@@ -69,7 +69,6 @@ export class MapsetRecordsComponent implements OnInit {
 	disableChannel = new BroadcastChannel('disable-button-channel');
 	originalGridParams: any;
 	uiUtility = UiUtility;
-	showLoadingSearch = true;
 	toBeDevelopedModalRef: NgbModalRef;
 	downloadModalRef: NgbModalRef;
 	isModalOpen = false;
@@ -166,7 +165,7 @@ export class MapsetRecordsComponent implements OnInit {
 
 			this.columnDefs = [
 				{
-					field: 'spanned',
+					field: 'index',
 					tooltipField: '',
 					headerName: 'Check/Uncheck All',
 					minWidth: 55,
@@ -435,7 +434,7 @@ export class MapsetRecordsComponent implements OnInit {
 
 		this.refsetService.getMappingsByMapset(this.mapsetCode, restParams).subscribe({
 			next: (results) => {
-				this.showLoadingSearch = false;
+				this.loaded = false;
 				const mapsetResults = results;
 				results = results.items;
 
@@ -583,7 +582,7 @@ export class MapsetRecordsComponent implements OnInit {
 				}
 				this.mapSetSubscription = this.refsetService.getMappingsByMapset(this.mapsetCode, restParams).subscribe({
 					next: (results) => {
-						this.showLoadingSearch = false;
+						this.loaded = false;
 						const mapsetResults = results;
 						results = results.items;
 
@@ -605,7 +604,7 @@ export class MapsetRecordsComponent implements OnInit {
 									adviceArray.push(results[a].mapEntries[b].advices[i]);
 								}
 								data.push({
-									'index': count,
+									'index': a + results[a].code + count,
 									'spanned': spanned,
 									'downloadable': true,
 									'mapEntries': results[a].mapEntries,
@@ -698,9 +697,9 @@ export class MapsetRecordsComponent implements OnInit {
 
 	checkboxRowSelect(event, index) {
 		if (index) {
-			this.mapsetData[index].checked == undefined || !this.mapsetData[index].checked ? (this.mapsetData[index].checked = true) : (this.mapsetData[index].checked = false);
-			const selectedIndexes = [index];
-			if (this.mapsetData[index].entries > 1) {
+			//this.mapsetData[index].checked == undefined || !this.mapsetData[index].checked ? (this.mapsetData[index].checked = true) : (this.mapsetData[index].checked = false);
+			//const selectedIndexes = [index];
+			/*if (this.mapsetData[index].entries > 1) {
 				for (let d = 1; d < this.mapsetData[index].entries; d++) {
 					selectedIndexes.push(index + d);
 					this.mapsetData[index + d].checked = this.mapsetData[index].checked;
@@ -712,7 +711,7 @@ export class MapsetRecordsComponent implements OnInit {
 						node.setSelected(this.mapsetData[selectedIndexes[c]].checked);
 					}
 				});
-			}
+			}*/
 		}
 	}
 
@@ -793,7 +792,7 @@ export class MapsetRecordsComponent implements OnInit {
 
 	@Debounce()
 	changedVersionStatus() {
-		this.showLoadingSearch = true;
+		this.loaded = false;
 		//this.onGridReady(this.originalGridParams);
 		this.openToBeDevelopedModal(this.tbdModal);
 	}
@@ -809,7 +808,7 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	clearSearch() {
-		this.showLoadingSearch = false;
+		this.loaded = false;
 		if (this.searchInput) {
 			this.searchInput = '';
 			this.onSearchChange();
@@ -818,12 +817,12 @@ export class MapsetRecordsComponent implements OnInit {
 
 	/*	@Debounce()
 	changedViewFilter() {
-		this.showLoadingSearch = true;
+		this.loaded = false;
 		this.onGridReady(this.originalGridParams);
 	}*/
 	@Debounce()
 	changedViewFilter() {
-		//this.showLoadingSearch = true;
+		//this.loaded = false;
 		//this.refsetGridApi.purgeInfiniteCache();
 	}
 
@@ -833,8 +832,8 @@ export class MapsetRecordsComponent implements OnInit {
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
 			//this.refsetGridApi.setQuickFilter(this.searchInput);
 			//	this.onGridReady(this.originalGridParams);
-			this.showLoadingSearch = true;
-			//	this.refsetGridApi.purgeInfiniteCache();
+			this.loaded = false;
+			this.refsetGridApi.purgeInfiniteCache();
 		}
 	}
 
