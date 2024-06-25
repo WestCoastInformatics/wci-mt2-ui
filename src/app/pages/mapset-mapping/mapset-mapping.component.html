@@ -2,45 +2,157 @@
 
 <!-- Search Bar -->
 <div class="top-search-bar content-header">
-	<div class="row justify-content-end align-items-baseline">
-		<div class="col page-title">
-			Mapping
-			<!-- : need map set name -->
-			<span [hidden]="!numOfMembers">{{ '(' + numOfMembers + ')' }}</span>
-		</div>
-		<div class="col-md-auto dropdown-group">
-			<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
-				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
+	<div class="d-flex justify-content-end">
+		<div class="col-md-8 d-flex">
+			<div class="page-title rt2-wrap" *ngIf="loaded" title="{{ mapsetData[0].name }}">
+				<span>{{ mapsetData[0].name }} </span>
 			</div>
-
-			<div class="col-md-auto">
-				<div class="dropdown directoryInput">
-					<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
-						<mat-label class="search-label" *ngIf="searchInput === ''">Search</mat-label>
-						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" disabled />
-					</mat-form-field>
-					<span class="clear-search" (click)="clearSearch()">&#10005;</span>
-				</div>
-			</div>
-			<div class="col-md-auto p-l-5 hide">
-				<mat-form-field floatLabel="never" class="directoryViewFilterField" appearance="fill">
+			<!--div class="col-md-auto p-l-20">
+				<mat-form-field floatLabel="never" class="directoryViewFilterField format-version-drop-down" appearance="fill">
 					<mat-label></mat-label>
-					<mat-select title="Public/Private Refsets" #directoryViewSelect [(value)]="selectedView" (selectionChange)="changedViewFilter()">
-						<mat-option *ngFor="let option of viewOptions" [value]="option.value" class="no-checkbox"> {{ option.display }} </mat-option>
+					<mat-select title="Choose Version" placeholder="Choose Version" #directoryViewSelect [(value)]="selectedVersion" (selectionChange)="changedVersionStatus()">
+						<mat-option *ngFor="let option of versionStatuses" [value]="option" class="no-checkbox"> {{ option }} </mat-option>
 					</mat-select>
 				</mat-form-field>
+			</div-->
+		</div>
+		<div class="col-md-auto d-flex p-r-40">
+			<div class="col-6">
+				<button class="library-app-refset-download" (click)="openDownloadModal(downloadModal)">
+					<div class="mat-button-wrapper mapset-download-icon">
+						<i class="fa fa-download fa-lg" title="Download Map" aria-label="Download Map"></i>
+					</div>
+				</button>
+			</div>
+			<div class="col-12">
+				<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: mapsetData }"></template>
 			</div>
 		</div>
 	</div>
 </div>
 
-<div class="container-fluid refsetDirectoryPage" (window:resize)="onResize($event)">
-	<div class="box box-default">
-		<div style="max-height: 600px; overflow: scroll">
-			<code>
-				<pre>{{ mapping | json }}</pre>
-			</code>
+<div class="rt2-container" (window:resize)="onResize($event)">
+	<div class="metadata-collapsible-container m-t-20">
+		<div class="metadata-collapsible-container-group-header row">
+			<div class="metadata-collapsible-container-title page-header-font" *ngIf="mapsetData.length > 0">
+				<span>Maps&nbsp; </span><span>{{ '(' + mapsetData[0].mapEntries.length + ')' }}</span>
+			</div>
+
+			<div class="dropdown-group row" *ngIf="loaded">
+				<div class="col-10">
+					<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
+						<mat-select title="Actions" placeholder="Actions" [(value)]="selectedAction" (selectionChange)="openToBeDevelopedModal(toBeDevelopedModal)">
+							<mat-option value="edit" class="no-checkbox">Edit</mat-option>
+							<mat-option value="review" class="no-checkbox">Request Review</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<div class="action-column col-2">
+					<span class="date-column second-row">Last Updated: {{ dateFormatter(mapsetData[0].modified) }}</span>
+				</div>
+			</div>
+			<div [hidden]="loaded" class="section-loading">Loading...</div>
+			<div class="dropdown-group section-background mappings-section" *ngIf="loaded">
+				<div class="col-12">
+					<div *ngFor="let record of mapsetData; index as i">
+						<div *ngIf="!record.spanned">
+							<div class="col-12 row">
+								<div class="d-flex col-12 row">
+									<div class="col-11 code-name hide">
+										{{ record.name }}, <span class="code-link">{{ record.code }}</span>
+									</div>
+
+									<div *ngFor="let entry of record.mapEntries; index as x" class="row col-12 second-row">
+										<div class="col-4 row mb-3">
+											<div class="record-num col-1">{{ entry.group || '1' }}/{{ record.mapEntries.length }}</div>
+											<div class="record-code col-2">{{ entry.toCode }}</div>
+											<div class="record-name col-8">{{ entry.toName }}</div>
+										</div>
+										<div class="col-8 row mb-3">
+											<div class="info-box">
+												<i class="fa-regular fa-handshake relation-icon"></i><span class="info-message">{{ entry.relation }}</span>
+											</div>
+											<div *ngFor="let advice of entry.advices; index as i" class="info-box">
+												<i class="fa-solid fa-star-of-life advice-icon"></i><span class="info-message">{{ advice }}</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="action-column col-2 hide">
+									<div class="action-btns">
+										<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: record }"></template>
+									</div>
+									<span class="date-column second-row">Last Updated: {{ dateFormatter(record.modified) }}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
+
+		<!-- Action Templates -->
+		<ng-template #directoryActionSection let-params>
+			<div class="d-flex">
+				<div class="col-6">
+					<div class="library-app-refset-notes" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+						<img src="/assets/sticky-note.svg" title="View Notes" aria-label="View Notes" class="mapset-notes-icon" />
+					</div>
+				</div>
+
+				<div class="col-6">
+					<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+						<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
+					</div>
+				</div>
+			</div>
+		</ng-template>
+
+		<ng-template #toBeDevelopedModal let-modal>
+			<div class="modal-header rt2-modal-header">
+				<div class="modal-title">To be developed</div>
+				<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>This feature is not yet available. Please check back later.</p>
+			</div>
+			<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+				<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+			</div>
+		</ng-template>
+
+		<ng-template #downloadModal let-modal>
+			<div class="modal-header rt2-modal-header">
+				<div class="modal-title">Download Map</div>
+				<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeDownloadModal()">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>Download {{ mapsetData[0].name }}</p>
+				<div class="modal-select">
+					<label class="modal-label">Format: </label>
+					<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
+						<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="rt2-column-chooser-select">
+							<mat-select-trigger class="trigger"
+								><span *ngIf="!selectedFormat"> Select a format </span><span *ngIf="selectedFormat">{{ selectedFormat.display }}</span></mat-select-trigger
+							>
+
+							<mat-option *ngFor="let format of formats" [value]="format" class="no-checkbox">
+								{{ format.display }}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+				<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
+				<button type="button" title="Download" class="rt2-btn rt2-action-btn" (click)="startDownload()">Download</button>
+			</div>
+		</ng-template>
+
+		<scroll-top></scroll-top>
 	</div>
 </div>
-<scroll-top></scroll-top>

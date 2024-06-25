@@ -16,7 +16,7 @@
 				</mat-form-field>
 			</div>
 		</div>
-		<div class="col-md-auto d-flex p-r-40">
+		<div class="col-md-auto d-flex p-r-40 mr-10">
 			<div class="col-6">
 				<button class="library-app-refset-download" (click)="openDownloadModal(downloadModal)" [disabled]="!selectedVersion || numOfMembers === 0">
 					<div class="mat-button-wrapper mapset-download-icon">
@@ -94,7 +94,7 @@
 							<div class="d-flex col-10 row">
 								<div class="checkbox-column"><template [ngTemplateOutlet]="checkboxCustom" [ngOutletContext]="{ $implicit: record }"></template></div>
 								<div class="col-11 code-name">
-									{{ record.name }}, <span class="code-link">{{ record.code }}</span>
+									{{ record.name }}, <span class="code-link" (click)="goToMappingPage(record.code)">{{ record.code }}</span>
 								</div>
 
 								<div *ngFor="let entry of record.mapEntries; index as x" class="row col-12 second-row">

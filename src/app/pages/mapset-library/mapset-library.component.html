@@ -10,51 +10,53 @@
 	</div>
 </div>
 
-<div class="container-fluid refsetDirectoryPage" (window:resize)="onResize($event)">
-	<div class="rt2-container">
-		<div class="row d-flex dropdown-group">
-			<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
-				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
-			</div>
+<div class="rt2-container refsetDirectoryPage" (window:resize)="onResize($event)">
+	<div class="metadata-collapsible-container m-t-20">
+		<div class="metadata-collapsible-container-group-header row">
+			<div class="row d-flex dropdown-group">
+				<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
+					<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
+				</div>
 
-			<div class="col-md-auto">
-				<div class="dropdown directoryInput">
-					<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
-						<mat-label class="search-label" *ngIf="searchInput === ''">Search</mat-label>
-						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
+				<div class="col-md-auto">
+					<div class="dropdown directoryInput">
+						<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
+							<mat-label class="search-label" *ngIf="searchInput === ''">Search</mat-label>
+							<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
+						</mat-form-field>
+						<span class="clear-search" (click)="clearSearch()">&#10005;</span>
+					</div>
+				</div>
+				<div class="col-md-auto p-l-5 hide">
+					<mat-form-field floatLabel="never" class="directoryViewFilterField" appearance="fill">
+						<mat-label></mat-label>
+						<mat-select title="Public/Private Refsets" #directoryViewSelect [(value)]="selectedView" (selectionChange)="changedViewFilter()">
+							<mat-option *ngFor="let option of viewOptions" [value]="option.value" class="no-checkbox"> {{ option.display }} </mat-option>
+						</mat-select>
 					</mat-form-field>
-					<span class="clear-search" (click)="clearSearch()">&#10005;</span>
 				</div>
 			</div>
-			<div class="col-md-auto p-l-5 hide">
-				<mat-form-field floatLabel="never" class="directoryViewFilterField" appearance="fill">
-					<mat-label></mat-label>
-					<mat-select title="Public/Private Refsets" #directoryViewSelect [(value)]="selectedView" (selectionChange)="changedViewFilter()">
-						<mat-option *ngFor="let option of viewOptions" [value]="option.value" class="no-checkbox"> {{ option.display }} </mat-option>
-					</mat-select>
-				</mat-form-field>
+
+			<div class="row loading-details dashboard-section" *ngIf="showLoadingSearch">
+				<div>Loading...</div>
 			</div>
+			<!-- Page Title -->
+			<!-- <div class="container-fluid page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div> -->
+
+			<!-- Reference Set Table -->
+			<ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct h-638" [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
+			</ag-grid-angular>
+
+			<app-pagination
+				#directoryPaging
+				*ngIf="showTable"
+				[pageSize]="refsetGridPaging.pageSize"
+				[gridOptions]="refsetGridOptions"
+				[pageSizeOptions]="refsetGridPaging.pageSizeOptions"
+				[totalKnown]="refsetGridPaging.totalKnown"
+				[manualStateRefresh]="refsetGridPaging.manualStateRefresh">
+			</app-pagination>
 		</div>
-
-		<div class="row loading-details dashboard-section" *ngIf="showLoadingSearch">
-			<div>Loading...</div>
-		</div>
-		<!-- Page Title -->
-		<!-- <div class="container-fluid page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div> -->
-
-		<!-- Reference Set Table -->
-		<ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct h-638" [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
-		</ag-grid-angular>
-
-		<app-pagination
-			#directoryPaging
-			*ngIf="showTable"
-			[pageSize]="refsetGridPaging.pageSize"
-			[gridOptions]="refsetGridOptions"
-			[pageSizeOptions]="refsetGridPaging.pageSizeOptions"
-			[totalKnown]="refsetGridPaging.totalKnown"
-			[manualStateRefresh]="refsetGridPaging.manualStateRefresh">
-		</app-pagination>
 	</div>
 	<!-- Information Templates -->
 	<ng-template #directoryInfoSection let-params>
@@ -150,7 +152,7 @@
 			<p>This feature is not yet available. Please check back later.</p>
 		</div>
 		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" class="rt2-btn rt2-close-btn" (click)="closeToBeDevelopedModal()">Close</button>
+			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
 		</div>
 	</ng-template>
 </div>
