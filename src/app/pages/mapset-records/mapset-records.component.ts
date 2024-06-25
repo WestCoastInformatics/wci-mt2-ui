@@ -792,7 +792,7 @@ export class MapsetRecordsComponent implements OnInit {
 
 	@Debounce()
 	changedVersionStatus() {
-		this.loaded = false;
+		//this.loaded = false;
 		//this.onGridReady(this.originalGridParams);
 		this.openToBeDevelopedModal(this.tbdModal);
 	}
