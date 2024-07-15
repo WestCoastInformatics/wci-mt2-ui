@@ -167,6 +167,7 @@ export class MapsetRecordsComponent implements OnInit {
 				{
 					field: 'index',
 					tooltipField: '',
+					colId: 'checkbox',
 					headerName: 'Check/Uncheck All',
 					minWidth: 55,
 					width: 55,
@@ -320,14 +321,13 @@ export class MapsetRecordsComponent implements OnInit {
 				angularCompileHeaders: true,
 				suppressColumnVirtualisation: true,
 				suppressPaginationPanel: true,
-				suppressRowClickSelection: true,
 				paginationPageSize: this.refsetGridPaging.pageSize,
 				rowSelection: 'single',
 				cacheBlockSize: this.refsetGridPaging.pageSize,
 				maxBlocksInCache: 1,
 				rowModelType: 'infinite',
 				enableCellTextSelection: true,
-				onCellClicked: this.onGridCellClick,
+				onCellDoubleClicked: this.onGridCellClick,
 				onGridReady: this.onGridReady,
 				frameworkComponents: {
 					'templateRenderer': TemplateRendererComponent,
@@ -770,6 +770,10 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	onGridCellClick = (event) => {
+		if (event.column.colId !== 'checkbox' && event.column.colId !== 'actions') {
+			this.goToMappingPage(event.data.code);
+		}
+		/*
 		if (event.column.colId === 'code') {
 			this.goToMappingPage(event.data.code);
 			return;
@@ -780,7 +784,7 @@ export class MapsetRecordsComponent implements OnInit {
 					node.data.advices_open = false;
 				}
 			});
-		}
+		}*/
 	};
 
 	gridEvent(action): void {
