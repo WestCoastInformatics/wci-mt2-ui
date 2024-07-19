@@ -207,7 +207,7 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 					paginationPageSize: this.refsetGridPaging.pageSize,
 					rowSelection: 'single',
 					enableCellTextSelection: true,
-					onCellClicked: this.onGridCellClick,
+					onCellDoubleClicked: this.onGridCellClick,
 					onGridReady: this.onGridReady,
 					frameworkComponents: {
 						'templateRenderer': TemplateRendererComponent,
