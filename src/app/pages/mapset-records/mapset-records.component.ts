@@ -266,10 +266,8 @@ export class MapsetRecordsComponent implements OnInit {
 					unSortIcon: true,
 					suppressSorting: true,
 				},
-
 				{
 					field: 'advices',
-					tooltipValueGetter: '',
 					headerName: 'Advices',
 					cellClass: 'rt2-directory-column-version-date',
 					minWidth: 65,
@@ -279,9 +277,6 @@ export class MapsetRecordsComponent implements OnInit {
 					cellRendererParams: { template: this.adviceSection },
 					unSortIcon: true,
 					suppressSorting: true,
-					getQuickFilterText: (params) => {
-						return '';
-					},
 				},
 				{
 					field: 'modified',
