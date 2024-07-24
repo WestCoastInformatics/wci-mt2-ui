@@ -293,6 +293,10 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 				this.numOfMembers = results.length;
 				this.numOfResults = results.total;
 
+				const lastIndex = document.getElementsByClassName('ag-header').length - 1;
+				const child = document.getElementsByClassName('ag-header')[lastIndex];
+				document.getElementById('directoryHeader').appendChild(child);
+
 				if (results.length == 0) {
 					this.refsetGridPaging.totalKnown = true;
 					this.refsetGridApi.showNoRowsOverlay();

@@ -163,6 +163,7 @@ tr.refset_tool_inactive_row {
 }
 
 .rt2-ag-grid {
+	height: 100%;
 	&.ten-rows {
 		height: 622px;
 	}
@@ -314,6 +315,15 @@ tr.refset_tool_inactive_row {
 	.ag-overlay-loading-center {
 		height: 3rem;
 		padding: 0.5rem;
+	}
+}
+
+#directoryHeader .ag-header {
+	height: 50px !important;
+	width: 100% !important;
+
+	.ag-header-cell-resize {
+		right: -4px;
 	}
 }
 

@@ -192,6 +192,7 @@ export class MapsetRecordsComponent implements OnInit {
 					filter: false,
 					resizable: false,
 					sortable: false,
+					suppressSorting: true,
 					getQuickFilterText: (params) => {
 						return '';
 					},
@@ -204,6 +205,9 @@ export class MapsetRecordsComponent implements OnInit {
 					flex: 1,
 					minWidth: 125,
 					cellClass: 'blue-link',
+					resizable: true,
+					sortable: false,
+					suppressSorting: true,
 				},
 				{
 					field: 'name',
@@ -252,6 +256,7 @@ export class MapsetRecordsComponent implements OnInit {
 					cellClass: 'rt2-directory-column-id',
 					resizable: true,
 					unSortIcon: true,
+					sortable: false,
 					suppressSorting: true,
 					flex: 1,
 					minWidth: 100,
@@ -265,6 +270,7 @@ export class MapsetRecordsComponent implements OnInit {
 					minWidth: 85,
 					resizable: true,
 					unSortIcon: true,
+					sortable: false,
 					suppressSorting: true,
 				},
 				{
@@ -277,6 +283,7 @@ export class MapsetRecordsComponent implements OnInit {
 					cellRenderer: TemplateRendererComponent,
 					cellRendererParams: { template: this.adviceSection },
 					unSortIcon: true,
+					sortable: false,
 					suppressSorting: true,
 				},
 				{
@@ -291,6 +298,7 @@ export class MapsetRecordsComponent implements OnInit {
 					floatingFilterComponent: DateTextFilterComponent,
 					floatingFilterComponentParams: { suppressFilterButton: true },
 					unSortIcon: true,
+					sortable: false,
 					suppressSorting: true,
 				},
 				{
@@ -322,6 +330,7 @@ export class MapsetRecordsComponent implements OnInit {
 				maxBlocksInCache: 1,
 				rowModelType: 'infinite',
 				enableCellTextSelection: true,
+				domLayout: 'autoHeight',
 				onCellDoubleClicked: this.onGridCellClick,
 				onGridReady: this.onGridReady,
 				frameworkComponents: {
@@ -337,6 +346,7 @@ export class MapsetRecordsComponent implements OnInit {
 					suppressMenu: true,
 					resizable: true,
 					suppressSorting: true,
+					suppressMovable: true,
 				},
 				enableBrowserTooltips: true,
 				rowClassRules: {
@@ -625,8 +635,12 @@ export class MapsetRecordsComponent implements OnInit {
 						this.mapsetData = data;
 						this.mapsetData = this.mapsetData.sort((a, b) => (a.name > b.name ? 1 : -1));
 						mapsetResults.items = this.mapsetData;
-						this.numOfMembers = mapsetResults.total; //total;
-						this.numOfResults = mapsetResults.total; //total;
+						this.numOfMembers = mapsetResults.total;
+						this.numOfResults = mapsetResults.total;
+
+						const lastIndex = document.getElementsByClassName('ag-header').length - 1;
+						const child = document.getElementsByClassName('ag-header')[lastIndex];
+						document.getElementById('directoryHeader').appendChild(child);
 
 						this.showPaging = results.total > 0;
 						if (mapsetResults.items.length === 0 && pageNumber > 1) {
@@ -1059,6 +1073,8 @@ export class MapsetRecordsComponent implements OnInit {
 
 		if (this.showMappingsSection) {
 			document.getElementsByClassName('mappings-section')[0]?.setAttribute('style', `max-height: ${sectionsMaxHeight}px;`);
+
+			document.getElementsByClassName('grid-wrapper')[0]?.setAttribute('style', `max-height: ${sectionsMaxHeight}px;`);
 		}
 		if (this.showMetadataSection) {
 			document.getElementsByClassName('metadata-section')[0]?.setAttribute('style', `max-height: ${sectionsMinHeight}px;`);

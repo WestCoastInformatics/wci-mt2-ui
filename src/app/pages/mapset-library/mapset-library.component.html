@@ -36,7 +36,7 @@
 					</mat-form-field>
 				</div>
 			</div>
-
+			<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showTable && !showLoadingSearch"></div>
 			<div class="row loading-details dashboard-section" *ngIf="showLoadingSearch">
 				<div>Loading...</div>
 			</div>
