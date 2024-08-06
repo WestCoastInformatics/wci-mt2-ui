@@ -72,20 +72,26 @@
 				</mat-form-field>
 			</div>
 		</div>
-		<div [hidden]="!showMappingsSection" class="section-background mappings-section">
+		<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!loaded || numOfMembers === 0 || showMapTable !== 'table'"></div>
+		<div [hidden]="!showMappingsSection" class="section-background mappings-section" [ngClass]="{ 'overflow': showMapTable !== 'table' }">
 			<div [hidden]="loaded" class="section-loading">Loading...</div>
 			<div [hidden]="!loaded" *ngIf="numOfMembers === 0" class="status-no-results">No Results to Show</div>
-			<ag-grid-angular
-				#directoryTable
-				*ngIf="showTable"
-				[hidden]="!loaded || numOfMembers === 0 || showMapTable !== 'table'"
-				class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter"
-				[columnDefs]="columnDefs"
-				[suppressRowTransform]="true"
-				[gridOptions]="refsetGridOptions"
-				[rowSelection]="rowSelection"
-				(firstDataRendered)="onResize(500)">
-			</ag-grid-angular>
+			<div class="content-wrapper" [hidden]="showMapTable !== 'table'">
+				<div class="grid-wrapper">
+					<ag-grid-angular
+						*ngIf="showTable"
+						id="directoryTable"
+						#directoryTable
+						[hidden]="!loaded || numOfMembers === 0 || showMapTable !== 'table'"
+						class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter"
+						[columnDefs]="columnDefs"
+						[suppressRowTransform]="true"
+						[gridOptions]="refsetGridOptions"
+						[rowSelection]="rowSelection"
+						(firstDataRendered)="onResize(500)">
+					</ag-grid-angular>
+				</div>
+			</div>
 
 			<div *ngIf="showMapTable !== 'table'">
 				<div *ngFor="let record of mapsetData; index as i">
@@ -143,7 +149,7 @@
 			<img src="assets/caret-up-solid.svg" *ngIf="!showMetadataSection" alt="Collapse Button" title="Collapse Workflow History" aria-label="Collapse Button" class="caret-up-solid" />
 			<img src="assets/caret-down-solid.svg" *ngIf="showMetadataSection" alt="Expand Button" title="Expand Workflow History" aria-label="Expand Button" class="caret-down-solid" />
 		</div>
-		<div [hidden]="!showMetadataSection" class="section-background metadata-section">
+		<div [hidden]="!showMetadataSection" class="section-background metadata-section overflow">
 			<div class="d-flex dropdown-group">This feature is not yet available. Please check back later.</div>
 		</div>
 	</div>
@@ -156,7 +162,7 @@
 			<img src="assets/caret-up-solid.svg" *ngIf="!showHistorySection" alt="Collapse Button" title="Collapse Workflow History" aria-label="Collapse Button" class="caret-up-solid" />
 			<img src="assets/caret-down-solid.svg" *ngIf="showHistorySection" alt="Expand Button" title="Expand Workflow History" aria-label="Expand Button" class="caret-down-solid" />
 		</div>
-		<div [hidden]="!showHistorySection" class="section-background history-section">
+		<div [hidden]="!showHistorySection" class="section-background history-section overflow">
 			<div class="d-flex dropdown-group">This feature is not yet available. Please check back later.</div>
 		</div>
 	</div>
