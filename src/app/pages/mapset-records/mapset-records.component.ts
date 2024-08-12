@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { MatSelect } from '@angular/material/select';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
@@ -78,6 +79,7 @@ export class MapsetRecordsComponent implements OnInit {
 	gridSelectAll = false;
 	advicePopoverLocation = '45px';
 	showMapTable = 'table';
+	checkedNum = 0;
 
 	selectedAction = '';
 	showMappingsSection = true;
@@ -111,6 +113,7 @@ export class MapsetRecordsComponent implements OnInit {
 	@ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
 	@ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
 	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
+	@ViewChild('actions') private actions: MatSelect;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -131,7 +134,6 @@ export class MapsetRecordsComponent implements OnInit {
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
 		this.titleService.setTitle('Mapping Tool - Mappings');
-		this.breadcrumbService.setBreadcrumbs([{ label: 'Mappings' }]);
 
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
@@ -158,6 +160,7 @@ export class MapsetRecordsComponent implements OnInit {
 		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
 			const thisResult = results;
 			this.mapsetName = thisResult.refSetName;
+			this.breadcrumbService.setBreadcrumbs([{ path: '/library', label: 'Library' }, { label: this.mapsetName }]);
 			this.versionStatuses.push(formatDate(thisResult.modified, 'MM-dd-yyyy', 'en-US') + ' (' + thisResult.versionStatus + ') ');
 			if (this.versionStatuses.length == 1) {
 				this.selectedVersion = this.versionStatuses;
@@ -169,6 +172,7 @@ export class MapsetRecordsComponent implements OnInit {
 					tooltipField: '',
 					colId: 'checkbox',
 					headerName: 'Check/Uncheck All',
+					headerTooltip: 'Check/Uncheck All',
 					minWidth: 55,
 					width: 55,
 					cellRenderer: TemplateRendererComponent,
@@ -202,6 +206,7 @@ export class MapsetRecordsComponent implements OnInit {
 					field: 'code',
 					tooltipField: 'code',
 					headerName: 'Source',
+					headerTooltip: 'Source',
 					flex: 1,
 					minWidth: 125,
 					cellClass: 'blue-link',
@@ -213,6 +218,7 @@ export class MapsetRecordsComponent implements OnInit {
 					field: 'name',
 					tooltipField: 'name',
 					headerName: 'Source PT',
+					headerTooltip: 'Source PT',
 					flex: 2,
 					resizable: true,
 					minWidth: 165,
@@ -226,6 +232,7 @@ export class MapsetRecordsComponent implements OnInit {
 					field: 'toCode',
 					tooltipField: 'toCode',
 					headerName: 'Target',
+					headerTooltip: 'Target',
 					flex: 1,
 					minWidth: 135,
 					cellRenderer: TemplateRendererComponent,
@@ -241,6 +248,7 @@ export class MapsetRecordsComponent implements OnInit {
 					field: 'toName',
 					tooltipField: 'toName',
 					headerName: 'Target PT',
+					headerTooltip: 'Target PT',
 					resizable: true,
 					unSortIcon: true,
 					sortable: false,
@@ -253,6 +261,7 @@ export class MapsetRecordsComponent implements OnInit {
 					field: 'relation',
 					tooltipField: 'relation',
 					headerName: 'Relationship',
+					headerTooltip: 'Relationship',
 					cellClass: 'rt2-directory-column-id',
 					resizable: true,
 					unSortIcon: true,
@@ -265,6 +274,7 @@ export class MapsetRecordsComponent implements OnInit {
 					field: 'rule',
 					tooltipField: 'rule',
 					headerName: 'Rule',
+					headerTooltip: 'Rule',
 					cellClass: 'rt2-directory-column-id',
 					flex: 1,
 					minWidth: 85,
@@ -276,6 +286,7 @@ export class MapsetRecordsComponent implements OnInit {
 				{
 					field: 'advices',
 					headerName: 'Advices',
+					headerTooltip: 'Advices',
 					cellClass: 'rt2-directory-column-version-date',
 					minWidth: 65,
 					width: 125,
@@ -290,6 +301,7 @@ export class MapsetRecordsComponent implements OnInit {
 					field: 'modified',
 					tooltipValueGetter: UiUtility.gridDateValueGetter,
 					headerName: 'Last Modified',
+					headerTooltip: 'Last Modified',
 					cellClass: 'rt2-directory-column-modified-date',
 					minWidth: 65,
 					width: 165,
@@ -526,6 +538,7 @@ export class MapsetRecordsComponent implements OnInit {
 		//this.columnDefs[4].cellRendererParams = { template: this.descriptionSection };
 		//this.columnDefs[5].cellRendererParams = { template: this.actionsSection };
 		this.refsetGridApi.setColumnDefs(this.columnDefs);
+		this.refsetGridColumnApi = gridReadyParams.columnApi;
 
 		const _window = window;
 		_window['checkboxHandleClick'] = (event) => {
@@ -651,7 +664,7 @@ export class MapsetRecordsComponent implements OnInit {
 						}
 
 						if (mapsetResults.total) {
-							mapsetResults.totalKnown = true;
+							//mapsetResults.totalKnown = true;
 						}
 						if (data?.length > 0) {
 							this.refsetGridApi.hideOverlay();
@@ -705,22 +718,24 @@ export class MapsetRecordsComponent implements OnInit {
 	};
 
 	checkboxRowSelect(event, index) {
-		if (index) {
-			//this.mapsetData[index].checked == undefined || !this.mapsetData[index].checked ? (this.mapsetData[index].checked = true) : (this.mapsetData[index].checked = false);
-			//const selectedIndexes = [index];
-			/*if (this.mapsetData[index].entries > 1) {
-				for (let d = 1; d < this.mapsetData[index].entries; d++) {
-					selectedIndexes.push(index + d);
-					this.mapsetData[index + d].checked = this.mapsetData[index].checked;
+		for (let d = 0; d < this.mapsetData.length; d++) {
+			if (this.mapsetData[d].index === index) {
+				if (this.mapsetData[d].checked === undefined) {
+					this.mapsetData[d].checked = true;
+				} else {
+					if (!this.mapsetData[d].checked) {
+						this.mapsetData[d].checked = true;
+					} else {
+						this.mapsetData[d].checked = false;
+					}
 				}
 			}
-			for (let c = 0; c < selectedIndexes.length; c++) {
-				this.refsetGridApi.forEachNode((node) => {
-					if (node.rowIndex == selectedIndexes[c]) {
-						node.setSelected(this.mapsetData[selectedIndexes[c]].checked);
-					}
-				});
-			}*/
+		}
+		this.checkedNum = 0;
+		for (let c = 0; c < this.mapsetData.length; c++) {
+			if (this.mapsetData[c].checked === true) {
+				this.checkedNum++;
+			}
 		}
 	}
 
@@ -730,6 +745,8 @@ export class MapsetRecordsComponent implements OnInit {
 		if (value !== undefined) {
 			number = value.number;
 		}
+		//remove 1 for 'ALWAYS'
+		number--;
 		return number;
 	}
 
@@ -797,9 +814,7 @@ export class MapsetRecordsComponent implements OnInit {
 	};
 
 	gridEvent(action): void {
-		//console.log(action);
 		const selectedRows = this.refsetGridApi.getSelectedRows();
-		//console.log(selectedRows);
 		this.openToBeDevelopedModal(this.tbdModal);
 	}
 
@@ -808,6 +823,35 @@ export class MapsetRecordsComponent implements OnInit {
 		//this.loaded = false;
 		//this.onGridReady(this.originalGridParams);
 		this.openToBeDevelopedModal(this.tbdModal);
+	}
+
+	selectAction() {
+		//const selectedRows = this.refsetGridApi.getSelectedRows();
+		//	console.log('change action ', this.selectedAction);
+
+		switch (this.selectedAction) {
+			case 'edit':
+				//console.log(selectedRows);
+
+				if (this.checkedNum === 1) {
+					for (let c = 0; c < this.mapsetData.length; c++) {
+						if (this.mapsetData[c].checked === true) {
+							this.actions.close();
+							const ddInterval = setInterval(() => {
+								this.goToEditMappingPage(this.mapsetData[c].code);
+								clearInterval(ddInterval);
+							}, 2);
+						}
+					}
+				}
+				break;
+			case 'selected':
+				this.downloadMapsets();
+				break;
+			case 'all':
+				this.downloadMapsets();
+				break;
+		}
 	}
 
 	downloadMapsets() {
@@ -887,6 +931,13 @@ export class MapsetRecordsComponent implements OnInit {
 		const url = new URL(window.location.href);
 		window.history.pushState({}, '', url.href);
 		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + code], { replaceUrl: false, skipLocationChange: false });
+	}
+
+	goToEditMappingPage(code) {
+		const url = new URL(window.location.href);
+		url.searchParams.set('reload', 'true');
+		window.history.pushState({}, '', url.href);
+		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + code + '/edit'], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	getRefsetRow(refsetId: string) {

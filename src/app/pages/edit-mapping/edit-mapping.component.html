@@ -1,0 +1,311 @@
+<div *ngIf="showLoadingSpinner" class="loading"></div>
+
+<!-- Search Bar -->
+<div class="top-search-bar content-header">
+	<div class="d-flex justify-content-end">
+		<div class="col-md-12 d-flex">
+			<div class="page-title rt2-wrap" *ngIf="loaded" title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}">
+				<span>{{ mapsetData[0].code + ' ' + mapsetData[0].name }} </span>
+			</div>
+		</div>
+	</div>
+</div>
+<div [hidden]="loaded" class="section-loading">Loading...</div>
+<div class="dropdown-group row edit-actions" *ngIf="loaded">
+	<div class="col-10">
+		<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
+			<mat-select title="Authoring Actions" placeholder="Authoring Actions" [(value)]="selectedAction" (selectionChange)="selectActionMenu()">
+				<mat-option value="note" class="no-checkbox">View or Add Authoring Note</mat-option>
+				<mat-option value="comm" class="no-checkbox">View or Add Authoring Communication</mat-option>
+				<mat-option value="review" class="no-checkbox">Request Review</mat-option>
+			</mat-select>
+		</mat-form-field>
+	</div>
+	<div class="action-column col-2 no-margin-top">
+		<span class="date-column">
+			<button
+				type="button"
+				title="Undo Changes"
+				class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+				(click)="reloadMapping()"
+				[disabled]="!userChanged"
+				(ngClass)="({ 'disabled': !userChanged })">
+				Undo Changes
+			</button>
+			<button
+				type="button"
+				title="Save Mapping"
+				class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+				(click)="saveMapping()"
+				[disabled]="!userChanged"
+				(ngClass)="({ 'disabled': !userChanged })">
+				Save Mapping
+			</button>
+		</span>
+	</div>
+</div>
+<div class="rt2-container" (window:resize)="onResize($event)" (scroll)="onResize($event)">
+	<div class="edit-container">
+		<div class="metadata-collapsible-container m-t-20 col">
+			<div class="metadata-collapsible-container-group-header row">
+				<div class="metadata-collapsible-container-title page-header-font">
+					<span>Source Concept</span>
+				</div>
+
+				<div class="section-background mappings-section" *ngIf="loaded">
+					<div class="col-12">
+						<div class="d-flex col-12 row mt-5">
+							<div class="col-2 align-right mb-10">ID:</div>
+							<div class="col-10 mb-10">
+								<span class="code-link" (click)="goToMappingPage()" title="Open in new tab" aria-label="Open in new tab"
+									>{{ selectedMapset.fromTerminology }}, {{ mapsetData[0].code }} <i class="fa-solid fa-arrow-up-right-from-square"></i
+								></span>
+							</div>
+							<div class="col-2 align-right">Name:</div>
+							<div class="col-10">
+								{{ mapsetData[0].name }}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="metadata-collapsible-container m-t-20 col">
+			<div class="metadata-collapsible-container-group-header row">
+				<div class="metadata-collapsible-container-title page-header-font btn-header">
+					<div class="entry-column">Selected Target Concept</div>
+				</div>
+				<div class="section-background mappings-section" *ngIf="loaded">
+					<div class="col-12">
+						<div class="d-flex col-12 row mt-5">
+							<div class="col-3 align-right mb-10 mt-10">Target Code:</div>
+							<div class="col-9">
+								ICD10,
+
+								<mat-form-field floatLabel="never" id="targetInputField" title="Enter Target Code" class="adjust-mat-input">
+									<input matInput #targetInput placeholder="Enter Target Code" id="targetCodeInput" [formControl]="targetFC" class="target-input" />
+									<!--	<mat-autocomplete #auto="matAutocomplete">
+										<mat-option *ngFor="let state of filteredStates | async" [value]="state.name">
+											<span>{{ state.name }}</span> |
+										</mat-option>
+									</mat-autocomplete>-->
+								</mat-form-field>
+								<span class="clear-search" (click)="clearTargetInput()">&#10005;</span>
+
+								<button
+									type="button"
+									title="Set as Target"
+									class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
+									(click)="setTargetCode()"
+									[disabled]="!foundConceptCode"
+									(ngClass)="({ 'disabled': !foundConceptCode })">
+									Set as Target
+								</button>
+								<button type="button" title="Set Empty Target" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="addEmptyTargetToGroup(numOfGroups)">
+									Set Empty Target
+								</button>
+							</div>
+							<div class="col-3 align-right">Preferred Term:</div>
+							<div class="col-9">
+								{{ targetNameInput }}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="metadata-collapsible-container col-md-12 config-scrolling-section">
+		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showConfigSection')">
+			<div class="metadata-collapsible-container-title page-header-font">
+				<span>Target Configuration</span>
+			</div>
+			<img src="assets/caret-up-solid.svg" *ngIf="!showConfigSection" alt="Collapse Button" title="Collapse Target Configuration" aria-label="Collapse Button" class="caret-up-solid" />
+			<img src="assets/caret-down-solid.svg" *ngIf="showConfigSection" alt="Expand Button" title="Expand Target Configuration" aria-label="Expand Button" class="caret-down-solid" />
+		</div>
+		<div [hidden]="!showConfigSection || !loaded" class="section-background config-section">
+			<div *ngFor="let record of mapsetData; index as i">
+				<div class="dropdown-group col-gap" *ngFor="let _ of [].constructor(numOfGroups); index as g">
+					<div class="metadata-collapsible-container-title page-header-font metadata-collapsible-container-group-header map-group-header">
+						<div>
+							<div class="move-group-container">
+								<i title="Move Group" class="fa-solid fa-up-down-left-right link-icon mr-5 group-move-btn" (click)="openToBeDevelopedModal(tbdModal)"></i>
+							</div>
+							<span>Map Group {{ g + 1 }}</span>
+						</div>
+						<span title="Remove Group" class="clear-search group-remove-btn" (click)="removeMapGroup(g + 1)">&#10005;</span>
+					</div>
+					<div
+						class="metadata-collapsible-container-group-header target-row solid-target-border target-hover-background"
+						[ngClass]="{ 'target-selected-background': selectedTarget === entry.uuid }"
+						*ngFor="let entry of record.mapEntries; index as x"
+						[hidden]="g + 1 !== entry.group">
+						<div class="col-4">
+							<div class="target-name">
+								<div class="move-container">
+									<i title="Move Target" class="fa-solid fa-up-down-left-right link-icon mr-5 target-move-btn" (click)="openToBeDevelopedModal(tbdModal)"></i>
+								</div>
+								<!--target-name-wrap-->
+								<span class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)">{{ entry.group || '1' }}/{{ entry.priority }}</span
+								><span class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)">{{ entry.toCode }}</span
+								><span title="{{ entry.toName }}" class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)">{{ entry.toName }}</span>
+							</div>
+						</div>
+						<div class="target-selection" *ngIf="entry.toName.indexOf('[NO TARGET]') > -1 || entry.toName.indexOf(' CONCEPT NOT FOUND') > -1">
+							<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
+								<mat-select title="Select a Relationship" placeholder="Select a Relationship" [(value)]="entry.relation" (selectionChange)="userChangeSelection()">
+									<mat-option *ngFor="let map of noTargetRelations" value="{{ map }}" class="no-checkbox">{{ map }}</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+						<div class="target-selection" *ngIf="entry.toName.indexOf('[NO TARGET]') === -1 && entry.toName.indexOf(' CONCEPT NOT FOUND') === -1">
+							<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
+								<mat-select title="Select a Relationship" placeholder="Select a Relationship" [(value)]="entry.relation" (selectionChange)="userChangeSelection()">
+									<mat-option *ngFor="let map of targetRelations" value="{{ map }}" class="no-checkbox">{{ map }}</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+						<div class="target-selection">
+							<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
+								<mat-select title="Select a Rule" placeholder="Select a Rule" [(value)]="record.rule" (selectionChange)="userChangeSelection()">
+									<mat-option value="TRUE" class="no-checkbox">TRUE</mat-option>
+									<mat-option value="Gender - Female" class="no-checkbox" [hidden]="!ruleBased">Gender - Female</mat-option>
+									<mat-option value="Gender - Male" class="no-checkbox" [hidden]="!ruleBased">Gender - Male</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+
+						<span class="col-2 advice-list">
+							<template [ngTemplateOutlet]="targetAdviceSection" [ngTemplateOutletContext]="{ $implicit: entry }"></template>
+						</span>
+						<div class="move-container"><span title="Remove Target" class="clear-search target-remove-btn" (click)="removeTarget(entry.uuid)">&#10005;</span></div>
+					</div>
+					<div class="metadata-collapsible-container-group-header target-btn dotted-target-border target-hover-background mt-10" (click)="addEmptyTargetToGroup(g + 1)" title="Add Target">
+						<div><i class="fa-solid fa-circle-plus link-icon mr-5"></i> <span class="link-icon">Add a New Target</span></div>
+					</div>
+				</div>
+			</div>
+			<div class="metadata-collapsible-container-group-header target-btn dotted-target-border target-hover-background mt-10 ml-10 mr-10" (click)="addMapGroup()" title="Add Group">
+				<div><i class="fa-solid fa-circle-plus link-icon mr-5"></i> <span class="link-icon">Add a New Map Group</span></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="metadata-collapsible-container col-md-12 mb-10">
+		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showBrowserSection')">
+			<div class="metadata-collapsible-container-title page-header-font">
+				<span>ICD10 Terminology Browser</span>
+			</div>
+			<img src="assets/caret-up-solid.svg" *ngIf="!showBrowserSection" alt="Collapse Button" title="Collapse ICD10 Terminology Browser" aria-label="Collapse Button" class="caret-up-solid" />
+			<img src="assets/caret-down-solid.svg" *ngIf="showBrowserSection" alt="Expand Button" title="Expand ICD10 Terminology Browser" aria-label="Expand Button" class="caret-down-solid" />
+		</div>
+		<div [hidden]="!showBrowserSection" class="section-background browser-section">
+			<div class="d-flex dropdown-group">This feature is not yet available. Please check back later.</div>
+		</div>
+	</div>
+</div>
+<!-- Action Templates -->
+<ng-template #directoryActionSection let-params>
+	<div class="d-flex">
+		<div class="col-6">
+			<div class="library-app-refset-notes" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+				<img src="/assets/sticky-note.svg" title="View Notes" aria-label="View Notes" class="mapset-notes-icon" />
+			</div>
+		</div>
+
+		<div class="col-6">
+			<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+				<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<!-- Advice Templates -->
+<ng-template #targetAdviceSection let-entry>
+	<div class="advice-popover" id="{{ 'advice-popover_' + entry.uuid }}" [ngStyle]="{ top: advicePopoverLocationY, left: advicePopoverLocationX }" [ngClass]="entry?.advices_open ? 'show' : 'hide'">
+		<div class="popup-handle popup-handle-top"></div>
+		<img src="assets/grey-close-icon.svg" (click)="closePopover()" width="12px" height="12px" title="Close" aria-label="Close" class="grey-close-icon" alt="Close" />
+		<ul>
+			<li *ngFor="let advice of entry.updateAdviceList" class="advice-list-item" [hidden]="advice.indexOf('ALWAYS') > -1">
+				<span title="{{ advice }}" class="code-link">{{ advice }}</span
+				><span title="Remove advice" class="clear-search adjust-clear" (click)="removeAdviceFromList(entry.uuid, advice)">&#10005;</span>
+			</li>
+		</ul>
+		<div class="target-selection advice-selection" [hidden]="entry.addAdviceList?.length === 0">
+			<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
+				<mat-select title="Select advice to add" placeholder="Select advice to add" [(value)]="adviceToAdd" (selectionChange)="addAdviceToList(entry.uuid)">
+					<mat-option *ngFor="let advice of entry.addAdviceList" value="{{ advice }}" title="{{ advice }}" class="no-checkbox">{{ advice }}</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+		<span class="mappings-section m-l-20" *ngIf="entry.addAdviceList?.length === 0">No advice to add.</span>
+		<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
+			<button
+				type="button"
+				title="Save"
+				class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
+				(click)="setAdvice(entry.uuid)"
+				[disabled]="entry.addAdviceList?.length === 0"
+				(ngClass)="({ 'disabled': entry.addAdviceList?.length === 0 })">
+				Save
+			</button>
+		</div>
+	</div>
+	<div id="{{ 'popover_' + entry.uuid }}">
+		<ul [hidden]="entry?.advices.length <= 1">
+			<li *ngFor="let advice of entry?.advices; index as i" [hidden]="advice.indexOf('ALWAYS') > -1">
+				<span class="advice-name-wrap" title="{{ advice }}">{{ advice }}</span>
+			</li>
+			<li>
+				<span class="code-link" (click)="openPopover($event, entry.uuid)" title="Add an Advice" *ngIf="entry?.advices.length !== 0">Add/Edit Advice</span>
+			</li>
+		</ul>
+		<span class="code-link p-l-10" (click)="openPopover($event, entry.uuid)" title="Add an Advice" *ngIf="entry?.advices.length <= 1">+ Add Advice</span>
+	</div>
+</ng-template>
+
+<ng-template #toBeDevelopedModal let-modal>
+	<div class="modal-header rt2-modal-header">
+		<div class="modal-title">Coming soon</div>
+		<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<p>This feature is not yet available. Please check back later.</p>
+	</div>
+	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+		<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+	</div>
+</ng-template>
+
+<ng-template #downloadModal let-modal>
+	<div class="modal-header rt2-modal-header">
+		<div class="modal-title">Download Map</div>
+		<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeDownloadModal()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<p>Download {{ mapsetData[0].name }}</p>
+		<div class="modal-select">
+			<label class="modal-label">Format: </label>
+			<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
+				<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="rt2-column-chooser-select">
+					<mat-select-trigger class="trigger"
+						><span *ngIf="!selectedFormat"> Select a format </span><span *ngIf="selectedFormat">{{ selectedFormat.display }}</span></mat-select-trigger
+					>
+
+					<mat-option *ngFor="let format of formats" [value]="format" class="no-checkbox">
+						{{ format.display }}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+	</div>
+	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+		<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
+		<button type="button" title="Download" class="rt2-btn rt2-action-btn" (click)="startDownload()">Download</button>
+	</div>
+</ng-template>

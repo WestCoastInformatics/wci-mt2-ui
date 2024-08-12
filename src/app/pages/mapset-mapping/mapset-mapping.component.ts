@@ -1,5 +1,6 @@
 import { Subscription } from 'rxjs';
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { MatSelect } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
@@ -98,6 +99,7 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
 	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
+	@ViewChild('actions') private actions: MatSelect;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -118,12 +120,11 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
 		this.titleService.setTitle('Mapping Tool - Map');
-		this.breadcrumbService.setBreadcrumbs([{ label: 'Map' }]);
 
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.conceptCode = routeParams.concept;
-			//	this.getMapsetInfo();
+			this.getMapsetInfo();
 		});
 
 		this.formats = [
@@ -195,11 +196,41 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 				}
 
 				this.mapsetData = data;
+
+				this.breadcrumbService.setBreadcrumbs([
+					{ path: '/library', label: 'Library' },
+					{ path: '/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
+					{ label: this.mapsetData.length > 0 ? this.mapsetData[0]?.name : 'Map' },
+				]);
 			},
 			error: (error) => {
 				//
 			},
 		});
+	}
+
+	selectAction() {
+		switch (this.selectedAction) {
+			case 'edit':
+				if (this.selectedAction === 'edit') {
+					this.actions.close();
+					const ddInterval = setInterval(() => {
+						this.goToEditMappingPage();
+						clearInterval(ddInterval);
+					}, 2);
+				}
+				break;
+			case 'review':
+				this.openToBeDevelopedModal(this.tbdModal);
+				break;
+		}
+	}
+
+	goToEditMappingPage() {
+		const url = new URL(window.location.href);
+		url.searchParams.set('reload', 'true');
+		window.history.pushState({}, '', url.href);
+		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode + '/edit'], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	showDropdown(): void {

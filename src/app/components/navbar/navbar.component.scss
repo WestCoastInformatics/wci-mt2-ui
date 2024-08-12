@@ -224,15 +224,19 @@ nav {
 
 .rt2-breadcrumb-bar > :not(:last-child)::after {
 	content: '/';
-	color: $ghost-grey;
+	color: $standard_default_button_color;
 	margin: 0 10px;
 }
 
 .rt2-breadcrumb-bar {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 
 	.rt2-breadcrumb {
+		display: flex;
+		max-width: 650px;
+		text-wrap: nowrap;
 		color: $white;
 		font-family: $standard_font_family;
 		font-weight: $standard_font_weight;
@@ -240,9 +244,13 @@ nav {
 
 		&.rt2-breadcrumb-selectable {
 			cursor: pointer;
-			color: $standard_link_color;
+			color: $standard_default_button_color !important;
 		}
 	}
+}
+
+.multi-crumbs {
+	max-width: 300px !important;
 }
 
 .navbar-div {

@@ -4,8 +4,8 @@
 <div class="top-search-bar content-header">
 	<div class="d-flex justify-content-end">
 		<div class="col-md-8 d-flex">
-			<div class="page-title rt2-wrap" *ngIf="loaded" title="{{ mapsetData[0].name }}">
-				<span>{{ mapsetData[0].name }} </span>
+			<div class="page-title rt2-wrap" *ngIf="loaded" title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}">
+				<span>{{ mapsetData[0].code + ' ' + mapsetData[0].name }} </span>
 			</div>
 			<!--div class="col-md-auto p-l-20">
 				<mat-form-field floatLabel="never" class="directoryViewFilterField format-version-drop-down" appearance="fill">
@@ -41,7 +41,7 @@
 			<div class="dropdown-group row" *ngIf="loaded">
 				<div class="col-10">
 					<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
-						<mat-select title="Actions" placeholder="Actions" [(value)]="selectedAction" (selectionChange)="openToBeDevelopedModal(toBeDevelopedModal)">
+						<mat-select #actions title="Actions" placeholder="Actions" [(value)]="selectedAction" (selectionChange)="selectAction()">
 							<mat-option value="edit" class="no-checkbox">Edit</mat-option>
 							<mat-option value="review" class="no-checkbox">Request Review</mat-option>
 						</mat-select>
@@ -64,7 +64,7 @@
 
 									<div *ngFor="let entry of record.mapEntries; index as x" class="row col-12 second-row">
 										<div class="col-4 row mb-3">
-											<div class="record-num col-1">{{ entry.group || '1' }}/{{ record.mapEntries.length }}</div>
+											<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
 											<div class="record-code col-2">{{ entry.toCode }}</div>
 											<div class="record-name col-8">{{ entry.toName }}</div>
 										</div>
@@ -72,7 +72,7 @@
 											<div class="info-box">
 												<i class="fa-regular fa-handshake relation-icon"></i><span class="info-message">{{ entry.relation }}</span>
 											</div>
-											<div *ngFor="let advice of entry.advices; index as i" class="info-box">
+											<div *ngFor="let advice of entry.advices; index as i" class="info-box" [hidden]="advice.indexOf('ALWAYS') > -1">
 												<i class="fa-solid fa-star-of-life advice-icon"></i><span class="info-message">{{ advice }}</span>
 											</div>
 										</div>
@@ -110,7 +110,7 @@
 
 		<ng-template #toBeDevelopedModal let-modal>
 			<div class="modal-header rt2-modal-header">
-				<div class="modal-title">To be developed</div>
+				<div class="modal-title">Coming soon</div>
 				<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
 					<span aria-hidden="true">&times;</span>
 				</button>
