@@ -34,7 +34,6 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	projectRelations = [];
 	mapAdvices = [];
 	updateAdviceList = [];
-	adviceToAdd = '';
 	viewOptions = [
 		{ value: 'all', display: 'All' },
 		{ value: 'public', display: 'Public' },
@@ -321,8 +320,6 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 						if (b >= 1) {
 							spanned = true;
 						}
-					} else {
-						//results.mapEntries[b].group = '';
 					}
 					if (this.numOfGroups < results.mapEntries[b].group) {
 						this.numOfGroups = results.mapEntries[b].group;
@@ -349,13 +346,10 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 							'group': results.mapEntries[b].group,
 							'priority': results.mapEntries[b].priority,
 						});
-
 						count++;
 					}
 				}
-
 				this.mapsetData = data;
-				this.resizeSectionView();
 
 				this.breadcrumbService.setBreadcrumbs([
 					{ path: '/library', label: 'Library' },
@@ -371,7 +365,6 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 
 	addMapGroup() {
 		this.numOfGroups++;
-		this.resizeSectionView();
 	}
 
 	removeMapGroup(groupNum: number) {
@@ -382,7 +375,6 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		});
 		this.numOfGroups--;
 		this.userChanged = true;
-		this.resizeSectionView();
 	}
 
 	addEmptyTargetToGroup(groupNum: number) {
@@ -426,7 +418,6 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 			};
 
 			this.mapsetData[0].mapEntries.push(newMapEntry);
-			this.resizeSectionView();
 		} else {
 			for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
 				if (this.mapsetData[0].mapEntries[p].uuid === this.selectedTarget) {
@@ -459,7 +450,6 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 			}
 		}
 		this.userChanged = true;
-		this.resizeSectionView();
 	}
 
 	setSelectedTarget(uuid: string, code: string, name: string) {
@@ -510,7 +500,6 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				uuid: this.numOfGroups + nextPriorityNum + Date.now(),
 			};
 			this.mapsetData[0].mapEntries.push(newMapEntry);
-			this.resizeSectionView();
 		} else {
 			for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
 				if (this.mapsetData[0].mapEntries[p].uuid === this.selectedTarget) {
@@ -604,11 +593,11 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 					entry.addAdviceList.sort((a, b) => (a > b ? 1 : -1));
 					entry.updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
 					entry.advices_open = true;
+					entry.adviceToAdd = '';
 				}
 			});
 		});
 		this.updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
-		this.adviceToAdd = '';
 		const popHeight = 0;
 
 		const showInterval = setInterval(() => {
@@ -623,15 +612,15 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.mapsetData.forEach((data) => {
 			data.mapEntries.forEach((entry) => {
 				if (entry.uuid === uuid) {
-					entry.updateAdviceList.push(this.adviceToAdd);
+					entry.updateAdviceList.push(entry.adviceToAdd);
 					entry.updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
-					entry.addAdviceList.splice(entry.addAdviceList.indexOf(this.adviceToAdd), 1);
+					entry.addAdviceList.splice(entry.addAdviceList.indexOf(entry.adviceToAdd), 1);
 					entry.addAdviceList.sort((a, b) => (a > b ? 1 : -1));
+					entry.adviceToAdd = null;
+					entry.adviceToAdd = '';
 				}
 			});
 		});
-		this.adviceToAdd = null;
-		this.adviceToAdd = '';
 	}
 
 	removeAdviceFromList(uuid: string, advice: string) {
@@ -646,8 +635,6 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				}
 			});
 		});
-		this.adviceToAdd = null;
-		this.adviceToAdd = '';
 	}
 
 	setAdvice(uuid: string) {
@@ -663,10 +650,11 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	closePopover() {
-		this.adviceToAdd = '';
 		this.mapsetData.forEach((data) => {
 			data.mapEntries.forEach((entry) => {
 				if (entry.advices_open) {
+					entry.adviceToAdd = null;
+					entry.adviceToAdd = '';
 					entry.advices_open = false;
 				}
 			});
@@ -734,50 +722,14 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 			this[section] = true;
 			this.onResize(undefined);
 		}
-
-		this.resizeSectionView();
-	}
-
-	resizeSectionView() {
-		const sectionHeight = $('.section-background').parent().parent().height();
-		let sectionsMinHeight = 0;
-		let sectionsMaxHeight = 0;
-
-		sectionsMinHeight = 0; //185;
-		const sectionsSectionHeight = 0; //180; //242;
-		if (this.showConfigSection && this.showBrowserSection) {
-			sectionsMaxHeight = sectionHeight - sectionsSectionHeight - sectionsMinHeight * 2;
-		} else {
-			if (this.showConfigSection || this.showBrowserSection) {
-				sectionsMaxHeight = sectionHeight - sectionsSectionHeight - sectionsMinHeight;
-			}
-		}
-		//get total heights of target rows by uuid then do the math?
-		const targetConfigHeight = this.mapsetData[0].mapEntries.length * 75 + (this.numOfGroups + 1) * 100 + 75;
-
-		if (this.showConfigSection) {
-			document.getElementsByClassName('config-section')[0]?.setAttribute('style', `max-height: ${targetConfigHeight}px !important;`);
-			document.getElementsByClassName('config-section')[0]?.setAttribute('style', `min-height: ${targetConfigHeight}px !important;`);
-			document.getElementsByClassName('config-section')[0]?.setAttribute('style', `height: ${targetConfigHeight}px;`);
-			document.getElementsByClassName('config-scrolling-section')[0]?.setAttribute('style', `max-height: ${targetConfigHeight}px !important;`);
-			document.getElementsByClassName('config-scrolling-section')[0]?.setAttribute('style', `min-height: ${targetConfigHeight}px !important;`);
-			document.getElementsByClassName('config-scrolling-section')[0]?.setAttribute('style', `height: ${targetConfigHeight}px;`);
-		}
-		if (this.showBrowserSection) {
-			//	document.getElementsByClassName('browser-section')[0]?.setAttribute('style', `max-height: ${68}px;`);
-		}
 	}
 
 	onResize(event) {
-		/*to do control advice popover position when resizing/scrolling
-		this.advicePopoverLocationY = event.pageY + 20 + 'px';
-		this.advicePopoverLocationX = event.pageX - 150 + 'px';*/
+		this.closePopover();
 	}
 
 	@HostListener('window:scroll', ['$event'])
 	onScroll(event) {
-		/*to do control advice popover position when resizing/scrolling
-		this.advicePopoverLocationY = event.pageY + 20 + 'px';
-		this.advicePopoverLocationX = event.pageX - 150 + 'px';*/
+		this.closePopover();
 	}
 }

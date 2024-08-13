@@ -723,10 +723,13 @@
 }
 
 .config-section {
-	//min-height: 282px;
-	height: 282px;
-	//max-height: 282px;
+	display: flex;
+	flex-direction: column;
 	padding-left: 0 !important;
+}
+
+.config-scrolling-section {
+	height: 100%;
 }
 
 .browser-section {
