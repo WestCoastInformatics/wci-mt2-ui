@@ -89,8 +89,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	mapping: string;
 	routeParamsSubscription$: Subscription;
 	gridSelectAll = false;
-	advicePopoverLocationX = '0';
-	advicePopoverLocationY = '0';
+	advicePopoverLocation = 0;
 
 	selectedAction = '';
 	loaded = false;
@@ -324,6 +323,20 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 					if (this.numOfGroups < results.mapEntries[b].group) {
 						this.numOfGroups = results.mapEntries[b].group;
 					}
+					//remove advice ""
+					results.mapEntries[b].advices = results.mapEntries[b].advices.filter(function (res) {
+						return res !== '';
+					});
+					let adviceAlways = [];
+					adviceAlways = results.mapEntries[b].advices.filter(function (res) {
+						return res.indexOf('ALWAYS') > -1;
+					});
+					let mapAdvices = [];
+					mapAdvices = results.mapEntries[b].advices.filter(function (res) {
+						return res.indexOf('ALWAYS') === -1;
+					});
+					results.mapEntries[b].mapAdvices = mapAdvices;
+					results.mapEntries[b].adviceAlways = adviceAlways;
 					if (!spanned) {
 						data.push({
 							'index': results.code + count,
@@ -399,22 +412,24 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				}
 			}
 			const newMapEntry = {
-				active: true,
-				additionalMapEntryInfos: [],
-				advices: [],
-				block: 0,
-				created: null,
-				group: groupNum,
-				id: null,
-				modified: null,
-				modifiedBy: null,
-				moduleId: this.tempModuleIdChangeBeforeRelease,
-				priority: nextPriorityNum,
-				relation: defaultRelationship,
-				rule: defaultRule,
-				toCode: '',
-				toName: '[NO TARGET]',
-				uuid: groupNum + nextPriorityNum + Date.now(),
+				'active': true,
+				'additionalMapEntryInfos': [],
+				'mapAdvices': [],
+				'adviceAlways': [],
+				'advices': [],
+				'block': 0,
+				'created': null,
+				'group': groupNum,
+				'id': null,
+				'modified': null,
+				'modifiedBy': null,
+				'moduleId': this.tempModuleIdChangeBeforeRelease,
+				'priority': nextPriorityNum,
+				'relation': defaultRelationship,
+				'rule': defaultRule,
+				'toCode': '',
+				'toName': '[NO TARGET]',
+				'uuid': groupNum + nextPriorityNum + Date.now(),
 			};
 
 			this.mapsetData[0].mapEntries.push(newMapEntry);
@@ -482,22 +497,24 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				}
 			}
 			const newMapEntry = {
-				active: true,
-				additionalMapEntryInfos: [],
-				advices: [],
-				block: 0,
-				created: null,
-				group: this.numOfGroups,
-				id: null,
-				modified: null,
-				modifiedBy: null,
-				moduleId: this.tempModuleIdChangeBeforeRelease,
-				priority: nextPriorityNum,
-				relation: defaultRelationship,
-				rule: defaultRule,
-				toCode: this.targetCodeInput,
-				toName: this.targetNameInput,
-				uuid: this.numOfGroups + nextPriorityNum + Date.now(),
+				'active': true,
+				'additionalMapEntryInfos': [],
+				'mapAdvices': [],
+				'adviceAlways': [],
+				'advices': [],
+				'block': 0,
+				'created': null,
+				'group': this.numOfGroups,
+				'id': null,
+				'modified': null,
+				'modifiedBy': null,
+				'moduleId': this.tempModuleIdChangeBeforeRelease,
+				'priority': nextPriorityNum,
+				'relation': defaultRelationship,
+				'rule': defaultRule,
+				'toCode': this.targetCodeInput,
+				'toName': this.targetNameInput,
+				'uuid': this.numOfGroups + nextPriorityNum + Date.now(),
 			};
 			this.mapsetData[0].mapEntries.push(newMapEntry);
 		} else {
@@ -528,6 +545,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 
 		for (let m = 0; m < this.mapsetData[0].mapEntries.length; m++) {
 			const uiEntry = this.mapsetData[0].mapEntries[m];
+
 			const mapEntry = {
 				'advices': uiEntry.advices,
 				'toCode': uiEntry.toCode,
@@ -577,7 +595,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				}
 				if (entry.uuid === uuid) {
 					entry.addAdviceList = [];
-					entry.updateAdviceList = JSON.parse(JSON.stringify(entry.advices));
+					entry.updateAdviceList = JSON.parse(JSON.stringify(entry.mapAdvices));
 					this.mapAdvices.forEach((map) => {
 						let found = false;
 						entry.updateAdviceList.forEach((advice) => {
@@ -601,8 +619,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		const popHeight = 0;
 
 		const showInterval = setInterval(() => {
-			this.advicePopoverLocationY = event.pageY + 20 + 'px';
-			this.advicePopoverLocationX = event.pageX - 150 + 'px';
+			this.advicePopoverLocation = event.layerY + event.offsetY;
 			clearInterval(showInterval);
 		}, 5);
 	}
@@ -612,12 +629,14 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.mapsetData.forEach((data) => {
 			data.mapEntries.forEach((entry) => {
 				if (entry.uuid === uuid) {
-					entry.updateAdviceList.push(entry.adviceToAdd);
-					entry.updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
-					entry.addAdviceList.splice(entry.addAdviceList.indexOf(entry.adviceToAdd), 1);
-					entry.addAdviceList.sort((a, b) => (a > b ? 1 : -1));
-					entry.adviceToAdd = null;
-					entry.adviceToAdd = '';
+					if (entry.adviceToAdd !== '') {
+						entry.updateAdviceList.push(entry.adviceToAdd);
+						entry.updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
+						entry.addAdviceList.splice(entry.addAdviceList.indexOf(entry.adviceToAdd), 1);
+						entry.addAdviceList.sort((a, b) => (a > b ? 1 : -1));
+						entry.adviceToAdd = null;
+						entry.adviceToAdd = '';
+					}
 				}
 			});
 		});
@@ -628,6 +647,8 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.mapsetData.forEach((data) => {
 			data.mapEntries.forEach((entry) => {
 				if (entry.uuid === uuid) {
+					entry.adviceToAdd = null;
+					entry.adviceToAdd = '';
 					entry.addAdviceList.push(advice);
 					entry.addAdviceList.sort((a, b) => (a > b ? 1 : -1));
 					entry.updateAdviceList.splice(entry.updateAdviceList.indexOf(advice), 1);
@@ -642,7 +663,11 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.mapsetData.forEach((data) => {
 			data.mapEntries.forEach((entry) => {
 				if (entry.uuid === uuid) {
-					entry.advices = entry.updateAdviceList;
+					entry.mapAdvices = JSON.parse(JSON.stringify(entry.updateAdviceList));
+					entry.advices = JSON.parse(JSON.stringify(entry.mapAdvices));
+					if (entry.adviceAlways.length > 0) {
+						entry.advices.unshift(entry.adviceAlways[0]);
+					}
 					entry.advices_open = false;
 				}
 			});
@@ -725,11 +750,11 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	onResize(event) {
-		this.closePopover();
+		//this.closePopover();
 	}
 
 	@HostListener('window:scroll', ['$event'])
 	onScroll(event) {
-		this.closePopover();
+		//this.closePopover();
 	}
 }

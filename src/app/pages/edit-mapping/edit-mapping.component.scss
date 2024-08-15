@@ -4,8 +4,7 @@
 .advice-popover {
 	position: absolute;
 	z-index: 15;
-	top: 200px;
-	margin-left: -5%;
+	margin-left: -75px !important;
 	padding: 2px 2px 2px 2px;
 	border-radius: 5px;
 	border: 1px solid #aaaaaa;
@@ -17,7 +16,6 @@
 	min-width: 300px;
 	max-width: 300px;
 	gap: 0 !important;
-	margin-left: 0 !important;
 	ul {
 		margin-left: 0 !important;
 	}
@@ -605,6 +603,7 @@
 	line-height: 12px;
 	font-size: 12px;
 	padding: 0;
+	position: relative;
 }
 
 .advice-icon {
