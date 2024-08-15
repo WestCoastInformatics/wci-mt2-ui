@@ -65,7 +65,8 @@
 			</div>
 			<div class="col-md-auto p-l-10">
 				<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
-					<mat-select title="Actions" placeholder="Actions" [(value)]="selectedAction" (selectionChange)="downloadMapsets()">
+					<mat-select #actions title="Actions" placeholder="Actions" [(value)]="selectedAction" (selectionChange)="selectAction()">
+						<mat-option value="edit" class="no-checkbox" [disabled]="checkedNum !== 1">Edit Selected Mapping</mat-option>
 						<mat-option value="selected" class="no-checkbox">Download Selected Mappings</mat-option>
 						<mat-option value="all" class="no-checkbox">Download Entire Map Set</mat-option>
 					</mat-select>
@@ -105,7 +106,7 @@
 
 								<div *ngFor="let entry of record.mapEntries; index as x" class="row col-12 second-row">
 									<div class="col-4 row mb-3">
-										<div class="record-num col-1">{{ entry.group || '1' }}/{{ record.mapEntries.length }}</div>
+										<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
 										<div class="record-code col-2">{{ entry.toCode }}</div>
 										<div class="record-name col-8">{{ entry.toName }}</div>
 									</div>
@@ -113,7 +114,7 @@
 										<div class="info-box">
 											<i class="fa-regular fa-handshake relation-icon"></i><span class="info-message">{{ entry.relation }}</span>
 										</div>
-										<div *ngFor="let advice of entry.advices; index as i" class="info-box">
+										<div *ngFor="let advice of entry.advices; index as i" class="info-box" [hidden]="advice.indexOf('ALWAYS') > -1">
 											<i class="fa-solid fa-star-of-life advice-icon"></i><span class="info-message">{{ advice }}</span>
 										</div>
 									</div>
@@ -265,11 +266,12 @@
 
 	<!-- Advice Templates -->
 	<ng-template #directoryAdviceSection let-params>
-		<div class="advice-column" [ngStyle]="{ 'line-height': 50 / getValueLength(params) > 10 ? 50 / getValueLength(params) + 'px' : 10 + 'px' }">
+		<div class="advice-column" [ngStyle]="{ 'line-height': 50 / getValueLength(params) > 10 ? 50 / getValueLength(params) + 'px' : 10 + 'px' }" [hidden]="getValueLength(params) === 0">
 			<div *ngFor="let item of getValueList(params)">
-				<span title="{{ item }}">{{ item }}</span>
+				<span title="{{ item }}" [hidden]="item.indexOf('ALWAYS') > -1">{{ item }}</span>
 			</div>
 		</div>
+		<div [hidden]="getValueLength(params) > 0">---</div>
 	</ng-template>
 
 	<ng-template #directoryCodeSection let-params>
@@ -305,7 +307,7 @@
 
 	<ng-template #toBeDevelopedModal let-modal>
 		<div class="modal-header rt2-modal-header">
-			<div class="modal-title">To be developed</div>
+			<div class="modal-title">Coming soon</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
 				<span aria-hidden="true">&times;</span>
 			</button>

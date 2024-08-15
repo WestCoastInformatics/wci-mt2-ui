@@ -998,10 +998,14 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 	border-bottom: 1px solid $standard_primary_button_color;
 }
 
+.mat-mdc-form-field-subscript-wrapper {
+	display: none;
+}
+
 .clear-search {
 	color: #444;
 	position: relative;
-	left: -10px;
+	left: -15px;
 	top: 0.05em;
 	cursor: pointer;
 }

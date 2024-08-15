@@ -42,6 +42,10 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + 'project/search', params, false);
 	}
 
+	getMapProjectById(id: string, params: any): Observable<any> {
+		return this.get(this.contextPath + `mapproject/${id}`, params, false);
+	}
+
 	getTeams(params: any): Observable<any> {
 		return this.get(this.contextPath + 'team/search', params, false);
 	}
@@ -317,6 +321,14 @@ export class RefsetService extends RestService {
 
 	getMappingByMapsetAndConcept(mapset: string, concept: string): Observable<any> {
 		return this.get(this.contextPath + `mapset/${mapset}/mappings/${concept}`, '', false);
+	}
+
+	getConceptByCode(terminology: string, version: string, code: string): Observable<any> {
+		return this.get(this.contextPath + `concept/${terminology}/${version}/${code}`, '', false);
+	}
+
+	updateMapsetMapping(mapSetCode: string, params): Observable<any> {
+		return this.put(this.contextPath + `mapset/${mapSetCode}`, params);
 	}
 
 	getEditions(params: any): Observable<any> {

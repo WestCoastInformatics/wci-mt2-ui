@@ -8,8 +8,16 @@
 		<div
 			class="rt2-breadcrumb-bar text-ghost-grey"
 			[class]="breadcrumbs.length > 1 && projectRole.length > 8 ? 'extended-breadcrumb-and-roles' : breadcrumbs.length > 2 ? 'extended-breadcrumb' : 'display: flex'">
-			<div *ngFor="let breadcrumb of breadcrumbs" title="{{ breadcrumb.label }}" aria-label="{{ breadcrumb.label }}" [class]="breadcrumb.class" (click)="navigate(breadcrumb.id)">
-				{{ breadcrumb.label }}
+			<div
+				*ngFor="let breadcrumb of breadcrumbs"
+				title="{{ breadcrumb.label }}"
+				aria-label="{{ breadcrumb.label }}"
+				[class]="breadcrumb.class"
+				[ngClass]="{ 'multi-crumbs': breadcrumbs.length > 2 }"
+				(click)="navigate(breadcrumb.id)">
+				<div class="ellipsed-label">
+					{{ breadcrumb.label }}
+				</div>
 			</div>
 		</div>
 
