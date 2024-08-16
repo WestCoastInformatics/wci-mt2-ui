@@ -631,8 +631,8 @@ export class MapsetRecordsComponent implements OnInit {
 									'name': results[a].name,
 									'toName': results[a].mapEntries[b].toName.length > 0 && results[a].mapEntries[b].toName !== ' DOES NOT EXIST' ? results[a].mapEntries[b].toName : '---',
 									'toCode':
-										results[a].mapEntries[b].toCode.length > 0
-											? results[a].mapEntries[b].group + '/' + results[a].mapEntries.length + '#' + results[a].mapEntries[b].toCode
+										results[a].mapEntries[b].toName.length > 0
+											? results[a].mapEntries[b].group + '/' + results[a].mapEntries[b].priority + '#' + results[a].mapEntries[b].toCode
 											: 'No map entries available.',
 									'rule': results[a].mapEntries[b].rule.length > 0 ? results[a].mapEntries[b].rule : '---',
 									'relation': results[a].mapEntries[b].relation.length > 0 ? results[a].mapEntries[b].relation : '---',
