@@ -219,8 +219,12 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 						clearInterval(ddInterval);
 					}, 2);
 				}
+				this.selectedAction = '';
+				this.actions.value = this.selectedAction;
 				break;
 			case 'review':
+				this.selectedAction = '';
+				this.actions.value = this.selectedAction;
 				this.openToBeDevelopedModal(this.tbdModal);
 				break;
 		}

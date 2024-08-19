@@ -14,7 +14,7 @@
 <div class="dropdown-group row edit-actions" *ngIf="loaded">
 	<div class="col-10">
 		<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
-			<mat-select title="Authoring Actions" placeholder="Authoring Actions" [(value)]="selectedAction" (selectionChange)="selectActionMenu()">
+			<mat-select #actions title="Authoring Actions" placeholder="Authoring Actions" [(value)]="selectedAction" (selectionChange)="selectActionMenu()">
 				<mat-option value="note" class="no-checkbox">View or Add Authoring Note</mat-option>
 				<mat-option value="comm" class="no-checkbox">View or Add Authoring Communication</mat-option>
 				<mat-option value="review" class="no-checkbox">Request Review</mat-option>
@@ -153,21 +153,31 @@
 						</div>
 						<div class="target-selection" *ngIf="entry.toName.indexOf('[NO TARGET]') > -1 || entry.toName.indexOf(' CONCEPT NOT FOUND') > -1">
 							<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
-								<mat-select title="Select a Relationship" placeholder="Select a Relationship" [(value)]="entry.relation" (selectionChange)="userChangeSelection()">
+								<mat-select
+									#selectRelationship
+									title="Select a Relationship"
+									placeholder="Select a Relationship"
+									[(value)]="entry.relation"
+									(selectionChange)="userChangeSelection('norelation')">
 									<mat-option *ngFor="let map of noTargetRelations" value="{{ map }}" class="no-checkbox">{{ map }}</mat-option>
 								</mat-select>
 							</mat-form-field>
 						</div>
 						<div class="target-selection" *ngIf="entry.toName.indexOf('[NO TARGET]') === -1 && entry.toName.indexOf(' CONCEPT NOT FOUND') === -1">
 							<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
-								<mat-select title="Select a Relationship" placeholder="Select a Relationship" [(value)]="entry.relation" (selectionChange)="userChangeSelection()">
+								<mat-select
+									#selectRelationship
+									title="Select a Relationship"
+									placeholder="Select a Relationship"
+									[(value)]="entry.relation"
+									(selectionChange)="userChangeSelection('relation')">
 									<mat-option *ngFor="let map of targetRelations" value="{{ map }}" class="no-checkbox">{{ map }}</mat-option>
 								</mat-select>
 							</mat-form-field>
 						</div>
 						<div class="target-selection">
 							<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
-								<mat-select title="Select a Rule" placeholder="Select a Rule" [(value)]="record.rule" (selectionChange)="userChangeSelection()">
+								<mat-select #selectRule title="Select a Rule" placeholder="Select a Rule" [(value)]="record.rule" (selectionChange)="userChangeSelection('rule')">
 									<mat-option value="TRUE" class="no-checkbox">TRUE</mat-option>
 									<mat-option value="Gender - Female" class="no-checkbox" [hidden]="!ruleBased">Gender - Female</mat-option>
 									<mat-option value="Gender - Male" class="no-checkbox" [hidden]="!ruleBased">Gender - Male</mat-option>
@@ -234,8 +244,7 @@
 		</ul>
 		<div class="target-selection advice-selection" [hidden]="entry.addAdviceList?.length === 0">
 			<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
-				<mat-select title="Select advice to add" placeholder="Select advice to add" [(value)]="entry.adviceToAdd" (selectionChange)="addAdviceToList(entry.uuid)">
-					<mat-option value="''" class="no-checkbox">Select advice to add</mat-option>
+				<mat-select #selectAdvice title="Select advice to add" placeholder="Select advice to add" [(value)]="entry.adviceToAdd" (selectionChange)="addAdviceToList(entry.uuid)">
 					<mat-option *ngFor="let advice of entry.addAdviceList" value="{{ advice }}" title="{{ advice }}" class="no-checkbox">{{ advice }}</mat-option>
 				</mat-select>
 			</mat-form-field>
@@ -260,7 +269,7 @@
 
 <ng-template #toBeDevelopedModal let-modal>
 	<div class="modal-header rt2-modal-header">
-		<div class="modal-title">Coming soon</div>
+		<div class="modal-title">Coming Soon</div>
 		<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
 			<span aria-hidden="true">&times;</span>
 		</button>

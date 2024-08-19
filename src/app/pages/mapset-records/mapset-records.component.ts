@@ -186,7 +186,7 @@ export class MapsetRecordsComponent implements OnInit {
 							'    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>' +
 							'    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>' +
 							'    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>' +
-							'    <label class="checkbox-override"><input type="checkbox" onclick="checkboxHandleClick(event)" title="Check/Uncheck All" >' +
+							'    <label class="checkbox-override"><input type="checkbox" onclick="checkboxHandleClick()" id="checkbox-table-all" >' +
 							'    <span class="checkbox-container"></span></label>' +
 							'    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
 							'  </div>' +
@@ -315,7 +315,7 @@ export class MapsetRecordsComponent implements OnInit {
 				},
 				{
 					field: 'downloadable',
-					colId: 'actions',
+					colId: 'action-btns',
 					headerName: '',
 					width: 90,
 					cellClass: 'rt2-directory-column-actions',
@@ -405,134 +405,21 @@ export class MapsetRecordsComponent implements OnInit {
 		this.showMapTable = value;
 	}
 
-	//***** AG Grid Functions *****/
-	/*onGridReady = (gridReadyParams) => {
-		this.originalGridParams = gridReadyParams;
-		this.refsetGridApi = gridReadyParams.api;
-		this.refsetGridApi.setFilterModel(null);
-		this.refsetGridColumnApi = gridReadyParams.columnApi;
-		this.onResize(undefined);
-		this.loaded = false;
-		const _window = window;
-		_window['checkboxHandleClick'] = (event) => {
-			this.gridSelectAll == undefined || this.gridSelectAll ? (this.gridSelectAll = false) : (this.gridSelectAll = true);
-			this.mapsetData = this.mapsetData.map((set) => {
-				set.checked = this.gridSelectAll;
-				return set;
-			});
-			this.refsetGridApi.setRowData(this.mapsetData);
-			this.refsetGridApi.forEachNode((node) => node.setSelected(this.gridSelectAll));
-		};
-
-		this.refsetGridApi.showLoadingOverlay();
-		let query = '';
-
-		if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
-			query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
-		}
-
-		const pageNumber = 1; //this.refsetGridApi.paginationGetPageSize();
-
-		this.refsetGridPaging.totalRows = null;
-		this.refsetGridPaging.totalKnown = false;
-		this.refsetGridApi?.api?.paginationGoToPage(0);
-
-		const restParams: any = {
-			offset: pageNumber - 1,
-			limit: this.refsetGridApi.paginationGetPageSize(),
-		};
-
-		if (CodeUtility.hasValue(query)) {
-			query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
-			restParams.filter = query;
-		} else {
-			restParams.filter = '';
-		}
-
-		this.refsetService.getMappingsByMapset(this.mapsetCode, restParams).subscribe({
-			next: (results) => {
-				this.loaded = false;
-				const mapsetResults = results;
-				results = results.items;
-
-				const data = [];
-				let count = 0;
-
-				for (let a = 0; a < results.length; a++) {
-					for (let b = 0; b < results[a].mapEntries.length; b++) {
-						let spanned = false;
-						if (results[a].mapEntries.length > 1) {
-							if (b >= 1) {
-								spanned = true;
-							}
-						} else {
-							results[a].mapEntries[b].group = '';
-						}
-						data.push({
-							'index': count,
-							'spanned': spanned,
-							'downloadable': true,
-							'mapEntries': results[a].mapEntries,
-							'entries': results[a].mapEntries.length,
-							'code': results[a].code,
-							'name': results[a].name,
-							'toName': results[a].mapEntries[b].toName.length > 0 && results[a].mapEntries[b].toName !== ' DOES NOT EXIST' ? results[a].mapEntries[b].toName : '---',
-							'toCode':
-								results[a].mapEntries[b].toCode.length > 0
-									? results[a].mapEntries[b].group + '/' + results[a].mapEntries.length + '#' + results[a].mapEntries[b].toCode
-									: 'No map entries available.',
-							'rule': results[a].mapEntries[b].rule.length > 0 ? results[a].mapEntries[b].rule : '---',
-							'relation': results[a].mapEntries[b].relation.length > 0 ? results[a].mapEntries[b].relation : '---',
-							'modified': results[a].mapEntries[b].modified,
-							'advices': results[a].mapEntries[b].advices,
-							'group': results[a].mapEntries[b].group,
-							'priority': results[a].mapEntries[b].priority,
-						});
-						count++;
-					}
-				}
-
-				this.mapsetData = data;
-				mapsetResults.items = this.mapsetData;
-				this.numOfMembers = mapsetResults.total; //total;
-				this.numOfResults = mapsetResults.total; //total;
-
-				if (mapsetResults.items.length == 0) {
-					this.refsetGridPaging.totalKnown = true;
-					this.refsetGridApi.showNoRowsOverlay();
-					this.refsetGridApi.setRowData([]);
-
-					if (pageNumber > 1) {
-						this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
-						this.refsetGridPaging.totalKnown = true;
-						this.paginationComponent.goToPage(pageNumber - 1);
-					}
-
-					return;
-				}
-				
-				UiUtility.applyServerPagedGridResults(mapsetResults, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
-
-				this.loaded = true;
-			},
-			error: (error) => {
-				this.refsetGridApi.showNoRowsOverlay();
-				this.refsetGridApi.setRowData([]);
-			},
+	checkboxAllClick(source) {
+		this.gridSelectAll == undefined || this.gridSelectAll ? (this.gridSelectAll = false) : (this.gridSelectAll = true);
+		this.mapsetData = this.mapsetData.map((set) => {
+			set.checked = this.gridSelectAll;
+			return set;
 		});
+		switch (source) {
+			case 'record':
+				break;
+			case 'table':
+				this.refsetGridApi.forEachNode((node) => node.setSelected(this.gridSelectAll));
+				break;
+		}
+	}
 
-		// set placeholders on the grid floating filter fields
-		Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
-			if (obj.attributes['disabled']) {
-				// skip columns with disabled filter
-				return;
-			}
-
-			const label = obj.getAttribute('aria-label');
-			const value = label.substring(0, label.indexOf('Filter Input')) + '...';
-			obj.setAttribute('placeholder', value);
-		});
-	};*/
 	onGridReady = (gridReadyParams) => {
 		this.refsetGridApi = gridReadyParams.api;
 		//this.columnDefs[4].cellRendererParams = { template: this.descriptionSection };
@@ -541,13 +428,8 @@ export class MapsetRecordsComponent implements OnInit {
 		this.refsetGridColumnApi = gridReadyParams.columnApi;
 
 		const _window = window;
-		_window['checkboxHandleClick'] = (event) => {
-			this.gridSelectAll == undefined || this.gridSelectAll ? (this.gridSelectAll = false) : (this.gridSelectAll = true);
-			this.mapsetData = this.mapsetData.map((set) => {
-				set.checked = this.gridSelectAll;
-				return set;
-			});
-			this.refsetGridApi.forEachNode((node) => node.setSelected(this.gridSelectAll));
+		_window['checkboxHandleClick'] = () => {
+			this.checkboxAllClick('table');
 		};
 
 		if (this.mapSetSubscription) {
@@ -615,29 +497,29 @@ export class MapsetRecordsComponent implements OnInit {
 										spanned = true;
 									}
 								} else {
-									results[a].mapEntries[b].group = '';
+									//results[a].mapEntries[b].group = '';
 								}
 								const adviceArray = [];
 								for (let i = 0; i < results[a].mapEntries[b].advices.length; i++) {
 									adviceArray.push(results[a].mapEntries[b].advices[i]);
 								}
 								data.push({
-									'index': a + results[a].code + count,
+									'index': results[a].code !== '' ? a + results[a].code + count : false,
 									'spanned': spanned,
-									'downloadable': true,
+									'downloadable': results[a].code !== '' ? true : false,
 									'mapEntries': results[a].mapEntries,
 									'entries': results[a].mapEntries.length,
 									'code': results[a].code,
 									'name': results[a].name,
 									'toName': results[a].mapEntries[b].toName.length > 0 && results[a].mapEntries[b].toName !== ' DOES NOT EXIST' ? results[a].mapEntries[b].toName : '---',
 									'toCode':
-										results[a].mapEntries[b].toName.length > 0
-											? results[a].mapEntries[b].group + '/' + results[a].mapEntries[b].priority + '#' + results[a].mapEntries[b].toCode
+										results[a].mapEntries.length > 0
+											? results[a].mapEntries[b].group + '/' + results[a].mapEntries[b].priority + '&' + results[a].mapEntries.length + '#' + results[a].mapEntries[b].toCode
 											: 'No map entries available.',
 									'rule': results[a].mapEntries[b].rule.length > 0 ? results[a].mapEntries[b].rule : '---',
 									'relation': results[a].mapEntries[b].relation.length > 0 ? results[a].mapEntries[b].relation : '---',
 									'modified': results[a].mapEntries[b].modified,
-									'advices': { 'number': adviceArray.length, 'list': adviceArray },
+									'advices': results[a].code !== '' ? { 'number': adviceArray.length, 'list': adviceArray } : { 'number': -1, 'list': [] },
 									'group': results[a].mapEntries[b].group,
 									'priority': results[a].mapEntries[b].priority,
 								});
@@ -646,7 +528,7 @@ export class MapsetRecordsComponent implements OnInit {
 						}
 
 						this.mapsetData = data;
-						this.mapsetData = this.mapsetData.sort((a, b) => (a.name > b.name ? 1 : -1));
+						//this.mapsetData = this.mapsetData.sort((a, b) => (a.name > b.name ? 1 : -1));
 						mapsetResults.items = this.mapsetData;
 						this.numOfMembers = mapsetResults.total;
 						this.numOfResults = mapsetResults.total;
@@ -796,7 +678,7 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	onGridCellClick = (event) => {
-		if (event.column.colId !== 'checkbox' && event.column.colId !== 'actions') {
+		if (event.column.colId !== 'checkbox' && event.column.colId !== 'action-btns') {
 			this.goToMappingPage(event.data.code);
 		}
 		/*
@@ -826,13 +708,13 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	selectAction() {
-		//const selectedRows = this.refsetGridApi.getSelectedRows();
-		//	console.log('change action ', this.selectedAction);
-
 		switch (this.selectedAction) {
+			case 'select':
+				window['checkbox-table-all'].click();
+				this.selectedAction = '';
+				this.actions.value = this.selectedAction;
+				break;
 			case 'edit':
-				//console.log(selectedRows);
-
 				if (this.checkedNum === 1) {
 					for (let c = 0; c < this.mapsetData.length; c++) {
 						if (this.mapsetData[c].checked === true) {
@@ -843,12 +725,18 @@ export class MapsetRecordsComponent implements OnInit {
 							}, 2);
 						}
 					}
+					this.selectedAction = '';
+					this.actions.value = this.selectedAction;
 				}
 				break;
 			case 'selected':
+				this.selectedAction = '';
+				this.actions.value = this.selectedAction;
 				this.downloadMapsets();
 				break;
 			case 'all':
+				this.selectedAction = '';
+				this.actions.value = this.selectedAction;
 				this.downloadMapsets();
 				break;
 		}
