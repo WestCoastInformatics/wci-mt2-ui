@@ -117,6 +117,10 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
 	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
+	@ViewChild('actions') private actions: MatSelect;
+	@ViewChild('selectRelationship') private selectRelationship: MatSelect;
+	@ViewChild('selectRule') private selectRule: MatSelect;
+	@ViewChild('selectAdvice') private selectAdvice: MatSelect;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -531,7 +535,18 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.userChanged = true;
 	}
 
-	userChangeSelection() {
+	userChangeSelection(selectBox) {
+		switch (selectBox) {
+			case 'norelation':
+				this.selectRelationship.value = '';
+				break;
+			case 'relation':
+				this.selectRelationship.value = '';
+				break;
+			case 'rule':
+				this.selectRule.value = '';
+				break;
+		}
 		this.userChanged = true;
 	}
 
@@ -571,7 +586,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 			mapping: saveMapset,
 			conceptCode: this.conceptCode,
 		};
-		console.log('save for MapSet', saveMapset);
+
 		this.userChanged = false;
 		this.refsetService.updateMapsetMapping(this.mapsetCode, saveMapset).subscribe(
 			(status) => {
@@ -640,6 +655,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				}
 			});
 		});
+		this.selectAdvice.value = '';
 	}
 
 	removeAdviceFromList(uuid: string, advice: string) {
@@ -725,10 +741,8 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	selectActionMenu() {
-		const ddInterval = setInterval(() => {
-			this.selectedAction = null;
-			clearInterval(ddInterval);
-		}, 1);
+		this.selectedAction = '';
+		this.actions.value = this.selectedAction;
 		this.openToBeDevelopedModal(this.tbdModal);
 	}
 

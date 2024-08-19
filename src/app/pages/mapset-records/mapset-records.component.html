@@ -66,6 +66,7 @@
 			<div class="col-md-auto p-l-10">
 				<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
 					<mat-select #actions title="Actions" placeholder="Actions" [(value)]="selectedAction" (selectionChange)="selectAction()">
+						<mat-option value="select" class="no-checkbox" *ngIf="showMapTable === 'record'">Check/Uncheck All</mat-option>
 						<mat-option value="edit" class="no-checkbox" [disabled]="checkedNum !== 1">Edit Selected Mapping</mat-option>
 						<mat-option value="selected" class="no-checkbox">Download Selected Mappings</mat-option>
 						<mat-option value="all" class="no-checkbox">Download Entire Map Set</mat-option>
@@ -99,7 +100,11 @@
 					<div class="record-row" [ngClass]="{ 'odd-row': 0 === i % 2 }" *ngIf="!record.spanned">
 						<div class="col-12 row">
 							<div class="d-flex col-10 row">
-								<div class="checkbox-column"><template [ngTemplateOutlet]="checkboxCustom" [ngOutletContext]="{ $implicit: record }"></template></div>
+								<div class="checkbox-column">
+									<label class="checkbox-override" title="Check/Uncheck All"
+										><input type="checkbox" (change)="checkboxRowSelect($event, record.index)" [checked]="record.checked" /><span class="checkbox-container"></span
+									></label>
+								</div>
 								<div class="col-11 code-name">
 									{{ record.name }}, <span class="code-link" (click)="goToMappingPage(record.code)">{{ record.code }}</span>
 								</div>
@@ -209,13 +214,8 @@
 
 	<!-- Check Templates -->
 	<ng-template #directoryCheckSection let-params>
-		<label class="checkbox-override"
+		<label class="checkbox-override" *ngIf="params?.value"
 			><input type="checkbox" (change)="checkboxRowSelect($event, params?.data?.index)" [checked]="params?.data?.checked" />' + ' <span class="checkbox-container"></span
-		></label>
-	</ng-template>
-	<ng-template #checkboxCustom let-params>
-		<label class="checkbox-override"
-			><input type="checkbox" (change)="checkboxRowSelect($event, params?.data?.index)" [checked]="params?.data?.checked" /><span class="checkbox-container"></span
 		></label>
 	</ng-template>
 
@@ -249,7 +249,7 @@
 
 	<!-- Action Templates -->
 	<ng-template #directoryActionSection let-params>
-		<div class="d-flex">
+		<div class="d-flex" *ngIf="params?.value === true">
 			<div class="col-6">
 				<div class="library-app-refset-notes" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
 					<img src="/assets/sticky-note.svg" title="View Notes" aria-label="View Notes" class="mapset-notes-icon" />
@@ -266,12 +266,12 @@
 
 	<!-- Advice Templates -->
 	<ng-template #directoryAdviceSection let-params>
-		<div class="advice-column" [ngStyle]="{ 'line-height': 50 / getValueLength(params) > 10 ? 50 / getValueLength(params) + 'px' : 10 + 'px' }" [hidden]="getValueLength(params) === 0">
+		<div class="advice-column" [ngStyle]="{ 'line-height': 50 / getValueLength(params) > 10 ? 50 / getValueLength(params) + 'px' : 10 + 'px' }" [hidden]="getValueLength(params) < 1">
 			<div *ngFor="let item of getValueList(params)">
 				<span title="{{ item }}" [hidden]="item.indexOf('ALWAYS') > -1">{{ item }}</span>
 			</div>
 		</div>
-		<div [hidden]="getValueLength(params) > 0">---</div>
+		<div [hidden]="getValueLength(params) !== 0">---</div>
 	</ng-template>
 
 	<ng-template #directoryCodeSection let-params>
@@ -279,9 +279,9 @@
 			{{ params?.value }}
 		</span>
 		<span *ngIf="params?.value !== 'No map entries available.' && params?.value !== undefined">
-			<mat-chip-list *ngIf="params?.value.split('#')[0] !== '/1'">
-				<mat-chip class="mapset-chip" title="{{ 'Group ' + params?.value.split('#')[0].split('/')[0] + ', Entry ' + params?.value.split('#')[0].split('/')[1] }}">
-					{{ params?.value.split('#')[0] }}
+			<mat-chip-list *ngIf="params?.value.split('#')[0] !== '1/1&1'">
+				<mat-chip class="mapset-chip" title="{{ 'Group ' + params?.value.split('#')[0].split('&')[0].split('/')[0] + ', Entry ' + params?.value.split('#')[0].split('&')[0].split('/')[1] }}">
+					{{ params?.value.split('#')[0].split('&')[0] }}
 				</mat-chip>
 			</mat-chip-list>
 			<span class="blue-link" title="{{ params?.value.split('#')[1] }}">{{ params?.value.split('#')[1] }}</span></span
@@ -307,7 +307,7 @@
 
 	<ng-template #toBeDevelopedModal let-modal>
 		<div class="modal-header rt2-modal-header">
-			<div class="modal-title">Coming soon</div>
+			<div class="modal-title">Coming Soon</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
 				<span aria-hidden="true">&times;</span>
 			</button>
