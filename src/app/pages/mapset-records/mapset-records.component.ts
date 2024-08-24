@@ -522,6 +522,7 @@ export class MapsetRecordsComponent implements OnInit {
 									'advices': results[a].code !== '' ? { 'number': adviceArray.length, 'list': adviceArray } : { 'number': -1, 'list': [] },
 									'group': results[a].mapEntries[b].group,
 									'priority': results[a].mapEntries[b].priority,
+									'released': results[a].mapEntries[b].released,
 								});
 								count++;
 							}
