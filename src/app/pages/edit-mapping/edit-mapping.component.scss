@@ -162,11 +162,6 @@
 	}
 }
 
-.rt2-container {
-	min-height: calc(100vh - 250px) !important;
-	max-height: calc(100vh - 250px) !important;
-}
-
 .target-selection-box:hover {
 	background-color: #f2f2f2;
 }
@@ -196,7 +191,7 @@
 }
 
 .edit-actions {
-	height: 50px;
+	height: 200px;
 	border: none !important;
 }
 
@@ -204,6 +199,8 @@
 	flex-direction: row;
 	display: flex;
 	gap: 24px;
+	padding-left: 0;
+	height: 140px;
 }
 
 .entry-column {
@@ -255,6 +252,8 @@
 
 .rt2-container {
 	padding-top: 0 !important;
+	min-height: calc(100vh - 400px) !important;
+	max-height: calc(100vh - 400px) !important;
 }
 
 .adjust-clear {

@@ -43,10 +43,8 @@
 			</button>
 		</span>
 	</div>
-</div>
-<div class="rt2-container" (window:resize)="onResize($event)" (scroll)="onResize($event)">
-	<div class="edit-container">
-		<div class="metadata-collapsible-container m-t-20 col">
+	<div class="edit-container mt-10">
+		<div class="metadata-collapsible-container col">
 			<div class="metadata-collapsible-container-group-header row">
 				<div class="metadata-collapsible-container-title page-header-font">
 					<span>Source Concept</span>
@@ -70,7 +68,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="metadata-collapsible-container m-t-20 col">
+		<div class="metadata-collapsible-container col">
 			<div class="metadata-collapsible-container-group-header row">
 				<div class="metadata-collapsible-container-title page-header-font btn-header">
 					<div class="entry-column">Selected Target Concept</div>
@@ -97,8 +95,8 @@
 									title="Set as Target"
 									class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
 									(click)="setTargetCode()"
-									[disabled]="!foundConceptCode"
-									(ngClass)="({ 'disabled': !foundConceptCode })">
+									[disabled]="!foundConceptCode || !selectedTarget"
+									(ngClass)="({ 'disabled': !foundConceptCode || !selectedTarget })">
 									Set as Target
 								</button>
 								<button type="button" title="Set Empty Target" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="addEmptyTargetToGroup(numOfGroups)">
@@ -115,6 +113,8 @@
 			</div>
 		</div>
 	</div>
+</div>
+<div class="rt2-container" (window:resize)="onResize($event)" (scroll)="onResize($event)">
 	<div class="metadata-collapsible-container col-md-12 config-scrolling-section">
 		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showConfigSection')">
 			<div class="metadata-collapsible-container-title page-header-font">

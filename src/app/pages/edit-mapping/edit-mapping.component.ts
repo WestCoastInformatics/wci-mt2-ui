@@ -396,59 +396,60 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	addEmptyTargetToGroup(groupNum: number) {
-		if (this.selectedTarget === '') {
-			let nextPriorityNum = 1;
-			for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
-				if (this.mapsetData[0].mapEntries[p].group === groupNum) {
-					if (this.mapsetData[0].mapEntries[p].priority >= nextPriorityNum) {
-						nextPriorityNum++;
-					}
+		//if (this.selectedTarget === '') {
+		let nextPriorityNum = 1;
+		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
+			if (this.mapsetData[0].mapEntries[p].group === groupNum) {
+				if (this.mapsetData[0].mapEntries[p].priority >= nextPriorityNum) {
+					nextPriorityNum++;
 				}
 			}
-			let defaultRule = '';
-			if (!this.ruleBased) {
-				defaultRule = 'TRUE';
+		}
+		let defaultRule = '';
+		if (!this.ruleBased) {
+			defaultRule = 'TRUE';
+		}
+		let defaultRelationship = '';
+		for (let r = 0; r < this.projectRelations.length; r++) {
+			if (this.projectRelations[r].allowableForNullTarget === true) {
+				defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
+				break;
 			}
-			let defaultRelationship = '';
-			for (let r = 0; r < this.projectRelations.length; r++) {
-				if (this.projectRelations[r].allowableForNullTarget === true) {
-					defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
-					break;
-				}
-			}
-			const newMapEntry = {
-				'active': true,
-				'additionalMapEntryInfos': [],
-				'mapAdvices': [],
-				'adviceAlways': [],
-				'advices': [],
-				'block': 0,
-				'created': null,
-				'group': groupNum,
-				'id': null,
-				'modified': null,
-				'modifiedBy': null,
-				'moduleId': this.tempModuleIdChangeBeforeRelease,
-				'priority': nextPriorityNum,
-				'relation': defaultRelationship,
-				'rule': defaultRule,
-				'toCode': '',
-				'toName': '[NO TARGET]',
-				'uuid': groupNum + nextPriorityNum + Date.now(),
-			};
+		}
+		const newMapEntry = {
+			'active': true,
+			'additionalMapEntryInfos': [],
+			'mapAdvices': [],
+			'adviceAlways': [],
+			'advices': [],
+			'block': 0,
+			'created': null,
+			'group': groupNum,
+			'id': null,
+			'modified': null,
+			'modifiedBy': null,
+			'moduleId': this.tempModuleIdChangeBeforeRelease,
+			'priority': nextPriorityNum,
+			'relation': defaultRelationship,
+			'rule': defaultRule,
+			'toCode': '',
+			'toName': '[NO TARGET]',
+			'uuid': String(groupNum + nextPriorityNum + Date.now()),
+		};
 
-			this.mapsetData[0].mapEntries.push(newMapEntry);
-		} else {
+		this.mapsetData[0].mapEntries.push(newMapEntry);
+		this.setSelectedTarget(newMapEntry.uuid, newMapEntry.toCode, newMapEntry.toName);
+		/*} else {
 			for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
 				if (this.mapsetData[0].mapEntries[p].uuid === this.selectedTarget) {
 					this.mapsetData[0].mapEntries[p].toCode = '';
 					this.mapsetData[0].mapEntries[p].toName = '[NO TARGET]';
 				}
 			}
-			this.selectedTarget = '';
+			//this.selectedTarget = '';
 			this.foundConceptCode = false;
 			this.clearTargetInput();
-		}
+		}*/
 		this.userChanged = true;
 	}
 
