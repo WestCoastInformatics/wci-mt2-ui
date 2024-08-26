@@ -155,11 +155,12 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		this.refsetService.getMappingByMapsetAndConcept(this.mapsetCode, this.conceptCode).subscribe({
-			next: (results) => {
+		this.refsetService.getMappingByMapsetConceptList(this.mapsetCode, this.conceptCode).subscribe({
+			next: (response) => {
 				this.loaded = true;
 				const data = [];
 				let count = 0;
+				const results = response.items[0];
 
 				for (let b = 0; b < results.mapEntries.length; b++) {
 					let spanned = false;

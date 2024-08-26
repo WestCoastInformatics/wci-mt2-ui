@@ -113,7 +113,7 @@
 	<div class="rt2-pagination-total-label">
 		<div *ngIf="showTotal && totalKnown && displayedResults > 0">
 			Showing <span class="rt2-pagination-count">{{ startRecord }}</span> to <span class="rt2-pagination-count">{{ endRecord }}</span> of
-			<span class="rt2-pagination-count">{{ this.displayedResults }}</span>
+			<span class="rt2-pagination-count">{{ displayedResults }}</span>
 			results
 		</div>
 		<div *ngIf="displayedResults === 0">No Results to Show</div>
