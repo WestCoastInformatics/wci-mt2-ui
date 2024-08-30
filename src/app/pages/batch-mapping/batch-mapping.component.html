@@ -1,0 +1,402 @@
+<div *ngIf="showLoadingSpinner" class="loading"></div>
+
+<!-- Search Bar -->
+<div class="top-search-bar content-header">
+	<div class="d-flex justify-content-end">
+		<div class="col-md-12 d-flex">
+			<div class="page-title rt2-wrap" *ngIf="loaded" title="Batch Edit ({{ mapsetData.length }})">
+				<span>Batch Edit ({{ mapsetData.length }}) </span>
+			</div>
+		</div>
+	</div>
+</div>
+<div [hidden]="loaded" class="section-loading">Loading...</div>
+<div class="dropdown-group row edit-actions" *ngIf="loaded">
+	<div class="col-10">
+		<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
+			<mat-select #actions title="Authoring Actions" placeholder="Authoring Actions" [(value)]="selectedAction" (selectionChange)="selectActionMenu()">
+				<mat-option value="add" class="no-checkbox" [disabled]="checkedNum < 1">Add Empty Target to Mappings</mat-option>
+				<mat-option value="remove" class="no-checkbox" [disabled]="checkedNum < 1">Remove Target Mappings</mat-option>
+				<mat-option value="note" class="no-checkbox">View or Add Authoring Note</mat-option>
+				<mat-option value="comm" class="no-checkbox">View or Add Authoring Communication</mat-option>
+				<mat-option value="review" class="no-checkbox">Request Review</mat-option>
+			</mat-select>
+		</mat-form-field>
+	</div>
+	<div class="action-column col-2 no-margin-top">
+		<span class="date-column">
+			<button
+				type="button"
+				title="Undo Changes"
+				class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+				(click)="reloadMapping()"
+				[disabled]="!userChanged"
+				(ngClass)="({ 'disabled': !userChanged })">
+				Undo Changes
+			</button>
+			<button
+				type="button"
+				title="Save Mapping"
+				class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+				(click)="saveMapping()"
+				[disabled]="!userChanged"
+				(ngClass)="({ 'disabled': !userChanged })">
+				Save Mappings
+			</button>
+		</span>
+	</div>
+</div>
+<div class="rt2-container" (window:resize)="onResize($event)" [ngStyle]="{ 'overflow-y': showGroupPopover || showTargetPopover ? 'hidden' : 'auto' }">
+	<div class="metadata-collapsible-container col-md-12 config-scrolling-section">
+		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showConfigSection')">
+			<div class="metadata-collapsible-container-title page-header-font">
+				<span>Target Configuration</span>
+			</div>
+			<img src="assets/caret-up-solid.svg" *ngIf="!showConfigSection" alt="Collapse Button" title="Collapse Target Configuration" aria-label="Collapse Button" class="caret-up-solid" />
+			<img src="assets/caret-down-solid.svg" *ngIf="showConfigSection" alt="Expand Button" title="Expand Target Configuration" aria-label="Expand Button" class="caret-down-solid" />
+		</div>
+		<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showConfigSection || !loaded"></div>
+		<div [hidden]="!showConfigSection || !loaded" class="section-background config-section">
+			<div class="grid-wrapper">
+				<ag-grid-angular
+					[columnDefs]="gridColumnDefs"
+					[rowData]="mapsetData"
+					(gridReady)="onGridReady($event)"
+					[gridOptions]="gridOptions"
+					class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter">
+				</ag-grid-angular>
+
+				<!--Group Popover-->
+				<div class="group-popover" id="group-popover" [ngStyle]="{ top: popoverLocationY + 'px', left: popoverLocationX + 'px' }" [ngClass]="showGroupPopover ? 'show' : 'hide'">
+					<div class="popup-handle popup-handle-top"></div>
+					<img src="assets/grey-close-icon.svg" (click)="closeGroup()" width="12px" height="12px" title="Close" aria-label="Close" class="grey-close-icon" alt="Close" />
+					<div class="col mappings-section m-l-20">
+						<div class="m-t-20 m-b-10">
+							<div>
+								<label class="m-r-10">Group</label>
+								<mat-form-field floatLabel="never" id="groupInputField" title="Enter Group" class="adjust-mat-input-sm">
+									<input matInput #groupInput placeholder="Enter Group" id="groupCodeInput" [formControl]="groupFC" class="target-input" />
+								</mat-form-field>
+								<span class="clear-search" (click)="clearGroupInput()">&#10005;</span>
+							</div>
+							<div>
+								<label class="m-r-10">Entry</label>
+								<mat-form-field floatLabel="never" id="entryInputField" title="Enter Entry" class="adjust-mat-input-sm">
+									<input matInput #priorityInput placeholder="Enter Entry" id="entryCodeInput" [formControl]="priorityFC" class="target-input" />
+								</mat-form-field>
+								<span class="clear-search" (click)="clearPriorityInput()">&#10005;</span>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
+						<button type="button" title="Save" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="setGroup()">Save</button>
+					</div>
+				</div>
+
+				<!--Target Popover-->
+				<div class="target-popover" id="target-popover" [ngStyle]="{ top: popoverLocationY + 'px', left: popoverLocationX + 'px' }" [ngClass]="showTargetPopover ? 'show' : 'hide'">
+					<div class="popup-handle popup-handle-top"></div>
+					<img src="assets/grey-close-icon.svg" (click)="closeTarget()" width="12px" height="12px" title="Close" aria-label="Close" class="grey-close-icon" alt="Close" />
+					<div class="col mappings-section m-l-20 m-r-20">
+						<div class="m-t-20 m-b-10">
+							<mat-form-field floatLabel="never" id="targetInputField" title="Enter Target Code" class="adjust-mat-input">
+								<input matInput #targetInput placeholder="Enter Target Code" id="targetCodeInput" [formControl]="targetFC" class="target-input" />
+								<!--	<mat-autocomplete #auto="matAutocomplete">
+							<mat-option *ngFor="let state of filteredStates | async" [value]="state.name">
+								<span>{{ state.name }}</span> |
+							</mat-option>
+						</mat-autocomplete>-->
+							</mat-form-field>
+							<span class="clear-search" (click)="clearTargetInput()">&#10005;</span>
+						</div>
+						<span class="mappings-section m-b-10">{{ targetToName }}</span>
+					</div>
+
+					<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
+						<button
+							type="button"
+							title="Set as Target"
+							class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
+							(click)="setTarget()"
+							[disabled]="!foundConceptCode || !selectedTarget"
+							(ngClass)="({ 'disabled': !foundConceptCode || !selectedTarget })">
+							Set as Target
+						</button>
+						<button type="button" title="Set Empty Target" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="setEmptyTarget()">Set Empty Target</button>
+					</div>
+				</div>
+
+				<!--Advice Popover-->
+				<div class="advice-popover" id="advice-popover" [ngStyle]="{ top: popoverLocationY + 'px', left: popoverLocationX + 'px' }" [ngClass]="showAdvicePopover ? 'show' : 'hide'">
+					<div class="popup-handle popup-handle-top"></div>
+					<img src="assets/grey-close-icon.svg" (click)="closePopover()" width="12px" height="12px" title="Close" aria-label="Close" class="grey-close-icon" alt="Close" />
+					<ul>
+						<li *ngFor="let advice of popover_updateAdviceList" class="advice-list-item" [hidden]="advice.indexOf('ALWAYS') > -1">
+							<span title="{{ advice }}" class="code-link">{{ advice }}</span
+							><span title="Remove advice" class="clear-search adjust-clear" (click)="removeAdviceFromList(advice)">&#10005;</span>
+						</li>
+					</ul>
+					<div class="target-selection advice-selection" [hidden]="popover_addAdviceList.length === 0">
+						<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box target-selection-box-advice">
+							<mat-select #selectAdvice title="Select advice to add" placeholder="Select advice to add" [(value)]="popover_adviceToAdd" (selectionChange)="addAdviceToList(popover_uuid)">
+								<mat-option *ngFor="let advice of popover_addAdviceList" value="{{ advice }}" title="{{ advice }}" class="no-checkbox">{{ advice }}</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</div>
+					<span class="mappings-section m-l-20" *ngIf="popover_addAdviceList.length === 0">No advice to add.</span>
+					<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
+						<button type="button" title="Save" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="setAdvice()">Save</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="metadata-collapsible-container col-md-12 mb-10">
+		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showBrowserSection')">
+			<div class="metadata-collapsible-container-title page-header-font">
+				<span>ICD10 Terminology Browser</span>
+			</div>
+			<img src="assets/caret-up-solid.svg" *ngIf="!showBrowserSection" alt="Collapse Button" title="Collapse ICD10 Terminology Browser" aria-label="Collapse Button" class="caret-up-solid" />
+			<img src="assets/caret-down-solid.svg" *ngIf="showBrowserSection" alt="Expand Button" title="Expand ICD10 Terminology Browser" aria-label="Expand Button" class="caret-down-solid" />
+		</div>
+		<div [hidden]="!showBrowserSection" class="section-background browser-section">
+			<div class="d-flex dropdown-group">This feature is not yet available. Please check back later.</div>
+		</div>
+	</div>
+</div>
+<!-- Information Templates -->
+<ng-template #directoryInfoSection let-params>
+	<div class="d-flex rt2-wrap">
+		<div class="col-6">
+			<button
+				mat-icon-button
+				aria-hidden="false"
+				#directoryInfoIcon
+				class="rt2-table-action-icon w-30 h-30"
+				aria-label="View All Reference Set Metadata"
+				title="View Reference Set Metadata"
+				(click)="openInformation(params.data.refsetId)">
+				<mat-icon class="scale-85-pct">information</mat-icon>
+			</button>
+		</div>
+		<div class="col-6">
+			<div *ngIf="params.data.memberSearchMatch" title="Search matches reference set member" class="member-search-icon general-icon-font">M</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #directoryInfoDialog let-data>
+	<div class="container-fluid w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
+		<div class="row rt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
+			<p class="fs-18 mb-0 ml-10">{{ data.name }}</p>
+			<p class="fs-16 ml-10">
+				<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span
+				><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
+			</p>
+		</div>
+		<refset-meta [refset]="data"></refset-meta>
+	</div>
+</ng-template>
+
+<!-- Workflow Status Templates -->
+<ng-template #directoryWorkflowStatusSection let-params>
+	<object [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)">{{ params?.value }}</object>
+</ng-template>
+
+<!-- Check Templates -->
+<ng-template #directoryCheckSection let-params>
+	<label class="checkbox-override" *ngIf="params?.value"
+		><input type="checkbox" (change)="checkboxRowSelect($event, params?.data?.index)" [checked]="params?.data?.checked" />' + ' <span class="checkbox-container"></span
+	></label>
+</ng-template>
+
+<!-- Name Templates -->
+<ng-template #directoryNameSection let-params>
+	<span class="blue-link">{{ params?.value }}</span>
+
+	<mat-icon
+		*ngIf="params?.data?.privateRefset"
+		aria-hidden="false"
+		#directoryPrivateIcon
+		class="rt2-table-action-icon rt2-table-action-form-icon"
+		aria-label="Private Reference Set"
+		title="Private Reference Set">
+		lock
+	</mat-icon>
+	<mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="rt2-table-action-icon rt2-table-action-form-icon" aria-label="Local Set" title="Local Set"> my_location </mat-icon>
+</ng-template>
+
+<!-- Edition Templates -->
+<ng-template #directoryEditionSection let-params>
+	<img
+		(load)="showFlagIcon($event, true)"
+		(error)="showFlagIcon($event, false)"
+		src="{{ params?.data?.flagIcon }}"
+		class="rt2-edition-flag"
+		title="{{ params?.data?.editionName }} Flag"
+		aria-label="{{ params?.data?.editionName }} Flag" />
+	{{ params?.data?.edition?.name }}
+</ng-template>
+
+<!-- Action Templates -->
+<ng-template #directoryActionSection let-params>
+	<div class="d-flex" *ngIf="params?.value === true">
+		<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+			<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
+		</div>
+	</div>
+</ng-template>
+
+<!-- Advice Templates -->
+<ng-template #directoryAdviceSection let-params>
+	<div class="advice-column" [ngStyle]="{ 'line-height': 50 / getValueLength(params) > 10 ? 50 / getValueLength(params) + 'px' : 10 + 'px' }" [hidden]="getValueLength(params) < 1">
+		<div *ngFor="let item of getValueList(params)">
+			<span title="{{ item }}" [hidden]="item.indexOf('ALWAYS') > -1">{{ item }}</span>
+		</div>
+	</div>
+	<div [hidden]="getValueLength(params) !== 0">---</div>
+</ng-template>
+
+<!--Rule Template-->
+<ng-template #targetRelationshipSection let-params>
+	{{ showParams(params.value) }}
+	<!--{{ showParams(targetRelations) }}-->
+	<div class="target-selection-grid">
+		<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box target-selection-box-grid">
+			<mat-select #selectRelationship title="Select a Relationship" placeholder="Select a Relationship" [(value)]="params.value" (selectionChange)="userChangeSelection('relation')">
+				<mat-option *ngFor="let map of targetRelations" value="{{ map }}" class="no-checkbox">{{ map }}</mat-option>
+			</mat-select>
+		</mat-form-field>
+	</div>
+</ng-template>
+
+<!--Rule Template-->
+<ng-template #targetRuleSection let-params>
+	<div class="target-selection-grid">
+		<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box target-selection-box-grid">
+			<mat-select #selectRule title="Select a Rule" placeholder="Select a Rule" [(value)]="params.value" (selectionChange)="userChangeSelection('rule')">
+				<mat-option value="TRUE" class="no-checkbox">TRUE</mat-option>
+				<mat-option value="Gender - Female" class="no-checkbox" [hidden]="!ruleBased">Gender - Female</mat-option>
+				<mat-option value="Gender - Male" class="no-checkbox" [hidden]="!ruleBased">Gender - Male</mat-option>
+			</mat-select>
+		</mat-form-field>
+	</div>
+</ng-template>
+
+<!-- Advice Templates -->
+<ng-template #targetAdviceSection let-params>
+	<!--{{ showParams(params) }}
+	<div class="advice-popover" id="{{ 'advice-popover_' + params.data.uuid }}" [ngStyle]="{ top: advicePopoverLocation + 'px' }" [ngClass]="params.data?.advices_open ? 'show' : 'hide'">
+		<div class="popup-handle popup-handle-top"></div>
+		<img src="assets/grey-close-icon.svg" (click)="closePopover(params.data)" width="12px" height="12px" title="Close" aria-label="Close" class="grey-close-icon" alt="Close" />
+		<ul>
+			<li *ngFor="let advice of params.data.updateAdviceList" class="advice-list-item" [hidden]="advice.indexOf('ALWAYS') > -1">
+				<span title="{{ advice }}" class="code-link">{{ advice }}</span
+				><span title="Remove advice" class="clear-search adjust-clear" (click)="removeAdviceFromList(params.data.uuid, advice)">&#10005;</span>
+			</li>
+		</ul>
+		<div class="target-selection advice-selection" [hidden]="params.data.addAdviceList?.length === 0">
+			<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
+				<mat-select #selectAdvice title="Select advice to add" placeholder="Select advice to add" [(value)]="params.data.adviceToAdd" (selectionChange)="addAdviceToList(params.data.uuid)">
+					<mat-option *ngFor="let advice of params.data.addAdviceList" value="{{ advice }}" title="{{ advice }}" class="no-checkbox">{{ advice }}</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+		<span class="mappings-section m-l-20" *ngIf="params.data.addAdviceList?.length === 0">No advice to add.</span>
+		<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
+			<button type="button" title="Save" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="setAdvice(params.data.uuid)">Save</button>
+		</div>
+	</div>-->
+	<div id="{{ 'popover_' + params.data.uuid }}">
+		<ul [hidden]="params.value.mapAdvices.length === 0" class="max-list">
+			<li *ngFor="let advice of params.value.mapAdvices; index as i" class="advice-line">
+				<span class="advice-name-wrap" title="{{ advice }}">{{ advice }}</span>
+			</li>
+		</ul>
+		<ul [hidden]="params.value.mapAdvices.length === 0">
+			<li class="advice-line">
+				<span class="code-link" (click)="openPopover($event, params)" title="Add/Edit Advice">Add/Edit Advice ({{ params.value.mapAdvices.length }})</span>
+			</li>
+		</ul>
+		<span class="code-link p-l-10 advice-line" (click)="openPopover($event, params)" title="Add an Advice" [hidden]="params.value.mapAdvices.length !== 0">+ Add Advice</span>
+	</div>
+</ng-template>
+
+<ng-template #directoryCodeSection let-params>
+	<span *ngIf="params?.value === 'No map entries available.'">
+		{{ params?.value }}
+	</span>
+	<span *ngIf="params?.value !== 'No map entries available.' && params?.value !== undefined" class="pointer">
+		<mat-chip-list *ngIf="params?.value.split('#')[0] !== '1/1&1'" (click)="editGroup($event, params)" class="pointer">
+			<mat-chip
+				class="mapset-chip pointer"
+				title="{{ 'Group ' + params?.value.split('#')[0].split('&')[0].split('/')[0] + ', Entry ' + params?.value.split('#')[0].split('&')[0].split('/')[1] }}">
+				{{ params?.value.split('#')[0].split('&')[0] }}
+			</mat-chip>
+		</mat-chip-list>
+		<span class="blue-link" title="{{ params?.value.split('#')[1] }}" (click)="editTarget($event, params)">{{ params?.value.split('#')[1] }}</span></span
+	>
+</ng-template>
+
+<ng-template #directoryToNameSection let-params>
+	<span *ngIf="params?.value === '---'">
+		{{ params?.value }}
+	</span>
+	<span *ngIf="params?.value !== '---'">
+		<span>{{ params?.value }}</span></span
+	>
+</ng-template>
+
+<ng-template #directoryFeedbackDialog let-data>
+	This functionality will be implemented in subsequent phases.
+	<mat-form-field floatLabel="never" *ngIf="false">
+		<mat-label>Feedback</mat-label>
+		<input matInput [(ngModel)]="data.feedback" />
+	</mat-form-field>
+</ng-template>
+
+<ng-template #toBeDevelopedModal let-modal>
+	<div class="modal-header rt2-modal-header">
+		<div class="modal-title">Coming Soon</div>
+		<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<p>This feature is not yet available. Please check back later.</p>
+	</div>
+	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+		<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+	</div>
+</ng-template>
+
+<ng-template #downloadModal let-modal>
+	<div class="modal-header rt2-modal-header">
+		<div class="modal-title">Download Map Set</div>
+		<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeDownloadModal()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<p>Download {{ mapsetName }} {{ selectedVersion }}</p>
+		<div class="modal-select">
+			<label class="modal-label">Format: </label>
+			<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
+				<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="rt2-column-chooser-select">
+					<mat-select-trigger class="trigger"
+						><span *ngIf="!selectedFormat"> Select a format </span><span *ngIf="selectedFormat">{{ selectedFormat.display }}</span></mat-select-trigger
+					>
+
+					<mat-option *ngFor="let format of formats" [value]="format" class="no-checkbox">
+						{{ format.display }}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+	</div>
+	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+		<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
+		<button type="button" title="Download" class="rt2-btn rt2-action-btn" (click)="startDownload()">Download</button>
+	</div>
+</ng-template>

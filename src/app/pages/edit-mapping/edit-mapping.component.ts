@@ -11,7 +11,7 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { Title } from '@angular/platform-browser';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
+import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -355,7 +355,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 							'toName': results.mapEntries[b].toName.length > 0 && results.mapEntries[b].toName !== ' DOES NOT EXIST' ? results.mapEntries[b].toName : '---',
 							'toCode':
 								results.mapEntries[b].toCode.length > 0
-									? results.mapEntries[b].group + '/' + results.mapEntries.length + '#' + results.mapEntries[b].toCode
+									? results.mapEntries[b].group + '/' + results.mapEntries[b].priority + '#' + results.mapEntries[b].toCode
 									: 'No map entries available.',
 							'rule': results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
 							'relation': results.mapEntries[b].relation.length > 0 ? results.mapEntries[b].relation.toUpperCase() : '---',

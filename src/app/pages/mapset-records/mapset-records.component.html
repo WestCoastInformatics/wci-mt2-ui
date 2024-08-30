@@ -68,7 +68,8 @@
 					<mat-select #actions title="Actions" placeholder="Actions" [(value)]="selectedAction" (selectionChange)="selectAction()">
 						<mat-option value="select" class="no-checkbox" *ngIf="showMapTable === 'record'">Check/Uncheck All</mat-option>
 						<mat-option value="edit" class="no-checkbox" [disabled]="checkedNum !== 1">Edit Selected Mapping</mat-option>
-						<mat-option value="selected" class="no-checkbox">Download Selected Mappings</mat-option>
+						<mat-option value="batch" class="no-checkbox" [disabled]="checkedNum < 2">Batch Edit Selected Mappings</mat-option>
+						<mat-option value="selected" class="no-checkbox" [disabled]="checkedNum < 1">Download Selected Mappings</mat-option>
 						<mat-option value="all" class="no-checkbox">Download Entire Map Set</mat-option>
 					</mat-select>
 				</mat-form-field>

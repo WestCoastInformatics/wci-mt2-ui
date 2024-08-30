@@ -230,7 +230,6 @@ export class MapsetRecordsComponent implements OnInit {
 				},
 				{
 					field: 'toCode',
-					tooltipField: 'toCode',
 					headerName: 'Target',
 					headerTooltip: 'Target',
 					flex: 1,
@@ -710,6 +709,25 @@ export class MapsetRecordsComponent implements OnInit {
 
 	selectAction() {
 		switch (this.selectedAction) {
+			case 'batch':
+				if (this.checkedNum > 1) {
+					const codes = [];
+					for (let c = 0; c < this.mapsetData.length; c++) {
+						if (this.mapsetData[c].checked === true) {
+							codes.push(this.mapsetData[c].code);
+						}
+					}
+					if (codes.length > 0) {
+						this.actions.close();
+						const ddInterval = setInterval(() => {
+							this.goToBatchMappingsPage(codes);
+							clearInterval(ddInterval);
+						}, 2);
+					}
+					this.selectedAction = '';
+					this.actions.value = this.selectedAction;
+				}
+				break;
 			case 'select':
 				window['checkbox-table-all'].click();
 				this.selectedAction = '';
@@ -827,6 +845,13 @@ export class MapsetRecordsComponent implements OnInit {
 		url.searchParams.set('reload', 'true');
 		window.history.pushState({}, '', url.href);
 		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + code + '/edit'], { replaceUrl: false, skipLocationChange: false });
+	}
+
+	goToBatchMappingsPage(codes) {
+		const url = new URL(window.location.href);
+		url.searchParams.set('reload', 'true');
+		window.history.pushState({}, '', url.href);
+		this.router.navigate(['/mapset/' + this.mapsetCode + '/mappings/' + codes.join('_') + '/batch'], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	getRefsetRow(refsetId: string) {
