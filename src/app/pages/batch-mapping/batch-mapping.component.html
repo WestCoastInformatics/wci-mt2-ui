@@ -15,8 +15,10 @@
 	<div class="col-10">
 		<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
 			<mat-select #actions title="Authoring Actions" placeholder="Authoring Actions" [(value)]="selectedAction" (selectionChange)="selectActionMenu()">
-				<mat-option value="add" class="no-checkbox" [disabled]="checkedNum < 1">Add Empty Target to Mappings</mat-option>
-				<mat-option value="remove" class="no-checkbox" [disabled]="checkedNum < 1">Remove Target Mappings</mat-option>
+				<mat-option value="set" class="no-checkbox" [disabled]="checkedNum < 1">Set Empty Target to Mappings</mat-option>
+				<mat-option value="add" class="no-checkbox" [disabled]="checkedNum < 1">Add Entry to Mappings</mat-option>
+				<mat-option value="change" class="no-checkbox" [disabled]="checkedNum < 1">Change Group/Entry of Mappings</mat-option>
+				<mat-option value="remove" class="no-checkbox" [disabled]="checkedNum < 1">Remove selected Mappings</mat-option>
 				<mat-option value="note" class="no-checkbox">View or Add Authoring Note</mat-option>
 				<mat-option value="comm" class="no-checkbox">View or Add Authoring Communication</mat-option>
 				<mat-option value="review" class="no-checkbox">Request Review</mat-option>
@@ -38,7 +40,7 @@
 				type="button"
 				title="Save Mapping"
 				class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
-				(click)="saveMapping()"
+				(click)="saveMappings()"
 				[disabled]="!userChanged"
 				(ngClass)="({ 'disabled': !userChanged })">
 				Save Mappings
@@ -260,7 +262,6 @@
 
 <!--Rule Template-->
 <ng-template #targetRelationshipSection let-params>
-	{{ showParams(params.value) }}
 	<!--{{ showParams(targetRelations) }}-->
 	<div class="target-selection-grid">
 		<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box target-selection-box-grid">

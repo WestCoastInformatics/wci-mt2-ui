@@ -51,6 +51,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	refsetGridLastFilter = '';
 	refsetGridLastSort = '';
 	showTable = false;
+	mapsetResponse = [];
 	mapsetData = [];
 	dialog: DialogService;
 	versionStatuses: any;
@@ -164,20 +165,6 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 			}
 		});
 
-		this.groupFC.valueChanges.pipe(distinctUntilChanged()).subscribe((res) => {
-			if (this.groupFC.dirty) {
-				//this.foundConceptCode = false;
-				//this.targetNameInput = '';
-				//this.onInputTargetChange();
-			}
-		});
-		this.priorityFC.valueChanges.pipe(distinctUntilChanged()).subscribe((res) => {
-			if (this.priorityFC.dirty) {
-				//this.foundConceptCode = false;
-				//this.targetNameInput = '';
-				//this.onInputTargetChange();
-			}
-		});
 		//setup for type-ahead search
 		/*this.codeList = this.targetFC.valueChanges.pipe(
 			debounceTime(600),
@@ -218,7 +205,6 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
-			console.log('routeParams.concepts', routeParams.concepts);
 			this.conceptCodes = routeParams.concepts.split('_');
 			this.getMapsetInfo();
 			this.getMapProject();
@@ -243,12 +229,13 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 			context: { componentParent: this },
 			pagination: false,
 			angularCompileHeaders: true,
-			suppressColumnVirtualisation: false,
+			suppressColumnVirtualisation: true,
 			suppressPaginationPanel: true,
 			paginationPageSize: this.gridPaging.pageSize,
 			rowSelection: 'single',
 			enableCellTextSelection: true,
 			onGridReady: this.onGridReady,
+			onCellValueChanged: this.onCellValueChanged,
 			frameworkComponents: {
 				'templateRenderer': TemplateRendererComponent,
 				'categoryFilterComponent': CategoryFilterComponent,
@@ -384,11 +371,12 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				headerName: 'Relationship',
 				headerTooltip: 'Relationship',
 				resizable: true,
-				/*	cellRenderer: TemplateRendererComponent,
-				cellRendererParams: { template: this.relationshipSection },*/
 				cellEditor: 'agSelectCellEditor',
 				cellEditorParams: {
 					values: this.targetRelations,
+					valueListGap: 1,
+					valueListMaxHeight: 400,
+					valueListMaxWidth: 300,
 				},
 				unSortIcon: true,
 				sortable: false,
@@ -448,7 +436,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				suppressSorting: true,
 			},
 			{
-				field: 'downloadable',
+				field: 'feedback',
 				colId: 'action-btns',
 				headerName: '',
 				width: 60,
@@ -469,6 +457,11 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	onGridReady = (params) => {
 		this.gridParams = params;
 		this.gridApi = params.api;
+
+		const _window = window;
+		_window['checkboxHandleClick'] = () => {
+			this.checkboxAllClick();
+		};
 	};
 
 	onGridCellClick = (event) => {
@@ -480,9 +473,9 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		});
 	};
 
-	showParams(params) {
-		console.log('paras ', params);
-	}
+	onCellValueChanged = (event) => {
+		this.userChanged = true;
+	};
 
 	getMapsetInfo() {
 		this.refsetService.getMapsets().subscribe({
@@ -599,25 +592,16 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				this.loaded = true;
 				const batch = [];
 				const list = response.items;
+				this.mapsetResponse = list;
 
-				console.log(' loading list ', list);
 				for (let i = 0; i < list.length; i++) {
 					const results = list[i];
 					let data = {};
 					let count = 0;
 					for (let b = 0; b < results.mapEntries.length; b++) {
-						//let spanned = false;
-						//results.mapEntries[b].uuid = results.code + results.mapEntries[b].modified + b;
-						//results.mapEntries[b].advices_open = false;
-						/*if (results.mapEntries.length > 1) {
-							if (b >= 1) {
-								spanned = true;
-							}
-						}*/
 						if (this.numOfGroups < results.mapEntries[b].group) {
 							this.numOfGroups = results.mapEntries[b].group;
 						}
-						//remove advice ""
 						results.mapEntries[b].advices = results.mapEntries[b].advices.filter(function (res) {
 							return res !== '';
 						});
@@ -631,12 +615,11 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 						});
 						results.mapEntries[b].mapAdvices = mapAdvices;
 						results.mapEntries[b].adviceAlways = adviceAlways;
-						//if (!spanned) {
 						data = {
 							'uuid': results.code + results.mapEntries[b].modified + b,
 							'index': results.code + count,
 							'active': results.active,
-							'downloadable': true,
+							'feedback': true,
 							'mapEntries': results.mapEntries[b],
 							'entries': results.mapEntries.length,
 							'code': results.code,
@@ -655,12 +638,10 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 							'priority': results.mapEntries[b].priority,
 						};
 						count++;
-						//}
 						batch.push(data);
 					}
 				}
 				this.mapsetData = batch;
-				console.log('ms ', this.mapsetData);
 
 				const lastIndex = document.getElementsByClassName('ag-header').length - 1;
 				const child = document.getElementsByClassName('ag-header')[lastIndex];
@@ -692,60 +673,70 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.userChanged = true;
 	}
 
-	addEmptyTargetToGroup(groupNum: number) {
-		if (this.selectedTarget === '') {
-			let nextPriorityNum = 1;
-			for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
-				if (this.mapsetData[0].mapEntries[p].group === groupNum) {
-					if (this.mapsetData[0].mapEntries[p].priority >= nextPriorityNum) {
-						nextPriorityNum++;
+	addEmptyTargetToGroup(id: string, groupNum: number) {
+		//if (this.selectedTarget === '') {
+		let nextPriorityNum = 1;
+		let selectEntryIndex = 0;
+		let orginalFrom = { 'code': '', 'name': '' };
+		for (let p = 0; p < this.mapsetData.length; p++) {
+			if (this.mapsetData[p].uuid == id) {
+				orginalFrom = { 'code': this.mapsetData[p].code, 'name': this.mapsetData[p].name };
+				if (this.mapsetData[p].group === groupNum) {
+					if (this.mapsetData[p].priority >= nextPriorityNum) {
+						selectEntryIndex = p;
+						nextPriorityNum = this.mapsetData[p].priority + 1;
 					}
-				}
-			}
-			let defaultRule = '';
-			if (!this.ruleBased) {
-				defaultRule = 'TRUE';
-			}
-			let defaultRelationship = '';
-			for (let r = 0; r < this.projectRelations.length; r++) {
-				if (this.projectRelations[r].allowableForNullTarget === true) {
-					defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
 					break;
 				}
 			}
-			const newMapEntry = {
-				'active': true,
-				'additionalMapEntryInfos': [],
-				'mapAdvices': [],
-				'adviceAlways': [],
-				'advices': [],
-				'block': 0,
-				'created': null,
-				'group': groupNum,
+		}
+		let defaultRule = '';
+		if (!this.ruleBased) {
+			defaultRule = 'TRUE';
+		}
+		let defaultRelationship = '';
+		for (let r = 0; r < this.projectRelations.length; r++) {
+			if (this.projectRelations[r].allowableForNullTarget === true) {
+				defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
+				break;
+			}
+		}
+
+		const newMapEntry = {
+			'feedback': true,
+			'index': orginalFrom.code + this.mapsetData.length,
+			'name': orginalFrom.name,
+			'code': orginalFrom.code,
+			'group': groupNum,
+			'priority': nextPriorityNum,
+			'relation': defaultRelationship,
+			'rule': defaultRule,
+			'toCode': groupNum + '/' + nextPriorityNum + '#' + '[Empty Target]',
+			'toName': '---',
+			'uuid': groupNum + nextPriorityNum + Date.now(),
+			'mapEntries': {
 				'id': null,
 				'modified': null,
 				'modifiedBy': null,
 				'moduleId': this.tempModuleIdChangeBeforeRelease,
+				'active': true,
+				'descriptions': [],
+				'additionalMapEntryInfos': [],
+				'block': 0,
+				'created': null,
+				'toCode': '[Empty Target]',
+				'toName': '---',
+				'advices': [],
+				'mapAdvices': [],
+				'adviceAlways': [],
+				'group': groupNum,
 				'priority': nextPriorityNum,
-				'relation': defaultRelationship,
-				'rule': defaultRule,
-				'toCode': '',
-				'toName': '[NO TARGET]',
 				'uuid': groupNum + nextPriorityNum + Date.now(),
-			};
+			},
+		};
 
-			this.mapsetData[0].mapEntries.push(newMapEntry);
-		} else {
-			for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
-				if (this.mapsetData[0].mapEntries[p].uuid === this.selectedTarget) {
-					this.mapsetData[0].mapEntries[p].toCode = '';
-					this.mapsetData[0].mapEntries[p].toName = '[NO TARGET]';
-				}
-			}
-			this.selectedTarget = '';
-			this.foundConceptCode = false;
-			this.clearTargetInput();
-		}
+		this.mapsetData.splice(selectEntryIndex + 1, 0, newMapEntry);
+		this.gridApi.setRowData(this.mapsetData);
 		this.userChanged = true;
 	}
 
@@ -804,6 +795,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				'mapAdvices': [],
 				'adviceAlways': [],
 				'advices': [],
+				'descriptions': [],
 				'block': 0,
 				'created': null,
 				'group': this.numOfGroups,
@@ -848,47 +840,40 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.userChanged = true;
 	}
 
-	saveMapping() {
-		const saveMapset = {
-			'code': this.mapsetData[0].code,
-			'name': this.mapsetData[0].name,
-			'active': this.mapsetData[0].active,
-			'mapEntries': [],
-		};
-
-		for (let m = 0; m < this.mapsetData[0].mapEntries.length; m++) {
-			const uiEntry = this.mapsetData[0].mapEntries[m];
-
-			const mapEntry = {
-				'advices': uiEntry.advices,
-				'toCode': uiEntry.toCode,
-				'toName': uiEntry.toName,
-				'rule': uiEntry.rule,
-				'priority': uiEntry.priority,
-				'relation': uiEntry.relation.toUpperCase(),
-				'group': uiEntry.group,
-				'block': uiEntry.block,
-				'moduleId': uiEntry.moduleId,
-				'active': uiEntry.active,
-				'additionalMapEntryInfos': uiEntry.additionalMapEntryInfos,
-				'descriptions': uiEntry.descriptions,
-				'id': uiEntry.id,
-				'modified': uiEntry.modified,
-				'created': uiEntry.created,
-				'modifiedBy': uiEntry.modifiedBy,
-			};
-			saveMapset.mapEntries.push(mapEntry);
+	saveMappings() {
+		for (let f = 0; f < this.mapsetResponse.length; f++) {
+			this.mapsetResponse[f].mapEntries = [];
+			for (let p = 0; p < this.mapsetData.length; p++) {
+				if (this.mapsetResponse[f].code === this.mapsetData[p].code) {
+					const uiData = this.mapsetData[p];
+					const uiEntry = this.mapsetData[p].mapEntries;
+					const mapEntry = {
+						'advices': uiEntry.advices,
+						'toCode': uiEntry.toCode === '[Empty Target]' ? null : uiEntry.toCode,
+						'toName': uiEntry.toName === '---' ? null : uiEntry.toName,
+						'rule': uiData.rule,
+						'priority': uiData.priority,
+						'relation': uiData.relation.toUpperCase(),
+						'group': uiData.group,
+						'block': uiEntry.block,
+						'moduleId': uiEntry.moduleId,
+						'active': uiEntry.active,
+						'additionalMapEntryInfos': uiEntry.additionalMapEntryInfos,
+						'descriptions': uiEntry.descriptions,
+						'id': uiEntry.id,
+						'modified': uiEntry.modified,
+						'created': uiEntry.created,
+						'modifiedBy': uiEntry.modifiedBy,
+					};
+					this.mapsetResponse[f].mapEntries.push(mapEntry);
+				}
+			}
 		}
 
-		const params: any = {
-			mapping: saveMapset,
-			conceptCode: this.conceptCodes,
-		};
-
 		this.userChanged = false;
-		this.refsetService.updateMapsetMapping(this.mapsetCode, saveMapset).subscribe(
+		this.refsetService.updateMapsetMappingBulk(this.mapsetCode, this.mapsetResponse).subscribe(
 			(status) => {
-				this.notificationService.show('The mapping has been saved.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+				this.notificationService.show('The mappings have been saved.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
 			},
 			(error) => {
 				//
@@ -901,9 +886,6 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	editGroup(event: any, params: any): void {
-		//const showInterval = setInterval(() => {
-		console.log(' eve ', event);
-		console.log(' params ', params);
 		this.groupFC.reset();
 		this.priorityFC.reset();
 		this.selectedTarget = params.data.uuid;
@@ -913,24 +895,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.showAdvicePopover = false;
 		this.showTargetPopover = false;
 		this.popoverLocationY = event.y + 15;
-		this.popoverLocationX = event.x - 140; /*
-		this.popover_uuid = params.data.uuid;
-		this.popover_adviceToAdd = '';
-		this.popover_updateAdviceList = JSON.parse(JSON.stringify(params.data.mapEntries.mapAdvices));
-		this.mapAdvices.forEach((map) => {
-			let found = false;
-			this.popover_updateAdviceList.forEach((advice) => {
-				if (map === advice) {
-					found = true;
-				}
-			});
-			if (!found) {
-				this.popover_addAdviceList.push(map);
-			}
-		});
-
-		this.popover_addAdviceList.sort((a, b) => (a > b ? 1 : -1));
-		this.popover_updateAdviceList.sort((a, b) => (a > b ? 1 : -1));*/
+		this.popoverLocationX = event.x - 140;
 	}
 
 	clearGroupInput() {
@@ -947,21 +912,19 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.userChanged = true;
 		this.mapsetData.forEach((data) => {
 			if (data.uuid === this.selectedTarget) {
-				data.toCode = this.groupFC.value + '/' + data.mapEntries.priority + '#' + data.mapEntries.toCode;
 				data.mapEntries.group = this.groupFC.value;
 				data.group = this.groupFC.value;
 				data.mapEntries.priority = this.priorityFC.value;
 				data.priority = this.priorityFC.value;
+				data.toCode = this.groupFC.value + '/' + data.mapEntries.priority + '#' + data.mapEntries.toCode;
 			}
 		});
 		this.gridApi.refreshCells(this.gridParams);
+		this.gridApi.redrawRows();
 		this.closeGroup();
 	}
 
 	editTarget(event: any, params: any): void {
-		//const showInterval = setInterval(() => {
-		console.log(' eve ', event);
-		console.log(' params ', params);
 		this.targetFC.reset();
 		this.selectedTarget = params.data.uuid;
 		this.targetFC.setValue(params.data.mapEntries.toCode);
@@ -970,25 +933,9 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.showAdvicePopover = false;
 		this.showGroupPopover = false;
 		this.popoverLocationY = event.y + 15;
-		this.popoverLocationX = event.x - 160; /*
-		this.popover_uuid = params.data.uuid;
-		this.popover_adviceToAdd = '';
-		this.popover_updateAdviceList = JSON.parse(JSON.stringify(params.data.mapEntries.mapAdvices));
-		this.mapAdvices.forEach((map) => {
-			let found = false;
-			this.popover_updateAdviceList.forEach((advice) => {
-				if (map === advice) {
-					found = true;
-				}
-			});
-			if (!found) {
-				this.popover_addAdviceList.push(map);
-			}
-		});
-
-		this.popover_addAdviceList.sort((a, b) => (a > b ? 1 : -1));
-		this.popover_updateAdviceList.sort((a, b) => (a > b ? 1 : -1));*/
+		this.popoverLocationX = event.x - 160;
 	}
+
 	closeTarget() {
 		this.targetFC.reset();
 		this.selectedTarget = '';
@@ -1024,8 +971,6 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	openPopover(event: any, params: any): void {
-		//const showInterval = setInterval(() => {
-		console.log(' eve ', event);
 		this.showAdvicePopover = true;
 		this.showGroupPopover = false;
 		this.showTargetPopover = false;
@@ -1130,15 +1075,10 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 
 	closePopover() {
 		this.showAdvicePopover = false;
-		//params.data.advices_open = false;
 	}
 
 	addAdviceToList(uuid: string) {
 		this.userChanged = true;
-		console.log(' this md ', this.mapsetData);
-		//this.mapsetData.forEach((data) => {
-		//data.mapEntries.forEach((entry) => {
-		//if (data.uuid === uuid) {
 		if (this.popover_adviceToAdd !== '') {
 			this.popover_updateAdviceList.push(this.popover_adviceToAdd);
 			this.popover_updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
@@ -1147,42 +1087,29 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 			this.popover_adviceToAdd = null;
 			this.popover_adviceToAdd = '';
 		}
-		//	}
-		//});
-		//	});
 		this.selectAdvice.value = '';
 	}
 
 	removeAdviceFromList(advice: string) {
 		this.userChanged = true;
-		//this.mapsetData.forEach((data) => {
-		//	data.mapEntries.forEach((entry) => {
-		//		if (entry.uuid === this.popover_uuid) {
 		this.popover_adviceToAdd = null;
 		this.popover_adviceToAdd = '';
 		this.popover_addAdviceList.push(advice);
 		this.popover_addAdviceList.sort((a, b) => (a > b ? 1 : -1));
 		this.popover_updateAdviceList.splice(this.popover_updateAdviceList.indexOf(advice), 1);
 		this.popover_updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
-		//}
-		//	});
-		//	});
 	}
 
 	setAdvice() {
 		this.userChanged = true;
 		this.mapsetData.forEach((data) => {
-			//data.mapEntries.forEach((entry) => {
 			if (data.uuid === this.popover_uuid) {
 				data.mapEntries.mapAdvices = JSON.parse(JSON.stringify(this.popover_updateAdviceList));
 				data.mapEntries.advices = JSON.parse(JSON.stringify(data.mapEntries.mapAdvices));
 				if (data.mapEntries.adviceAlways.length > 0) {
 					data.mapEntries.advices.unshift(data.mapEntries.adviceAlways[0]);
 				}
-
-				//	entry.advices_open = false;
 			}
-			//	});
 		});
 		this.closePopover();
 	}
@@ -1226,7 +1153,30 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	selectActionMenu() {
+		let checkList;
 		switch (this.selectedAction) {
+			case 'add':
+				checkList = this.mapsetData.filter((map) => {
+					if (map.checked) {
+						return map;
+					}
+				});
+				checkList.forEach((check) => {
+					this.addEmptyTargetToGroup(check.uuid, check.group);
+				});
+				break;
+			case 'set':
+				this.mapsetData.forEach((map) => {
+					if (map.checked) {
+						map.mapEntries.toCode = '[Empty Target]';
+						map.toCode = map.mapEntries.group + '/' + map.mapEntries.priority + '#' + '[Empty Target]';
+						map.mapEntries.toName = '---';
+						map.toName = '---';
+					}
+				});
+				this.userChanged = true;
+				this.gridApi.refreshCells(this.gridParams);
+				break;
 			case 'remove':
 				this.userChanged = true;
 				this.mapsetData = this.mapsetData.filter((map) => {
@@ -1235,6 +1185,15 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				break;
 			default:
 				this.openToBeDevelopedModal(this.tbdModal);
+		}
+		if (this.gridSelectAll) {
+			window['checkbox-table-all'].click();
+		} else {
+			this.mapsetData.forEach((map) => {
+				if (map.checked) {
+					map.checked = false;
+				}
+			});
 		}
 		this.selectedAction = '';
 		this.actions.value = this.selectedAction;
@@ -1261,6 +1220,16 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				this.checkedNum++;
 			}
 		}
+	}
+
+	checkboxAllClick() {
+		this.gridSelectAll == undefined || this.gridSelectAll ? (this.gridSelectAll = false) : (this.gridSelectAll = true);
+		this.mapsetData = this.mapsetData.map((set) => {
+			set.checked = this.gridSelectAll;
+			return set;
+		});
+		this.gridApi.setRowData(this.mapsetData);
+		this.checkedNum = this.gridSelectAll ? this.mapsetData.length : 0;
 	}
 
 	getValueLength(params): number {
