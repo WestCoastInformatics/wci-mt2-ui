@@ -48,7 +48,7 @@
 		</span>
 	</div>
 </div>
-<div class="rt2-container" (window:resize)="onResize($event)" [ngStyle]="{ 'overflow-y': showGroupPopover || showTargetPopover ? 'hidden' : 'auto' }">
+<div class="rt2-container">
 	<div class="metadata-collapsible-container col-md-12 config-scrolling-section">
 		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showConfigSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
@@ -58,7 +58,7 @@
 			<img src="assets/caret-down-solid.svg" *ngIf="showConfigSection" alt="Expand Button" title="Expand Target Configuration" aria-label="Expand Button" class="caret-down-solid" />
 		</div>
 		<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showConfigSection || !loaded"></div>
-		<div [hidden]="!showConfigSection || !loaded" class="section-background config-section">
+		<div id="config-background" [hidden]="!showConfigSection || !loaded" class="section-background config-section">
 			<div class="grid-wrapper">
 				<ag-grid-angular
 					[columnDefs]="gridColumnDefs"

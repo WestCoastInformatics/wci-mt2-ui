@@ -894,8 +894,8 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.showGroupPopover = true;
 		this.showAdvicePopover = false;
 		this.showTargetPopover = false;
-		this.popoverLocationY = event.y + 15;
-		this.popoverLocationX = event.x - 140;
+		this.popoverLocationY = event.y + 15 - 333 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+		this.popoverLocationX = event.x - 160;
 	}
 
 	clearGroupInput() {
@@ -932,8 +932,8 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.showTargetPopover = true;
 		this.showAdvicePopover = false;
 		this.showGroupPopover = false;
-		this.popoverLocationY = event.y + 15;
-		this.popoverLocationX = event.x - 160;
+		this.popoverLocationY = event.y + 15 - 333 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+		this.popoverLocationX = event.x - 180;
 	}
 
 	closeTarget() {
@@ -974,11 +974,12 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.showAdvicePopover = true;
 		this.showGroupPopover = false;
 		this.showTargetPopover = false;
-		this.popoverLocationY = event.y + 15;
-		this.popoverLocationX = event.x - 140;
+		this.popoverLocationY = event.y + 15 - 333 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+		this.popoverLocationX = event.x - 160;
 		this.popover_uuid = params.data.uuid;
 		this.popover_adviceToAdd = '';
 		this.popover_updateAdviceList = JSON.parse(JSON.stringify(params.data.mapEntries.mapAdvices));
+		this.popover_addAdviceList = [];
 		this.mapAdvices.forEach((map) => {
 			let found = false;
 			this.popover_updateAdviceList.forEach((advice) => {
@@ -990,87 +991,8 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				this.popover_addAdviceList.push(map);
 			}
 		});
-
 		this.popover_addAdviceList.sort((a, b) => (a > b ? 1 : -1));
 		this.popover_updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
-		/*this.mapsetData.forEach((data) => {
-			data.mapEntries.forEach((entry) => {
-				if (entry.advices_open) {
-					entry.advices_open = false;
-				}
-				if (entry.uuid === uuid) {
-					entry.addAdviceList = [];
-					entry.updateAdviceList = JSON.parse(JSON.stringify(entry.mapAdvices));
-					this.mapAdvices.forEach((map) => {
-						let found = false;
-						entry.updateAdviceList.forEach((advice) => {
-							if (map === advice) {
-								found = true;
-							}
-						});
-						if (!found) {
-							entry.addAdviceList.push(map);
-						}
-					});
-
-					entry.addAdviceList.sort((a, b) => (a > b ? 1 : -1));
-					entry.updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
-					entry.advices_open = true;
-					entry.adviceToAdd = '';
-				}
-			});
-		});
-		this.updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
-		const popHeight = 0;
-
-		const showInterval = setInterval(() => {
-			this.advicePopoverLocation = event.layerY + event.offsetY;
-			clearInterval(showInterval);
-		}, 5);
-	}*/
-		//const minus = (this.mapsetData.length - params.data.index) * 70;
-		//const table = this.mapsetData.length * 51;
-
-		//this.advicePopoverLocation = 335; // + table; // - (this.mapsetData.length - params.data.index * 71);
-		// - minus;
-		//const showInterval = setInterval(() => {
-		//	console.log('ppar', minus);
-		/*	this.gridApi.forEachNode((node) => {
-			console.log('no', node.data);
-			if (node.data.advices_open) {
-				node.data.advices_open = false;
-			}
-		});*/
-		//params.data.advices_open = true;
-		//console.log(' this.advicePopoverLocation ', this.advicePopoverLocation);
-		//params.data.advice_top = true;
-		//const main = this;
-		/*const timeout = setTimeout(function () {
-			let popHeight = 0;
-
-			console.log(' this.advicePopoverLocation AT', main.advicePopoverLocation);
-			popHeight = document.getElementById('advice-popover').offsetHeight;
-			main.advicePopoverLocation = main.advicePopoverLocation - popHeight;
-			console.log(' pos ', popHeight);
-			console.log(' this.advicePopoverLocation T', main.advicePopoverLocation);
-			clearTimeout(timeout);
-		}, 2);*/
-		//	params.data.advice_bottom = false;
-
-		//this.advicePopoverLocation = 45;
-		/*	let offsetRows = 2;
-			if (popHeight > 100) {
-				offsetRows = 3;
-			}
-			if (params.node.rowIndex > 0 && params.node.rowIndex + offsetRows >= this.gridApi.paginationGetPageSize()) {
-				params.data.advice_bottom = true;
-				params.data.advice_top = false;*/
-		//this.advicePopoverLocation = 335 - popHeight + params.data.index * 51;
-
-		//	this.advicePopoverLocation = Number(popHeight + 250);
-		//}
-		//	clearInterval(showInterval);
-		//}, 1);
 	}
 
 	closePopover() {

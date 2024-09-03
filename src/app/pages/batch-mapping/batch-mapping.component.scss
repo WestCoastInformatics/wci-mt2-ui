@@ -139,6 +139,10 @@
 	display: flex;
 }
 
+.grid-wrapper {
+	position: relative;
+}
+
 .target-selection-grid {
 	height: 25px;
 	border: 1px solid #666;
@@ -765,7 +769,7 @@
 }
 
 .target-selection-box-advice {
-	margin-top: -1.2em !important;
+	margin-top: -13px !important;
 	padding-top: 0;
 	height: 45px;
 }
@@ -786,7 +790,7 @@
 }
 
 .advice-popover {
-	position: sticky;
+	position: absolute;
 	z-index: 15;
 	top: 0;
 	right: 200px;
