@@ -185,7 +185,9 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 						'name': results.name,
 						'toName': results.mapEntries[b].toName.length > 0 && results.mapEntries[b].toName !== ' DOES NOT EXIST' ? results.mapEntries[b].toName : '---',
 						'toCode':
-							results.mapEntries[b].toCode.length > 0 ? results.mapEntries[b].group + '/' + results.mapEntries.length + '#' + results.mapEntries[b].toCode : 'No map entries available.',
+							results.mapEntries[b].toCode.length > 0
+								? results.mapEntries[b].group + '/' + results.mapEntries[b].priority + '#' + results.mapEntries[b].toCode
+								: 'No map entries available.',
 						'rule': results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
 						'relation': results.mapEntries[b].relation.length > 0 ? results.mapEntries[b].relation : '---',
 						'modified': results.mapEntries[b].modified,

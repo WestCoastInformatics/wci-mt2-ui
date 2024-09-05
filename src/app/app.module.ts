@@ -75,6 +75,7 @@ import { MapsetLibraryComponent } from './pages/mapset-library/mapset-library.co
 import { MapsetDetailsComponent } from './pages/mapset-details/mapset-details.component';
 import { MapsetMappingComponent } from './pages/mapset-mapping/mapset-mapping.component';
 import { EditMappingComponent } from 'src/app/pages/edit-mapping/edit-mapping.component';
+import { BatchMappingComponent } from 'src/app/pages/batch-mapping/batch-mapping.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProjectsRefsetComponent } from './pages/projects/refsets/projects-refset.component';
 import { OrganizationsComponent } from './pages/organizations/organizations.component';
@@ -146,6 +147,7 @@ const appRoutes: Routes = [
 	{ path: '', component: LandingComponent },
 	{ path: 'library', component: MapsetLibraryComponent, data: { breadcrumbLabel: 'Map Set Library' } },
 	{ path: 'mapset/:code/mappings', component: MapsetRecordsComponent, data: { breadcrumbLabel: 'Mappings' } },
+	{ path: 'mapset/:code/mappings/:concepts/batch', component: BatchMappingComponent, data: { breadcrumbLabel: 'Batch Edit Mappings' } },
 	{ path: 'mapset/:code/mapping/:concept', component: MapsetMappingComponent, data: { breadcrumbLabel: 'Mapping' } },
 	{ path: 'mapset/:code/mapping/:concept/edit', component: EditMappingComponent, data: { breadcrumbLabel: 'Edit Mapping' } },
 	{ path: 'details/:mapsetId/:versionDate', component: MapsetDetailsComponent, data: { breadcrumbLabel: 'Map Set Details', editMode: false } },
@@ -309,6 +311,7 @@ const appRoutes: Routes = [
 		MapsetDetailsComponent,
 		MapsetMappingComponent,
 		EditMappingComponent,
+		BatchMappingComponent,
 		OrganizationsComponent,
 		OrganizationProjectsComponent,
 		OrganizationTeamsComponent,

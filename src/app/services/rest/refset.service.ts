@@ -336,6 +336,10 @@ export class RefsetService extends RestService {
 		return this.put(this.contextPath + `mapset/${mapSetCode}`, params);
 	}
 
+	updateMapsetMappingBulk(mapSetCode: string, params): Observable<any> {
+		return this.put(this.contextPath + `mapset/${mapSetCode}/bulk`, params);
+	}
+
 	getEditions(params: any): Observable<any> {
 		return this.get(this.contextPath + 'edition/search', params, false);
 	}
