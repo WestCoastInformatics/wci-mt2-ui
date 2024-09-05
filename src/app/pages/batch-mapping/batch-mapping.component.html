@@ -11,7 +11,9 @@
 	</div>
 </div>
 <div [hidden]="loaded" class="section-loading">Loading...</div>
-<div class="dropdown-group row edit-actions" *ngIf="loaded">
+
+<div [hidden]="!saving" class="section-saving">Please wait, save in progress...</div>
+<div class="dropdown-group row edit-actions" *ngIf="loaded && !saving">
 	<div class="col-10">
 		<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
 			<mat-select #actions title="Authoring Actions" placeholder="Authoring Actions" [(value)]="selectedAction" (selectionChange)="selectActionMenu()">
@@ -58,8 +60,8 @@
 			<img src="assets/caret-up-solid.svg" *ngIf="!showConfigSection" alt="Collapse Button" title="Collapse Target Configuration" aria-label="Collapse Button" class="caret-up-solid" />
 			<img src="assets/caret-down-solid.svg" *ngIf="showConfigSection" alt="Expand Button" title="Expand Target Configuration" aria-label="Expand Button" class="caret-down-solid" />
 		</div>
-		<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showConfigSection || !loaded"></div>
-		<div id="config-background" [hidden]="!showConfigSection || !loaded" class="section-background config-section">
+		<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showConfigSection || !loaded || saving"></div>
+		<div id="config-background" [hidden]="!showConfigSection || !loaded || saving" class="section-background config-section">
 			<div class="grid-wrapper">
 				<ag-grid-angular
 					[columnDefs]="gridColumnDefs"
@@ -259,18 +261,6 @@
 		</div>
 	</div>
 	<div [hidden]="getValueLength(params) !== 0">---</div>
-</ng-template>
-
-<!--Rule Template-->
-<ng-template #targetRelationshipSection let-params>
-	<!--{{ showParams(targetRelations) }}-->
-	<div class="target-selection-grid">
-		<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box target-selection-box-grid">
-			<mat-select #selectRelationship title="Select a Relationship" placeholder="Select a Relationship" [(value)]="params.value" (selectionChange)="userChangeSelection('relation')">
-				<mat-option *ngFor="let map of targetRelations" value="{{ map }}" class="no-checkbox">{{ map }}</mat-option>
-			</mat-select>
-		</mat-form-field>
-	</div>
 </ng-template>
 
 <!--Rule Template-->

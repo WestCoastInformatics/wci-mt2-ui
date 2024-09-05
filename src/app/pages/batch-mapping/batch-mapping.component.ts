@@ -89,6 +89,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	popover_addAdviceList = [];
 	selectedAction = '';
 	loaded = false;
+	saving = false;
 	selectedFormat = {};
 	formats = [];
 	numOfGroups = 1;
@@ -134,7 +135,6 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	@ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
 	@ViewChild('directoryToNameSection') toNameSection: TemplateRef<any>;
 	@ViewChild('targetAdviceSection') adviceSection: TemplateRef<any>;
-	@ViewChild('targetRelationshipSection') relationshipSection: TemplateRef<any>;
 	@ViewChild('targetRuleSection') ruleSection: TemplateRef<any>;
 	@ViewChild('directoryEditionSection') editionSection: TemplateRef<any>;
 	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
@@ -372,12 +372,8 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				headerTooltip: 'Relationship',
 				resizable: true,
 				cellEditor: 'agSelectCellEditor',
-				cellEditorParams: {
-					values: this.targetRelations,
-					valueListGap: 1,
-					valueListMaxHeight: 400,
-					valueListMaxWidth: 300,
-				},
+				cellEditorParams: (params) =>
+					params.data.mapEntries.toCode === '[Empty Target]' ? { values: this.noTargetRelations, valueListGap: 1 } : { values: this.targetRelations, valueListGap: 1 },
 				unSortIcon: true,
 				sortable: false,
 				suppressSorting: true,
@@ -523,7 +519,6 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				this.mapAdvices = results.mapAdvices.map((res) => {
 					return res.name;
 				});
-
 				this.loadGridColumns();
 			},
 		});
@@ -841,6 +836,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	saveMappings() {
+		this.saving = true;
 		for (let f = 0; f < this.mapsetResponse.length; f++) {
 			this.mapsetResponse[f].mapEntries = [];
 			for (let p = 0; p < this.mapsetData.length; p++) {
@@ -873,6 +869,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.userChanged = false;
 		this.refsetService.updateMapsetMappingBulk(this.mapsetCode, this.mapsetResponse).subscribe(
 			(status) => {
+				this.saving = false;
 				this.notificationService.show('The mappings have been saved.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
 			},
 			(error) => {
@@ -927,8 +924,10 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	editTarget(event: any, params: any): void {
 		this.targetFC.reset();
 		this.selectedTarget = params.data.uuid;
-		this.targetFC.setValue(params.data.mapEntries.toCode);
-		this.targetToName = params.data.mapEntries.toName;
+		if (params.data.mapEntries.toCode !== '[Empty Target]') {
+			this.targetFC.setValue(params.data.mapEntries.toCode);
+			this.targetToName = params.data.mapEntries.toName;
+		}
 		this.showTargetPopover = true;
 		this.showAdvicePopover = false;
 		this.showGroupPopover = false;
@@ -950,9 +949,12 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				data.toCode = data.mapEntries.group + '/' + data.mapEntries.priority + '#' + '[Empty Target]';
 				data.mapEntries.toName = '---';
 				data.toName = '---';
+				data.relation = this.noTargetRelations[0];
+				data.mapEntries.relation = this.noTargetRelations[0];
 			}
 		});
 		this.gridApi.refreshCells(this.gridParams);
+		this.gridApi.redrawRows();
 		this.closeTarget();
 	}
 
@@ -967,6 +969,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 			}
 		});
 		this.gridApi.refreshCells(this.gridParams);
+		this.gridApi.redrawRows();
 		this.closeTarget();
 	}
 
@@ -1094,6 +1097,8 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 						map.toCode = map.mapEntries.group + '/' + map.mapEntries.priority + '#' + '[Empty Target]';
 						map.mapEntries.toName = '---';
 						map.toName = '---';
+						map.relation = this.noTargetRelations[0];
+						map.mapEntries.relation = this.noTargetRelations[0];
 					}
 				});
 				this.userChanged = true;
@@ -1104,6 +1109,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				this.mapsetData = this.mapsetData.filter((map) => {
 					return !map.checked;
 				});
+				this.gridApi.redrawRows();
 				break;
 			default:
 				this.openToBeDevelopedModal(this.tbdModal);
@@ -1116,6 +1122,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 					map.checked = false;
 				}
 			});
+			this.gridApi.redrawRows();
 		}
 		this.selectedAction = '';
 		this.actions.value = this.selectedAction;
