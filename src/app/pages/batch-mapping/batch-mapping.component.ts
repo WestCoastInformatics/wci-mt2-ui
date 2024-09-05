@@ -845,8 +845,8 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 					const uiEntry = this.mapsetData[p].mapEntries;
 					const mapEntry = {
 						'advices': uiEntry.advices,
-						'toCode': uiEntry.toCode === '[Empty Target]' ? null : uiEntry.toCode,
-						'toName': uiEntry.toName === '---' ? null : uiEntry.toName,
+						'toCode': uiEntry.toCode === '[Empty Target]' ? '' : uiEntry.toCode,
+						'toName': uiEntry.toName === '---' ? '[NO TARGET]' : uiEntry.toName,
 						'rule': uiData.rule,
 						'priority': uiData.priority,
 						'relation': uiData.relation.toUpperCase(),
