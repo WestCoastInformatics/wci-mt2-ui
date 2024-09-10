@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { PaginationChangedEvent } from 'ag-grid-community';
 import { MatSelect } from '@angular/material/select';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
@@ -20,6 +21,7 @@ import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { formatDate } from '@angular/common';
+import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
 	selector: 'app-mapset-records',
@@ -51,6 +53,7 @@ export class MapsetRecordsComponent implements OnInit {
 		totalRows: null,
 		manualStateRefresh: Boolean(true),
 	};
+	paginationPages: any = {};
 	refsetGridLastFilter = '';
 	refsetGridLastSort = '';
 	showTable = false;
@@ -92,6 +95,7 @@ export class MapsetRecordsComponent implements OnInit {
 	datasource: any;
 	recordRows = [];
 	mapSetSubscription: Subscription;
+	private isNewPageSize = false;
 
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
@@ -124,10 +128,10 @@ export class MapsetRecordsComponent implements OnInit {
 		private changeDetectorRef: ChangeDetectorRef,
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
-		private modalService: NgbModal
+		private modalService: NgbModal,
+		private pagerService: PaginationService
 	) {
 		document.body.scrollTop = 0;
-		//refsetService.getTaxonomyRoot();
 	}
 
 	//***** Framework Functions *****/
@@ -329,17 +333,28 @@ export class MapsetRecordsComponent implements OnInit {
 					},
 				},
 			];
+
 			this.refsetGridOptions = {
-				context: { componentParent: this },
 				pagination: true,
+				rowModelType: 'infinite',
+				suppressScrollOnNewData: true,
+				suppressColumnMoveAnimation: true,
+				suppressDragLeaveHidesColumns: true,
+				debounceVerticalScrollbar: true,
+				animateRows: false,
+				cacheBlockSize: this.refsetGridPaging.pageSize,
+				debug: true,
+				cacheOverflowSize: 2,
+				maxBlocksInCache: 2,
+				maxConcurrentDatasourceRequests: 2,
+				paginationPageSize: this.refsetGridPaging.pageSize,
+				serverSideEnableClientSideSort: true,
+				paginationPageSizeSelector: this.refsetGridPaging.pageSizeOptions,
+				datasource: this.createDataSource(),
+				onPaginationChanged: (event: any) => this.onPaginationChanged(event),
+				context: { componentParent: this },
 				angularCompileHeaders: true,
 				suppressColumnVirtualisation: true,
-				suppressPaginationPanel: true,
-				paginationPageSize: this.refsetGridPaging.pageSize,
-				rowSelection: 'single',
-				cacheBlockSize: this.refsetGridPaging.pageSize,
-				maxBlocksInCache: 1,
-				rowModelType: 'infinite',
 				enableCellTextSelection: true,
 				domLayout: 'autoHeight',
 				onCellDoubleClicked: this.onGridCellClick,
@@ -373,7 +388,6 @@ export class MapsetRecordsComponent implements OnInit {
 				},
 			};
 			this.showTable = true;
-			this.changeDetectorRef.detectChanges();
 		});
 	}
 
@@ -421,8 +435,6 @@ export class MapsetRecordsComponent implements OnInit {
 
 	onGridReady = (gridReadyParams) => {
 		this.refsetGridApi = gridReadyParams.api;
-		//this.columnDefs[4].cellRendererParams = { template: this.descriptionSection };
-		//this.columnDefs[5].cellRendererParams = { template: this.actionsSection };
 		this.refsetGridApi.setColumnDefs(this.columnDefs);
 		this.refsetGridColumnApi = gridReadyParams.columnApi;
 
@@ -434,170 +446,148 @@ export class MapsetRecordsComponent implements OnInit {
 		if (this.mapSetSubscription) {
 			this.mapSetSubscription.unsubscribe();
 		}
+	};
 
-		this.onResize(undefined);
-		this.datasource = {
+	createDataSource() {
+		return {
 			rowCount: null,
 			getRows: (rowParams) => {
+				const startRow = rowParams.startRow;
+				const endRow = rowParams.endRow;
+				const sortModel = rowParams.sortModel;
 				this.refsetGridApi.showLoadingOverlay();
 
-				let pageNumber = this.refsetGridApi.paginationGetCurrentPage() + 1; // rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
-				//let query = UiUtility.formatFilterData(rowParams.filterModel);
-				//const sort = UiUtility.formatSortData(rowParams.sortModel);
 				let query = '';
 
 				if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
 					query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
 				}
-				const newFilterString = query;
-				//const newSortString = JSON.stringify(sort);
 
-				// if the filters or sort have changed then move to the first page
-				if (newFilterString !== this.refsetGridLastFilter) {
-					//|| newSortString !== this.refsetGridLastSort) {
-					pageNumber = 1;
-					this.refsetGridApi?.api?.paginationGoToPage(0);
-				}
-
-				// if the filters have changed then reset the total row variables
-				if (newFilterString !== this.refsetGridLastFilter) {
-					this.refsetGridPaging.totalRows = null;
-					this.refsetGridPaging.totalKnown = false;
-				}
-
-				this.refsetGridLastFilter = newFilterString;
-				//this.refsetGridLastSort = newSortString;
-
-				const restParams: any = {
-					offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(), //pageNumber - 1,
-					limit: this.refsetGridApi.paginationGetPageSize(),
-				};
-
-				if (CodeUtility.hasValue(query)) {
-					query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
-					restParams.filter = query;
+				if (this.isNewPageSize) {
+					rowParams.failCallback();
 				} else {
-					restParams.filter = '';
-				}
-				this.mapSetSubscription = this.refsetService.getMappingsByMapset(this.mapsetCode, restParams).subscribe({
-					next: (results) => {
-						this.loaded = false;
-						const mapsetResults = results;
-						results = results.items;
+					this.loaded = false;
+					let limit = endRow - startRow;
+					if (this.numOfMembers > 0) {
+						if (startRow + limit > this.numOfMembers) {
+							limit = this.numOfMembers - startRow;
+						}
+					}
+					const restParams: any = {
+						offset: startRow,
+						limit: limit,
+					};
 
-						const data = [];
-						let count = 0;
+					if (CodeUtility.hasValue(query)) {
+						query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
+						restParams.filter = query;
+					} else {
+						restParams.filter = '';
+					}
+					this.mapSetSubscription = this.refsetService.getMappingsByMapset(this.mapsetCode, restParams).subscribe({
+						next: (results) => {
+							this.changeDetectorRef.detectChanges();
+							this.loaded = false;
+							const mapsetResults = results;
+							results = results.items;
 
-						for (let a = 0; a < results.length; a++) {
-							for (let b = 0; b < results[a].mapEntries.length; b++) {
-								let spanned = false;
-								if (results[a].mapEntries.length > 1) {
-									if (b >= 1) {
-										spanned = true;
+							const data = [];
+							let count = 0;
+
+							for (let a = 0; a < results.length; a++) {
+								for (let b = 0; b < results[a].mapEntries.length; b++) {
+									let spanned = false;
+									if (results[a].mapEntries.length > 1) {
+										if (b >= 1) {
+											spanned = true;
+										}
+									} else {
+										//results[a].mapEntries[b].group = '';
 									}
-								} else {
-									//results[a].mapEntries[b].group = '';
+									const adviceArray = [];
+									for (let i = 0; i < results[a].mapEntries[b].advices.length; i++) {
+										adviceArray.push(results[a].mapEntries[b].advices[i]);
+									}
+									data.push({
+										'index': results[a].code !== '' ? a + results[a].code + count : false,
+										'spanned': spanned,
+										'downloadable': results[a].code !== '' ? true : false,
+										'mapEntries': results[a].mapEntries,
+										'entries': results[a].mapEntries.length,
+										'code': results[a].code,
+										'name': results[a].name,
+										'toName': results[a].mapEntries[b].toName.length > 0 && results[a].mapEntries[b].toName !== ' DOES NOT EXIST' ? results[a].mapEntries[b].toName : '---',
+										'toCode':
+											results[a].mapEntries.length > 0
+												? results[a].mapEntries[b].group + '/' + results[a].mapEntries[b].priority + '&' + results[a].mapEntries.length + '#' + results[a].mapEntries[b].toCode
+												: 'No map entries available.',
+										'rule': results[a].mapEntries[b].rule.length > 0 ? results[a].mapEntries[b].rule : '---',
+										'relation': results[a].mapEntries[b].relation.length > 0 ? results[a].mapEntries[b].relation : '---',
+										'modified': results[a].mapEntries[b].modified,
+										'advices': results[a].code !== '' ? { 'number': adviceArray.length, 'list': adviceArray } : { 'number': -1, 'list': [] },
+										'group': results[a].mapEntries[b].group,
+										'priority': results[a].mapEntries[b].priority,
+										'released': results[a].mapEntries[b].released,
+									});
+									count++;
 								}
-								const adviceArray = [];
-								for (let i = 0; i < results[a].mapEntries[b].advices.length; i++) {
-									adviceArray.push(results[a].mapEntries[b].advices[i]);
-								}
-								data.push({
-									'index': results[a].code !== '' ? a + results[a].code + count : false,
-									'spanned': spanned,
-									'downloadable': results[a].code !== '' ? true : false,
-									'mapEntries': results[a].mapEntries,
-									'entries': results[a].mapEntries.length,
-									'code': results[a].code,
-									'name': results[a].name,
-									'toName': results[a].mapEntries[b].toName.length > 0 && results[a].mapEntries[b].toName !== ' DOES NOT EXIST' ? results[a].mapEntries[b].toName : '---',
-									'toCode':
-										results[a].mapEntries.length > 0
-											? results[a].mapEntries[b].group + '/' + results[a].mapEntries[b].priority + '&' + results[a].mapEntries.length + '#' + results[a].mapEntries[b].toCode
-											: 'No map entries available.',
-									'rule': results[a].mapEntries[b].rule.length > 0 ? results[a].mapEntries[b].rule : '---',
-									'relation': results[a].mapEntries[b].relation.length > 0 ? results[a].mapEntries[b].relation : '---',
-									'modified': results[a].mapEntries[b].modified,
-									'advices': results[a].code !== '' ? { 'number': adviceArray.length, 'list': adviceArray } : { 'number': -1, 'list': [] },
-									'group': results[a].mapEntries[b].group,
-									'priority': results[a].mapEntries[b].priority,
-									'released': results[a].mapEntries[b].released,
-								});
-								count++;
 							}
-						}
 
-						this.mapsetData = data;
-						//this.mapsetData = this.mapsetData.sort((a, b) => (a.name > b.name ? 1 : -1));
-						mapsetResults.items = this.mapsetData;
-						this.numOfMembers = mapsetResults.total;
-						this.numOfResults = mapsetResults.total;
+							this.mapsetData = data;
+							mapsetResults.items = this.mapsetData;
+							this.numOfMembers = mapsetResults.total;
+							this.numOfResults = mapsetResults.total;
 
-						const lastIndex = document.getElementsByClassName('ag-header').length - 1;
-						const child = document.getElementsByClassName('ag-header')[lastIndex];
-						document.getElementById('directoryHeader').appendChild(child);
+							const lastIndexH = document.getElementsByClassName('ag-header').length - 1;
+							const childH = document.getElementsByClassName('ag-header')[lastIndexH];
+							document.getElementById('directoryHeader').appendChild(childH);
+							const lastIndexP = document.getElementsByClassName('ag-paging-panel').length - 1;
+							const childP = document.getElementsByClassName('ag-paging-panel')[lastIndexP];
+							document.getElementById('directoryPaging').appendChild(childP);
 
-						this.showPaging = results.total > 0;
-						if (mapsetResults.items.length === 0 && pageNumber > 1) {
-							this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
-							this.refsetGridPaging.totalKnown = true;
-							this.paginationComponent.goToPage(pageNumber - 1);
-							return;
-						}
+							this.showPaging = true;
 
-						if (mapsetResults.total) {
-							//mapsetResults.totalKnown = true;
-						}
-						if (data?.length > 0) {
-							this.refsetGridApi.hideOverlay();
-							let currentRowCount = null;
-							let lastRow = -1;
+							if (data?.length > 0) {
+								this.showPaging = true;
+								this.refsetGridApi.hideOverlay();
+								this.paginationPages = Math.ceil(this.numOfMembers / this.refsetGridPaging.pageSize)
+									? this.pagerService.getPager(Math.ceil(this.numOfMembers / this.refsetGridPaging.pageSize), this.refsetGridApi.paginationGetCurrentPage(), true)
+									: {};
 
-							if (mapsetResults.totalKnown || data.length < this.refsetGridApi.paginationGetPageSize() || this.refsetGridPaging.totalKnown) {
-								if (mapsetResults.totalKnown) {
-									lastRow = mapsetResults.total;
-								} else if (this.refsetGridPaging.totalKnown) {
-									lastRow = this.refsetGridPaging.totalRows;
-								} else {
-									currentRowCount = data.length + (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize();
-									lastRow = currentRowCount;
-								}
+								this.paginationPages.currentPage = this.getCurrentPage();
 
-								this.refsetGridPaging.totalRows = lastRow;
-								this.refsetGridPaging.totalKnown = true;
+								this.loaded = true;
+								const lastRow = this.numOfMembers;
+								rowParams.successCallback(data, lastRow);
 							} else {
-								currentRowCount = data.length + (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize();
+								this.showPaging = false;
+								this.refsetGridApi.showNoRowsOverlay();
+								rowParams.successCallback([], 0);
 							}
-							this.loaded = true;
-							rowParams.successCallback(data, lastRow);
-						} else {
+
+							this.refsetGridPaging.manualStateRefresh = Boolean(true);
+							// set placeholders on the grid floating filter fields
+							Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
+								if (obj.attributes['disabled']) {
+									// skip columns with disabled filter
+									return;
+								}
+
+								const label = obj.getAttribute('aria-label');
+								const value = label.substring(0, label.indexOf('Filter Input')) + '...';
+								obj.setAttribute('placeholder', value);
+							});
+							this.mapSetSubscription.unsubscribe();
+						},
+						error: (error) => {
 							this.refsetGridApi.showNoRowsOverlay();
 							rowParams.successCallback([], 0);
-						}
-
-						this.refsetGridPaging.manualStateRefresh = Boolean(true);
-						// set placeholders on the grid floating filter fields
-						Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
-							if (obj.attributes['disabled']) {
-								// skip columns with disabled filter
-								return;
-							}
-
-							const label = obj.getAttribute('aria-label');
-							const value = label.substring(0, label.indexOf('Filter Input')) + '...';
-							obj.setAttribute('placeholder', value);
-						});
-						this.mapSetSubscription.unsubscribe();
-					},
-					error: (error) => {
-						this.refsetGridApi.showNoRowsOverlay();
-						rowParams.successCallback([], 0);
-					},
-				});
+						},
+					});
+				}
 			},
 		};
-		gridReadyParams.api.setDatasource(this.datasource);
-	};
+	}
 
 	checkboxRowSelect(event, index) {
 		for (let d = 0; d < this.mapsetData.length; d++) {
@@ -796,9 +786,35 @@ export class MapsetRecordsComponent implements OnInit {
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
 			//this.refsetGridApi.setQuickFilter(this.searchInput);
 			//	this.onGridReady(this.originalGridParams);
+			this.setPageSize(10);
+			this.goToPage(0);
 			this.loaded = false;
 			this.refsetGridApi.purgeInfiniteCache();
 		}
+	}
+
+	/*Pagination functions */
+	onPaginationChanged(event: PaginationChangedEvent) {
+		if (this.refsetGridApi) {
+			this.isNewPageSize = event.newPageSize ?? false;
+			if (this.isNewPageSize) {
+				this.loaded = false;
+			}
+			this.refsetGridPaging.pageSize = this.refsetGridApi.paginationGetPageSize();
+			this.refsetGridApi.updateGridOptions({
+				paginationPageSize: this.refsetGridPaging.pageSize,
+				cacheBlockSize: this.refsetGridPaging.pageSize,
+			});
+		}
+	}
+
+	setPageSize(size: number) {
+		this.refsetGridApi.paginationGoToFirstPage();
+		this.refsetGridApi.paginationSetPageSize(size);
+	}
+
+	goToPage(number: number) {
+		this.refsetGridApi.paginationGoToPage(number);
 	}
 
 	//***** General Functions *****/
@@ -852,6 +868,14 @@ export class MapsetRecordsComponent implements OnInit {
 		url.searchParams.set('reload', 'true');
 		window.history.pushState({}, '', url.href);
 		this.router.navigate(['/mapset/' + this.mapsetCode + '/mappings/' + codes.join('_') + '/batch'], { replaceUrl: false, skipLocationChange: false });
+	}
+
+	getCurrentPage() {
+		let current = 1;
+		if (this.refsetGridApi) {
+			current = this.refsetGridApi.paginationGetCurrentPage();
+		}
+		return current;
 	}
 
 	getRefsetRow(refsetId: string) {
