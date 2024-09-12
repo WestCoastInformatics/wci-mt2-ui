@@ -3,7 +3,7 @@ import { Subscription, debounceTime, distinctUntilChanged, Observable, forkJoin,
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, HostListener } from '@angular/core';
 import { MatSelect } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ISelectCellEditorParams } from 'ag-grid-community';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -27,6 +27,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 })
 export class BatchMappingComponent implements OnInit, AfterViewInit {
 	user: User;
+	searchInput = '';
 	targetCodeInput = '';
 	targetNameInput = '';
 	ruleBased = false;
@@ -115,8 +116,10 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
 	gridParams: any;
 	gridApi: any;
+	gridColumnApi: any;
 	gridColumnDefs = [];
 	gridInterval: any;
+	useDialog = false;
 
 	checkedNum = 0;
 
@@ -233,6 +236,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 			suppressPaginationPanel: true,
 			paginationPageSize: this.gridPaging.pageSize,
 			rowSelection: 'single',
+			animateRows: false,
 			enableCellTextSelection: true,
 			onGridReady: this.onGridReady,
 			onCellValueChanged: this.onCellValueChanged,
@@ -279,7 +283,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				field: 'index',
 				tooltipField: '',
 				colId: 'checkbox',
-				headerName: 'Check/Uncheck All',
+				headerName: '',
 				headerTooltip: 'Check/Uncheck All',
 				minWidth: 55,
 				width: 55,
@@ -453,6 +457,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	onGridReady = (params) => {
 		this.gridParams = params;
 		this.gridApi = params.api;
+		this.gridColumnApi = params.columnApi.api;
 
 		const _window = window;
 		_window['checkboxHandleClick'] = () => {
@@ -549,6 +554,23 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		if (this.targetCodeInput.length > 2) {
 			this.targetToName = 'Searching...';
 			this.getConceptByCode();
+		}
+	}
+
+	clearSearch() {
+		this.showLoadingSearch = false;
+		if (this.searchInput) {
+			this.searchInput = '';
+			this.onSearchChange();
+		}
+	}
+
+	@Debounce()
+	onSearchChange() {
+		this.searchInput = this.searchInput.trim();
+
+		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
+			this.gridApi.setQuickFilter(this.searchInput);
 		}
 	}
 
@@ -891,8 +913,8 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.showGroupPopover = true;
 		this.showAdvicePopover = false;
 		this.showTargetPopover = false;
-		this.popoverLocationY = event.y + 15 - 333 + document.getElementsByClassName('rt2-container')[0].scrollTop;
-		this.popoverLocationX = event.x - 160;
+		this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+		this.popoverLocationX = event.x - 170;
 	}
 
 	clearGroupInput() {
@@ -931,8 +953,8 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.showTargetPopover = true;
 		this.showAdvicePopover = false;
 		this.showGroupPopover = false;
-		this.popoverLocationY = event.y + 15 - 333 + document.getElementsByClassName('rt2-container')[0].scrollTop;
-		this.popoverLocationX = event.x - 180;
+		this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+		this.popoverLocationX = event.x - 190;
 	}
 
 	closeTarget() {
@@ -977,8 +999,8 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.showAdvicePopover = true;
 		this.showGroupPopover = false;
 		this.showTargetPopover = false;
-		this.popoverLocationY = event.y + 15 - 333 + document.getElementsByClassName('rt2-container')[0].scrollTop;
-		this.popoverLocationX = event.x - 160;
+		this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+		this.popoverLocationX = event.x - 170;
 		this.popover_uuid = params.data.uuid;
 		this.popover_adviceToAdd = '';
 		this.popover_updateAdviceList = JSON.parse(JSON.stringify(params.data.mapEntries.mapAdvices));

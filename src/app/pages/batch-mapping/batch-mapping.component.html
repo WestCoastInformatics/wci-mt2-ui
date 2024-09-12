@@ -60,6 +60,24 @@
 			<img src="assets/caret-up-solid.svg" *ngIf="!showConfigSection" alt="Collapse Button" title="Collapse Target Configuration" aria-label="Collapse Button" class="caret-up-solid" />
 			<img src="assets/caret-down-solid.svg" *ngIf="showConfigSection" alt="Expand Button" title="Expand Target Configuration" aria-label="Expand Button" class="caret-down-solid" />
 		</div>
+		<div class="row d-flex dropdown-group" *ngIf="showConfigSection && loaded">
+			<div class="col-md-auto rt2-directory-chooser-column">
+				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="gridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
+			</div>
+
+			<div class="col-md-auto">
+				<div class="dropdown directoryInput">
+					<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
+						<mat-label class="search-label" *ngIf="searchInput === ''">Search</mat-label>
+						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
+					</mat-form-field>
+					<span class="clear-search" (click)="clearSearch()">&#10005;</span>
+					<span *ngIf="searchInput.length > 0" class="mappings-section"
+						>{{ gridApi.getDisplayedRowCount() > 0 ? gridApi.getDisplayedRowCount() : 'No ' }} result{{ gridApi.getDisplayedRowCount() > 1 ? 's' : '' }} found</span
+					>
+				</div>
+			</div>
+		</div>
 		<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showConfigSection || !loaded || saving"></div>
 		<div id="config-background" [hidden]="!showConfigSection || !loaded || saving" class="section-background config-section">
 			<div class="grid-wrapper">

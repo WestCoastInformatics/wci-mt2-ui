@@ -19,7 +19,7 @@
 				</div>
 
 				<div class="col-md-auto">
-					<div class="dropdown directoryInput">
+					<div class="dropdown directoryInput" *ngIf="showTable">
 						<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
 							<mat-label class="search-label" *ngIf="searchInput === ''">Search</mat-label>
 							<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
@@ -44,10 +44,10 @@
 			<!-- <div class="container-fluid page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div> -->
 
 			<!-- Reference Set Table -->
-			<ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct h-638" [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
+			<ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct" [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
 			</ag-grid-angular>
 
-			<app-pagination
+			<!--<app-pagination
 				#directoryPaging
 				*ngIf="showTable"
 				[pageSize]="refsetGridPaging.pageSize"
@@ -55,7 +55,113 @@
 				[pageSizeOptions]="refsetGridPaging.pageSizeOptions"
 				[totalKnown]="refsetGridPaging.totalKnown"
 				[manualStateRefresh]="refsetGridPaging.manualStateRefresh">
-			</app-pagination>
+			</app-pagination>-->
+			<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
+			<div class="rt2-pagination-container" [hidden]="showLoadingSearch || numOfMembers === 0">
+				<div class="rt2-pagination-top-row">
+					<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons">
+						<button
+							#paginationFirstPage
+							mat-raised-button
+							(click)="goToPage(0)"
+							class="pagination-page-buttons"
+							[ngClass]="{ disabled: getCurrentPage() === 0 }"
+							title="Go To First Page"
+							attr.aria-label="Go To First Page">
+							<mat-icon aria-hidden="false">first_page</mat-icon>
+						</button>
+
+						<button
+							#paginationPreviousPage
+							mat-raised-button
+							(click)="this.refsetGridApi.paginationGoToPreviousPage()"
+							title="Go To Previous Page {{ getCurrentPage() }}"
+							class="pagination-page-buttons"
+							[ngClass]="{ disabled: getCurrentPage() === 0 }"
+							attr.aria-label="Go To Previous Page {{ getCurrentPage() }}">
+							<mat-icon aria-hidden="false">arrow_left</mat-icon>
+						</button>
+
+						<span *ngFor="let page of paginationPages.pages">
+							<button
+								#paginationPageNumber
+								mat-raised-button
+								class="pagination-page-buttons"
+								[color]="getCurrentPage() + 1 === page ? 'primary' : ''"
+								(click)="goToPage(page - 1)"
+								attr.aria-label="{{ getCurrentPage() + 1 === page ? 'Current' : 'Go To' }} Page {{ page }}"
+								title="{{ getCurrentPage() + 1 === page ? 'Current' : 'Go To' }} Page {{ page }}">
+								{{ page }}
+							</button>
+						</span>
+
+						<button
+							mat-button
+							*ngIf="paginationPages.totalPages - paginationPages.startPage > 5"
+							(click)="goToPage(paginationPages.startPage + 4)"
+							class="pagination-page-buttons w-min-32 p-0"
+							title="Go To Page {{ paginationPages.startPage + 5 }}"
+							attr.aria-label="Go To Page {{ paginationPages.startPage + 5 }}"
+							title="Go To Page {{ paginationPages.startPage + 5 }}">
+							...
+						</button>
+
+						<button
+							mat-raised-button
+							*ngIf="paginationPages.totalPages - paginationPages.startPage > 5"
+							(click)="goToPage(paginationPages.totalPages)"
+							class="pagination-page-buttons"
+							attr.aria-label="Go To Page {{ paginationPages.totalPages }}"
+							title="Go To Page {{ paginationPages.totalPages }}">
+							{{ paginationPages.totalPages }}
+						</button>
+
+						<button
+							#paginationNextPage
+							mat-raised-button
+							(click)="this.refsetGridApi.paginationGoToNextPage()"
+							title="Go To Next Page {{ getCurrentPage() + 2 }}"
+							class="pagination-page-buttons"
+							[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
+							attr.aria-label="Go To Next Page {{ getCurrentPage() + 2 }}">
+							<mat-icon aria-hidden="false">arrow_right</mat-icon>
+						</button>
+
+						<button
+							#paginationLastPage
+							mat-raised-button
+							(click)="goToPage(paginationPages.totalPages)"
+							title="Go To Last Page ({{ paginationPages.totalPages }})"
+							class="pagination-page-buttons"
+							[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
+							attr.aria-label="Go To Last Page {{ paginationPages.totalPages }}">
+							<mat-icon aria-hidden="false">last_page</mat-icon>
+						</button>
+					</div>
+
+					<div class="rt2-pagination-bottom-row" *ngIf="showPaging">
+						<span *ngFor="let sizeOption of refsetGridPaging.pageSizeOptions">
+							<button
+								mat-raised-button
+								[color]="refsetGridPaging.pageSize === sizeOption ? 'secondary' : ''"
+								class="pagination-page-buttons unthemed"
+								(click)="setPageSize(sizeOption)"
+								[hidden]="sizeOption > numOfMembers"
+								title="{{ sizeOption }} Members per Page">
+								{{ sizeOption }}
+							</button>
+						</span>
+					</div>
+				</div>
+				<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
+					Showing <span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }} </span> to
+					<span class="fw-bold p-l-5 p-r-5">
+						{{ numOfMembers < (getCurrentPage() + 1) * refsetGridPaging.pageSize ? numOfMembers : (getCurrentPage() + 1) * refsetGridPaging.pageSize }}
+					</span>
+					of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
+				</div>
+				<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
+			</div>
 		</div>
 	</div>
 	<!-- Information Templates -->

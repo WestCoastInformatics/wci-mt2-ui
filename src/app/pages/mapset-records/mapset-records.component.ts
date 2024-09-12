@@ -83,6 +83,7 @@ export class MapsetRecordsComponent implements OnInit {
 	advicePopoverLocation = '45px';
 	showMapTable = 'table';
 	checkedNum = 0;
+	useDialog = false;
 
 	selectedAction = '';
 	showMappingsSection = true;
@@ -175,7 +176,7 @@ export class MapsetRecordsComponent implements OnInit {
 					field: 'index',
 					tooltipField: '',
 					colId: 'checkbox',
-					headerName: 'Check/Uncheck All',
+					headerName: '',
 					headerTooltip: 'Check/Uncheck All',
 					minWidth: 55,
 					width: 55,
@@ -343,7 +344,7 @@ export class MapsetRecordsComponent implements OnInit {
 				debounceVerticalScrollbar: true,
 				animateRows: false,
 				cacheBlockSize: this.refsetGridPaging.pageSize,
-				debug: true,
+				debug: false,
 				cacheOverflowSize: 2,
 				maxBlocksInCache: 2,
 				maxConcurrentDatasourceRequests: 2,
@@ -355,6 +356,7 @@ export class MapsetRecordsComponent implements OnInit {
 				context: { componentParent: this },
 				angularCompileHeaders: true,
 				suppressColumnVirtualisation: true,
+				suppressPaginationPanel: true,
 				enableCellTextSelection: true,
 				domLayout: 'autoHeight',
 				onCellDoubleClicked: this.onGridCellClick,
@@ -418,29 +420,24 @@ export class MapsetRecordsComponent implements OnInit {
 		this.showMapTable = value;
 	}
 
-	checkboxAllClick(source) {
+	checkboxAllClick() {
 		this.gridSelectAll == undefined || this.gridSelectAll ? (this.gridSelectAll = false) : (this.gridSelectAll = true);
 		this.mapsetData = this.mapsetData.map((set) => {
 			set.checked = this.gridSelectAll;
 			return set;
 		});
-		switch (source) {
-			case 'record':
-				break;
-			case 'table':
-				this.refsetGridApi.forEachNode((node) => node.setSelected(this.gridSelectAll));
-				break;
-		}
+		this.refsetGridApi.redrawRows();
+		this.checkedNum = this.gridSelectAll ? this.mapsetData.length : 0;
 	}
 
 	onGridReady = (gridReadyParams) => {
 		this.refsetGridApi = gridReadyParams.api;
 		this.refsetGridApi.setColumnDefs(this.columnDefs);
-		this.refsetGridColumnApi = gridReadyParams.columnApi;
+		this.refsetGridColumnApi = gridReadyParams.columnApi.api;
 
 		const _window = window;
 		_window['checkboxHandleClick'] = () => {
-			this.checkboxAllClick('table');
+			this.checkboxAllClick();
 		};
 
 		if (this.mapSetSubscription) {

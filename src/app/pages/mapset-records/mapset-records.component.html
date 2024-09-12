@@ -75,7 +75,7 @@
 				</mat-form-field>
 			</div>
 		</div>
-		<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!loaded || numOfMembers === 0 || showMapTable !== 'table'"></div>
+		<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showMappingsSection || !loaded || numOfMembers === 0 || showMapTable !== 'table'"></div>
 		<div [hidden]="!showMappingsSection" class="section-background mappings-section" [ngClass]="{ 'overflow': showMapTable !== 'table' }">
 			<div *ngIf="showMapTable === 'table'" [hidden]="loaded" class="section-loading">Loading...</div>
 			<div [hidden]="!loaded" *ngIf="numOfMembers === 0" class="status-no-results">No Results to Show</div>
@@ -138,9 +138,7 @@
 				</div>
 			</div>
 		</div>
-
 		<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
-
 		<div class="rt2-pagination-container" [hidden]="!loaded || numOfMembers === 0 || !showMappingsSection">
 			<div class="rt2-pagination-top-row">
 				<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons">
