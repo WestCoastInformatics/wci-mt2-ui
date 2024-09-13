@@ -966,6 +966,8 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				data.toCode = data.mapEntries.group + '/' + data.mapEntries.priority + '#' + this.targetFC.value;
 				data.mapEntries.toName = this.targetToName;
 				data.toName = this.targetToName;
+				data.relation = this.targetRelations[0];
+				data.mapEntries.relation = this.targetRelations[0];
 			}
 		});
 		this.gridApi.refreshCells(this.gridParams);
