@@ -1,4 +1,5 @@
 @import 'src/assets/scss/variables.scss';
+@import 'src/assets/scss/button-styles.scss';
 @import 'src/assets/scss/core-styles.scss';
 
 .advice-popover {
@@ -55,6 +56,16 @@
 	flex: 1 1 0px;
 	width: 100%;
 	overflow: auto;
+}
+
+.directory-new-paging {
+	display: flex;
+	margin-top: 7px;
+	flex: 1;
+	justify-content: center;
+	color: #7f7f7f;
+	font-size: 1.4rem !important;
+	font-weight: 400 !important;
 }
 
 .popup-handle {
@@ -432,4 +443,23 @@
 	height: 22px;
 	//color: #2269e8;
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
+}
+
+.record-loading {
+	position: absolute;
+}
+
+.mat-mdc-raised-button.mat-primary {
+	background-color: $mapset-blue !important;
+	color: #ffffff !important;
+}
+
+.mat-mdc-raised-button.mat-secondary {
+	background-color: #e6e6e6 !important;
+	color: #7f7f7f !important;
+}
+
+.mat-mdc-raised-button.mat-unthemed {
+	background-color: #ffffff !important;
+	color: #7f7f7f !important;
 }

@@ -162,6 +162,14 @@
 	}
 }
 
+.metadata-collapsible-container-group-header:hover {
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+.no-hover:hover {
+	background-color: initial !important;
+}
+
 .target-selection-box:hover {
 	background-color: #f2f2f2;
 }
@@ -305,10 +313,6 @@
 	margin-bottom: 7px;
 	padding-right: 0;
 	padding-left: 0;
-}
-
-.metadata-collapsible-container {
-	padding-right: 15px;
 }
 
 .mapset-chip {

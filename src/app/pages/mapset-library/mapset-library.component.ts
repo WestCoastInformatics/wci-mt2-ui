@@ -15,9 +15,9 @@ import { Constants } from 'src/app/utilities/constants.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
-import { forkJoin } from 'rxjs';
 import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { PaginationService } from 'src/app/services/pagination.service';
 
 /**
  * @title Tree with nested nodes
@@ -73,6 +73,9 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 	showLoadingSearch = true;
 	toBeDevelopedModalRef: NgbModalRef;
 	isModalOpen = false;
+	showPaging = false;
+	paginationPages: any = {};
+	private isNewPageSize = false;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -94,7 +97,8 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 		private changeDetectorRef: ChangeDetectorRef,
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
-		private modalService: NgbModal
+		private modalService: NgbModal,
+		private pagerService: PaginationService
 	) {
 		document.body.scrollTop = 0;
 		refsetService.getTaxonomyRoot();
@@ -202,6 +206,8 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 				this.refsetGridOptions = {
 					context: { componentParent: this },
 					pagination: true,
+					animateRows: false,
+					rowModelType: 'clientSide',
 					suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
 					suppressPaginationPanel: true,
 					paginationPageSize: this.refsetGridPaging.pageSize,
@@ -218,7 +224,7 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 						sortable: true,
 						filter: true,
 						sortingOrder: ['asc', 'desc'],
-						floatingFilter: true,
+						floatingFilter: false,
 						floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false },
 						suppressMenu: true,
 						resizable: true,
@@ -255,7 +261,7 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 		this.originalGridParams = gridReadyParams;
 		this.refsetGridApi = gridReadyParams.api;
 		this.refsetGridApi.setFilterModel(null);
-		this.refsetGridColumnApi = gridReadyParams.columnApi;
+		this.refsetGridColumnApi = gridReadyParams.columnApi.api;
 		this.onResize(undefined);
 
 		this.refsetGridApi.showLoadingOverlay();
@@ -307,8 +313,10 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 						this.refsetGridPaging.totalKnown = true;
 						this.paginationComponent.goToPage(pageNumber - 1);
 					}
-
+					this.showPaging = false;
 					return;
+				} else {
+					this.showPaging = true;
 				}
 
 				UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
@@ -331,6 +339,14 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 			obj.setAttribute('placeholder', value);
 		});
 	};
+
+	getCurrentPage() {
+		let current = 1;
+		if (this.refsetGridApi) {
+			current = this.refsetGridApi.paginationGetCurrentPage();
+		}
+		return current;
+	}
 
 	editionValueGetter = function (params) {
 		if (!CodeUtility.hasValue(params?.data)) {
