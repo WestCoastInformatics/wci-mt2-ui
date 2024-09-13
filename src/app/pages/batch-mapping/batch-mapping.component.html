@@ -316,10 +316,10 @@
 </ng-template>
 
 <ng-template #directoryCodeSection let-params>
-	<span *ngIf="params?.value === 'No map entries available.'">
+	<!--<span *ngIf="params?.value === 'No map entries available.'">
 		{{ params?.value }}
-	</span>
-	<span *ngIf="params?.value !== 'No map entries available.' && params?.value !== undefined" class="pointer">
+	</span>-->
+	<span *ngIf="params?.value !== undefined" class="pointer">
 		<mat-chip-list *ngIf="params?.value.split('#')[0] !== '1/1&1'" (click)="editGroup($event, params)" class="pointer">
 			<mat-chip
 				class="mapset-chip pointer"
