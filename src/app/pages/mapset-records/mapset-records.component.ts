@@ -96,7 +96,7 @@ export class MapsetRecordsComponent implements OnInit {
 	datasource: any;
 	recordRows = [];
 	mapSetSubscription: Subscription;
-	private isNewPageSize = false;
+	isNewPageSize = false;
 
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
