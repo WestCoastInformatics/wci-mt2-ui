@@ -68,6 +68,13 @@
 	font-weight: 400 !important;
 }
 
+.mapset-intl-icon {
+	cursor: pointer;
+	color: $mapset-blue;
+	font-size: 1.25em;
+	vertical-align: middle;
+}
+
 .popup-handle {
 	z-index: 25;
 	height: 16px;

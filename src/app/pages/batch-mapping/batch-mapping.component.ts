@@ -653,6 +653,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 							'advices_open': false,
 							'group': results.mapEntries[b].group,
 							'priority': results.mapEntries[b].priority,
+							'released': results.mapEntries[b].released,
 						};
 						count++;
 						batch.push(data);

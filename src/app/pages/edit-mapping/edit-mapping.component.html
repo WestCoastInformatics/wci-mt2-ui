@@ -148,7 +148,17 @@
 								<!--target-name-wrap-->
 								<span class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)">{{ entry.group || '1' }}/{{ entry.priority }}</span
 								><span class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)">{{ entry.toCode }}</span
-								><span title="{{ entry.toName }}" class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)">{{ entry.toName }}</span>
+								><span title="{{ entry.toName }}" class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)"
+									>{{ entry.toName }}
+									<mat-icon
+										*ngIf="entry.released"
+										aria-hidden="false"
+										class="mat-button-wrapper mapset-intl-icon m-l-5"
+										aria-label="SNOMED International"
+										title="SNOMED International">
+										<span class="material-symbols-outlined"> language_international </span>
+									</mat-icon></span
+								>
 							</div>
 						</div>
 						<div class="target-selection" *ngIf="entry.toName.indexOf('[NO TARGET]') > -1 || entry.toName.indexOf(' CONCEPT NOT FOUND') > -1">
