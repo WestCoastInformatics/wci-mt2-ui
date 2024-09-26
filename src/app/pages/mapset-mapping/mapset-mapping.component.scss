@@ -492,3 +492,10 @@
 	//color: #2269e8;
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
+
+.mapset-intl-icon {
+	cursor: pointer;
+	color: $mapset-blue;
+	font-size: 1.25em;
+	vertical-align: middle;
+}

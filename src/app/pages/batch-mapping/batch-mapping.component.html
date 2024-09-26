@@ -237,17 +237,9 @@
 <!-- Name Templates -->
 <ng-template #directoryNameSection let-params>
 	<span class="blue-link">{{ params?.value }}</span>
-
-	<mat-icon
-		*ngIf="params?.data?.privateRefset"
-		aria-hidden="false"
-		#directoryPrivateIcon
-		class="rt2-table-action-icon rt2-table-action-form-icon"
-		aria-label="Private Reference Set"
-		title="Private Reference Set">
-		lock
+	<mat-icon *ngIf="params?.data?.released" aria-hidden="false" class="mat-button-wrapper mapset-intl-icon m-l-5" aria-label="SNOMED International" title="SNOMED International">
+		<span class="material-symbols-outlined"> language_international </span>
 	</mat-icon>
-	<mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="rt2-table-action-icon rt2-table-action-form-icon" aria-label="Local Set" title="Local Set"> my_location </mat-icon>
 </ng-template>
 
 <!-- Edition Templates -->

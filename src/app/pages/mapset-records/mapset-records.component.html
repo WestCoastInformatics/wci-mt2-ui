@@ -67,6 +67,7 @@
 				<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
 					<mat-select #actions title="Actions" placeholder="Actions" [(value)]="selectedAction" (selectionChange)="selectAction()">
 						<mat-option value="select" class="no-checkbox" *ngIf="showMapTable === 'record'">Check/Uncheck All</mat-option>
+						<mat-option value="view" class="no-checkbox" *ngIf="showMapTable === 'record'" [disabled]="checkedNum !== 1">View Selected Mapping</mat-option>
 						<mat-option value="edit" class="no-checkbox" [disabled]="checkedNum !== 1">Edit Selected Mapping</mat-option>
 						<mat-option value="batch" class="no-checkbox" [disabled]="checkedNum < 2">Batch Edit Selected Mappings</mat-option>
 						<mat-option value="selected" class="no-checkbox" [disabled]="checkedNum < 1">Download Selected Mappings</mat-option>
@@ -115,7 +116,17 @@
 									<div class="col-4 row mb-3">
 										<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
 										<div class="record-code col-2">{{ entry.toCode }}</div>
-										<div class="record-name col-8">{{ entry.toName }}</div>
+										<div class="record-name col-8">
+											{{ entry.toName
+											}}<mat-icon
+												*ngIf="entry.released"
+												aria-hidden="false"
+												class="mat-button-wrapper mapset-intl-icon m-l-5"
+												aria-label="SNOMED International"
+												title="SNOMED International">
+												<span class="material-symbols-outlined"> language_international </span>
+											</mat-icon>
+										</div>
 									</div>
 									<div class="col-8 row mb-3">
 										<div class="info-box">

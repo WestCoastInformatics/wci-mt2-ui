@@ -194,6 +194,7 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 						'advices': { 'number': adviceArray.length, 'list': adviceArray },
 						'group': results.mapEntries[b].group,
 						'priority': results.mapEntries[b].priority,
+						'released': results.mapEntries[b].released,
 					});
 					count++;
 				}

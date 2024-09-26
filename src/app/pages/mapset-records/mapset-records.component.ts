@@ -720,6 +720,21 @@ export class MapsetRecordsComponent implements OnInit {
 				this.selectedAction = '';
 				this.actions.value = this.selectedAction;
 				break;
+			case 'view':
+				if (this.checkedNum === 1) {
+					for (let c = 0; c < this.mapsetData.length; c++) {
+						if (this.mapsetData[c].checked === true) {
+							this.actions.close();
+							const ddInterval = setInterval(() => {
+								this.goToMappingPage(this.mapsetData[c].code);
+								clearInterval(ddInterval);
+							}, 2);
+						}
+					}
+					this.selectedAction = '';
+					this.actions.value = this.selectedAction;
+				}
+				break;
 			case 'edit':
 				if (this.checkedNum === 1) {
 					for (let c = 0; c < this.mapsetData.length; c++) {

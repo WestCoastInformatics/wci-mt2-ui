@@ -66,7 +66,17 @@
 										<div class="col-4 row mb-3">
 											<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
 											<div class="record-code col-2">{{ entry.toCode }}</div>
-											<div class="record-name col-8">{{ entry.toName }}</div>
+											<div class="record-name col-8">
+												{{ entry.toName
+												}}<mat-icon
+													*ngIf="entry.released"
+													aria-hidden="false"
+													class="mat-button-wrapper mapset-intl-icon m-l-5"
+													aria-label="SNOMED International"
+													title="SNOMED International">
+													<span class="material-symbols-outlined"> language_international </span>
+												</mat-icon>
+											</div>
 										</div>
 										<div class="col-8 row mb-3">
 											<div class="info-box">
