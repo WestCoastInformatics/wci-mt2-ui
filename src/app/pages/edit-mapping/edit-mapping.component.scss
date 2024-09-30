@@ -85,8 +85,9 @@
 }
 
 .map-group-header {
-	padding-top: 0 !important;
+	padding-left: 5px !important;
 	margin-top: 0 !important;
+	margin-left: 0 !important;
 }
 
 .header-adjust {
@@ -130,6 +131,13 @@
 	display: inline-block;
 }
 
+.sub-header-font {
+	font-size: 12px;
+	margin-left: 15px;
+	margin-top: 5px;
+	color: #666;
+}
+
 .target-selection {
 	height: 25px;
 	border: 1px solid #666;
@@ -162,8 +170,16 @@
 	}
 }
 
-.metadata-collapsible-container-group-header:hover {
-	background-color: rgba(0, 0, 0, 0.1);
+.group-background > .metadata-collapsible-container-group-header {
+	pointer-events: auto;
+}
+
+.group-background:hover {
+	background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.group-background {
+	pointer-events: none;
 }
 
 .no-hover:hover {
@@ -181,7 +197,7 @@
 
 .target-hover-background:hover,
 .target-selected-background {
-	background-color: rgba(24, 80, 190, 0.1);
+	background-color: rgba(24, 80, 190, 0.2);
 	.target-move-btn,
 	.target-remove-btn {
 		display: inline-block !important;
@@ -409,6 +425,7 @@
 
 .mappings-section {
 	color: #666;
+	font-size: 12px;
 }
 
 .member-search-icon {
@@ -645,14 +662,6 @@
 	padding-left: 0.5em !important;
 }
 
-.discussion-icon {
-	cursor: pointer;
-	width: 22px;
-	height: 22px;
-	//color: #2269e8;
-	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
-}
-
 /*previous */
 #directorySearchInputField {
 	width: 340px;
@@ -716,10 +725,10 @@
 
 .mapset-notes-icon {
 	cursor: pointer;
-	width: 24px;
-	height: 24px;
+	width: 22px;
+	height: 22px;
 	//color: #2269e8;
-	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
+	filter: invert(10%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 
 .discussion-icon {
@@ -729,6 +738,15 @@
 	height: 24px;
 	//color: #2269e8;
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
+}
+
+.rate-review-icon {
+	cursor: pointer;
+	margin-top: -0.2em;
+	width: 28px;
+	height: 28px;
+	//color: #2269e8;
+	filter: invert(60%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 
 .config-section {

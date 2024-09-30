@@ -82,7 +82,6 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 	routeParamsSubscription$: Subscription;
 	gridSelectAll = false;
 
-	selectedAction = '';
 	loaded = false;
 	selectedFormat = {};
 	formats = [];
@@ -213,24 +212,35 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	selectAction() {
-		switch (this.selectedAction) {
+	selectAction(action: string) {
+		switch (action) {
 			case 'edit':
-				if (this.selectedAction === 'edit') {
-					this.actions.close();
+				if (action === 'edit') {
 					const ddInterval = setInterval(() => {
 						this.goToEditMappingPage();
 						clearInterval(ddInterval);
 					}, 2);
 				}
-				this.selectedAction = '';
-				this.actions.value = this.selectedAction;
 				break;
 			case 'review':
-				this.selectedAction = '';
-				this.actions.value = this.selectedAction;
 				this.openToBeDevelopedModal(this.tbdModal);
 				break;
+		}
+	}
+
+	clearSearch() {
+		this.loaded = false;
+		if (this.searchInput) {
+			this.searchInput = '';
+			this.onSearchChange();
+		}
+	}
+
+	@Debounce()
+	onSearchChange() {
+		this.searchInput = this.searchInput.trim();
+		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
+			this.openToBeDevelopedModal(this.tbdModal);
 		}
 	}
 

@@ -88,7 +88,6 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	popover_adviceToAdd = '';
 	popover_updateAdviceList = [];
 	popover_addAdviceList = [];
-	selectedAction = '';
 	loaded = false;
 	saving = false;
 	selectedFormat = {};
@@ -571,6 +570,12 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
 			this.gridApi.setQuickFilter(this.searchInput);
+			this.checkedNum = 0;
+			if (this.gridSelectAll) {
+				window['checkbox-table-all'].click();
+			} else {
+				this.unCheckAll();
+			}
 		}
 	}
 
@@ -1115,9 +1120,9 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		return UiUtility.dateFormatter(val);
 	}
 
-	selectActionMenu() {
+	selectAction(action: string) {
 		let checkList;
-		switch (this.selectedAction) {
+		switch (action) {
 			case 'add':
 				checkList = this.mapsetData.filter((map) => {
 					if (map.checked) {
@@ -1155,15 +1160,17 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		if (this.gridSelectAll) {
 			window['checkbox-table-all'].click();
 		} else {
-			this.mapsetData.forEach((map) => {
-				if (map.checked) {
-					map.checked = false;
-				}
-			});
-			this.gridApi.redrawRows();
+			this.unCheckAll();
 		}
-		this.selectedAction = '';
-		this.actions.value = this.selectedAction;
+	}
+
+	unCheckAll() {
+		this.mapsetData.forEach((map) => {
+			if (map.checked) {
+				map.checked = false;
+			}
+		});
+		this.gridApi.redrawRows();
 	}
 
 	/* mappings table functions */

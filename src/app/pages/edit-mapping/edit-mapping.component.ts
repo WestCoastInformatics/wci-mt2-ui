@@ -91,7 +91,6 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	gridSelectAll = false;
 	advicePopoverLocation = 0;
 
-	selectedAction = '';
 	loaded = false;
 	selectedFormat = {};
 	formats = [];
@@ -362,6 +361,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 							'modified': results.mapEntries[b].modified,
 							'advices': results.mapEntries[b].advices,
 							'group': results.mapEntries[b].group,
+							'groupTotal': results.mapEntries[b].group,
 							'priority': results.mapEntries[b].priority,
 							'released': results.mapEntries[b].released,
 						});
@@ -386,12 +386,24 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.numOfGroups++;
 	}
 
-	removeMapGroup(groupNum: number) {
-		this.mapsetData[0].mapEntries.forEach((entry, index) => {
-			if (entry.group === groupNum) {
-				this.mapsetData[0].mapEntries.splice(index, 1);
+	getGroupTotal(group) {
+		let total = 0;
+
+		for (let u = 0; u < this.mapsetData[0].mapEntries.length; u++) {
+			if (this.mapsetData[0].mapEntries[u].group === group) {
+				total++;
 			}
-		});
+		}
+
+		return total;
+	}
+
+	removeMapGroup(groupNum: number) {
+		for (let d = this.mapsetData[0].mapEntries.length - 1; d > 0; d--) {
+			if (this.mapsetData[0].mapEntries[d].group === groupNum) {
+				this.mapsetData[0].mapEntries.splice(d, 1);
+			}
+		}
 		this.numOfGroups--;
 		this.userChanged = true;
 	}
@@ -639,7 +651,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		const popHeight = 0;
 
 		const showInterval = setInterval(() => {
-			this.advicePopoverLocation = event.layerY + event.offsetY;
+			this.advicePopoverLocation = event.layerY + event.offsetY + 5;
 			clearInterval(showInterval);
 		}, 5);
 	}
@@ -745,9 +757,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		return UiUtility.dateFormatter(val);
 	}
 
-	selectActionMenu() {
-		this.selectedAction = '';
-		this.actions.value = this.selectedAction;
+	selectActionMenu(action: string) {
 		this.openToBeDevelopedModal(this.tbdModal);
 	}
 

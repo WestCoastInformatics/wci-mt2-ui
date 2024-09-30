@@ -1853,13 +1853,19 @@ input[type='checkbox'] {
 	}
 }
 
+.search-box {
+	max-width: 370px !important;
+	width: 370px !important;
+	padding-left: 10px !important;
+}
+
 .mat-elevation-z8 {
 	overflow: overlay;
 	box-shadow: none;
 	max-height: 300px;
 	margin-left: 15px;
 	margin-right: 15px;
-	border-bottom: 15px solid #f5f5f5;
+	/*border-bottom: 15px solid #f5f5f5;*/
 }
 
 .add-remove-descendants-modal > .modal-dialog > .modal-content {

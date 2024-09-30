@@ -1,0 +1,44 @@
+@import 'src/assets/scss/variables.scss';
+@import 'src/assets/scss/button-styles.scss';
+@import 'src/assets/scss/core-styles.scss';
+
+.menu {
+	padding: 5px 17px 5px 17px !important;
+	font-size: 14px;
+	color: #666666;
+}
+
+.heading {
+	font-weight: 700;
+	margin-bottom: 32px;
+}
+
+.menu-button {
+	display: flex;
+	flex-direction: column;
+}
+
+.menu-icon {
+	text-align: center;
+	width: 100% !important;
+	background-color: #fff;
+}
+
+.menu-label {
+	font-size: 9px;
+}
+
+.menu-inline {
+	display: inline-block;
+}
+
+.menu-checkbox {
+	display: block !important;
+}
+
+.mapset-download-icon {
+	cursor: pointer;
+	color: $mapset-blue;
+	font-size: 1.25em;
+	background-color: #fff;
+}

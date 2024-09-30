@@ -84,8 +84,6 @@ export class MapsetRecordsComponent implements OnInit {
 	showMapTable = 'table';
 	checkedNum = 0;
 	useDialog = false;
-
-	selectedAction = '';
 	showMappingsSection = true;
 	showMetadataSection = false;
 	showHistorySection = false;
@@ -694,8 +692,8 @@ export class MapsetRecordsComponent implements OnInit {
 		this.openToBeDevelopedModal(this.tbdModal);
 	}
 
-	selectAction() {
-		switch (this.selectedAction) {
+	selectAction(selectedAction: string) {
+		switch (selectedAction) {
 			case 'batch':
 				if (this.checkedNum > 1) {
 					const codes = [];
@@ -705,59 +703,44 @@ export class MapsetRecordsComponent implements OnInit {
 						}
 					}
 					if (codes.length > 0) {
-						this.actions.close();
 						const ddInterval = setInterval(() => {
 							this.goToBatchMappingsPage(codes);
 							clearInterval(ddInterval);
 						}, 2);
 					}
-					this.selectedAction = '';
-					this.actions.value = this.selectedAction;
 				}
 				break;
 			case 'select':
 				window['checkbox-table-all'].click();
-				this.selectedAction = '';
-				this.actions.value = this.selectedAction;
 				break;
 			case 'view':
 				if (this.checkedNum === 1) {
 					for (let c = 0; c < this.mapsetData.length; c++) {
 						if (this.mapsetData[c].checked === true) {
-							this.actions.close();
 							const ddInterval = setInterval(() => {
 								this.goToMappingPage(this.mapsetData[c].code);
 								clearInterval(ddInterval);
 							}, 2);
 						}
 					}
-					this.selectedAction = '';
-					this.actions.value = this.selectedAction;
 				}
 				break;
 			case 'edit':
 				if (this.checkedNum === 1) {
 					for (let c = 0; c < this.mapsetData.length; c++) {
 						if (this.mapsetData[c].checked === true) {
-							this.actions.close();
 							const ddInterval = setInterval(() => {
 								this.goToEditMappingPage(this.mapsetData[c].code);
 								clearInterval(ddInterval);
 							}, 2);
 						}
 					}
-					this.selectedAction = '';
-					this.actions.value = this.selectedAction;
 				}
 				break;
 			case 'selected':
-				this.selectedAction = '';
-				this.actions.value = this.selectedAction;
 				this.downloadMapsets();
 				break;
 			case 'all':
-				this.selectedAction = '';
-				this.actions.value = this.selectedAction;
 				this.downloadMapsets();
 				break;
 		}
@@ -811,6 +794,10 @@ export class MapsetRecordsComponent implements OnInit {
 			this.isNewPageSize = event.newPageSize ?? false;
 			if (this.isNewPageSize) {
 				this.loaded = false;
+			}
+			this.checkedNum = 0;
+			if (this.gridSelectAll) {
+				window['checkbox-table-all'].click();
 			}
 			this.refsetGridPaging.pageSize = this.refsetGridApi.paginationGetPageSize();
 			this.refsetGridApi.updateGridOptions({

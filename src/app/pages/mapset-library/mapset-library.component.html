@@ -17,23 +17,28 @@
 				<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
 					<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
 				</div>
-
-				<div class="col-md-auto">
-					<div class="dropdown directoryInput" *ngIf="showTable">
-						<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
-							<mat-label class="search-label" *ngIf="searchInput === ''">Search</mat-label>
-							<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
-						</mat-form-field>
-						<span class="clear-search" (click)="clearSearch()">&#10005;</span>
+				<div class="col-md-auto rt2-directory-chooser-column">
+					<mat-menu #searchMenu="matMenu" class="search-box">
+						<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
+							<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
+								<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
+								<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" (click)="$event.stopPropagation()" />
+							</mat-form-field>
+							<span class="clear-search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span><br />
+							<span *ngIf="searchInput.length > 0" class="mappings-section"
+								>{{ refsetGridApi.getDisplayedRowCount() > 0 ? refsetGridApi.getDisplayedRowCount() : 'No ' }} result{{
+									refsetGridApi.getDisplayedRowCount() > 1 ? 's' : ''
+								}}
+								found</span
+							>
+						</div></mat-menu
+					>
+					<div class="menu-inline">
+						<button [matMenuTriggerFor]="searchMenu" aria-label="Search" title="Search" class="mapset-download-icon menu-button">
+							<mat-icon class="menu-icon">search</mat-icon>
+							<span class="menu-label">search</span>
+						</button>
 					</div>
-				</div>
-				<div class="col-md-auto p-l-5 hide">
-					<mat-form-field floatLabel="never" class="directoryViewFilterField" appearance="fill">
-						<mat-label></mat-label>
-						<mat-select title="Public/Private Refsets" #directoryViewSelect [(value)]="selectedView" (selectionChange)="changedViewFilter()">
-							<mat-option *ngFor="let option of viewOptions" [value]="option.value" class="no-checkbox"> {{ option.display }} </mat-option>
-						</mat-select>
-					</mat-form-field>
 				</div>
 			</div>
 			<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showTable && !showLoadingSearch"></div>

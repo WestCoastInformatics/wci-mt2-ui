@@ -38,13 +38,16 @@
 		<div class="switch-view" *ngIf="showMappingsSection" [hidden]="numOfMembers === 0">
 			<mat-label class="switch-label">view by</mat-label>
 			<mat-button-toggle-group #group="matButtonToggleGroup" [value]="showMapTable" (change)="changeMappingsView(group.value)">
-				<mat-button-toggle value="table"> table </mat-button-toggle>
-				<mat-button-toggle value="record"> record </mat-button-toggle>
+				<mat-button-toggle value="table" title="View by table"> table </mat-button-toggle>
+				<mat-button-toggle value="record" title="View by record"> record </mat-button-toggle>
 			</mat-button-toggle-group>
 		</div>
 		<div class="metadata-collapsible-container-group-header pointer" (click)="toggleSectionView('showMappingsSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
 				<span>Mappings&nbsp; </span><span [hidden]="!numOfMembers">{{ '(' + numOfMembers + ')' }}</span> <span [hidden]="numOfMembers">{{ '(0)' }}</span>
+				<div class="sub-header-font">
+					<span [hidden]="checkedNum === 0">selected {{ checkedNum }}</span>
+				</div>
 			</div>
 			<img src="assets/caret-up-solid.svg" *ngIf="!showMappingsSection" alt="Collapse Button" title="Collapse Mappings" aria-label="Collapse Button" class="caret-up-solid" />
 			<img src="assets/caret-down-solid.svg" *ngIf="showMappingsSection" alt="Expand Button" title="Expand Mappings" aria-label="Expand Button" class="caret-down-solid" />
@@ -54,26 +57,50 @@
 				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
 			</div>
 
-			<div class="col-md-auto">
-				<div class="dropdown directoryInput">
-					<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
-						<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
-						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
-					</mat-form-field>
-					<span class="clear-search" (click)="clearSearch()">&#10005;</span>
+			<div class="col-md-auto rt2-directory-chooser-column">
+				<mat-menu #searchMenu="matMenu" class="search-box">
+					<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
+						<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
+							<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
+							<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" (click)="$event.stopPropagation()" />
+						</mat-form-field>
+						<span class="clear-search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span>
+					</div></mat-menu
+				>
+				<div class="menu-inline">
+					<button [matMenuTriggerFor]="searchMenu" aria-label="Search" title="Search" class="mapset-download-icon menu-button">
+						<mat-icon class="menu-icon">search</mat-icon>
+						<span class="menu-label">search</span>
+					</button>
 				</div>
 			</div>
-			<div class="col-md-auto p-l-10">
-				<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
-					<mat-select #actions title="Actions" placeholder="Actions" [(value)]="selectedAction" (selectionChange)="selectAction()">
-						<mat-option value="select" class="no-checkbox" *ngIf="showMapTable === 'record'">Check/Uncheck All</mat-option>
-						<mat-option value="view" class="no-checkbox" *ngIf="showMapTable === 'record'" [disabled]="checkedNum !== 1">View Selected Mapping</mat-option>
-						<mat-option value="edit" class="no-checkbox" [disabled]="checkedNum !== 1">Edit Selected Mapping</mat-option>
-						<mat-option value="batch" class="no-checkbox" [disabled]="checkedNum < 2">Batch Edit Selected Mappings</mat-option>
-						<mat-option value="selected" class="no-checkbox" [disabled]="checkedNum < 1">Download Selected Mappings</mat-option>
-						<mat-option value="all" class="no-checkbox">Download Entire Map Set</mat-option>
-					</mat-select>
-				</mat-form-field>
+			<div class="col-md-auto rt2-directory-chooser-column">
+				<div class="menu-inline">
+					<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="mapset-download-icon menu-button">
+						<mat-icon class="menu-icon">more_vert</mat-icon>
+						<span class="menu-label">Actions</span>
+					</button>
+				</div>
+				<mat-menu #actionMenu="matMenu">
+					<button mat-menu-item (click)="selectAction('select')" *ngIf="showMapTable === 'record'">
+						<span>Check/Uncheck All</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('view')" *ngIf="showMapTable === 'record'" [disabled]="checkedNum !== 1">
+						<span>View Selected Mapping</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('edit')" [disabled]="checkedNum !== 1">
+						<span>Edit Selected Mapping</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('batch')" [disabled]="checkedNum < 2">
+						<span>Batch Edit Selected Mappings</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('selected')" [disabled]="checkedNum < 1">
+						<span>Download Selected Mappings</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('all')">
+						<span>Download Entire Map Set</span>
+					</button>
+				</mat-menu>
 			</div>
 		</div>
 		<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showMappingsSection || !loaded || numOfMembers === 0 || showMapTable !== 'table'"></div>

@@ -9,6 +9,7 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 @Component({
 	selector: 'app-column-chooser',
 	templateUrl: './column-chooser.component.html',
+	styleUrls: ['./column-chooser.component.scss'],
 	encapsulation: ViewEncapsulation.None,
 })
 export class ColumnChooserComponent {
@@ -110,11 +111,29 @@ export class ColumnChooserComponent {
 		return column1 && column2 ? column1.colId == column2.colId : column1 == column2;
 	}
 
+	selectColumns() {
+		this.selectedColumns = this.columns.filter((menuitem) => menuitem.show).map((menuitem) => menuitem.colId);
+		console.log('this co', this.selectedColumns);
+		const state: any = [];
+		for (const column of this.columns) {
+			let found = false;
+			for (const selectedColumn of this.selectedColumns) {
+				if (column.colId === selectedColumn) {
+					found = true;
+					break;
+				}
+			}
+			column.show = found;
+			state.push({ colId: column.colId, hide: !column.show });
+		}
+		this.gridColumnApi.applyColumnState({ state: state });
+	}
+
 	applyColumns() {
 		const state: any = [];
 		this.selectedColumns;
 		this.columns;
-
+		console.log('this co', this.columns);
 		for (const column of this.columns) {
 			if (!this.useDialog) {
 				let found = false;

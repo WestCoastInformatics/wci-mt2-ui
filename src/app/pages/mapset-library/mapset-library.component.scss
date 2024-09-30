@@ -62,8 +62,13 @@
 .dropdown-group {
 	background-color: #fff;
 	border: 1px solid #f0f0f0;
-	padding: 10px 10px 0 10px;
-	margin: 10px 7px 0 10px;
+	padding: 10px 20px 10px 10px;
+	margin: 10px 7px 15px 10px;
+}
+
+.mappings-section {
+	color: #666;
+	font-size: 12px;
 }
 
 .metadata-collapsible-container-group-header {
@@ -84,7 +89,7 @@
 
 .rt2-directory-chooser-column {
 	padding-right: 20px;
-	margin-top: -0.8em;
+	margin-top: -0.5em;
 }
 
 .member-search-icon {

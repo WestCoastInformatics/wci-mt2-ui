@@ -16,14 +16,7 @@
 				</mat-form-field>
 			</div-->
 		</div>
-		<div class="col-md-auto d-flex p-r-40">
-			<div class="col-6">
-				<button class="library-app-refset-download" (click)="openDownloadModal(downloadModal)">
-					<div class="mat-button-wrapper mapset-download-icon">
-						<i class="fa fa-download fa-lg" title="Download Map" aria-label="Download Map"></i>
-					</div>
-				</button>
-			</div>
+		<div class="col-md-auto row p-r-10">
 			<div class="col-12">
 				<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: mapsetData }"></template>
 			</div>
@@ -38,17 +31,44 @@
 				<span>Maps&nbsp; </span><span>{{ '(' + mapsetData[0].mapEntries.length + ')' }}</span>
 			</div>
 
-			<div class="dropdown-group row" *ngIf="loaded">
-				<div class="col-10">
-					<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
-						<mat-select #actions title="Actions" placeholder="Actions" [(value)]="selectedAction" (selectionChange)="selectAction()">
-							<mat-option value="edit" class="no-checkbox">Edit</mat-option>
-							<mat-option value="review" class="no-checkbox">Request Review</mat-option>
-						</mat-select>
-					</mat-form-field>
+			<div class="row d-flex dropdown-group" *ngIf="loaded">
+				<div class="col-md-auto rt2-directory-chooser-column">
+					<mat-menu #searchMenu="matMenu" class="search-box">
+						<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
+							<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
+								<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
+								<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" (click)="$event.stopPropagation()" />
+							</mat-form-field>
+							<span class="clear-search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span>
+						</div></mat-menu
+					>
+					<div class="menu-inline">
+						<!--[matMenuTriggerFor]="searchMenu"-->
+						<button (click)="openToBeDevelopedModal(tbdModal)" aria-label="Search" title="Search" class="mapset-download-icon menu-button">
+							<mat-icon class="menu-icon">search</mat-icon>
+							<span class="menu-label">search</span>
+						</button>
+					</div>
 				</div>
+				<div class="col-md-auto rt2-directory-chooser-column">
+					<div class="menu-inline">
+						<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="mapset-download-icon menu-button">
+							<mat-icon class="menu-icon">more_vert</mat-icon>
+							<span class="menu-label">Actions</span>
+						</button>
+					</div>
+					<mat-menu #actionMenu="matMenu">
+						<button mat-menu-item (click)="selectAction('edit')">
+							<span>Edit</span>
+						</button>
+						<button mat-menu-item (click)="selectAction('review')">
+							<span>Request Review</span>
+						</button>
+					</mat-menu>
+				</div>
+
 				<div class="action-column col-2">
-					<span class="date-column second-row">Last Updated: {{ dateFormatter(mapsetData[0].modified) }}</span>
+					<span class="date-column second-row" [hidden]="!mapsetData[0].modified">Last Updated: {{ dateFormatter(mapsetData[0].modified) }}</span>
 				</div>
 			</div>
 			<div [hidden]="loaded" class="section-loading">Loading...</div>
@@ -104,14 +124,21 @@
 		<!-- Action Templates -->
 		<ng-template #directoryActionSection let-params>
 			<div class="d-flex">
-				<div class="col-6">
-					<div class="library-app-refset-notes" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+				<div class="col">
+					<button class="library-app-refset-download p-r-20" (click)="openDownloadModal(downloadModal)">
+						<div class="mat-button-wrapper mapset-download-icon">
+							<i class="fa fa-download fa-lg" title="Download Map" aria-label="Download Map"></i>
+						</div>
+					</button>
+				</div>
+				<div class="col">
+					<div class="library-app-refset-notes p-r-20" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
 						<img src="/assets/sticky-note.svg" title="View Notes" aria-label="View Notes" class="mapset-notes-icon" />
 					</div>
 				</div>
 
-				<div class="col-6">
-					<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+				<div class="col">
+					<div class="library-app-refset-discussion-list p-r-20" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
 						<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
 					</div>
 				</div>

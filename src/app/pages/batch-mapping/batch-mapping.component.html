@@ -14,20 +14,7 @@
 
 <div [hidden]="!saving" class="section-saving">Please wait, save in progress...</div>
 <div class="dropdown-group row edit-actions" *ngIf="loaded && !saving">
-	<div class="col-10">
-		<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
-			<mat-select #actions title="Authoring Actions" placeholder="Authoring Actions" [(value)]="selectedAction" (selectionChange)="selectActionMenu()">
-				<mat-option value="set" class="no-checkbox" [disabled]="checkedNum < 1">Set Empty Target to Mappings</mat-option>
-				<mat-option value="add" class="no-checkbox" [disabled]="checkedNum < 1">Add Entry to Mappings</mat-option>
-				<mat-option value="change" class="no-checkbox" [disabled]="checkedNum < 1">Change Group/Entry of Mappings</mat-option>
-				<mat-option value="advice" class="no-checkbox" [disabled]="checkedNum < 1">Add/Edit Advice of Mappings</mat-option>
-				<mat-option value="remove" class="no-checkbox" [disabled]="checkedNum < 1">Remove selected Mappings</mat-option>
-				<mat-option value="note" class="no-checkbox">View or Add Authoring Note</mat-option>
-				<mat-option value="comm" class="no-checkbox">View or Add Authoring Communication</mat-option>
-				<mat-option value="review" class="no-checkbox">Request Review</mat-option>
-			</mat-select>
-		</mat-form-field>
-	</div>
+	<div class="col-10"></div>
 	<div class="action-column col-2 no-margin-top">
 		<span class="date-column">
 			<button
@@ -56,6 +43,9 @@
 		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showConfigSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
 				<span>Target Configuration</span>
+				<div class="sub-header-font">
+					<span [hidden]="checkedNum === 0">selected {{ checkedNum }}</span>
+				</div>
 			</div>
 			<img src="assets/caret-up-solid.svg" *ngIf="!showConfigSection" alt="Collapse Button" title="Collapse Target Configuration" aria-label="Collapse Button" class="caret-up-solid" />
 			<img src="assets/caret-down-solid.svg" *ngIf="showConfigSection" alt="Expand Button" title="Expand Target Configuration" aria-label="Expand Button" class="caret-down-solid" />
@@ -64,18 +54,58 @@
 			<div class="col-md-auto rt2-directory-chooser-column">
 				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="gridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
 			</div>
-
-			<div class="col-md-auto">
-				<div class="dropdown directoryInput">
-					<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
-						<mat-label class="search-label" *ngIf="searchInput === ''">Search</mat-label>
-						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
-					</mat-form-field>
-					<span class="clear-search" (click)="clearSearch()">&#10005;</span>
-					<span *ngIf="searchInput.length > 0" class="mappings-section"
-						>{{ gridApi.getDisplayedRowCount() > 0 ? gridApi.getDisplayedRowCount() : 'No ' }} result{{ gridApi.getDisplayedRowCount() > 1 ? 's' : '' }} found</span
-					>
+			<div class="col-md-auto rt2-directory-chooser-column">
+				<mat-menu #searchMenu="matMenu" class="search-box">
+					<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
+						<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
+							<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
+							<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" (click)="$event.stopPropagation()" />
+						</mat-form-field>
+						<span class="clear-search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span><br />
+						<span *ngIf="searchInput.length > 0" class="mappings-section"
+							>{{ gridApi.getDisplayedRowCount() > 0 ? gridApi.getDisplayedRowCount() : 'No ' }} result{{ gridApi.getDisplayedRowCount() > 1 ? 's' : '' }} found</span
+						>
+					</div></mat-menu
+				>
+				<div class="menu-inline">
+					<button [matMenuTriggerFor]="searchMenu" aria-label="Search" title="Search" class="mapset-download-icon menu-button">
+						<mat-icon class="menu-icon">search</mat-icon>
+						<span class="menu-label">search</span>
+					</button>
 				</div>
+			</div>
+			<div class="col-md-auto rt2-directory-chooser-column">
+				<div class="menu-inline">
+					<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="mapset-download-icon menu-button">
+						<mat-icon class="menu-icon">more_vert</mat-icon>
+						<span class="menu-label">Actions</span>
+					</button>
+				</div>
+				<mat-menu #actionMenu="matMenu">
+					<button mat-menu-item (click)="selectAction('set')" [disabled]="checkedNum < 1">
+						<span>Set Empty Target to Mappings</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('add')" [disabled]="checkedNum < 1">
+						<span>Add Entry to Mappings</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('change')" [disabled]="checkedNum < 1">
+						<span>Change Group/Entry of Mappings</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('advice')" [disabled]="checkedNum < 1">
+						<span>Add/Edit Advice of Mappings</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('remove')" [disabled]="checkedNum < 1">
+						<span>Remove selected Mappings</span></button
+					><button mat-menu-item (click)="selectAction('note')">
+						<span>View or Add Authoring Note</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('comm')">
+						<span>View or Add Authoring Communication</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('review')">
+						<span>Request Review</span>
+					</button>
+				</mat-menu>
 			</div>
 		</div>
 		<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showConfigSection || !loaded || saving"></div>
