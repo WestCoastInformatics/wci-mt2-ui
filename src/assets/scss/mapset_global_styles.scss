@@ -1132,7 +1132,7 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 
 /* Absolute Center Spinner */
 .loading {
-	position: fixed;
+	position: absolute;
 	z-index: 9999;
 	height: 2em;
 	width: 2em;
@@ -1148,7 +1148,7 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 .loading:before {
 	content: '';
 	display: block;
-	position: fixed;
+	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;

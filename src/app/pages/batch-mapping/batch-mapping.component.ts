@@ -72,6 +72,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	showLoadingSearch = true;
 	toBeDevelopedModalRef: NgbModalRef;
 	downloadModalRef: NgbModalRef;
+	confirmModalRef: NgbModalRef;
 	isModalOpen = false;
 	mapsetName = 'Mapset Name';
 	selectedMapset: any;
@@ -144,6 +145,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	@ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
 	@ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
 	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
+	@ViewChild('confirmationModal') confirmationModal: TemplateRef<any>;
 	@ViewChild('actions') private actions: MatSelect;
 
 	constructor(
@@ -1108,6 +1110,21 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.isModalOpen = false;
 	}
 
+	openConfirmationModal() {
+		this.confirmModalRef = this.modalService.open(this.confirmationModal, { centered: true });
+		this.isModalOpen = true;
+	}
+
+	closeConfirmDialog() {
+		this.confirmModalRef.close();
+		this.isModalOpen = false;
+	}
+
+	confirmRemoveItem() {
+		this.selectAction('remove');
+		this.closeConfirmDialog();
+	}
+
 	capitalizeFirstLetterOfString(stringValue: string): string {
 		if (stringValue) {
 			return stringValue.toLowerCase().replace(/(?:^|\s|[-"'([{])+\S/g, (c) => c.toUpperCase());
@@ -1152,6 +1169,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				this.mapsetData = this.mapsetData.filter((map) => {
 					return !map.checked;
 				});
+				this.checkedNum = 0;
 				this.gridApi.redrawRows();
 				break;
 			default:

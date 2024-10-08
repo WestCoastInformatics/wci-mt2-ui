@@ -35,7 +35,7 @@
 
 <div class="rt2-container" (window:resize)="onResize($event)">
 	<div class="metadata-collapsible-container m-t-20">
-		<div class="switch-view" *ngIf="showMappingsSection" [hidden]="numOfMembers === 0">
+		<div class="switch-view" *ngIf="showMappingsSection && loaded" [hidden]="numOfMembers === 0">
 			<mat-label class="switch-label">view by</mat-label>
 			<mat-button-toggle-group #group="matButtonToggleGroup" [value]="showMapTable" (change)="changeMappingsView(group.value)">
 				<mat-button-toggle value="table" title="View by table"> table </mat-button-toggle>
@@ -85,7 +85,7 @@
 					<button mat-menu-item (click)="selectAction('select')" *ngIf="showMapTable === 'record'">
 						<span>Check/Uncheck All</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('view')" *ngIf="showMapTable === 'record'" [disabled]="checkedNum !== 1">
+					<button mat-menu-item (click)="selectAction('view')" [disabled]="checkedNum !== 1">
 						<span>View Selected Mapping</span>
 					</button>
 					<button mat-menu-item (click)="selectAction('edit')" [disabled]="checkedNum !== 1">
@@ -103,73 +103,75 @@
 				</mat-menu>
 			</div>
 		</div>
-		<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showMappingsSection || !loaded || numOfMembers === 0 || showMapTable !== 'table'"></div>
-		<div [hidden]="!showMappingsSection" class="section-background mappings-section" [ngClass]="{ 'overflow': showMapTable !== 'table' }">
-			<div *ngIf="showMapTable === 'table'" [hidden]="loaded" class="section-loading">Loading...</div>
-			<div [hidden]="!loaded" *ngIf="numOfMembers === 0" class="status-no-results">No Results to Show</div>
-			<div class="content-wrapper" [hidden]="showMapTable !== 'table' || !loaded">
-				<div class="grid-wrapper">
-					<ag-grid-angular
-						*ngIf="showTable"
-						id="directoryTable"
-						#directoryTable
-						[hidden]="!loaded || numOfMembers === 0 || showMapTable !== 'table'"
-						class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter"
-						style="width: 100%; height: 100%"
-						[columnDefs]="columnDefs"
-						[suppressRowTransform]="true"
-						[gridOptions]="refsetGridOptions"
-						[rowSelection]="rowSelection"
-						(firstDataRendered)="onResize(500)">
-					</ag-grid-angular>
+		<div class="metadata-section-background" *ngIf="showMappingsSection">
+			<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showMappingsSection || !loaded || numOfMembers === 0 || showMapTable !== 'table'"></div>
+			<div [hidden]="!showMappingsSection" class="section-background mappings-section" [ngClass]="{ 'overflow': showMapTable !== 'table' }">
+				<div *ngIf="showMapTable === 'table'" [hidden]="loaded" class="section-loading">Loading...</div>
+				<div [hidden]="!loaded" *ngIf="numOfMembers === 0" class="status-no-results">No Results to Show</div>
+				<div class="content-wrapper" [hidden]="showMapTable !== 'table' || !loaded">
+					<div class="grid-wrapper">
+						<ag-grid-angular
+							*ngIf="showTable"
+							id="directoryTable"
+							#directoryTable
+							[hidden]="!loaded || numOfMembers === 0 || showMapTable !== 'table'"
+							class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter"
+							style="width: 100%; height: 100%"
+							[columnDefs]="columnDefs"
+							[suppressRowTransform]="true"
+							[gridOptions]="refsetGridOptions"
+							[rowSelection]="rowSelection"
+							(firstDataRendered)="onResize(500)">
+						</ag-grid-angular>
+					</div>
 				</div>
-			</div>
-			<div [hidden]="loaded" *ngIf="showMapTable !== 'table'" class="section-loading record-loading">Loading...</div>
-			<div [hidden]="!loaded" *ngIf="showMapTable !== 'table'" class="content-wrapper">
-				<div *ngFor="let record of mapsetData; index as i">
-					<div class="record-row" [ngClass]="{ 'odd-row': 0 === i % 2 }" *ngIf="!record.spanned">
-						<div class="col-12 row">
-							<div class="d-flex col-10 row">
-								<div class="checkbox-column">
-									<label class="checkbox-override" title="Check/Uncheck All"
-										><input type="checkbox" (change)="checkboxRowSelect($event, record.index)" [checked]="record.checked" /><span class="checkbox-container"></span
-									></label>
-								</div>
-								<div class="col-11 code-name">
-									{{ record.name }}, <span class="code-link" (click)="goToMappingPage(record.code)">{{ record.code }}</span>
-								</div>
+				<div [hidden]="loaded" *ngIf="showMapTable !== 'table'" class="section-loading record-loading">Loading...</div>
+				<div [hidden]="!loaded" *ngIf="showMapTable !== 'table'" class="content-wrapper">
+					<div *ngFor="let record of mapsetData; index as i">
+						<div class="record-row" [ngClass]="{ 'odd-row': 0 === i % 2 }" *ngIf="!record.spanned">
+							<div class="col-12 row">
+								<div class="d-flex col-10 row">
+									<div class="checkbox-column">
+										<label class="checkbox-override" title="Check/Uncheck All"
+											><input type="checkbox" (change)="checkboxRowSelect($event, record.index)" [checked]="record.checked" /><span class="checkbox-container"></span
+										></label>
+									</div>
+									<div class="col-11 code-name">
+										{{ record.name }}, <span class="code-link" (click)="goToMappingPage(record.code)">{{ record.code }}</span>
+									</div>
 
-								<div *ngFor="let entry of record.mapEntries; index as x" class="row col-12 second-row">
-									<div class="col-4 row mb-3">
-										<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
-										<div class="record-code col-2">{{ entry.toCode }}</div>
-										<div class="record-name col-8">
-											{{ entry.toName
-											}}<mat-icon
-												*ngIf="entry.released"
-												aria-hidden="false"
-												class="mat-button-wrapper mapset-intl-icon m-l-5"
-												aria-label="SNOMED International"
-												title="SNOMED International">
-												<span class="material-symbols-outlined"> language_international </span>
-											</mat-icon>
+									<div *ngFor="let entry of record.mapEntries; index as x" class="row col-12 second-row">
+										<div class="col-4 row mb-3">
+											<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
+											<div class="record-code col-2">{{ entry.toCode }}</div>
+											<div class="record-name col-8">
+												{{ entry.toName
+												}}<mat-icon
+													*ngIf="entry.released"
+													aria-hidden="false"
+													class="mat-button-wrapper mapset-intl-icon m-l-5"
+													aria-label="SNOMED International"
+													title="SNOMED International">
+													<span class="material-symbols-outlined"> language_international </span>
+												</mat-icon>
+											</div>
 										</div>
-									</div>
-									<div class="col-8 row mb-3">
-										<div class="info-box">
-											<i class="fa-regular fa-handshake relation-icon"></i><span class="info-message">{{ entry.relation }}</span>
-										</div>
-										<div *ngFor="let advice of entry.advices; index as i" class="info-box" [hidden]="advice.indexOf('ALWAYS') > -1">
-											<i class="fa-solid fa-star-of-life advice-icon"></i><span class="info-message">{{ advice }}</span>
+										<div class="col-8 row mb-3">
+											<div class="info-box">
+												<i class="fa-regular fa-handshake relation-icon"></i><span class="info-message">{{ entry.relation }}</span>
+											</div>
+											<div *ngFor="let advice of entry.advices; index as i" class="info-box" [hidden]="advice.indexOf('ALWAYS') > -1">
+												<i class="fa-solid fa-star-of-life advice-icon"></i><span class="info-message">{{ advice }}</span>
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="action-column col-2">
-								<div class="action-btns">
-									<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: record }"></template>
+								<div class="action-column col-2">
+									<div class="action-btns">
+										<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: record }"></template>
+									</div>
+									<span class="date-column second-row">Last Updated: {{ dateFormatter(record.modified) }}</span>
 								</div>
-								<span class="date-column second-row">Last Updated: {{ dateFormatter(record.modified) }}</span>
 							</div>
 						</div>
 					</div>
@@ -177,7 +179,7 @@
 			</div>
 		</div>
 		<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
-		<div class="rt2-pagination-container" [hidden]="!loaded || numOfMembers === 0 || !showMappingsSection">
+		<div class="rt2-pagination-container" [hidden]="!loaded || numOfMembers === 0" *ngIf="showMappingsSection">
 			<div class="rt2-pagination-top-row">
 				<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons">
 					<button
