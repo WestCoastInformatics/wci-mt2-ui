@@ -169,6 +169,18 @@
 	display: none;
 }
 
+.metadata-collapsible-container {
+	background-color: #f2f2f2;
+
+	border: 1px solid #f2f2f2;
+	border-radius: 5px;
+	margin-bottom: 1rem;
+
+	&.white {
+		background-color: white;
+	}
+}
+
 .metadata-collapsible-container-group-header:hover {
 	.group-move-btn,
 	.group-remove-btn {
@@ -366,8 +378,10 @@
 .dropdown-group {
 	background-color: #fff;
 	border: 1px solid #f0f0f0;
+	border-bottom: none;
 	padding: 10px 20px 10px 10px;
-	margin: 10px 7px 15px 10px;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
 .dropdown-actions {
@@ -564,7 +578,6 @@
 	background-color: #fafafa;
 	border: 1px solid #f0f0f0;
 	color: #666;
-	margin-top: 5px;
 }
 
 .second-row {
@@ -919,7 +932,17 @@
 	height: 100%;
 	margin-left: 11px;
 	margin-right: 8px;
-	margin-top: 5px;
+}
+
+.metadata-section-background {
+	background-color: white;
+	height: 100%;
+	margin-right: 11px;
+	margin-left: 11px;
+	padding-right: 10px;
+	padding-left: 10px;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .directoryViewFilterField {
@@ -1016,8 +1039,7 @@
 }
 
 .rt2-directory-chooser-column {
-	padding-right: 20px;
-	margin-top: -0.5em;
+	margin-bottom: 10px;
 }
 
 .member-search-icon {
@@ -1119,13 +1141,6 @@
 	margin-right: 145px;
 	color: #7f7f7f;
 	font-size: 14px;
-}
-
-.record-row {
-	background-color: #fafafa;
-	border: 1px solid #f0f0f0;
-	color: #666;
-	margin-top: 5px;
 }
 
 .second-row {

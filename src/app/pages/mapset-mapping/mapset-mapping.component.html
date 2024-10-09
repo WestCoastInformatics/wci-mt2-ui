@@ -31,8 +31,8 @@
 				<span>Maps&nbsp; </span><span>{{ '(' + mapsetData[0].mapEntries.length + ')' }}</span>
 			</div>
 
-			<div class="row d-flex dropdown-group" *ngIf="loaded">
-				<div class="col-md-10 row">
+			<div class="row d-flex dropdown-group m-t-10" *ngIf="loaded">
+				<div class="col-md-10 row p-l-30 p-t-10">
 					<div class="col-md-auto rt2-directory-chooser-column">
 						<mat-menu #searchMenu="matMenu" class="search-box">
 							<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
