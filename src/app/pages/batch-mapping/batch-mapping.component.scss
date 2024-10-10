@@ -169,6 +169,18 @@
 	display: none;
 }
 
+.mapset-intl-icon {
+	cursor: pointer;
+	color: $mapset-blue;
+	font-size: 1.25em;
+	vertical-align: text-top;
+}
+
+.mapset-mod-icon {
+	margin-left: 10px;
+	height: 13px;
+}
+
 .metadata-collapsible-container {
 	background-color: #f2f2f2;
 
@@ -959,13 +971,6 @@
 	.mat-form-field-underline {
 		width: 125px;
 	}
-}
-
-.mapset-intl-icon {
-	cursor: pointer;
-	color: $mapset-blue;
-	font-size: 1.25em;
-	vertical-align: middle;
 }
 
 .metadata-collapsible-container-group-header {

@@ -113,7 +113,6 @@ export class ColumnChooserComponent {
 
 	selectColumns() {
 		this.selectedColumns = this.columns.filter((menuitem) => menuitem.show).map((menuitem) => menuitem.colId);
-		console.log('this co', this.selectedColumns);
 		const state: any = [];
 		for (const column of this.columns) {
 			let found = false;
@@ -133,7 +132,6 @@ export class ColumnChooserComponent {
 		const state: any = [];
 		this.selectedColumns;
 		this.columns;
-		console.log('this co', this.columns);
 		for (const column of this.columns) {
 			if (!this.useDialog) {
 				let found = false;

@@ -25,7 +25,7 @@
 									<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
 									<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" (click)="$event.stopPropagation()" />
 								</mat-form-field>
-								<span class="clear-search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span><br />
+								<span class="clear-search" title="Clear Search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span><br />
 								<span *ngIf="searchInput.length > 0" class="mappings-section"
 									>{{ refsetGridApi.getDisplayedRowCount() > 0 ? refsetGridApi.getDisplayedRowCount() : 'No ' }} result{{
 										refsetGridApi.getDisplayedRowCount() > 1 ? 's' : ''

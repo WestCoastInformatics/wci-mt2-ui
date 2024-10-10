@@ -81,6 +81,7 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 	mapping: string;
 	routeParamsSubscription$: Subscription;
 	gridSelectAll = false;
+	internationalId = '449080006';
 
 	loaded = false;
 	selectedFormat = {};
@@ -179,6 +180,7 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 						'spanned': spanned,
 						'downloadable': true,
 						'mapEntries': results.mapEntries,
+						'descriptions': results.descriptions,
 						'entries': results.mapEntries.length,
 						'code': results.code,
 						'name': results.name,
@@ -194,6 +196,7 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 						'group': results.mapEntries[b].group,
 						'priority': results.mapEntries[b].priority,
 						'released': results.mapEntries[b].released,
+						'moduleId': results.mapEntries[b].moduleId,
 					});
 					count++;
 				}
@@ -210,6 +213,26 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 				//
 			},
 		});
+	}
+
+	getModuleLanguageIcon(moduleId: string, descriptions: Array<any>) {
+		let flag = 'en';
+		for (let e = 0; e < descriptions.length; e++) {
+			if (descriptions[e].moduleId === moduleId) {
+				flag = descriptions[e].language;
+			}
+		}
+		return flag;
+	}
+
+	getModuleLanguageName(moduleId: string, descriptions: Array<any>) {
+		let lang = 'EN';
+		for (let e = 0; e < descriptions.length; e++) {
+			if (descriptions[e].moduleId === moduleId) {
+				lang = descriptions[e].languageName;
+			}
+		}
+		return lang;
 	}
 
 	selectAction(action: string) {

@@ -68,13 +68,6 @@
 	font-weight: 400 !important;
 }
 
-.mapset-intl-icon {
-	cursor: pointer;
-	color: $mapset-blue;
-	font-size: 1.25em;
-	vertical-align: middle;
-}
-
 .sub-header-font {
 	font-size: 12px;
 	margin-left: 15px;
@@ -438,7 +431,12 @@
 	cursor: pointer;
 	color: $mapset-blue;
 	font-size: 1.25em;
-	vertical-align: middle;
+	vertical-align: text-top;
+}
+
+.mapset-mod-icon {
+	margin-left: 10px;
+	height: 13px;
 }
 
 .mapset-notes-icon {

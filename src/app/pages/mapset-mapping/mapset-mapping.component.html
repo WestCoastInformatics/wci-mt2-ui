@@ -40,7 +40,7 @@
 									<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
 									<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" (click)="$event.stopPropagation()" />
 								</mat-form-field>
-								<span class="clear-search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span>
+								<span class="clear-search" title="Clear Search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span>
 							</div></mat-menu
 						>
 						<div class="menu-inline">
@@ -88,15 +88,23 @@
 											<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
 											<div class="record-code col-2">{{ entry.toCode }}</div>
 											<div class="record-name col-8">
-												{{ entry.toName
-												}}<mat-icon
-													*ngIf="entry.released"
-													aria-hidden="false"
-													class="mat-button-wrapper mapset-intl-icon m-l-5"
-													aria-label="SNOMED International"
-													title="SNOMED International">
-													<span class="material-symbols-outlined"> language_international </span>
-												</mat-icon>
+												{{ entry.toName }}
+												<span *ngIf="entry.released">
+													<mat-icon
+														*ngIf="entry.moduleId === internationalId"
+														aria-hidden="false"
+														class="mat-button-wrapper mapset-intl-icon m-l-5"
+														aria-label="SNOMED International"
+														title="SNOMED International">
+														<span class="material-symbols-outlined"> language_international </span>
+													</mat-icon>
+													<img
+														class="mapset-mod-icon"
+														*ngIf="entry.moduleId !== internationalId"
+														src="{{ 'assets/flags/' + getModuleLanguageIcon(entry.moduleId, record.descriptions) + '.png' }}"
+														title="{{ getModuleLanguageName(entry.moduleId, record.descriptions) }}"
+														aria-label="{{ getModuleLanguageName(entry.moduleId, record.descriptions) }}"
+												/></span>
 											</div>
 										</div>
 										<div class="col-8 row mb-3">

@@ -120,6 +120,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	gridColumnDefs = [];
 	gridInterval: any;
 	useDialog = false;
+	internationalId = '449080006';
 
 	checkedNum = 0;
 
@@ -645,6 +646,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 							'active': results.active,
 							'feedback': true,
 							'mapEntries': results.mapEntries[b],
+							'descriptions': results.descriptions[b],
 							'entries': results.mapEntries.length,
 							'code': results.code,
 							'name': results.name,
@@ -661,6 +663,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 							'group': results.mapEntries[b].group,
 							'priority': results.mapEntries[b].priority,
 							'released': results.mapEntries[b].released,
+							'moduleId': results.mapEntries[b].moduleId,
 						};
 						count++;
 						batch.push(data);
@@ -1222,6 +1225,26 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		});
 		this.gridApi.setRowData(this.mapsetData);
 		this.checkedNum = this.gridSelectAll ? this.mapsetData.length : 0;
+	}
+
+	getModuleLanguageIcon(moduleId: string, descriptions: Array<any>) {
+		let flag = 'en';
+		for (let e = 0; e < descriptions.length; e++) {
+			if (descriptions[e].moduleId === moduleId) {
+				flag = descriptions[e].language;
+			}
+		}
+		return flag;
+	}
+
+	getModuleLanguageName(moduleId: string, descriptions: Array<any>) {
+		let lang = 'EN';
+		for (let e = 0; e < descriptions.length; e++) {
+			if (descriptions[e].moduleId === moduleId) {
+				lang = descriptions[e].languageName;
+			}
+		}
+		return lang;
 	}
 
 	getValueLength(params): number {

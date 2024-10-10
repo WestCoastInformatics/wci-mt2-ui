@@ -8,7 +8,7 @@
 				<span>{{ mapsetData[0].code + ' ' + mapsetData[0].name }} </span>
 			</div>
 		</div>
-		<div class="col-md-auto d-flex p-r-30">
+		<div class="col-md-auto d-flex p-r-30 m-t-5">
 			<div class="col-12">
 				<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: mapsetData }"></template>
 			</div>
@@ -125,44 +125,68 @@
 			<img src="assets/caret-up-solid.svg" *ngIf="!showConfigSection" alt="Collapse Button" title="Collapse Target Configuration" aria-label="Collapse Button" class="caret-up-solid" />
 			<img src="assets/caret-down-solid.svg" *ngIf="showConfigSection" alt="Expand Button" title="Expand Target Configuration" aria-label="Expand Button" class="caret-down-solid" />
 		</div>
+
 		<div [hidden]="!showConfigSection || !loaded" class="section-background config-section">
 			<div *ngFor="let record of mapsetData; index as i">
-				<div class="dropdown-group col-gap group-background" *ngFor="let _ of [].constructor(numOfGroups); index as g">
+				<div
+					class="dropdown-group col-gap group-background map-group"
+					*ngFor="let _ of [].constructor(this.numOfGroups); index as g"
+					[cdkDragDisabled]="numOfGroups === 1 || true"
+					cdkDropList
+					(cdkDropListDropped)="drop($event)"
+					cdkDragBoundary=".config-section"
+					cdkDragLockAxis="y"
+					cdkDrag>
 					<div class="metadata-collapsible-container-title page-header-font metadata-collapsible-container-group-header map-group-header">
 						<div>
 							<div class="move-group-container">
-								<i title="Move Group" class="fa-solid fa-up-down-left-right link-icon mr-5 group-move-btn" (click)="openToBeDevelopedModal(tbdModal)"></i>
+								<i title="Move Group" class="fa-solid fa-up-down-left-right link-icon mr-5 group-move-btn" [ngClass]="{ 'disabled': numOfGroups === 1 || true }" cdkDragHandle></i>
 							</div>
 							<span>Map Group {{ g + 1 }}</span>
 
 							<span class="sub-header-font" [hidden]="getGroupTotal(g + 1) === 0">( {{ getGroupTotal(g + 1) }} entr{{ getGroupTotal(g + 1) === 1 ? 'y' : 'ies' }} )</span>
 						</div>
-						<span title="Remove Group" class="clear-search group-remove-btn" (click)="removeMapGroup(g + 1)">&#10005;</span>
+						<span title="Remove Group" class="clear-search group-remove-btn" (click)="openConfirmationModal(g + 1, 'group')">&#10005;</span>
 					</div>
 					<div
 						class="metadata-collapsible-container-group-header target-row solid-target-border target-hover-background"
 						[ngClass]="{ 'target-selected-background': selectedTarget === entry.uuid }"
 						*ngFor="let entry of record.mapEntries; index as x"
-						[hidden]="g + 1 !== entry.group">
+						[cdkDropListData]="entry"
+						cdkDragBoundary=".map-group"
+						cdkDragLockAxis="y"
+						[hidden]="g + 1 !== entry.group"
+						cdkDrag>
 						<div class="col-4">
 							<div class="target-name">
 								<div class="move-container">
-									<i title="Move Target" class="fa-solid fa-up-down-left-right link-icon mr-5 target-move-btn" (click)="openToBeDevelopedModal(tbdModal)"></i>
+									<i
+										title="Move Target"
+										class="fa-solid fa-up-down-left-right link-icon mr-5 target-move-btn"
+										[ngClass]="{ 'disabled': mapsetData[0].mapEntries.length === 1 }"
+										cdkDragHandle></i>
 								</div>
 								<!--target-name-wrap-->
 								<span class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)">{{ entry.group || '1' }}/{{ entry.priority }}</span
 								><span class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)">{{ entry.toCode }}</span
 								><span title="{{ entry.toName }}" class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)"
 									>{{ entry.toName }}
-									<mat-icon
-										*ngIf="entry.released"
-										aria-hidden="false"
-										class="mat-button-wrapper mapset-intl-icon m-l-5"
-										aria-label="SNOMED International"
-										title="SNOMED International">
-										<span class="material-symbols-outlined"> language_international </span>
-									</mat-icon></span
-								>
+									<span *ngIf="entry.released">
+										<mat-icon
+											*ngIf="entry.moduleId === internationalId"
+											aria-hidden="false"
+											class="mat-button-wrapper mapset-intl-icon m-l-5"
+											aria-label="SNOMED International"
+											title="SNOMED International">
+											<span class="material-symbols-outlined"> language_international </span>
+										</mat-icon>
+										<img
+											class="mapset-mod-icon"
+											*ngIf="entry.moduleId !== internationalId"
+											src="{{ 'assets/flags/' + getModuleLanguageIcon(entry.moduleId, record.descriptions) + '.png' }}"
+											title="{{ getModuleLanguageName(entry.moduleId, record.descriptions) }}"
+											aria-label="{{ getModuleLanguageName(entry.moduleId, record.descriptions) }}" /></span
+								></span>
 							</div>
 						</div>
 						<div class="target-selection" *ngIf="entry.toName.indexOf('[NO TARGET]') > -1 || entry.toName.indexOf(' CONCEPT NOT FOUND') > -1">
@@ -202,7 +226,7 @@
 						<span class="col-2 advice-list">
 							<template [ngTemplateOutlet]="targetAdviceSection" [ngTemplateOutletContext]="{ $implicit: entry }"></template>
 						</span>
-						<div class="move-container"><span title="Remove Target" class="clear-search target-remove-btn" (click)="removeTarget(entry.uuid)">&#10005;</span></div>
+						<div class="move-container"><span title="Remove Target" class="clear-search target-remove-btn" (click)="openConfirmationModal(entry.uuid, 'target')">&#10005;</span></div>
 					</div>
 					<div class="metadata-collapsible-container-group-header target-btn dotted-target-border target-hover-background mt-10" (click)="addEmptyTargetToGroup(g + 1)" title="Add Target">
 						<div><i class="fa-solid fa-circle-plus link-icon mr-5"></i> <span class="link-icon">Add a New Target</span></div>
@@ -299,7 +323,23 @@
 		<p>This feature is not yet available. Please check back later.</p>
 	</div>
 	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-		<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		<button type="button" title="Close" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+	</div>
+</ng-template>
+
+<ng-template #confirmationModal let-modal>
+	<div class="modal-header rt2-modal-header">
+		<div class="modal-title">Confirm Remove</div>
+		<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeConfirmDialog()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<p>Are you sure you want to remove this {{ removeType }}?</p>
+	</div>
+	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+		<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeConfirmDialog()">Cancel</button>
+		<button type="button" title="Confirm" class="rt2-btn rt2-action-btn" (click)="confirmRemoveItem()">Confirm</button>
 	</div>
 </ng-template>
 

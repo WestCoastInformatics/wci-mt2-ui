@@ -95,6 +95,7 @@ export class MapsetRecordsComponent implements OnInit {
 	recordRows = [];
 	mapSetSubscription: Subscription;
 	isNewPageSize = false;
+	internationalId = '449080006';
 
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
@@ -508,6 +509,7 @@ export class MapsetRecordsComponent implements OnInit {
 										'spanned': spanned,
 										'downloadable': results[a].code !== '' ? true : false,
 										'mapEntries': results[a].mapEntries,
+										'descriptions': results[a].descriptions,
 										'entries': results[a].mapEntries.length,
 										'code': results[a].code,
 										'name': results[a].name,
@@ -523,6 +525,7 @@ export class MapsetRecordsComponent implements OnInit {
 										'group': results[a].mapEntries[b].group,
 										'priority': results[a].mapEntries[b].priority,
 										'released': results[a].mapEntries[b].released,
+										'moduleId': results[a].mapEntries[b].moduleId,
 									});
 									count++;
 								}
@@ -604,6 +607,26 @@ export class MapsetRecordsComponent implements OnInit {
 				this.checkedNum++;
 			}
 		}
+	}
+
+	getModuleLanguageIcon(moduleId: string, descriptions: Array<any>) {
+		let flag = 'en';
+		for (let e = 0; e < descriptions.length; e++) {
+			if (descriptions[e].moduleId === moduleId) {
+				flag = descriptions[e].language;
+			}
+		}
+		return flag;
+	}
+
+	getModuleLanguageName(moduleId: string, descriptions: Array<any>) {
+		let lang = 'EN';
+		for (let e = 0; e < descriptions.length; e++) {
+			if (descriptions[e].moduleId === moduleId) {
+				lang = descriptions[e].languageName;
+			}
+		}
+		return lang;
 	}
 
 	getValueLength(params): number {

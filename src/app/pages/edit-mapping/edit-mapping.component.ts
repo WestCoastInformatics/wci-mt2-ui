@@ -3,6 +3,7 @@ import { Subscription, debounceTime, distinctUntilChanged, Observable, forkJoin,
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, HostListener } from '@angular/core';
 import { MatSelect } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -79,6 +80,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	showLoadingSearch = true;
 	toBeDevelopedModalRef: NgbModalRef;
 	downloadModalRef: NgbModalRef;
+	confirmModalRef: NgbModalRef;
 	isModalOpen = false;
 	mapsetName = 'Mapset Name';
 	selectedMapset: any;
@@ -90,7 +92,8 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	routeParamsSubscription$: Subscription;
 	gridSelectAll = false;
 	advicePopoverLocation = 0;
-
+	removeId: any;
+	removeType: string;
 	loaded = false;
 	selectedFormat = {};
 	formats = [];
@@ -98,6 +101,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	foundConceptCode = false;
 	selectedTarget = '';
 	userChanged = false;
+	internationalId = '449080006';
 
 	tempModuleIdChangeBeforeRelease = '449080006';
 
@@ -115,6 +119,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
 	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
 	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
+	@ViewChild('confirmationModal') confirmationModal: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
 	@ViewChild('actions') private actions: MatSelect;
 	@ViewChild('selectRelationship') private selectRelationship: MatSelect;
@@ -261,6 +266,26 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.getMapsetData();
 	}
 
+	getModuleLanguageIcon(moduleId: string, descriptions: Array<any>) {
+		let flag = 'en';
+		for (let e = 0; e < descriptions.length; e++) {
+			if (descriptions[e].moduleId === moduleId) {
+				flag = descriptions[e].language;
+			}
+		}
+		return flag;
+	}
+
+	getModuleLanguageName(moduleId: string, descriptions: Array<any>) {
+		let lang = 'EN';
+		for (let e = 0; e < descriptions.length; e++) {
+			if (descriptions[e].moduleId === moduleId) {
+				lang = descriptions[e].languageName;
+			}
+		}
+		return lang;
+	}
+
 	clearTargetInput() {
 		this.foundConceptCode = false;
 		this.targetCodeInput = '';
@@ -276,6 +301,16 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		if (this.targetCodeInput.length > 2) {
 			this.getConceptByCode();
 		}
+	}
+
+	drop(event: CdkDragDrop<string[]>) {
+		const temp = this.mapsetData[0].mapEntries[event.previousIndex];
+		const tempPriority = this.mapsetData[0].mapEntries[event.previousIndex].priority;
+		const tempPriority2 = this.mapsetData[0].mapEntries[event.currentIndex].priority;
+		this.mapsetData[0].mapEntries[event.previousIndex] = this.mapsetData[0].mapEntries[event.currentIndex];
+		this.mapsetData[0].mapEntries[event.currentIndex] = temp;
+		this.mapsetData[0].mapEntries[event.previousIndex].priority = tempPriority;
+		this.mapsetData[0].mapEntries[event.currentIndex].priority = tempPriority2;
 	}
 
 	reloadMapping() {
@@ -348,6 +383,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 							'spanned': spanned,
 							'downloadable': true,
 							'mapEntries': results.mapEntries,
+							'descriptions': results.descriptions,
 							'entries': results.mapEntries.length,
 							'code': results.code,
 							'name': results.name,
@@ -364,6 +400,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 							'groupTotal': results.mapEntries[b].group,
 							'priority': results.mapEntries[b].priority,
 							'released': results.mapEntries[b].released,
+							'moduleId': results.mapEntries[b].moduleId,
 						});
 						count++;
 					}
@@ -398,7 +435,8 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		return total;
 	}
 
-	removeMapGroup(groupNum: number) {
+	removeMapGroup() {
+		const groupNum: number = this.removeId;
 		for (let d = this.mapsetData[0].mapEntries.length - 1; d > 0; d--) {
 			if (this.mapsetData[0].mapEntries[d].group === groupNum) {
 				this.mapsetData[0].mapEntries.splice(d, 1);
@@ -467,7 +505,8 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.userChanged = true;
 	}
 
-	removeTarget(uuid: string) {
+	removeTarget() {
+		const uuid: string = this.removeId;
 		let changedPriority = 0;
 		let groupNum = 0;
 		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
@@ -719,9 +758,28 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	openDownloadModal(content) {
-		this.downloadModalRef = this.modalService.open(content, { centered: true });
+	openConfirmationModal(removeId, removeType) {
+		this.removeId = removeId;
+		this.removeType = removeType;
+		this.confirmModalRef = this.modalService.open(this.confirmationModal, { centered: true });
 		this.isModalOpen = true;
+	}
+
+	closeConfirmDialog() {
+		this.confirmModalRef.close();
+		this.isModalOpen = false;
+	}
+
+	confirmRemoveItem() {
+		switch (this.removeType) {
+			case 'group':
+				this.removeMapGroup();
+				break;
+			case 'target':
+				this.removeTarget();
+				break;
+		}
+		this.closeConfirmDialog();
 	}
 
 	startDownload() {

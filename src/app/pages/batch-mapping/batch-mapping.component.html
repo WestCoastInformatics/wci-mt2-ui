@@ -61,7 +61,7 @@
 							<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
 							<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" (click)="$event.stopPropagation()" />
 						</mat-form-field>
-						<span class="clear-search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span><br />
+						<span class="clear-search" title="Clear Search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span><br />
 						<span *ngIf="searchInput.length > 0" class="mappings-section"
 							>{{ gridApi.getDisplayedRowCount() > 0 ? gridApi.getDisplayedRowCount() : 'No ' }} result{{ gridApi.getDisplayedRowCount() > 1 ? 's' : '' }} found</span
 						>
@@ -274,9 +274,22 @@
 <!-- Name Templates -->
 <ng-template #directoryNameSection let-params>
 	<span class="blue-link">{{ params?.value }}</span>
-	<mat-icon *ngIf="params?.data?.released" aria-hidden="false" class="mat-button-wrapper mapset-intl-icon m-l-5" aria-label="SNOMED International" title="SNOMED International">
-		<span class="material-symbols-outlined"> language_international </span>
-	</mat-icon>
+	<span *ngIf="params?.data?.released">
+		<mat-icon
+			*ngIf="params?.data?.moduleId === internationalId"
+			aria-hidden="false"
+			class="mat-button-wrapper mapset-intl-icon m-l-5"
+			aria-label="SNOMED International"
+			title="SNOMED International">
+			<span class="material-symbols-outlined"> language_international </span>
+		</mat-icon>
+		<img
+			class="mapset-mod-icon"
+			*ngIf="params?.data?.moduleId !== internationalId"
+			src="{{ 'assets/flags/' + getModuleLanguageIcon(params?.data?.moduleId, params?.data?.descriptions) + '.png' }}"
+			title="{{ getModuleLanguageName(params?.data?.moduleId, params?.data?.descriptions) }}"
+			aria-label="{{ getModuleLanguageName(params?.data?.moduleId, params?.data?.descriptions) }}"
+	/></span>
 </ng-template>
 
 <!-- Edition Templates -->

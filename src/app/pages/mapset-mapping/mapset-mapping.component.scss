@@ -517,5 +517,10 @@
 	cursor: pointer;
 	color: $mapset-blue;
 	font-size: 1.25em;
-	vertical-align: middle;
+	vertical-align: text-top;
+}
+
+.mapset-mod-icon {
+	margin-left: 10px;
+	height: 13px;
 }
