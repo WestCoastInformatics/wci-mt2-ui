@@ -226,7 +226,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		const projectId = '1';
 		this.refsetService.getMapProjectById(projectId, params).subscribe({
 			next: (results) => {
-				this.targetTerminology = results.destinationTerminology.replace(/-/g, '');
+				this.targetTerminology = results.destinationTerminology;
 				this.targetTerminologyVersion = results.destinationTerminologyVersion;
 				this.ruleBased = results.ruleBased;
 				this.projectRelations = results.mapRelations;

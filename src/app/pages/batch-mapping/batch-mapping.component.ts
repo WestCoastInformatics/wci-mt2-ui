@@ -499,7 +499,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		const projectId = '1';
 		this.refsetService.getMapProjectById(projectId, params).subscribe({
 			next: (results) => {
-				this.targetTerminology = results.destinationTerminology.replace(/-/g, '');
+				this.targetTerminology = results.destinationTerminology;
 				this.targetTerminologyVersion = results.destinationTerminologyVersion;
 				this.ruleBased = results.ruleBased;
 				this.ruleOptions = this.ruleBased ? this.rulesFalse : this.rulesTrue;
