@@ -1,9 +1,10 @@
 import { FormControl } from '@angular/forms';
-import { Subscription, debounceTime, distinctUntilChanged, Observable, forkJoin, filter, map } from 'rxjs';
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, HostListener } from '@angular/core';
+import { AfterViewInit, ElementRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, HostListener, Renderer2 } from '@angular/core';
+import { Subscription, Observable, OperatorFunction, of, map } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -12,7 +13,6 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { Title } from '@angular/platform-browser';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -105,9 +105,12 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 
 	tempModuleIdChangeBeforeRelease = '449080006';
 
-	targetFC = new FormControl('');
-	codeList: Observable<any[]>;
-
+	targetFC = new FormControl('a');
+	public query: any;
+	//formatter = (result: any) => result || this.query;
+	formatter = (x: { name: string; code: string }) => x.code;
+	searchByKeyboard = false;
+	searchByTypeahead = false;
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
 
@@ -130,9 +133,9 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		private route: ActivatedRoute,
 		private router: Router,
 		private titleService: Title,
-		private dialogFactoryService: DialogFactoryService,
 		private refsetService: RefsetService,
-		private changeDetectorRef: ChangeDetectorRef,
+		private renderer: Renderer2,
+		private elementRef: ElementRef,
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
 		private notificationService: NotificationService,
@@ -140,43 +143,16 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	) {
 		document.body.scrollTop = 0;
 		this.targetFC.valueChanges.pipe(debounceTime(600), distinctUntilChanged()).subscribe((res) => {
-			if (this.targetFC.dirty) {
+			if (this.targetFC.dirty && !this.searchByTypeahead) {
 				this.foundConceptCode = false;
 				this.targetNameInput = '';
-				this.onInputTargetChange();
+				if (this.targetFC.value.length >= 2) {
+					this.onInputTargetChange();
+				}
+			} else {
+				this.searchByTypeahead = false;
 			}
 		});
-		//setup for type-ahead search
-		/*this.codeList = this.targetFC.valueChanges.pipe(
-			debounceTime(600),
-			distinctUntilChanged(),
-			map((state) => this.filterStates(state))
-		);*/
-		//).subscribe((res) => {
-		//	if (this.targetFC.dirty) {
-		//		this.onInputTargetChange();
-		//	}
-		//	});
-		//refsetService.getTaxonomyRoot();
-	}
-
-	//setup for type-ahead search
-	/*constructor() {
-		this.stateCtrl = new FormControl();
-		this.filteredStates = this.stateCtrl.valueChanges.pipe(
-		  startWith(''),
-		  map((state) => (state ? this.filterStates(state) : this.states.slice()))
-		);
-	  }
-	
-	  filterStates(name: string) {
-		return this.states.filter(
-		  (state) =>
-			state.name.toLowerCase().indexOf(name.toLowerCase()) === 0 
-		);
-	  }*/
-	filterStates(name: string) {
-		return this.codeList; //.filter((state) => state.name.toLowerCase().indexOf(name.toLowerCase()) === 0);
 	}
 
 	//***** Framework Functions *****/
@@ -205,6 +181,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		}
 
 		this.disableChannel.postMessage(false);
+		this.targetFC.disable();
 	}
 
 	getMapsetInfo() {
@@ -316,6 +293,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	reloadMapping() {
 		this.loaded = false;
 		this.userChanged = false;
+		this.targetFC.disable();
 		this.selectedTarget = '';
 		this.clearTargetInput();
 		this.getMapsetInfo();
@@ -326,15 +304,61 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		}, 250);
 	}
 
+	searchAutoComplete: OperatorFunction<string, readonly { name; code }[]> = (text$: Observable<string>) =>
+		text$.pipe(
+			debounceTime(600),
+			distinctUntilChanged(),
+			switchMap((term) => this.fetchData(term))
+		);
+	fetchData(term: string): Observable<any> {
+		if (term.length >= 2 && !this.searchByKeyboard) {
+			return this.refsetService.searchConceptByQuery(this.targetTerminology, this.targetTerminologyVersion, 'code:' + term.toUpperCase(), '10').pipe(map((data) => data.items));
+		} else {
+			return of([]); // return an empty array if the term length is less than 3
+		}
+	}
+
+	//for selecting item from suggestions
+	selectItemFromMenu(menu: any) {
+		this.searchByTypeahead = true;
+		this.targetCodeInput = menu.item.code;
+		this.targetNameInput = menu.item.name;
+		this.foundConceptCode = true;
+	}
+
+	//form submmision without selecting from dropdown
+	onKeyPress(e) {
+		this.searchByKeyboard = true;
+		this.targetNameInput = '';
+		this.targetCodeInput = this.targetFC.value;
+		console.log(' key dow', this.targetFC.value);
+		this.getConceptByCode();
+		this.handleCloseDropDown();
+	}
+
+	handleCloseDropDown() {
+		//Quick search
+		setTimeout(() => {
+			const typeaheadElement = this.elementRef.nativeElement.querySelector('#ngb-typeahead-0');
+			if (typeaheadElement) {
+				this.renderer.removeClass(typeaheadElement, 'show');
+			}
+		}, 1400);
+	}
+
 	getConceptByCode() {
 		this.refsetService.getConceptByCode(this.targetTerminology, this.targetTerminologyVersion, this.targetCodeInput).subscribe({
 			next: (results) => {
-				if (results.name.indexOf('CONCEPT NOT FOUND') > -1) {
-					this.foundConceptCode = false;
+				this.searchByKeyboard = false;
+				this.foundConceptCode = false;
+				if (results === null) {
+					this.targetNameInput = 'CONCEPT NOT FOUND';
 				} else {
-					this.foundConceptCode = true;
+					if (results.name.indexOf('CONCEPT NOT FOUND') === -1) {
+						this.foundConceptCode = true;
+					}
+					this.targetNameInput = results.name;
 				}
-				this.targetNameInput = results.name;
 			},
 			error: (error) => {
 				//
@@ -447,7 +471,6 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	addEmptyTargetToGroup(groupNum: number) {
-		//if (this.selectedTarget === '') {
 		let nextPriorityNum = 1;
 		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
 			if (this.mapsetData[0].mapEntries[p].group === groupNum) {
@@ -489,19 +512,10 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 			'uuid': String(groupNum + nextPriorityNum + Date.now()),
 		};
 
+		this.targetCodeInput = '';
+		this.targetNameInput = '';
 		this.mapsetData[0].mapEntries.push(newMapEntry);
 		this.setSelectedTarget(newMapEntry.uuid, newMapEntry.toCode, newMapEntry.toName);
-		/*} else {
-			for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
-				if (this.mapsetData[0].mapEntries[p].uuid === this.selectedTarget) {
-					this.mapsetData[0].mapEntries[p].toCode = '';
-					this.mapsetData[0].mapEntries[p].toName = '[NO TARGET]';
-				}
-			}
-			//this.selectedTarget = '';
-			this.foundConceptCode = false;
-			this.clearTargetInput();
-		}*/
 		this.userChanged = true;
 	}
 
@@ -527,14 +541,28 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	setSelectedTarget(uuid: string, code: string, name: string) {
+		this.targetFC.enable();
 		this.selectedTarget = uuid;
 		this.targetCodeInput = code;
 		this.targetNameInput = name;
 		this.targetFC.reset();
 		this.targetFC.setValue(this.targetCodeInput);
+		this.query = { 'code': this.targetCodeInput };
 	}
 
 	setTargetCode() {
+		let defaultRule = '';
+		if (!this.ruleBased) {
+			defaultRule = 'TRUE';
+		}
+		let defaultRelationship = '';
+		for (let r = 0; r < this.projectRelations.length; r++) {
+			if (this.projectRelations[r].allowableForNullTarget === false) {
+				defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
+				break;
+			}
+		}
+		console.log('def aul relatio', defaultRelationship);
 		if (this.selectedTarget === '') {
 			let nextPriorityNum = 1;
 			for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
@@ -544,17 +572,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 					}
 				}
 			}
-			let defaultRule = '';
-			if (!this.ruleBased) {
-				defaultRule = 'TRUE';
-			}
-			let defaultRelationship = '';
-			for (let r = 0; r < this.projectRelations.length; r++) {
-				if (this.projectRelations[r].allowableForNullTarget === true) {
-					defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
-					break;
-				}
-			}
+
 			const newMapEntry = {
 				'active': true,
 				'additionalMapEntryInfos': [],
@@ -582,10 +600,19 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				if (this.mapsetData[0].mapEntries[p].uuid === this.selectedTarget) {
 					this.mapsetData[0].mapEntries[p].toCode = this.targetCodeInput;
 					this.mapsetData[0].mapEntries[p].toName = this.targetNameInput;
+					this.mapsetData[0].mapEntries[p].moduleId = this.tempModuleIdChangeBeforeRelease;
+					this.mapsetData[0].mapEntries[p].relation = defaultRelationship;
+					this.mapsetData[0].mapEntries[p].rule = defaultRule;
+					this.mapsetData[0].mapEntries[p].additionalMapEntryInfos = [];
+					this.mapsetData[0].mapEntries[p].mapAdvices = [];
+					this.mapsetData[0].mapEntries[p].adviceAlways = [];
+					this.mapsetData[0].mapEntries[p].advices = [];
+					this.mapsetData[0].mapEntries[p].descriptions = [];
 				}
 			}
 		}
 		this.selectedTarget = '';
+		this.targetFC.disable();
 		this.foundConceptCode = false;
 		this.clearTargetInput();
 		this.userChanged = true;

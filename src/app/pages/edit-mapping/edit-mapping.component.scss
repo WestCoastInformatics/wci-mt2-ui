@@ -123,7 +123,7 @@
 }
 
 .advice-name-wrap {
-	max-width: 200px;
+	max-width: 300px;
 	word-wrap: break-word;
 	overflow: hidden;
 	white-space: nowrap;
@@ -151,6 +151,12 @@
 	padding-left: 2px;
 	padding-right: 2px;
 	width: 250px;
+}
+
+.rule-selection-box {
+	padding-left: 2px;
+	padding-right: 2px;
+	width: 150px;
 }
 
 .target-move-btn {
@@ -187,7 +193,8 @@
 	background-color: initial !important;
 }
 
-.target-selection-box:hover {
+.target-selection-box:hover,
+.rule-selection-box:hover {
 	background-color: #f2f2f2;
 }
 
@@ -203,6 +210,70 @@
 	.target-remove-btn {
 		display: inline-block !important;
 	}
+}
+
+.svg-inline {
+	position: absolute;
+	top: 11px;
+	left: 10px;
+}
+
+.clear-search {
+	color: #666;
+	position: relative;
+	left: -15px;
+	top: 0.15em;
+	cursor: pointer;
+}
+
+.target-btns {
+	margin-left: 210px;
+	position: relative;
+	flex-wrap: nowrap;
+	display: inline-flex;
+}
+
+.type-ahead-form {
+	position: absolute;
+	margin-left: 50px;
+}
+
+.type-head-append input,
+.input-logo-field input {
+	width: 100%;
+	font-size: 12px !important;
+	padding: 0 10px 0 30px;
+}
+.type-head-append {
+	position: relative;
+	min-width: 200px;
+	max-width: 200px;
+	height: max-content;
+	display: flex;
+}
+.type-head-append i {
+	position: absolute;
+	left: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #ddd;
+}
+
+::ng-deep [id^='ngb-typeahead-'] {
+	width: 100% !important;
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+.type-head-overflow {
+	width: 100% !important;
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+
+.max-width {
+	width: 100%;
 }
 
 .move-container {

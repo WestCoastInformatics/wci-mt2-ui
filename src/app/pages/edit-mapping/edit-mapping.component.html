@@ -73,32 +73,43 @@
 				<div class="section-background mappings-section" *ngIf="loaded">
 					<div class="col-12">
 						<div class="d-flex col-12 row mt-5">
-							<div class="col-3 align-right mb-10 mt-10">Target Code:</div>
-							<div class="col-9">
-								ICD10,
-
-								<mat-form-field floatLabel="never" id="targetInputField" title="Enter Target Code" class="adjust-mat-input">
-									<input matInput #targetInput placeholder="Enter Target Code" id="targetCodeInput" [formControl]="targetFC" class="target-input" />
-									<!--	<mat-autocomplete #auto="matAutocomplete">
-										<mat-option *ngFor="let state of filteredStates | async" [value]="state.name">
-											<span>{{ state.name }}</span> |
-										</mat-option>
-									</mat-autocomplete>-->
-								</mat-form-field>
-								<span class="clear-search" (click)="clearTargetInput()">&#10005;</span>
-
-								<button
-									type="button"
-									title="Set as Target"
-									class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
-									(click)="setTargetCode()"
-									[disabled]="!foundConceptCode || !selectedTarget"
-									(ngClass)="({ 'disabled': !foundConceptCode || !selectedTarget })">
-									Set as Target
-								</button>
-								<button type="button" title="Set Empty Target" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="addEmptyTargetToGroup(numOfGroups)">
-									Set Empty Target
-								</button>
+							<div class="col-3 align-right mb-10 m-t-5">Target Code:</div>
+							<div class="col-9 d-flex">
+								<span class="m-r-5 m-t-5"> ICD10, </span>
+								<form (ngSubmit)="onKeyPress($event)" class="max-width m-t-5 type-ahead-form">
+									<span class="type-head-append">
+										<i class="fa-solid fa-magnifying-glass svg-inline"></i>
+										<input
+											id="typeahead-basic"
+											type="text"
+											class="form-control"
+											[(ngModel)]="query"
+											[formControl]="targetFC"
+											title="Search Target Code (enter at least 2 characters)"
+											[placeholder]="'Search Target Code'"
+											[ngbTypeahead]="searchAutoComplete"
+											[resultFormatter]="formatter"
+											[inputFormatter]="formatter"
+											[resultTemplate]="rt"
+											(selectItem)="selectItemFromMenu($event)"
+											[focusFirst]="false" />
+										<span class="clear-search" title="Clear Search" (click)="clearTargetInput()">&#10005;</span>
+									</span>
+								</form>
+								<div class="target-btns">
+									<button
+										type="button"
+										title="Set as Target"
+										class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
+										(click)="setTargetCode()"
+										[disabled]="!foundConceptCode || !selectedTarget"
+										(ngClass)="({ 'disabled': !foundConceptCode || !selectedTarget })">
+										Set as Target
+									</button>
+									<button type="button" title="Set Empty Target" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="addEmptyTargetToGroup(numOfGroups)">
+										Set Empty Target
+									</button>
+								</div>
 							</div>
 							<div class="col-3 align-right">Preferred Term:</div>
 							<div class="col-9">
@@ -214,7 +225,7 @@
 							</mat-form-field>
 						</div>
 						<div class="target-selection">
-							<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
+							<mat-form-field appearance="fill" floatLabel="never" class="rule-selection-box">
 								<mat-select #selectRule title="Select a Rule" placeholder="Select a Rule" [(value)]="record.rule" (selectionChange)="userChangeSelection('rule')">
 									<mat-option value="TRUE" class="no-checkbox">TRUE</mat-option>
 									<mat-option value="Gender - Female" class="no-checkbox" [hidden]="!ruleBased">Gender - Female</mat-option>
@@ -223,7 +234,7 @@
 							</mat-form-field>
 						</div>
 
-						<span class="col-2 advice-list">
+						<span class="col-3 advice-list">
 							<template [ngTemplateOutlet]="targetAdviceSection" [ngTemplateOutletContext]="{ $implicit: entry }"></template>
 						</span>
 						<div class="move-container"><span title="Remove Target" class="clear-search target-remove-btn" (click)="openConfirmationModal(entry.uuid, 'target')">&#10005;</span></div>
@@ -252,6 +263,13 @@
 		</div>
 	</div>
 </div>
+
+<!--Type Ahead Result Template-->
+<ng-template #rt let-r="result" let-t="term">
+	<div class="type-head-overflow" title="{{ r.code + ': ' + r.name }}">
+		<ngb-highlight [result]="r.code + ': ' + r.name" [term]="t"></ngb-highlight>
+	</div>
+</ng-template>
 
 <!-- Action Templates -->
 <ng-template #directoryActionSection let-params>
@@ -284,7 +302,7 @@
 		<ul>
 			<li *ngFor="let advice of entry.updateAdviceList" class="advice-list-item" [hidden]="advice.indexOf('ALWAYS') > -1">
 				<span title="{{ advice }}" class="code-link">{{ advice }}</span
-				><span title="Remove advice" class="clear-search adjust-clear" (click)="removeAdviceFromList(entry.uuid, advice)">&#10005;</span>
+				><span title="Remove Advice" class="clear-search adjust-clear" (click)="removeAdviceFromList(entry.uuid, advice)">&#10005;</span>
 			</li>
 		</ul>
 		<div class="target-selection advice-selection" [hidden]="entry.addAdviceList?.length === 0">

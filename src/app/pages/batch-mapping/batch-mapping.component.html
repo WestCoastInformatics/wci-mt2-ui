@@ -131,14 +131,14 @@
 									<mat-form-field floatLabel="never" id="groupInputField" title="Enter Group" class="adjust-mat-input-sm">
 										<input matInput #groupInput placeholder="Enter Group" id="groupCodeInput" [formControl]="groupFC" class="target-input" />
 									</mat-form-field>
-									<span class="clear-search" (click)="clearGroupInput()">&#10005;</span>
+									<span class="clear-search" title="Clear Group" (click)="clearGroupInput()">&#10005;</span>
 								</div>
 								<div>
 									<label class="m-r-10">Entry</label>
 									<mat-form-field floatLabel="never" id="entryInputField" title="Enter Entry" class="adjust-mat-input-sm">
 										<input matInput #priorityInput placeholder="Enter Entry" id="entryCodeInput" [formControl]="priorityFC" class="target-input" />
 									</mat-form-field>
-									<span class="clear-search" (click)="clearPriorityInput()">&#10005;</span>
+									<span class="clear-search" title="Clear Entry" (click)="clearPriorityInput()">&#10005;</span>
 								</div>
 							</div>
 						</div>
@@ -161,7 +161,7 @@
 							</mat-option>
 						</mat-autocomplete>-->
 								</mat-form-field>
-								<span class="clear-search" (click)="clearTargetInput()">&#10005;</span>
+								<span class="clear-search" title="Clear Search" (click)="clearTargetInput()">&#10005;</span>
 							</div>
 							<span class="mappings-section m-b-10">{{ targetToName }}</span>
 						</div>
