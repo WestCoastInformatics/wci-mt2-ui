@@ -2307,6 +2307,10 @@ app-grid-header-floating-filter {
 
 /*********** SNOMED Angular template */
 
+.mdc-evolution-chip__action--presentational {
+	cursor: pointer !important;
+}
+
 ngb-typeahead-window.dropdown-menu button {
 	max-width: 30vw;
 	font-size: 1.2rem;

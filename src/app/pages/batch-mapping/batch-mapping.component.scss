@@ -376,6 +376,11 @@
 	width: 280px;
 }
 
+.adjust-mat-input-header {
+	height: 50px;
+	width: 280px;
+}
+
 .adjust-mat-input-sm {
 	height: 45px;
 	width: 150px;
@@ -1247,4 +1252,69 @@
 	height: 22px;
 	//color: #2269e8;
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
+}
+
+/* type ahead styles */
+
+.svg-inline {
+	position: absolute;
+	top: 11px;
+	left: 10px;
+}
+
+.clear-search {
+	color: #666;
+	position: relative;
+	left: -15px;
+	top: 0.15em;
+	cursor: pointer;
+}
+
+.clear-search-header {
+	color: #666;
+	position: relative;
+	left: -15px;
+	cursor: pointer;
+}
+
+.type-ahead-form {
+}
+
+.type-head-append input,
+.input-logo-field input {
+	width: 100%;
+	font-size: 12px !important;
+	padding: 0 10px 0 30px;
+}
+.type-head-append {
+	position: relative;
+	min-width: 280px;
+	max-width: 280px;
+	height: max-content;
+	display: flex;
+}
+
+.type-head-append i {
+	position: absolute;
+	left: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #ddd;
+}
+
+::ng-deep [id^='ngb-typeahead-'] {
+	width: 100% !important;
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+.type-head-overflow {
+	width: 100% !important;
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+
+.max-width {
+	width: 100%;
 }

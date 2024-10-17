@@ -1,11 +1,11 @@
 import { FormControl } from '@angular/forms';
-import { Subscription, debounceTime, distinctUntilChanged, Observable, forkJoin, filter, map } from 'rxjs';
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, HostListener } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { Subscription, Observable, OperatorFunction, of, map } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
-import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -73,6 +73,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	toBeDevelopedModalRef: NgbModalRef;
 	downloadModalRef: NgbModalRef;
 	confirmModalRef: NgbModalRef;
+	headerGroupModal: NgbModalRef;
 	isModalOpen = false;
 	mapsetName = 'Mapset Name';
 	selectedMapset: any;
@@ -102,8 +103,15 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	showTargetPopover = false;
 	tempModuleIdChangeBeforeRelease = '449080006';
 
-	targetFC = new FormControl('');
+	targetFC = new FormControl('a');
+	public query: any;
+	//formatter = (result: any) => result || this.query;
+	formatter = (x: { name: string; code: string }) => x.code;
+	searchByKeyboard = false;
+	searchByTypeahead = false;
+
 	groupFC = new FormControl('');
+	headerGroupFC = new FormControl('');
 	priorityFC = new FormControl('');
 	codeList: Observable<any[]>;
 	targetToName = '';
@@ -133,6 +141,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	@ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
 	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
+	@ViewChild('headerGroupModal') headerGroup: TemplateRef<any>;
 	@ViewChild('directoryCheckSection') checkSection: TemplateRef<any>;
 	@ViewChild('directoryInfoSection') infoSection: TemplateRef<any>;
 	@ViewChild('directoryCodeSection') codeSection: TemplateRef<any>;
@@ -153,7 +162,8 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		private route: ActivatedRoute,
 		private router: Router,
 		private titleService: Title,
-		private dialogFactoryService: DialogFactoryService,
+		private renderer: Renderer2,
+		private elementRef: ElementRef,
 		private refsetService: RefsetService,
 		private changeDetectorRef: ChangeDetectorRef,
 		private breadcrumbService: BreadcrumbService,
@@ -163,44 +173,17 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	) {
 		document.body.scrollTop = 0;
 		this.targetFC.valueChanges.pipe(debounceTime(600), distinctUntilChanged()).subscribe((res) => {
-			if (this.targetFC.dirty) {
+			if (this.targetFC.dirty && !this.searchByTypeahead) {
 				this.foundConceptCode = false;
 				this.targetNameInput = '';
-				this.onInputTargetChange();
+				this.targetToName = '';
+				if (this.targetFC.value.length >= 2) {
+					this.onInputTargetChange();
+				}
+			} else {
+				this.searchByTypeahead = false;
 			}
 		});
-
-		//setup for type-ahead search
-		/*this.codeList = this.targetFC.valueChanges.pipe(
-			debounceTime(600),
-			distinctUntilChanged(),
-			map((state) => this.filterStates(state))
-		);*/
-		//).subscribe((res) => {
-		//	if (this.targetFC.dirty) {
-		//		this.onInputTargetChange();
-		//	}
-		//	});
-		//refsetService.getTaxonomyRoot();
-	}
-
-	//setup for type-ahead search
-	/*constructor() {
-		this.stateCtrl = new FormControl();
-		this.filteredStates = this.stateCtrl.valueChanges.pipe(
-		  startWith(''),
-		  map((state) => (state ? this.filterStates(state) : this.states.slice()))
-		);
-	  }
-	
-	  filterStates(name: string) {
-		return this.states.filter(
-		  (state) =>
-			state.name.toLowerCase().indexOf(name.toLowerCase()) === 0 
-		);
-	  }*/
-	filterStates(name: string) {
-		return this.codeList; //.filter((state) => state.name.toLowerCase().indexOf(name.toLowerCase()) === 0);
 	}
 
 	//***** Framework Functions *****/
@@ -428,7 +411,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				headerTooltip: 'Last Modified',
 				cellClass: 'rt2-directory-column-modified-date',
 				minWidth: 65,
-				width: 145,
+				width: 135,
 				resizable: true,
 				valueGetter: UiUtility.gridDateValueGetter,
 				floatingFilterComponent: DateTextFilterComponent,
@@ -595,15 +578,61 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		}, 250);
 	}
 
+	searchAutoComplete: OperatorFunction<string, readonly { name; code }[]> = (text$: Observable<string>) =>
+		text$.pipe(
+			debounceTime(600),
+			distinctUntilChanged(),
+			switchMap((term) => this.fetchData(term))
+		);
+	fetchData(term: string): Observable<any> {
+		if (term.length >= 2 && !this.searchByKeyboard) {
+			return this.refsetService.searchConceptByQuery(this.targetTerminology, this.targetTerminologyVersion, 'code:' + term.toUpperCase(), '10').pipe(map((data) => data.items));
+		} else {
+			return of([]); // return an empty array if the term length is less than 3
+		}
+	}
+
+	//for selecting item from suggestions
+	selectItemFromMenu(menu: any) {
+		this.searchByTypeahead = true;
+		this.targetCodeInput = menu.item.code;
+		this.targetToName = menu.item.name;
+		this.foundConceptCode = true;
+	}
+
+	//form submmision without selecting from dropdown
+	onKeyPress(e) {
+		this.searchByKeyboard = true;
+		this.targetToName = '';
+		this.targetCodeInput = this.targetFC.value;
+		console.log(' key dow', this.targetFC.value);
+		this.getConceptByCode();
+		this.handleCloseDropDown();
+	}
+
+	handleCloseDropDown() {
+		//Quick search
+		setTimeout(() => {
+			const typeaheadElement = this.elementRef.nativeElement.querySelector('#ngb-typeahead-0');
+			if (typeaheadElement) {
+				this.renderer.removeClass(typeaheadElement, 'show');
+			}
+		}, 1400);
+	}
+
 	getConceptByCode() {
 		this.refsetService.getConceptByCode(this.targetTerminology, this.targetTerminologyVersion, this.targetCodeInput).subscribe({
 			next: (results) => {
-				if (results.name.indexOf('CONCEPT NOT FOUND') > -1) {
-					this.foundConceptCode = false;
+				this.searchByKeyboard = false;
+				this.foundConceptCode = false;
+				if (results === null) {
+					this.targetToName = 'CONCEPT NOT FOUND';
 				} else {
-					this.foundConceptCode = true;
+					if (results.name.indexOf('CONCEPT NOT FOUND') === -1) {
+						this.foundConceptCode = true;
+					}
+					this.targetToName = results.name;
 				}
-				this.targetToName = results.name;
 			},
 			error: (error) => {
 				//
@@ -938,9 +967,12 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.showAdvicePopover = false;
 		this.showTargetPopover = false;
 		this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
-		this.popoverLocationX = event.x - 170;
+		this.popoverLocationX = event.x - 190;
 	}
 
+	clearHeaderGroupInput() {
+		this.headerGroupFC.reset();
+	}
 	clearGroupInput() {
 		this.groupFC.reset();
 	}
@@ -969,16 +1001,18 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 
 	editTarget(event: any, params: any): void {
 		this.targetFC.reset();
+		this.targetToName = '';
 		this.selectedTarget = params.data.uuid;
 		if (params.data.mapEntries.toCode !== '[Empty Target]') {
 			this.targetFC.setValue(params.data.mapEntries.toCode);
+			this.query = { 'code': params.data.mapEntries.toCode };
 			this.targetToName = params.data.mapEntries.toName;
 		}
 		this.showTargetPopover = true;
 		this.showAdvicePopover = false;
 		this.showGroupPopover = false;
 		this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
-		this.popoverLocationX = event.x - 190;
+		this.popoverLocationX = event.x - 210;
 	}
 
 	closeTarget() {
@@ -1008,8 +1042,14 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.userChanged = true;
 		this.mapsetData.forEach((data) => {
 			if (data.uuid === this.selectedTarget) {
-				data.mapEntries.toCode = this.targetFC.value;
-				data.toCode = data.mapEntries.group + '/' + data.mapEntries.priority + '#' + this.targetFC.value;
+				const targetValue = this.targetFC.value;
+				if (targetValue['code'] === undefined) {
+					data.mapEntries.toCode = this.targetFC.value;
+					data.toCode = data.mapEntries.group + '/' + data.mapEntries.priority + '#' + this.targetFC.value;
+				} else {
+					data.mapEntries.toCode = targetValue['code'];
+					data.toCode = data.mapEntries.group + '/' + data.mapEntries.priority + '#' + targetValue['code'];
+				}
 				data.mapEntries.toName = this.targetToName;
 				data.toName = this.targetToName;
 				data.relation = this.targetRelations[0];
@@ -1026,7 +1066,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.showGroupPopover = false;
 		this.showTargetPopover = false;
 		this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
-		this.popoverLocationX = event.x - 170;
+		this.popoverLocationX = event.x - 190;
 		this.popover_uuid = params.data.uuid;
 		this.popover_adviceToAdd = '';
 		this.popover_updateAdviceList = JSON.parse(JSON.stringify(params.data.mapEntries.mapAdvices));
@@ -1142,6 +1182,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 
 	selectAction(action: string) {
 		let checkList;
+		let modal = false;
 		switch (action) {
 			case 'add':
 				checkList = this.mapsetData.filter((map) => {
@@ -1152,6 +1193,12 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				checkList.forEach((check) => {
 					this.addEmptyTargetToGroup(check.uuid, check.group);
 				});
+				break;
+			case 'group':
+				modal = true;
+				this.headerGroupModal = this.modalService.open(this.headerGroup, { centered: true });
+				this.isModalOpen = true;
+
 				break;
 			case 'set':
 				this.mapsetData.forEach((map) => {
@@ -1178,10 +1225,12 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 			default:
 				this.openToBeDevelopedModal(this.tbdModal);
 		}
-		if (this.gridSelectAll) {
-			window['checkbox-table-all'].click();
-		} else {
-			this.unCheckAll();
+		if (!modal) {
+			if (this.gridSelectAll) {
+				window['checkbox-table-all'].click();
+			} else {
+				this.unCheckAll();
+			}
 		}
 	}
 
@@ -1191,6 +1240,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				map.checked = false;
 			}
 		});
+		this.checkedNum = 0;
 		this.gridApi.redrawRows();
 	}
 
@@ -1225,6 +1275,31 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		});
 		this.gridApi.setRowData(this.mapsetData);
 		this.checkedNum = this.gridSelectAll ? this.mapsetData.length : 0;
+	}
+
+	setHeaderGroup() {
+		this.mapsetData.forEach((map) => {
+			if (map.checked) {
+				map.mapEntries.group = this.headerGroupFC.value;
+				map.group = this.headerGroupFC.value;
+				map.toCode = this.headerGroupFC.value + '/' + map.mapEntries.priority + '#' + map.mapEntries.toCode;
+			}
+		});
+		this.userChanged = true;
+		this.gridApi.refreshCells(this.gridParams);
+		this.gridApi.redrawRows();
+		this.closeHeaderGroupModal();
+	}
+
+	closeHeaderGroupModal() {
+		this.headerGroupFC.reset();
+		this.headerGroupModal.close();
+		this.isModalOpen = false;
+		if (this.gridSelectAll) {
+			window['checkbox-table-all'].click();
+		} else {
+			this.unCheckAll();
+		}
 	}
 
 	getModuleLanguageIcon(moduleId: string, descriptions: Array<any>) {

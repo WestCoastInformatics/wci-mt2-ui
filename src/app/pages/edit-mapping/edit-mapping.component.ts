@@ -276,6 +276,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.targetCodeInput = this.targetFC.value;
 		this.targetCodeInput = this.targetCodeInput.trim();
 		if (this.targetCodeInput.length > 2) {
+			this.targetNameInput = 'Searching...';
 			this.getConceptByCode();
 		}
 	}
@@ -331,7 +332,6 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.searchByKeyboard = true;
 		this.targetNameInput = '';
 		this.targetCodeInput = this.targetFC.value;
-		console.log(' key dow', this.targetFC.value);
 		this.getConceptByCode();
 		this.handleCloseDropDown();
 	}
@@ -562,7 +562,6 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				break;
 			}
 		}
-		console.log('def aul relatio', defaultRelationship);
 		if (this.selectedTarget === '') {
 			let nextPriorityNum = 1;
 			for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
