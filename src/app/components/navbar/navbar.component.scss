@@ -232,6 +232,7 @@ nav {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	flex-wrap: wrap;
 
 	.rt2-breadcrumb {
 		display: flex;

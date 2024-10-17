@@ -47,7 +47,7 @@
 					<span>Source Concept</span>
 				</div>
 
-				<div class="section-background mappings-section" *ngIf="loaded">
+				<div class="section-background mappings-section" *ngIf="loaded && selectedMapset">
 					<div class="col-12">
 						<div class="d-flex col-12 row mt-5">
 							<div class="col-2 align-right mb-10">ID:</div>
@@ -142,7 +142,7 @@
 				<div
 					class="dropdown-group col-gap group-background map-group"
 					*ngFor="let _ of [].constructor(this.numOfGroups); index as g"
-					[cdkDragDisabled]="numOfGroups === 1 || true"
+					[cdkDragDisabled]="numOfGroups === 1"
 					cdkDropList
 					(cdkDropListDropped)="drop($event)"
 					cdkDragBoundary=".config-section"
@@ -151,7 +151,7 @@
 					<div class="metadata-collapsible-container-title page-header-font metadata-collapsible-container-group-header map-group-header">
 						<div>
 							<div class="move-group-container">
-								<i title="Move Group" class="fa-solid fa-up-down-left-right link-icon mr-5 group-move-btn" [ngClass]="{ 'disabled': numOfGroups === 1 || true }" cdkDragHandle></i>
+								<i title="Move Group" class="fa-solid fa-up-down-left-right link-icon mr-5 group-move-btn" [ngClass]="{ 'disabled': numOfGroups === 1 }" cdkDragHandle></i>
 							</div>
 							<span>Map Group {{ g + 1 }}</span>
 
