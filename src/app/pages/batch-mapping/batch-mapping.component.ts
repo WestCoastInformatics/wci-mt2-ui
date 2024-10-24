@@ -157,6 +157,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
 	@ViewChild('confirmationModal') confirmationModal: TemplateRef<any>;
 	@ViewChild('actions') private actions: MatSelect;
+	@ViewChild('groupInput') private groupInput: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -224,6 +225,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 			animateRows: false,
 			enableCellTextSelection: true,
 			onGridReady: this.onGridReady,
+			onCellDoubleClicked: this.onGridCellClick,
 			onCellValueChanged: this.onCellValueChanged,
 			frameworkComponents: {
 				'templateRenderer': TemplateRendererComponent,
@@ -355,6 +357,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 
 			{
 				field: 'relation',
+				colId: 'relation-select',
 				cellClass: 'editCell',
 				tooltipField: 'relation',
 				headerName: 'Relationship',
@@ -372,6 +375,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 			},
 			{
 				field: 'rule',
+				colId: 'rule-select',
 				cellClass: 'editCell',
 				tooltipField: 'rule',
 				headerName: 'Rule',
@@ -450,17 +454,14 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		};
 	};
 
-	onGridCellClick = (event) => {
-		const selectedRows = this.gridApi.getSelectedRows();
-		const router = this.router;
-		selectedRows.forEach(function (selectedRow, index) {
-			router.navigate(['/personal/' + selectedRow.id + '/landing'], { replaceUrl: false, skipLocationChange: false });
-			return;
-		});
-	};
-
 	onCellValueChanged = (event) => {
 		this.userChanged = true;
+	};
+
+	onGridCellClick = (event) => {
+		if (event.column.colId !== 'checkbox' && event.column.colId !== 'action-btns' && event.column.colId !== 'relation-select' && event.column.colId !== 'rule-select') {
+			this.goToMappingPage(event.data.code);
+		}
 	};
 
 	getMapsetInfo() {
@@ -605,7 +606,6 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.searchByKeyboard = true;
 		this.targetToName = '';
 		this.targetCodeInput = this.targetFC.value;
-		console.log(' key dow', this.targetFC.value);
 		this.getConceptByCode();
 		this.handleCloseDropDown();
 	}
@@ -966,8 +966,13 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.showGroupPopover = true;
 		this.showAdvicePopover = false;
 		this.showTargetPopover = false;
-		this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
-		this.popoverLocationX = event.x - 190;
+
+		const showInterval = setInterval(() => {
+			this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+			this.popoverLocationX = event.x - 190;
+			this.groupInput.nativeElement.focus();
+			clearInterval(showInterval);
+		}, 5);
 	}
 
 	clearHeaderGroupInput() {
@@ -981,6 +986,19 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	}
 	closeGroup() {
 		this.showGroupPopover = false;
+	}
+
+	numberOnly(event): boolean {
+		const charCode = event.which ? event.which : event.keyCode;
+		if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+			event.preventDefault();
+			return false;
+		}
+		if (event.key === '-') {
+			event.preventDefault();
+			return false;
+		}
+		return true;
 	}
 
 	setGroup() {
@@ -1183,6 +1201,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	selectAction(action: string) {
 		let checkList;
 		let modal = false;
+		let showInterval;
 		switch (action) {
 			case 'add':
 				checkList = this.mapsetData.filter((map) => {
@@ -1198,6 +1217,10 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				modal = true;
 				this.headerGroupModal = this.modalService.open(this.headerGroup, { centered: true });
 				this.isModalOpen = true;
+				showInterval = setInterval(() => {
+					document.getElementById('headerGroupCodeInput').focus();
+					clearInterval(showInterval);
+				}, 500);
 
 				break;
 			case 'set':
@@ -1344,12 +1367,10 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 
 	/*end functions*/
 
-	goToMappingPage() {
+	goToMappingPage(code) {
 		const url = new URL(window.location.href);
 		window.history.pushState({}, '', url.href);
-		this.router.navigate([]).then((result) => {
-			window.open('/mapset/' + this.mapsetCode + '/mappings', '_blank');
-		});
+		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + code], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	toggleSectionView(section: string) {

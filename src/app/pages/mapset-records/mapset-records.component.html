@@ -204,7 +204,7 @@
 					<button
 						#paginationPreviousPage
 						mat-raised-button
-						(click)="this.refsetGridApi.paginationGoToPreviousPage()"
+						(click)="refsetGridApi.paginationGoToPreviousPage()"
 						title="Go To Previous Page {{ getCurrentPage() }}"
 						class="pagination-page-buttons"
 						[ngClass]="{ disabled: getCurrentPage() === 0 }"
@@ -249,7 +249,7 @@
 					<button
 						#paginationNextPage
 						mat-raised-button
-						(click)="this.refsetGridApi.paginationGoToNextPage()"
+						(click)="refsetGridApi.paginationGoToNextPage()"
 						title="Go To Next Page {{ getCurrentPage() + 2 }}"
 						class="pagination-page-buttons"
 						[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"

@@ -1,10 +1,10 @@
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { AfterViewInit, ElementRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, HostListener, Renderer2 } from '@angular/core';
 import { Subscription, Observable, OperatorFunction, of, map } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CdkDragDrop, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -97,7 +97,8 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	loaded = false;
 	selectedFormat = {};
 	formats = [];
-	numOfGroups = 1;
+	numOfGroups = 0;
+	groupList = [];
 	foundConceptCode = false;
 	selectedTarget = '';
 	userChanged = false;
@@ -106,6 +107,8 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	tempModuleIdChangeBeforeRelease = '449080006';
 
 	targetFC = new FormControl('a');
+	groupFC = new FormControl('');
+
 	public query: any;
 	//formatter = (result: any) => result || this.query;
 	formatter = (x: { name: string; code: string }) => x.code;
@@ -128,6 +131,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	@ViewChild('selectRelationship') private selectRelationship: MatSelect;
 	@ViewChild('selectRule') private selectRule: MatSelect;
 	@ViewChild('selectAdvice') private selectAdvice: MatSelect;
+	@ViewChild('groupInput') private groupInput: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -281,14 +285,63 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		}
 	}
 
+	sortEntries() {
+		this.mapsetData[0].mapEntries.sort((a, b) => {
+			if (a.group !== b.group) {
+				return a.group - b.group;
+			} else {
+				return a.priority - b.priority;
+			}
+		});
+	}
+
 	drop(event: CdkDragDrop<string[]>) {
-		const temp = this.mapsetData[0].mapEntries[event.previousIndex];
-		const tempPriority = this.mapsetData[0].mapEntries[event.previousIndex].priority;
-		const tempPriority2 = this.mapsetData[0].mapEntries[event.currentIndex].priority;
-		this.mapsetData[0].mapEntries[event.previousIndex] = this.mapsetData[0].mapEntries[event.currentIndex];
-		this.mapsetData[0].mapEntries[event.currentIndex] = temp;
-		this.mapsetData[0].mapEntries[event.previousIndex].priority = tempPriority;
-		this.mapsetData[0].mapEntries[event.currentIndex].priority = tempPriority2;
+		this.userChanged = true;
+		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
+			if (this.mapsetData[0].mapEntries[p].group - 1 === event.previousIndex) {
+				this.mapsetData[0].mapEntries[p].group = 'next';
+			}
+			if (this.mapsetData[0].mapEntries[p].group - 1 === event.currentIndex) {
+				this.mapsetData[0].mapEntries[p].group = 'prev';
+			}
+		}
+		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
+			if (this.mapsetData[0].mapEntries[p].group === 'next') {
+				this.mapsetData[0].mapEntries[p].group = event.currentIndex + 1;
+			}
+			if (this.mapsetData[0].mapEntries[p].group === 'prev') {
+				this.mapsetData[0].mapEntries[p].group = event.previousIndex + 1;
+			}
+		}
+		this.sortEntries();
+	}
+
+	dropT(event: CdkDragDrop<string[]>) {
+		this.userChanged = true;
+		let newGroup = [];
+		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
+			if (this.mapsetData[0].mapEntries[p].group === event.item.data.group) {
+				newGroup.push(this.mapsetData[0].mapEntries[p]);
+			}
+		}
+
+		const temp = newGroup[event.previousIndex];
+		const tempPriority = newGroup[event.previousIndex].priority;
+		const tempPriority2 = newGroup[event.currentIndex].priority;
+		newGroup[event.previousIndex] = newGroup[event.currentIndex];
+		newGroup[event.currentIndex] = temp;
+		newGroup[event.previousIndex].priority = tempPriority;
+		newGroup[event.currentIndex].priority = tempPriority2;
+
+		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
+			for (let i = 0; i < newGroup.length; i++) {
+				if (this.mapsetData[0].mapEntries[p].uuid === newGroup[i].uuid) {
+					this.mapsetData[0].mapEntries[p] = newGroup[i];
+				}
+			}
+		}
+
+		this.sortEntries();
 	}
 
 	reloadMapping() {
@@ -373,6 +426,13 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				const data = [];
 				let count = 0;
 				const results = response.items[0];
+				results.mapEntries.sort((a, b) => {
+					if (a.group !== b.group) {
+						return a.group - b.group;
+					} else {
+						return a.priority - b.priority;
+					}
+				});
 
 				for (let b = 0; b < results.mapEntries.length; b++) {
 					let spanned = false;
@@ -386,6 +446,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 					if (this.numOfGroups < results.mapEntries[b].group) {
 						this.numOfGroups = results.mapEntries[b].group;
 					}
+
 					//remove advice ""
 					results.mapEntries[b].advices = results.mapEntries[b].advices.filter(function (res) {
 						return res !== '';
@@ -429,8 +490,12 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 						count++;
 					}
 				}
-				this.mapsetData = data;
+				this.groupList = [];
+				for (let i = 0; i < this.numOfGroups; i++) {
+					this.groupList.push('group' + i);
+				}
 
+				this.mapsetData = data;
 				this.breadcrumbService.setBreadcrumbs([
 					{ path: '/library', label: 'Library' },
 					{ path: '/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
@@ -445,6 +510,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 
 	addMapGroup() {
 		this.numOfGroups++;
+		this.groupList.push('group' + this.numOfGroups);
 	}
 
 	getGroupTotal(group) {
@@ -459,6 +525,17 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		return total;
 	}
 
+	getGroupEntriesById(group) {
+		//order by group then priority list then drag and drop will work...
+		const groupEntries = [];
+		for (let u = 0; u < this.mapsetData[0].mapEntries.length; u++) {
+			if (this.mapsetData[0].mapEntries[u].group === group) {
+				groupEntries.push(this.mapsetData[0].mapEntries[u]);
+			}
+		}
+		return groupEntries;
+	}
+
 	removeMapGroup() {
 		const groupNum: number = this.removeId;
 		for (let d = this.mapsetData[0].mapEntries.length - 1; d > 0; d--) {
@@ -467,6 +544,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 			}
 		}
 		this.numOfGroups--;
+		this.groupList.pop();
 		this.userChanged = true;
 	}
 
@@ -684,7 +762,80 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.toggleDropdown = !this.toggleDropdown;
 	}
 
+	openGroupPopover(event: any, uuid: string) {
+		this.closePopover();
+		this.groupFC.reset();
+		this.mapsetData.forEach((data) => {
+			data.mapEntries.forEach((entry) => {
+				if (entry.group_open) {
+					entry.group_open = false;
+				}
+				if (entry.uuid === uuid) {
+					entry.group_open = true;
+					entry.adviceToAdd = '';
+				}
+			});
+		});
+		const popHeight = 0;
+
+		const showInterval = setInterval(() => {
+			this.advicePopoverLocation = event.layerY + event.offsetY + 5;
+			this.groupInput.nativeElement.focus();
+			clearInterval(showInterval);
+		}, 5);
+	}
+
+	clearGroupInput() {
+		this.groupFC.reset();
+	}
+
+	numberOnly(event): boolean {
+		const charCode = event.which ? event.which : event.keyCode;
+		if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+			event.preventDefault();
+			return false;
+		}
+		if (event.key === '-') {
+			event.preventDefault();
+			return false;
+		}
+		return true;
+	}
+
+	setGroup(uuid: string) {
+		const addSetGroup = setInterval(() => {
+			if (Number(this.groupFC.value) > this.numOfGroups) {
+				this.addMapGroup();
+			} else {
+				this.userChanged = true;
+				this.mapsetData.forEach((data) => {
+					data.mapEntries.forEach((entry) => {
+						if (entry.uuid === uuid) {
+							entry.group = this.groupFC.value;
+							this.groupFC.reset();
+							entry.group_open = false;
+						}
+					});
+				});
+				this.sortEntries();
+				clearInterval(addSetGroup);
+			}
+		}, 5);
+	}
+
+	closeGroup() {
+		this.groupFC.reset();
+		this.mapsetData.forEach((data) => {
+			data.mapEntries.forEach((entry) => {
+				if (entry.group_open) {
+					entry.group_open = false;
+				}
+			});
+		});
+	}
+
 	openPopover(event: any, uuid: string) {
+		this.closeGroup();
 		this.mapsetData.forEach((data) => {
 			data.mapEntries.forEach((entry) => {
 				if (entry.advices_open) {
@@ -842,14 +993,20 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	selectActionMenu(action: string) {
-		this.openToBeDevelopedModal(this.tbdModal);
+		switch (action) {
+			case 'view':
+				this.goToMappingPage('_self');
+				break;
+			default:
+				this.openToBeDevelopedModal(this.tbdModal);
+		}
 	}
 
-	goToMappingPage() {
+	goToMappingPage(target: string) {
 		const url = new URL(window.location.href);
 		window.history.pushState({}, '', url.href);
 		this.router.navigate([]).then((result) => {
-			window.open('/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode, '_blank');
+			window.open('/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode, target);
 		});
 	}
 

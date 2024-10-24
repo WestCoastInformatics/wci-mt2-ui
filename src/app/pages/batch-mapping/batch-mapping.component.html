@@ -92,7 +92,7 @@
 						<span>Change Group of Mappings</span>
 					</button>
 					<button mat-menu-item (click)="selectAction('advice')" [disabled]="checkedNum < 1">
-						<span>Update Advice to Mappings</span>
+						<span>Add Advice to Mappings</span>
 					</button>
 					<button mat-menu-item (click)="openConfirmationModal()" [disabled]="checkedNum < 1 || mapsetData.length < 2">
 						<span>Remove selected Mappings</span></button
@@ -129,21 +129,44 @@
 								<div>
 									<label class="m-r-10">Group</label>
 									<mat-form-field floatLabel="never" id="groupInputField" title="Enter Group" class="adjust-mat-input-sm">
-										<input matInput #groupInput placeholder="Enter Group" id="groupCodeInput" [formControl]="groupFC" class="target-input" />
+										<input
+											type="number"
+											matInput
+											#groupInput
+											placeholder="Enter Group"
+											id="groupCodeInput"
+											(keydown)="numberOnly($event)"
+											[formControl]="groupFC"
+											class="target-input" />
 									</mat-form-field>
 									<span class="clear-search" title="Clear Group" (click)="clearGroupInput()">&#10005;</span>
 								</div>
 								<div>
 									<label class="m-r-10">Entry</label>
 									<mat-form-field floatLabel="never" id="entryInputField" title="Enter Entry" class="adjust-mat-input-sm">
-										<input matInput #priorityInput placeholder="Enter Entry" id="entryCodeInput" [formControl]="priorityFC" class="target-input" />
+										<input
+											type="number"
+											matInput
+											#priorityInput
+											placeholder="Enter Entry"
+											id="entryCodeInput"
+											(keydown)="numberOnly($event)"
+											[formControl]="priorityFC"
+											class="target-input" />
 									</mat-form-field>
 									<span class="clear-search" title="Clear Entry" (click)="clearPriorityInput()">&#10005;</span>
 								</div>
 							</div>
 						</div>
 						<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
-							<button type="button" title="Save" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="setGroup()">Save</button>
+							<button
+								type="button"
+								title="Save"
+								class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
+								[disabled]="!groupFC.value || groupFC.value === '0' || !priorityFC.value || priorityFC.value === '0'"
+								(click)="setGroup()">
+								Save
+							</button>
 						</div>
 					</div>
 
@@ -474,7 +497,7 @@
 		<div>
 			<label class="m-r-10">Group</label>
 			<mat-form-field floatLabel="never" id="groupInputField" title="Enter Group" class="adjust-mat-input-header">
-				<input matInput #headerGroupInput placeholder="Enter Group" id="headerGroupCodeInput" [formControl]="headerGroupFC" class="target-input" />
+				<input type="number" matInput #headerGroupInput placeholder="Enter Group" id="headerGroupCodeInput" (keydown)="numberOnly($event)" [formControl]="headerGroupFC" class="target-input" />
 			</mat-form-field>
 			<span class="clear-search-header" title="Clear Group" (click)="clearHeaderGroupInput()">&#10005;</span>
 		</div>

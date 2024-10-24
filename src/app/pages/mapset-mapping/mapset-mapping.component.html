@@ -60,7 +60,7 @@
 						</div>
 						<mat-menu #actionMenu="matMenu">
 							<button mat-menu-item (click)="selectAction('edit')">
-								<span>Edit</span>
+								<span>Edit Maps</span>
 							</button>
 							<button mat-menu-item (click)="selectAction('review')">
 								<span>Request Review</span>
@@ -134,9 +134,14 @@
 		<ng-template #directoryActionSection let-params>
 			<div class="d-flex">
 				<div class="col">
+					<div class="library-app-refset-notes p-r-10" (click)="selectAction('edit')">
+						<img src="/assets/edit-icon.svg" title="Edit Maps" aria-label="Edit Maps" class="mapset-notes-icon mapset-edit-icon" />
+					</div>
+				</div>
+				<div class="col">
 					<button class="library-app-refset-download p-r-20" (click)="openDownloadModal(downloadModal)">
 						<div class="mat-button-wrapper mapset-download-icon">
-							<i class="fa fa-download fa-lg" title="Download Map" aria-label="Download Map"></i>
+							<i class="fa fa-download fa-lg" title="Download Maps" aria-label="Download Maps"></i>
 						</div>
 					</button>
 				</div>
@@ -171,7 +176,7 @@
 
 		<ng-template #downloadModal let-modal>
 			<div class="modal-header rt2-modal-header">
-				<div class="modal-title">Download Map</div>
+				<div class="modal-title">Download Maps</div>
 				<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeDownloadModal()">
 					<span aria-hidden="true">&times;</span>
 				</button>

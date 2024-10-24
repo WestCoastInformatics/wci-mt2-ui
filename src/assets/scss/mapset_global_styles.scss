@@ -2321,6 +2321,11 @@ ngb-typeahead-window.dropdown-menu button {
 	}
 }
 
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+	opacity: 0;
+}
+
 /* Taxonomy Tree */
 .taxonomy-loading {
 	background: white !important;
