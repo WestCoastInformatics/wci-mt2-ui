@@ -1132,7 +1132,7 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 
 /* Absolute Center Spinner */
 .loading {
-	position: fixed;
+	position: absolute;
 	z-index: 9999;
 	height: 2em;
 	width: 2em;
@@ -1148,7 +1148,7 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 .loading:before {
 	content: '';
 	display: block;
-	position: fixed;
+	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -1853,13 +1853,19 @@ input[type='checkbox'] {
 	}
 }
 
+.search-box {
+	max-width: 370px !important;
+	width: 370px !important;
+	padding-left: 10px !important;
+}
+
 .mat-elevation-z8 {
 	overflow: overlay;
 	box-shadow: none;
 	max-height: 300px;
 	margin-left: 15px;
 	margin-right: 15px;
-	border-bottom: 15px solid #f5f5f5;
+	/*border-bottom: 15px solid #f5f5f5;*/
 }
 
 .add-remove-descendants-modal > .modal-dialog > .modal-content {
@@ -2301,6 +2307,10 @@ app-grid-header-floating-filter {
 
 /*********** SNOMED Angular template */
 
+.mdc-evolution-chip__action--presentational {
+	cursor: pointer !important;
+}
+
 ngb-typeahead-window.dropdown-menu button {
 	max-width: 30vw;
 	font-size: 1.2rem;
@@ -2309,6 +2319,11 @@ ngb-typeahead-window.dropdown-menu button {
 	button.dropdown-item {
 		font-weight: 300;
 	}
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+	opacity: 0;
 }
 
 /* Taxonomy Tree */

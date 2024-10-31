@@ -35,16 +35,19 @@
 
 <div class="rt2-container" (window:resize)="onResize($event)">
 	<div class="metadata-collapsible-container m-t-20">
-		<div class="switch-view" *ngIf="showMappingsSection" [hidden]="numOfMembers === 0">
+		<div class="switch-view" *ngIf="showMappingsSection && loaded" [hidden]="numOfMembers === 0">
 			<mat-label class="switch-label">view by</mat-label>
 			<mat-button-toggle-group #group="matButtonToggleGroup" [value]="showMapTable" (change)="changeMappingsView(group.value)">
-				<mat-button-toggle value="table"> table </mat-button-toggle>
-				<mat-button-toggle value="record"> record </mat-button-toggle>
+				<mat-button-toggle value="table" title="View by table"> table </mat-button-toggle>
+				<mat-button-toggle value="record" title="View by record"> record </mat-button-toggle>
 			</mat-button-toggle-group>
 		</div>
 		<div class="metadata-collapsible-container-group-header pointer" (click)="toggleSectionView('showMappingsSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
 				<span>Mappings&nbsp; </span><span [hidden]="!numOfMembers">{{ '(' + numOfMembers + ')' }}</span> <span [hidden]="numOfMembers">{{ '(0)' }}</span>
+				<div class="sub-header-font">
+					<span [hidden]="checkedNum === 0">selected {{ checkedNum }}</span>
+				</div>
 			</div>
 			<img src="assets/caret-up-solid.svg" *ngIf="!showMappingsSection" alt="Collapse Button" title="Collapse Mappings" aria-label="Collapse Button" class="caret-up-solid" />
 			<img src="assets/caret-down-solid.svg" *ngIf="showMappingsSection" alt="Expand Button" title="Expand Mappings" aria-label="Expand Button" class="caret-down-solid" />
@@ -54,95 +57,129 @@
 				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
 			</div>
 
-			<div class="col-md-auto">
-				<div class="dropdown directoryInput">
-					<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
-						<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
-						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
-					</mat-form-field>
-					<span class="clear-search" (click)="clearSearch()">&#10005;</span>
+			<div class="col-md-auto rt2-directory-chooser-column">
+				<mat-menu #searchMenu="matMenu" class="search-box">
+					<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
+						<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
+							<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
+							<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" (click)="$event.stopPropagation()" />
+						</mat-form-field>
+						<span class="clear-search" title="Clear Search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span>
+					</div></mat-menu
+				>
+				<div class="menu-inline">
+					<button [matMenuTriggerFor]="searchMenu" aria-label="Search" title="Search" class="mapset-download-icon menu-button">
+						<mat-icon class="menu-icon">search</mat-icon>
+						<span class="menu-label">search</span>
+					</button>
 				</div>
 			</div>
-			<div class="col-md-auto p-l-10">
-				<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
-					<mat-select #actions title="Actions" placeholder="Actions" [(value)]="selectedAction" (selectionChange)="selectAction()">
-						<mat-option value="select" class="no-checkbox" *ngIf="showMapTable === 'record'">Check/Uncheck All</mat-option>
-						<mat-option value="view" class="no-checkbox" *ngIf="showMapTable === 'record'" [disabled]="checkedNum !== 1">View Selected Mapping</mat-option>
-						<mat-option value="edit" class="no-checkbox" [disabled]="checkedNum !== 1">Edit Selected Mapping</mat-option>
-						<mat-option value="batch" class="no-checkbox" [disabled]="checkedNum < 2">Batch Edit Selected Mappings</mat-option>
-						<mat-option value="selected" class="no-checkbox" [disabled]="checkedNum < 1">Download Selected Mappings</mat-option>
-						<mat-option value="all" class="no-checkbox">Download Entire Map Set</mat-option>
-					</mat-select>
-				</mat-form-field>
+			<div class="col-md-auto rt2-directory-chooser-column">
+				<div class="menu-inline">
+					<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="mapset-download-icon menu-button">
+						<mat-icon class="menu-icon">more_vert</mat-icon>
+						<span class="menu-label">Actions</span>
+					</button>
+				</div>
+				<mat-menu #actionMenu="matMenu">
+					<button mat-menu-item (click)="selectAction('select')" *ngIf="showMapTable === 'record'">
+						<span>Check/Uncheck All</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('view')" [disabled]="checkedNum !== 1">
+						<span>View Selected Mapping</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('edit')" [disabled]="checkedNum !== 1">
+						<span>Edit Selected Mapping</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('batch')" [disabled]="checkedNum < 2">
+						<span>Batch Edit Selected Mappings</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('selected')" [disabled]="checkedNum < 1">
+						<span>Download Selected Mappings</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('all')">
+						<span>Download Entire Map Set</span>
+					</button>
+				</mat-menu>
 			</div>
 		</div>
-		<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showMappingsSection || !loaded || numOfMembers === 0 || showMapTable !== 'table'"></div>
-		<div [hidden]="!showMappingsSection" class="section-background mappings-section" [ngClass]="{ 'overflow': showMapTable !== 'table' }">
-			<div *ngIf="showMapTable === 'table'" [hidden]="loaded" class="section-loading">Loading...</div>
-			<div [hidden]="!loaded" *ngIf="numOfMembers === 0" class="status-no-results">No Results to Show</div>
-			<div class="content-wrapper" [hidden]="showMapTable !== 'table' || !loaded">
-				<div class="grid-wrapper">
-					<ag-grid-angular
-						*ngIf="showTable"
-						id="directoryTable"
-						#directoryTable
-						[hidden]="!loaded || numOfMembers === 0 || showMapTable !== 'table'"
-						class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter"
-						style="width: 100%; height: 100%"
-						[columnDefs]="columnDefs"
-						[suppressRowTransform]="true"
-						[gridOptions]="refsetGridOptions"
-						[rowSelection]="rowSelection"
-						(firstDataRendered)="onResize(500)">
-					</ag-grid-angular>
+		<div class="metadata-section-background" *ngIf="showMappingsSection">
+			<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showMappingsSection || !loaded || numOfMembers === 0 || showMapTable !== 'table'"></div>
+			<div [hidden]="!showMappingsSection" class="section-background mappings-section" [ngClass]="{ 'overflow': showMapTable !== 'table' }">
+				<div *ngIf="showMapTable === 'table'" [hidden]="loaded" class="section-loading">Loading...</div>
+				<div [hidden]="!loaded" *ngIf="numOfMembers === 0" class="status-no-results">No Results to Show</div>
+				<div class="content-wrapper" [hidden]="showMapTable !== 'table' || !loaded">
+					<div class="grid-wrapper">
+						<ag-grid-angular
+							*ngIf="showTable"
+							id="directoryTable"
+							#directoryTable
+							[hidden]="!loaded || numOfMembers === 0 || showMapTable !== 'table'"
+							class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter"
+							style="width: 100%; height: 100%"
+							[columnDefs]="columnDefs"
+							[suppressRowTransform]="true"
+							[gridOptions]="refsetGridOptions"
+							[rowSelection]="rowSelection"
+							(firstDataRendered)="onResize(500)">
+						</ag-grid-angular>
+					</div>
 				</div>
-			</div>
-			<div [hidden]="loaded" *ngIf="showMapTable !== 'table'" class="section-loading record-loading">Loading...</div>
-			<div [hidden]="!loaded" *ngIf="showMapTable !== 'table'" class="content-wrapper">
-				<div *ngFor="let record of mapsetData; index as i">
-					<div class="record-row" [ngClass]="{ 'odd-row': 0 === i % 2 }" *ngIf="!record.spanned">
-						<div class="col-12 row">
-							<div class="d-flex col-10 row">
-								<div class="checkbox-column">
-									<label class="checkbox-override" title="Check/Uncheck All"
-										><input type="checkbox" (change)="checkboxRowSelect($event, record.index)" [checked]="record.checked" /><span class="checkbox-container"></span
-									></label>
-								</div>
-								<div class="col-11 code-name">
-									{{ record.name }}, <span class="code-link" (click)="goToMappingPage(record.code)">{{ record.code }}</span>
-								</div>
+				<div [hidden]="loaded" *ngIf="showMapTable !== 'table'" class="section-loading record-loading">Loading...</div>
+				<div [hidden]="!loaded" *ngIf="showMapTable !== 'table'" class="content-wrapper">
+					<div *ngFor="let record of mapsetData; index as i">
+						<div class="record-row" [ngClass]="{ 'odd-row': 0 === i % 2 }" *ngIf="!record.spanned">
+							<div class="col-12 row">
+								<div class="d-flex col-10 row">
+									<div class="checkbox-column">
+										<label class="checkbox-override" title="Check/Uncheck All"
+											><input type="checkbox" (change)="checkboxRowSelect($event, record.index)" [checked]="record.checked" /><span class="checkbox-container"></span
+										></label>
+									</div>
+									<div class="col-11 code-name">
+										{{ record.name }}, <span class="code-link" (click)="goToMappingPage(record.code)">{{ record.code }}</span>
+									</div>
 
-								<div *ngFor="let entry of record.mapEntries; index as x" class="row col-12 second-row">
-									<div class="col-4 row mb-3">
-										<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
-										<div class="record-code col-2">{{ entry.toCode }}</div>
-										<div class="record-name col-8">
-											{{ entry.toName
-											}}<mat-icon
-												*ngIf="entry.released"
-												aria-hidden="false"
-												class="mat-button-wrapper mapset-intl-icon m-l-5"
-												aria-label="SNOMED International"
-												title="SNOMED International">
-												<span class="material-symbols-outlined"> language_international </span>
-											</mat-icon>
+									<div *ngFor="let entry of record.mapEntries; index as x" class="row col-12 second-row">
+										<div class="col-4 row mb-3">
+											<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
+											<div class="record-code col-2">{{ entry.toCode }}</div>
+											<div class="record-name col-8">
+												{{ entry.toName }}
+												<span *ngIf="entry.released">
+													<mat-icon
+														*ngIf="entry.moduleId === internationalId"
+														aria-hidden="false"
+														class="mat-button-wrapper mapset-intl-icon m-l-5"
+														aria-label="SNOMED International"
+														title="SNOMED International">
+														<span class="material-symbols-outlined"> language_international </span>
+													</mat-icon>
+													<img
+														class="mapset-mod-icon"
+														*ngIf="entry.moduleId !== internationalId"
+														src="{{ 'assets/flags/' + getModuleLanguageIcon(entry.moduleId, record.descriptions) + '.png' }}"
+														title="{{ getModuleLanguageName(entry.moduleId, record.descriptions) }}"
+														aria-label="{{ getModuleLanguageName(entry.moduleId, record.descriptions) }}"
+												/></span>
+											</div>
 										</div>
-									</div>
-									<div class="col-8 row mb-3">
-										<div class="info-box">
-											<i class="fa-regular fa-handshake relation-icon"></i><span class="info-message">{{ entry.relation }}</span>
-										</div>
-										<div *ngFor="let advice of entry.advices; index as i" class="info-box" [hidden]="advice.indexOf('ALWAYS') > -1">
-											<i class="fa-solid fa-star-of-life advice-icon"></i><span class="info-message">{{ advice }}</span>
+										<div class="col-8 row mb-3">
+											<div class="info-box">
+												<i class="fa-regular fa-handshake relation-icon"></i><span class="info-message">{{ entry.relation }}</span>
+											</div>
+											<div *ngFor="let advice of entry.advices; index as i" class="info-box" [hidden]="advice.indexOf('ALWAYS') > -1">
+												<i class="fa-solid fa-star-of-life advice-icon"></i><span class="info-message">{{ advice }}</span>
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="action-column col-2">
-								<div class="action-btns">
-									<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: record }"></template>
+								<div class="action-column col-2">
+									<div class="action-btns">
+										<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: record }"></template>
+									</div>
+									<span class="date-column second-row">Last Updated: {{ dateFormatter(record.modified) }}</span>
 								</div>
-								<span class="date-column second-row">Last Updated: {{ dateFormatter(record.modified) }}</span>
 							</div>
 						</div>
 					</div>
@@ -150,7 +187,7 @@
 			</div>
 		</div>
 		<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
-		<div class="rt2-pagination-container" [hidden]="!loaded || numOfMembers === 0 || !showMappingsSection">
+		<div class="rt2-pagination-container" [hidden]="!loaded || numOfMembers === 0" *ngIf="showMappingsSection">
 			<div class="rt2-pagination-top-row">
 				<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons">
 					<button
@@ -167,7 +204,7 @@
 					<button
 						#paginationPreviousPage
 						mat-raised-button
-						(click)="this.refsetGridApi.paginationGoToPreviousPage()"
+						(click)="refsetGridApi.paginationGoToPreviousPage()"
 						title="Go To Previous Page {{ getCurrentPage() }}"
 						class="pagination-page-buttons"
 						[ngClass]="{ disabled: getCurrentPage() === 0 }"
@@ -212,7 +249,7 @@
 					<button
 						#paginationNextPage
 						mat-raised-button
-						(click)="this.refsetGridApi.paginationGoToNextPage()"
+						(click)="refsetGridApi.paginationGoToNextPage()"
 						title="Go To Next Page {{ getCurrentPage() + 2 }}"
 						class="pagination-page-buttons"
 						[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
@@ -329,9 +366,22 @@
 	<!-- Name Templates -->
 	<ng-template #directoryNameSection let-params>
 		<span class="blue-link">{{ params?.value }}</span>
-		<mat-icon *ngIf="params?.data?.released" aria-hidden="false" class="mat-button-wrapper mapset-intl-icon m-l-5" aria-label="SNOMED International" title="SNOMED International">
-			<span class="material-symbols-outlined"> language_international </span>
-		</mat-icon>
+		<span *ngIf="params?.data?.released">
+			<mat-icon
+				*ngIf="params?.data?.moduleId === internationalId"
+				aria-hidden="false"
+				class="mat-button-wrapper mapset-intl-icon m-l-5"
+				aria-label="SNOMED International"
+				title="SNOMED International">
+				<span class="material-symbols-outlined"> language_international </span>
+			</mat-icon>
+			<img
+				class="mapset-mod-icon"
+				*ngIf="params?.data?.moduleId !== internationalId"
+				src="{{ 'assets/flags/' + getModuleLanguageIcon(params?.data?.moduleId, params?.data?.descriptions) + '.png' }}"
+				title="{{ getModuleLanguageName(params?.data?.moduleId, params?.data?.descriptions) }}"
+				aria-label="{{ getModuleLanguageName(params?.data?.moduleId, params?.data?.descriptions) }}"
+		/></span>
 	</ng-template>
 
 	<!-- Edition Templates -->

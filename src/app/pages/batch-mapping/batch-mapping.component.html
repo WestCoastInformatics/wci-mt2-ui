@@ -13,21 +13,8 @@
 <div [hidden]="loaded" class="section-loading">Loading...</div>
 
 <div [hidden]="!saving" class="section-saving">Please wait, save in progress...</div>
-<div class="dropdown-group row edit-actions" *ngIf="loaded && !saving">
-	<div class="col-10">
-		<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
-			<mat-select #actions title="Authoring Actions" placeholder="Authoring Actions" [(value)]="selectedAction" (selectionChange)="selectActionMenu()">
-				<mat-option value="set" class="no-checkbox" [disabled]="checkedNum < 1">Set Empty Target to Mappings</mat-option>
-				<mat-option value="add" class="no-checkbox" [disabled]="checkedNum < 1">Add Entry to Mappings</mat-option>
-				<mat-option value="change" class="no-checkbox" [disabled]="checkedNum < 1">Change Group/Entry of Mappings</mat-option>
-				<mat-option value="advice" class="no-checkbox" [disabled]="checkedNum < 1">Add/Edit Advice of Mappings</mat-option>
-				<mat-option value="remove" class="no-checkbox" [disabled]="checkedNum < 1">Remove selected Mappings</mat-option>
-				<mat-option value="note" class="no-checkbox">View or Add Authoring Note</mat-option>
-				<mat-option value="comm" class="no-checkbox">View or Add Authoring Communication</mat-option>
-				<mat-option value="review" class="no-checkbox">Request Review</mat-option>
-			</mat-select>
-		</mat-form-field>
-	</div>
+<div class="dropdown-group row edit-actions m-b-10 m-t-10" *ngIf="loaded && !saving">
+	<div class="col-10"></div>
 	<div class="action-column col-2 no-margin-top">
 		<span class="date-column">
 			<button
@@ -56,119 +43,203 @@
 		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showConfigSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
 				<span>Target Configuration</span>
+				<div class="sub-header-font">
+					<span [hidden]="checkedNum === 0">selected {{ checkedNum }}</span>
+				</div>
 			</div>
 			<img src="assets/caret-up-solid.svg" *ngIf="!showConfigSection" alt="Collapse Button" title="Collapse Target Configuration" aria-label="Collapse Button" class="caret-up-solid" />
 			<img src="assets/caret-down-solid.svg" *ngIf="showConfigSection" alt="Expand Button" title="Expand Target Configuration" aria-label="Expand Button" class="caret-down-solid" />
 		</div>
 		<div class="row d-flex dropdown-group" *ngIf="showConfigSection && loaded">
-			<div class="col-md-auto rt2-directory-chooser-column">
+			<div class="col-md-auto rt2-directory-chooser-column m-l-20">
 				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="gridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
 			</div>
-
-			<div class="col-md-auto">
-				<div class="dropdown directoryInput">
-					<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
-						<mat-label class="search-label" *ngIf="searchInput === ''">Search</mat-label>
-						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
-					</mat-form-field>
-					<span class="clear-search" (click)="clearSearch()">&#10005;</span>
-					<span *ngIf="searchInput.length > 0" class="mappings-section"
-						>{{ gridApi.getDisplayedRowCount() > 0 ? gridApi.getDisplayedRowCount() : 'No ' }} result{{ gridApi.getDisplayedRowCount() > 1 ? 's' : '' }} found</span
-					>
+			<div class="col-md-auto rt2-directory-chooser-column">
+				<mat-menu #searchMenu="matMenu" class="search-box">
+					<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
+						<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
+							<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
+							<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" (click)="$event.stopPropagation()" />
+						</mat-form-field>
+						<span class="clear-search" title="Clear Search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span><br />
+						<span *ngIf="searchInput.length > 0" class="mappings-section"
+							>{{ gridApi.getDisplayedRowCount() > 0 ? gridApi.getDisplayedRowCount() : 'No ' }} result{{ gridApi.getDisplayedRowCount() > 1 ? 's' : '' }} found</span
+						>
+					</div>
+				</mat-menu>
+				<div class="menu-inline">
+					<button [matMenuTriggerFor]="searchMenu" aria-label="Search" title="Search" class="mapset-download-icon menu-button">
+						<mat-icon class="menu-icon">search</mat-icon>
+						<span class="menu-label">search</span>
+					</button>
 				</div>
 			</div>
+			<div class="col-md-auto rt2-directory-chooser-column">
+				<div class="menu-inline">
+					<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="mapset-download-icon menu-button">
+						<mat-icon class="menu-icon">more_vert</mat-icon>
+						<span class="menu-label">Actions</span>
+					</button>
+				</div>
+				<mat-menu #actionMenu="matMenu">
+					<button mat-menu-item (click)="selectAction('set')" [disabled]="checkedNum < 1">
+						<span>Set Empty Target to Mappings</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('add')" [disabled]="checkedNum < 1">
+						<span>Add Entry to Mappings</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('group')" [disabled]="checkedNum < 1">
+						<span>Change Group of Mappings</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('advice')" [disabled]="checkedNum < 1">
+						<span>Add Advice to Mappings</span>
+					</button>
+					<button mat-menu-item (click)="openConfirmationModal()" [disabled]="checkedNum < 1 || mapsetData.length < 2">
+						<span>Remove selected Mappings</span></button
+					><button mat-menu-item (click)="selectAction('note')" [disabled]="checkedNum < 1">
+						<span>View or Add Authoring Note</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('comm')" [disabled]="checkedNum < 1">
+						<span>View or Add Authoring Communication</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('review')" [disabled]="checkedNum < 1">
+						<span>Request Review</span>
+					</button>
+				</mat-menu>
+			</div>
 		</div>
-		<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showConfigSection || !loaded || saving"></div>
-		<div id="config-background" [hidden]="!showConfigSection || !loaded || saving" class="section-background config-section">
-			<div class="grid-wrapper">
-				<ag-grid-angular
-					[columnDefs]="gridColumnDefs"
-					[rowData]="mapsetData"
-					(gridReady)="onGridReady($event)"
-					[gridOptions]="gridOptions"
-					class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter">
-				</ag-grid-angular>
+		<div class="metadata-section-background" [hidden]="!showConfigSection">
+			<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showConfigSection || !loaded || saving"></div>
+			<div id="config-background" [hidden]="!showConfigSection || !loaded || saving" class="section-background config-section">
+				<div class="grid-wrapper">
+					<ag-grid-angular
+						[columnDefs]="gridColumnDefs"
+						[rowData]="mapsetData"
+						(gridReady)="onGridReady($event)"
+						[gridOptions]="gridOptions"
+						class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter">
+					</ag-grid-angular>
 
-				<!--Group Popover-->
-				<div class="group-popover" id="group-popover" [ngStyle]="{ top: popoverLocationY + 'px', left: popoverLocationX + 'px' }" [ngClass]="showGroupPopover ? 'show' : 'hide'">
-					<div class="popup-handle popup-handle-top"></div>
-					<img src="assets/grey-close-icon.svg" (click)="closeGroup()" width="12px" height="12px" title="Close" aria-label="Close" class="grey-close-icon" alt="Close" />
-					<div class="col mappings-section m-l-20">
-						<div class="m-t-20 m-b-10">
-							<div>
-								<label class="m-r-10">Group</label>
-								<mat-form-field floatLabel="never" id="groupInputField" title="Enter Group" class="adjust-mat-input-sm">
-									<input matInput #groupInput placeholder="Enter Group" id="groupCodeInput" [formControl]="groupFC" class="target-input" />
-								</mat-form-field>
-								<span class="clear-search" (click)="clearGroupInput()">&#10005;</span>
-							</div>
-							<div>
-								<label class="m-r-10">Entry</label>
-								<mat-form-field floatLabel="never" id="entryInputField" title="Enter Entry" class="adjust-mat-input-sm">
-									<input matInput #priorityInput placeholder="Enter Entry" id="entryCodeInput" [formControl]="priorityFC" class="target-input" />
-								</mat-form-field>
-								<span class="clear-search" (click)="clearPriorityInput()">&#10005;</span>
+					<!--Group Popover-->
+					<div class="group-popover" id="group-popover" [ngStyle]="{ top: popoverLocationY + 'px', left: popoverLocationX + 'px' }" [ngClass]="showGroupPopover ? 'show' : 'hide'">
+						<div class="popup-handle popup-handle-top"></div>
+						<img src="assets/grey-close-icon.svg" (click)="closeGroup()" width="12px" height="12px" title="Close" aria-label="Close" class="grey-close-icon" alt="Close" />
+						<div class="col mappings-section m-l-20">
+							<div class="m-t-20 m-b-10">
+								<div>
+									<label class="m-r-10">Group</label>
+									<mat-form-field floatLabel="never" id="groupInputField" title="Enter Group" class="adjust-mat-input-sm">
+										<input
+											type="number"
+											matInput
+											#groupInput
+											placeholder="Enter Group"
+											id="groupCodeInput"
+											(keydown)="numberOnly($event)"
+											[formControl]="groupFC"
+											class="target-input" />
+									</mat-form-field>
+									<span class="clear-search" title="Clear Group" (click)="clearGroupInput()">&#10005;</span>
+								</div>
+								<div>
+									<label class="m-r-10">Entry</label>
+									<mat-form-field floatLabel="never" id="entryInputField" title="Enter Entry" class="adjust-mat-input-sm">
+										<input
+											type="number"
+											matInput
+											#priorityInput
+											placeholder="Enter Entry"
+											id="entryCodeInput"
+											(keydown)="numberOnly($event)"
+											[formControl]="priorityFC"
+											class="target-input" />
+									</mat-form-field>
+									<span class="clear-search" title="Clear Entry" (click)="clearPriorityInput()">&#10005;</span>
+								</div>
 							</div>
 						</div>
+						<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
+							<button
+								type="button"
+								title="Save"
+								class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
+								[disabled]="!groupFC.value || groupFC.value === '0' || !priorityFC.value || priorityFC.value === '0'"
+								(click)="setGroup()">
+								Save
+							</button>
+						</div>
 					</div>
-					<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
-						<button type="button" title="Save" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="setGroup()">Save</button>
-					</div>
-				</div>
 
-				<!--Target Popover-->
-				<div class="target-popover" id="target-popover" [ngStyle]="{ top: popoverLocationY + 'px', left: popoverLocationX + 'px' }" [ngClass]="showTargetPopover ? 'show' : 'hide'">
-					<div class="popup-handle popup-handle-top"></div>
-					<img src="assets/grey-close-icon.svg" (click)="closeTarget()" width="12px" height="12px" title="Close" aria-label="Close" class="grey-close-icon" alt="Close" />
-					<div class="col mappings-section m-l-20 m-r-20">
-						<div class="m-t-20 m-b-10">
-							<mat-form-field floatLabel="never" id="targetInputField" title="Enter Target Code" class="adjust-mat-input">
-								<input matInput #targetInput placeholder="Enter Target Code" id="targetCodeInput" [formControl]="targetFC" class="target-input" />
-								<!--	<mat-autocomplete #auto="matAutocomplete">
-							<mat-option *ngFor="let state of filteredStates | async" [value]="state.name">
-								<span>{{ state.name }}</span> |
-							</mat-option>
-						</mat-autocomplete>-->
+					<!--Target Popover-->
+					<div class="target-popover" id="target-popover" [ngStyle]="{ top: popoverLocationY + 'px', left: popoverLocationX + 'px' }" [ngClass]="showTargetPopover ? 'show' : 'hide'">
+						<div class="popup-handle popup-handle-top"></div>
+						<img src="assets/grey-close-icon.svg" (click)="closeTarget()" width="12px" height="12px" title="Close" aria-label="Close" class="grey-close-icon" alt="Close" />
+						<div class="col mappings-section m-l-20 m-r-20">
+							<div class="m-t-20 m-b-10">
+								<form (ngSubmit)="onKeyPress($event)" class="max-width m-t-5 type-ahead-form">
+									<span class="type-head-append">
+										<i class="fa-solid fa-magnifying-glass svg-inline"></i>
+										<input
+											id="typeahead-basic"
+											type="text"
+											class="form-control"
+											[(ngModel)]="query"
+											[formControl]="targetFC"
+											title="Search Target Code (enter at least 2 characters)"
+											[placeholder]="'Search Target Code'"
+											[ngbTypeahead]="searchAutoComplete"
+											[resultFormatter]="formatter"
+											[inputFormatter]="formatter"
+											[resultTemplate]="rt"
+											(selectItem)="selectItemFromMenu($event)"
+											[focusFirst]="false" />
+										<span class="clear-search" title="Clear Search" (click)="clearTargetInput()">&#10005;</span>
+									</span>
+								</form>
+							</div>
+							<span class="mappings-section m-b-10">{{ targetToName }}</span>
+						</div>
+
+						<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
+							<button
+								type="button"
+								title="Set as Target"
+								class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
+								(click)="setTarget()"
+								[disabled]="!foundConceptCode || !selectedTarget"
+								(ngClass)="({ 'disabled': !foundConceptCode || !selectedTarget })">
+								Set as Target
+							</button>
+							<button type="button" title="Set Empty Target" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="setEmptyTarget()">Set Empty Target</button>
+						</div>
+					</div>
+
+					<!--Advice Popover-->
+					<div class="advice-popover" id="advice-popover" [ngStyle]="{ top: popoverLocationY + 'px', left: popoverLocationX + 'px' }" [ngClass]="showAdvicePopover ? 'show' : 'hide'">
+						<div class="popup-handle popup-handle-top"></div>
+						<img src="assets/grey-close-icon.svg" (click)="closePopover()" width="12px" height="12px" title="Close" aria-label="Close" class="grey-close-icon" alt="Close" />
+						<ul>
+							<li *ngFor="let advice of popover_updateAdviceList" class="advice-list-item" [hidden]="advice.indexOf('ALWAYS') > -1">
+								<span title="{{ advice }}" class="code-link">{{ advice }}</span
+								><span title="Remove advice" class="clear-search adjust-clear" (click)="removeAdviceFromList(advice)">&#10005;</span>
+							</li>
+						</ul>
+						<div class="target-selection advice-selection" [hidden]="popover_addAdviceList.length === 0">
+							<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box target-selection-box-advice">
+								<mat-select
+									#selectAdvice
+									title="Select advice to add"
+									placeholder="Select advice to add"
+									[(value)]="popover_adviceToAdd"
+									(selectionChange)="addAdviceToList(popover_uuid)">
+									<mat-option *ngFor="let advice of popover_addAdviceList" value="{{ advice }}" title="{{ advice }}" class="no-checkbox">{{ advice }}</mat-option>
+								</mat-select>
 							</mat-form-field>
-							<span class="clear-search" (click)="clearTargetInput()">&#10005;</span>
 						</div>
-						<span class="mappings-section m-b-10">{{ targetToName }}</span>
-					</div>
-
-					<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
-						<button
-							type="button"
-							title="Set as Target"
-							class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
-							(click)="setTarget()"
-							[disabled]="!foundConceptCode || !selectedTarget"
-							(ngClass)="({ 'disabled': !foundConceptCode || !selectedTarget })">
-							Set as Target
-						</button>
-						<button type="button" title="Set Empty Target" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="setEmptyTarget()">Set Empty Target</button>
-					</div>
-				</div>
-
-				<!--Advice Popover-->
-				<div class="advice-popover" id="advice-popover" [ngStyle]="{ top: popoverLocationY + 'px', left: popoverLocationX + 'px' }" [ngClass]="showAdvicePopover ? 'show' : 'hide'">
-					<div class="popup-handle popup-handle-top"></div>
-					<img src="assets/grey-close-icon.svg" (click)="closePopover()" width="12px" height="12px" title="Close" aria-label="Close" class="grey-close-icon" alt="Close" />
-					<ul>
-						<li *ngFor="let advice of popover_updateAdviceList" class="advice-list-item" [hidden]="advice.indexOf('ALWAYS') > -1">
-							<span title="{{ advice }}" class="code-link">{{ advice }}</span
-							><span title="Remove advice" class="clear-search adjust-clear" (click)="removeAdviceFromList(advice)">&#10005;</span>
-						</li>
-					</ul>
-					<div class="target-selection advice-selection" [hidden]="popover_addAdviceList.length === 0">
-						<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box target-selection-box-advice">
-							<mat-select #selectAdvice title="Select advice to add" placeholder="Select advice to add" [(value)]="popover_adviceToAdd" (selectionChange)="addAdviceToList(popover_uuid)">
-								<mat-option *ngFor="let advice of popover_addAdviceList" value="{{ advice }}" title="{{ advice }}" class="no-checkbox">{{ advice }}</mat-option>
-							</mat-select>
-						</mat-form-field>
-					</div>
-					<span class="mappings-section m-l-20" *ngIf="popover_addAdviceList.length === 0">No advice to add.</span>
-					<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
-						<button type="button" title="Save" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="setAdvice()">Save</button>
+						<span class="mappings-section m-l-20" *ngIf="popover_addAdviceList.length === 0">No advice to add.</span>
+						<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
+							<button type="button" title="Save" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="setAdvice()">Save</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -188,6 +259,14 @@
 		</div>
 	</div>
 </div>
+
+<!--Type Ahead Result Template-->
+<ng-template #rt let-r="result" let-t="term">
+	<div class="type-head-overflow" title="{{ r.code + ': ' + r.name }}">
+		<ngb-highlight [result]="r.code + ': ' + r.name" [term]="t"></ngb-highlight>
+	</div>
+</ng-template>
+
 <!-- Information Templates -->
 <ng-template #directoryInfoSection let-params>
 	<div class="d-flex rt2-wrap">
@@ -237,9 +316,22 @@
 <!-- Name Templates -->
 <ng-template #directoryNameSection let-params>
 	<span class="blue-link">{{ params?.value }}</span>
-	<mat-icon *ngIf="params?.data?.released" aria-hidden="false" class="mat-button-wrapper mapset-intl-icon m-l-5" aria-label="SNOMED International" title="SNOMED International">
-		<span class="material-symbols-outlined"> language_international </span>
-	</mat-icon>
+	<span *ngIf="params?.data?.released">
+		<mat-icon
+			*ngIf="params?.data?.moduleId === internationalId"
+			aria-hidden="false"
+			class="mat-button-wrapper mapset-intl-icon m-l-5"
+			aria-label="SNOMED International"
+			title="SNOMED International">
+			<span class="material-symbols-outlined"> language_international </span>
+		</mat-icon>
+		<img
+			class="mapset-mod-icon"
+			*ngIf="params?.data?.moduleId !== internationalId"
+			src="{{ 'assets/flags/' + getModuleLanguageIcon(params?.data?.moduleId, params?.data?.descriptions) + '.png' }}"
+			title="{{ getModuleLanguageName(params?.data?.moduleId, params?.data?.descriptions) }}"
+			aria-label="{{ getModuleLanguageName(params?.data?.moduleId, params?.data?.descriptions) }}"
+	/></span>
 </ng-template>
 
 <!-- Edition Templates -->
@@ -288,28 +380,6 @@
 
 <!-- Advice Templates -->
 <ng-template #targetAdviceSection let-params>
-	<!--{{ showParams(params) }}
-	<div class="advice-popover" id="{{ 'advice-popover_' + params.data.uuid }}" [ngStyle]="{ top: advicePopoverLocation + 'px' }" [ngClass]="params.data?.advices_open ? 'show' : 'hide'">
-		<div class="popup-handle popup-handle-top"></div>
-		<img src="assets/grey-close-icon.svg" (click)="closePopover(params.data)" width="12px" height="12px" title="Close" aria-label="Close" class="grey-close-icon" alt="Close" />
-		<ul>
-			<li *ngFor="let advice of params.data.updateAdviceList" class="advice-list-item" [hidden]="advice.indexOf('ALWAYS') > -1">
-				<span title="{{ advice }}" class="code-link">{{ advice }}</span
-				><span title="Remove advice" class="clear-search adjust-clear" (click)="removeAdviceFromList(params.data.uuid, advice)">&#10005;</span>
-			</li>
-		</ul>
-		<div class="target-selection advice-selection" [hidden]="params.data.addAdviceList?.length === 0">
-			<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
-				<mat-select #selectAdvice title="Select advice to add" placeholder="Select advice to add" [(value)]="params.data.adviceToAdd" (selectionChange)="addAdviceToList(params.data.uuid)">
-					<mat-option *ngFor="let advice of params.data.addAdviceList" value="{{ advice }}" title="{{ advice }}" class="no-checkbox">{{ advice }}</mat-option>
-				</mat-select>
-			</mat-form-field>
-		</div>
-		<span class="mappings-section m-l-20" *ngIf="params.data.addAdviceList?.length === 0">No advice to add.</span>
-		<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
-			<button type="button" title="Save" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="setAdvice(params.data.uuid)">Save</button>
-		</div>
-	</div>-->
 	<div id="{{ 'popover_' + params.data.uuid }}">
 		<ul [hidden]="params.value.mapAdvices.length === 0" class="max-list">
 			<li *ngFor="let advice of params.value.mapAdvices; index as i" class="advice-line">
@@ -326,9 +396,6 @@
 </ng-template>
 
 <ng-template #directoryCodeSection let-params>
-	<!--<span *ngIf="params?.value === 'No map entries available.'">
-		{{ params?.value }}
-	</span>-->
 	<span *ngIf="params?.value !== undefined" class="pointer">
 		<mat-chip-list *ngIf="params?.value.split('#')[0] !== '1/1&1'" (click)="editGroup($event, params)" class="pointer">
 			<mat-chip
@@ -373,6 +440,22 @@
 	</div>
 </ng-template>
 
+<ng-template #confirmationModal let-modal>
+	<div class="modal-header rt2-modal-header">
+		<div class="modal-title">Confirm Remove</div>
+		<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeConfirmDialog()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<p>Are you sure you want to remove this entry?</p>
+	</div>
+	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+		<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeConfirmDialog()">Cancel</button>
+		<button type="button" title="Confirm" class="rt2-btn rt2-action-btn" (click)="confirmRemoveItem()">Confirm</button>
+	</div>
+</ng-template>
+
 <ng-template #downloadModal let-modal>
 	<div class="modal-header rt2-modal-header">
 		<div class="modal-title">Download Map Set</div>
@@ -400,5 +483,26 @@
 	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
 		<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
 		<button type="button" title="Download" class="rt2-btn rt2-action-btn" (click)="startDownload()">Download</button>
+	</div>
+</ng-template>
+
+<ng-template #headerGroupModal let-modal>
+	<div class="modal-header rt2-modal-header">
+		<div class="modal-title">Change Group</div>
+		<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeHeaderGroupModal()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<div>
+			<label class="m-r-10">Group</label>
+			<mat-form-field floatLabel="never" id="groupInputField" title="Enter Group" class="adjust-mat-input-header">
+				<input type="number" matInput #headerGroupInput placeholder="Enter Group" id="headerGroupCodeInput" (keydown)="numberOnly($event)" [formControl]="headerGroupFC" class="target-input" />
+			</mat-form-field>
+			<span class="clear-search-header" title="Clear Group" (click)="clearHeaderGroupInput()">&#10005;</span>
+		</div>
+	</div>
+	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+		<button type="button" class="rt2-btn rt2-action-btn" (click)="setHeaderGroup()">Save</button>
 	</div>
 </ng-template>

@@ -3,24 +3,21 @@
 <!-- Search Bar -->
 <div class="top-search-bar content-header">
 	<div class="d-flex justify-content-end">
-		<div class="col-md-12 d-flex">
+		<div class="col-md-8 d-flex">
 			<div class="page-title rt2-wrap" *ngIf="loaded" title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}">
 				<span>{{ mapsetData[0].code + ' ' + mapsetData[0].name }} </span>
+			</div>
+		</div>
+		<div class="col-md-auto d-flex p-r-30 m-t-5">
+			<div class="col-12">
+				<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: mapsetData }"></template>
 			</div>
 		</div>
 	</div>
 </div>
 <div [hidden]="loaded" class="section-loading">Loading...</div>
 <div class="dropdown-group row edit-actions" *ngIf="loaded">
-	<div class="col-10">
-		<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
-			<mat-select #actions title="Authoring Actions" placeholder="Authoring Actions" [(value)]="selectedAction" (selectionChange)="selectActionMenu()">
-				<mat-option value="note" class="no-checkbox">View or Add Authoring Note</mat-option>
-				<mat-option value="comm" class="no-checkbox">View or Add Authoring Communication</mat-option>
-				<mat-option value="review" class="no-checkbox">Request Review</mat-option>
-			</mat-select>
-		</mat-form-field>
-	</div>
+	<div class="col-10"></div>
 	<div class="action-column col-2 no-margin-top">
 		<span class="date-column">
 			<button
@@ -50,13 +47,13 @@
 					<span>Source Concept</span>
 				</div>
 
-				<div class="section-background mappings-section" *ngIf="loaded">
+				<div class="section-background mappings-section" *ngIf="loaded && selectedMapset">
 					<div class="col-12">
 						<div class="d-flex col-12 row mt-5">
 							<div class="col-2 align-right mb-10">ID:</div>
 							<div class="col-10 mb-10">
-								<span class="code-link" (click)="goToMappingPage()" title="Open in new tab" aria-label="Open in new tab"
-									>{{ selectedMapset.fromTerminology }}, {{ mapsetData[0].code }} <i class="fa-solid fa-arrow-up-right-from-square"></i
+								<span class="code-link" (click)="goToMappingPage('_blank')" title="Open Maps in new tab" aria-label="Open in new tab"
+									>{{ selectedMapset.fromTerminology }}, {{ mapsetData[0].code }} <span class="p-l-5"><i class="fa-solid fa-arrow-up-right-from-square"></i></span
 								></span>
 							</div>
 							<div class="col-2 align-right">Name:</div>
@@ -76,32 +73,43 @@
 				<div class="section-background mappings-section" *ngIf="loaded">
 					<div class="col-12">
 						<div class="d-flex col-12 row mt-5">
-							<div class="col-3 align-right mb-10 mt-10">Target Code:</div>
-							<div class="col-9">
-								ICD10,
-
-								<mat-form-field floatLabel="never" id="targetInputField" title="Enter Target Code" class="adjust-mat-input">
-									<input matInput #targetInput placeholder="Enter Target Code" id="targetCodeInput" [formControl]="targetFC" class="target-input" />
-									<!--	<mat-autocomplete #auto="matAutocomplete">
-										<mat-option *ngFor="let state of filteredStates | async" [value]="state.name">
-											<span>{{ state.name }}</span> |
-										</mat-option>
-									</mat-autocomplete>-->
-								</mat-form-field>
-								<span class="clear-search" (click)="clearTargetInput()">&#10005;</span>
-
-								<button
-									type="button"
-									title="Set as Target"
-									class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
-									(click)="setTargetCode()"
-									[disabled]="!foundConceptCode || !selectedTarget"
-									(ngClass)="({ 'disabled': !foundConceptCode || !selectedTarget })">
-									Set as Target
-								</button>
-								<button type="button" title="Set Empty Target" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="addEmptyTargetToGroup(numOfGroups)">
-									Set Empty Target
-								</button>
+							<div class="col-3 align-right mb-10 m-t-5">Target Code:</div>
+							<div class="col-9 d-flex">
+								<span class="m-r-5 m-t-5"> ICD10, </span>
+								<form (ngSubmit)="onKeyPress($event)" class="max-width m-t-5 type-ahead-form">
+									<span class="type-head-append">
+										<i class="fa-solid fa-magnifying-glass svg-inline"></i>
+										<input
+											id="typeahead-basic"
+											type="text"
+											class="form-control"
+											[(ngModel)]="query"
+											[formControl]="targetFC"
+											title="Search Target Code (enter at least 2 characters)"
+											[placeholder]="'Search Target Code'"
+											[ngbTypeahead]="searchAutoComplete"
+											[resultFormatter]="formatter"
+											[inputFormatter]="formatter"
+											[resultTemplate]="rt"
+											(selectItem)="selectItemFromMenu($event)"
+											[focusFirst]="false" />
+										<span class="clear-search" title="Clear Search" (click)="clearTargetInput()">&#10005;</span>
+									</span>
+								</form>
+								<div class="target-btns">
+									<button
+										type="button"
+										title="Set as Target"
+										class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
+										(click)="setTargetCode()"
+										[disabled]="!foundConceptCode || !selectedTarget"
+										(ngClass)="({ 'disabled': !foundConceptCode || !selectedTarget })">
+										Set as Target
+									</button>
+									<button type="button" title="Set Empty Target" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="addEmptyTargetToGroup(numOfGroups)">
+										Set Empty Target
+									</button>
+								</div>
 							</div>
 							<div class="col-3 align-right">Preferred Term:</div>
 							<div class="col-9">
@@ -119,86 +127,125 @@
 		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showConfigSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
 				<span>Target Configuration</span>
+				<div class="sub-header-font" [hidden]="!loaded">
+					<span [hidden]="numOfGroups === 0"
+						>( {{ numOfGroups }} group<span *ngIf="numOfGroups > 1">s</span>, {{ mapsetData[0]?.mapEntries.length }} entr{{ mapsetData[0]?.mapEntries.length === 1 ? 'y' : 'ies' }} )</span
+					>
+				</div>
 			</div>
 			<img src="assets/caret-up-solid.svg" *ngIf="!showConfigSection" alt="Collapse Button" title="Collapse Target Configuration" aria-label="Collapse Button" class="caret-up-solid" />
 			<img src="assets/caret-down-solid.svg" *ngIf="showConfigSection" alt="Expand Button" title="Expand Target Configuration" aria-label="Expand Button" class="caret-down-solid" />
 		</div>
+
 		<div [hidden]="!showConfigSection || !loaded" class="section-background config-section">
-			<div *ngFor="let record of mapsetData; index as i">
-				<div class="dropdown-group col-gap" *ngFor="let _ of [].constructor(numOfGroups); index as g">
+			<div *ngFor="let record of mapsetData; index as i" class="section-groups" cdkDropList #groupDrop="cdkDropList" [cdkDropListData]="groupList" (cdkDropListDropped)="drop($event)">
+				<div
+					class="dropdown-group col-gap group-background"
+					*ngFor="let group of groupList; index as g"
+					[cdkDragData]="group"
+					[cdkDropListConnectedTo]="[groupDrop]"
+					[cdkDragDisabled]="numOfGroups === 1"
+					cdkDragBoundary=".section-groups"
+					cdkDragLockAxis="y"
+					cdkDrag>
 					<div class="metadata-collapsible-container-title page-header-font metadata-collapsible-container-group-header map-group-header">
 						<div>
 							<div class="move-group-container">
-								<i title="Move Group" class="fa-solid fa-up-down-left-right link-icon mr-5 group-move-btn" (click)="openToBeDevelopedModal(tbdModal)"></i>
+								<i title="Move Group" class="fa-solid fa-up-down-left-right link-icon mr-5 group-move-btn" [ngClass]="{ 'disabled': numOfGroups === 1 }" cdkDragHandle></i>
 							</div>
 							<span>Map Group {{ g + 1 }}</span>
+
+							<span class="sub-header-font" [hidden]="getGroupTotal(g + 1) === 0">( {{ getGroupTotal(g + 1) }} entr{{ getGroupTotal(g + 1) === 1 ? 'y' : 'ies' }} )</span>
 						</div>
-						<span title="Remove Group" class="clear-search group-remove-btn" (click)="removeMapGroup(g + 1)">&#10005;</span>
+						<span title="Remove Group" class="clear-search group-remove-btn" (click)="openConfirmationModal(g + 1, 'group')">&#10005;</span>
 					</div>
 					<div
-						class="metadata-collapsible-container-group-header target-row solid-target-border target-hover-background"
-						[ngClass]="{ 'target-selected-background': selectedTarget === entry.uuid }"
-						*ngFor="let entry of record.mapEntries; index as x"
-						[hidden]="g + 1 !== entry.group">
-						<div class="col-4">
-							<div class="target-name">
-								<div class="move-container">
-									<i title="Move Target" class="fa-solid fa-up-down-left-right link-icon mr-5 target-move-btn" (click)="openToBeDevelopedModal(tbdModal)"></i>
+						class="map-target"
+						cdkDropList
+						#targetDrop="cdkDropList"
+						[cdkDropListConnectedTo]="[targetDrop]"
+						(cdkDropListDropped)="dropT($event)"
+						[cdkDropListData]="getGroupEntriesById(g + 1)">
+						<div
+							class="metadata-collapsible-container-group-header target-row solid-target-border target-hover-background"
+							[ngClass]="{ 'target-selected-background': selectedTarget === entry.uuid }"
+							*ngFor="let entry of getGroupEntriesById(g + 1); index as x"
+							[cdkDragData]="entry"
+							[cdkDragDisabled]="getGroupTotal(g + 1) === 1"
+							cdkDragBoundary=".map-target"
+							cdkDragLockAxis="y"
+							cdkDrag>
+							<div class="col-4">
+								<div class="target-name">
+									<div class="move-container">
+										<i
+											title="Move Target"
+											class="fa-solid fa-up-down-left-right link-icon mr-5 target-move-btn"
+											[ngClass]="{ 'disabled': getGroupTotal(g + 1) === 1 }"
+											cdkDragHandle></i>
+									</div>
+									<!--target-name-wrap-->
+									<span class="group-link"><template [ngTemplateOutlet]="targetGroupSection" [ngTemplateOutletContext]="{ $implicit: entry }"></template></span>
+									<span class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)">{{ entry.toCode }}</span
+									><span title="{{ entry.toName }}" class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)"
+										>{{ entry.toName }}
+										<span *ngIf="entry.released">
+											<mat-icon
+												*ngIf="entry.moduleId === internationalId"
+												aria-hidden="false"
+												class="mat-button-wrapper mapset-intl-icon m-l-5"
+												aria-label="SNOMED International"
+												title="SNOMED International">
+												<span class="material-symbols-outlined"> language_international </span>
+											</mat-icon>
+											<img
+												class="mapset-mod-icon"
+												*ngIf="entry.moduleId !== internationalId"
+												src="{{ 'assets/flags/' + getModuleLanguageIcon(entry.moduleId, record.descriptions) + '.png' }}"
+												title="{{ getModuleLanguageName(entry.moduleId, record.descriptions) }}"
+												aria-label="{{ getModuleLanguageName(entry.moduleId, record.descriptions) }}" /></span
+									></span>
 								</div>
-								<!--target-name-wrap-->
-								<span class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)">{{ entry.group || '1' }}/{{ entry.priority }}</span
-								><span class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)">{{ entry.toCode }}</span
-								><span title="{{ entry.toName }}" class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)"
-									>{{ entry.toName }}
-									<mat-icon
-										*ngIf="entry.released"
-										aria-hidden="false"
-										class="mat-button-wrapper mapset-intl-icon m-l-5"
-										aria-label="SNOMED International"
-										title="SNOMED International">
-										<span class="material-symbols-outlined"> language_international </span>
-									</mat-icon></span
-								>
 							</div>
-						</div>
-						<div class="target-selection" *ngIf="entry.toName.indexOf('[NO TARGET]') > -1 || entry.toName.indexOf(' CONCEPT NOT FOUND') > -1">
-							<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
-								<mat-select
-									#selectRelationship
-									title="Select a Relationship"
-									placeholder="Select a Relationship"
-									[(value)]="entry.relation"
-									(selectionChange)="userChangeSelection('norelation')">
-									<mat-option *ngFor="let map of noTargetRelations" value="{{ map }}" class="no-checkbox">{{ map }}</mat-option>
-								</mat-select>
-							</mat-form-field>
-						</div>
-						<div class="target-selection" *ngIf="entry.toName.indexOf('[NO TARGET]') === -1 && entry.toName.indexOf(' CONCEPT NOT FOUND') === -1">
-							<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
-								<mat-select
-									#selectRelationship
-									title="Select a Relationship"
-									placeholder="Select a Relationship"
-									[(value)]="entry.relation"
-									(selectionChange)="userChangeSelection('relation')">
-									<mat-option *ngFor="let map of targetRelations" value="{{ map }}" class="no-checkbox">{{ map }}</mat-option>
-								</mat-select>
-							</mat-form-field>
-						</div>
-						<div class="target-selection">
-							<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
-								<mat-select #selectRule title="Select a Rule" placeholder="Select a Rule" [(value)]="record.rule" (selectionChange)="userChangeSelection('rule')">
-									<mat-option value="TRUE" class="no-checkbox">TRUE</mat-option>
-									<mat-option value="Gender - Female" class="no-checkbox" [hidden]="!ruleBased">Gender - Female</mat-option>
-									<mat-option value="Gender - Male" class="no-checkbox" [hidden]="!ruleBased">Gender - Male</mat-option>
-								</mat-select>
-							</mat-form-field>
-						</div>
+							<div class="target-selection" *ngIf="entry.toName.indexOf('[NO TARGET]') > -1 || entry.toName.indexOf(' CONCEPT NOT FOUND') > -1">
+								<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
+									<mat-select
+										#selectRelationship
+										title="Select a Relationship"
+										placeholder="Select a Relationship"
+										[(value)]="entry.relation"
+										(selectionChange)="userChangeSelection('norelation')">
+										<mat-option *ngFor="let map of noTargetRelations" value="{{ map }}" class="no-checkbox">{{ map }}</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</div>
+							<div class="target-selection" *ngIf="entry.toName.indexOf('[NO TARGET]') === -1 && entry.toName.indexOf(' CONCEPT NOT FOUND') === -1">
+								<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
+									<mat-select
+										#selectRelationship
+										title="Select a Relationship"
+										placeholder="Select a Relationship"
+										[(value)]="entry.relation"
+										(selectionChange)="userChangeSelection('relation')">
+										<mat-option *ngFor="let map of targetRelations" value="{{ map }}" class="no-checkbox">{{ map }}</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</div>
+							<div class="target-selection">
+								<mat-form-field appearance="fill" floatLabel="never" class="rule-selection-box">
+									<mat-select #selectRule title="Select a Rule" placeholder="Select a Rule" [(value)]="record.rule" (selectionChange)="userChangeSelection('rule')">
+										<mat-option value="TRUE" class="no-checkbox">TRUE</mat-option>
+										<mat-option value="Gender - Female" class="no-checkbox" [hidden]="!ruleBased">Gender - Female</mat-option>
+										<mat-option value="Gender - Male" class="no-checkbox" [hidden]="!ruleBased">Gender - Male</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</div>
 
-						<span class="col-2 advice-list">
-							<template [ngTemplateOutlet]="targetAdviceSection" [ngTemplateOutletContext]="{ $implicit: entry }"></template>
-						</span>
-						<div class="move-container"><span title="Remove Target" class="clear-search target-remove-btn" (click)="removeTarget(entry.uuid)">&#10005;</span></div>
+							<span class="col-3 advice-list">
+								<template [ngTemplateOutlet]="targetAdviceSection" [ngTemplateOutletContext]="{ $implicit: entry }"></template>
+							</span>
+							<div class="move-container"><span title="Remove Target" class="clear-search target-remove-btn" (click)="openConfirmationModal(entry.uuid, 'target')">&#10005;</span></div>
+						</div>
 					</div>
 					<div class="metadata-collapsible-container-group-header target-btn dotted-target-border target-hover-background mt-10" (click)="addEmptyTargetToGroup(g + 1)" title="Add Target">
 						<div><i class="fa-solid fa-circle-plus link-icon mr-5"></i> <span class="link-icon">Add a New Target</span></div>
@@ -224,22 +271,67 @@
 		</div>
 	</div>
 </div>
+
+<!--Type Ahead Result Template-->
+<ng-template #rt let-r="result" let-t="term">
+	<div class="type-head-overflow" title="{{ r.code + ': ' + r.name }}">
+		<ngb-highlight [result]="r.code + ': ' + r.name" [term]="t"></ngb-highlight>
+	</div>
+</ng-template>
+
 <!-- Action Templates -->
 <ng-template #directoryActionSection let-params>
 	<div class="d-flex">
-		<div class="col-6">
-			<div class="library-app-refset-notes" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-				<img src="/assets/sticky-note.svg" title="View Notes" aria-label="View Notes" class="mapset-notes-icon" />
+		<div class="col p-r-20">
+			<div class="library-app-refset-notes" (click)="selectActionMenu('view')">
+				<img src="/assets/preview-icon.svg" title="View Maps" aria-label="View Maps" class="mapset-notes-icon mapset-view-icon" />
 			</div>
 		</div>
 
-		<div class="col-6">
-			<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-				<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
+		<div class="col p-r-20">
+			<div class="library-app-refset-notes" (click)="selectActionMenu('note')">
+				<img src="/assets/sticky-note.svg" title="View or Add Authoring Notes" aria-label="View or Add Authoring Notes" class="mapset-notes-icon" />
+			</div>
+		</div>
+
+		<div class="col p-r-15">
+			<div class="library-app-refset-discussion-list" (click)="selectActionMenu('comm')">
+				<img src="/assets/comment-dots-regular.svg" title="View or Add Authoring Communication" aria-label="View or Add Authoring Communication" class="discussion-icon" />
+			</div>
+		</div>
+
+		<div class="col">
+			<div class="library-app-refset-discussion-list" (click)="selectActionMenu('review')">
+				<img src="/assets/rate-review.svg" title="Request Review" aria-label="Request Review" class="rate-review-icon" />
 			</div>
 		</div>
 	</div>
 </ng-template>
+
+<!--Group Popover-->
+<ng-template #targetGroupSection let-entry>
+	<div class="group-popover" id="{{ 'group-popover_' + entry.uuid }}" [ngStyle]="{ top: advicePopoverLocation + 'px' }" [ngClass]="entry?.group_open ? 'show' : 'hide'">
+		<div class="popup-handle-left popup-handle-top"></div>
+		<img src="assets/grey-close-icon.svg" (click)="closeGroup()" width="12px" height="12px" title="Close" aria-label="Close" class="grey-close-icon" alt="Close" />
+		<div class="col mappings-section m-l-20">
+			<div class="m-t-20 m-b-10">
+				<div>
+					<label class="m-r-10">Group</label>
+					<mat-form-field floatLabel="never" id="groupInputField" title="Enter Group" class="adjust-mat-input-sm">
+						<input type="number" matInput #groupInput placeholder="Enter Group" (keydown)="numberOnly($event)" id="groupCodeInput" [formControl]="groupFC" class="target-input" />
+					</mat-form-field>
+					<span class="clear-search" title="Clear Group" (click)="clearGroupInput()">&#10005;</span>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
+			<button type="button" title="Save" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="setGroup(entry.uuid)" [disabled]="!groupFC.value || groupFC.value === '0'">
+				Save
+			</button>
+		</div>
+	</div>
+	<span class="code-link p-l-5 p-r-5" (click)="openGroupPopover($event, entry.uuid)">{{ entry.group || '1' }}/{{ entry.priority }}</span></ng-template
+>
 
 <!-- Advice Templates -->
 <ng-template #targetAdviceSection let-entry>
@@ -249,7 +341,7 @@
 		<ul>
 			<li *ngFor="let advice of entry.updateAdviceList" class="advice-list-item" [hidden]="advice.indexOf('ALWAYS') > -1">
 				<span title="{{ advice }}" class="code-link">{{ advice }}</span
-				><span title="Remove advice" class="clear-search adjust-clear" (click)="removeAdviceFromList(entry.uuid, advice)">&#10005;</span>
+				><span title="Remove Advice" class="clear-search adjust-clear" (click)="removeAdviceFromList(entry.uuid, advice)">&#10005;</span>
 			</li>
 		</ul>
 		<div class="target-selection advice-selection" [hidden]="entry.addAdviceList?.length === 0">
@@ -288,13 +380,29 @@
 		<p>This feature is not yet available. Please check back later.</p>
 	</div>
 	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-		<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		<button type="button" title="Close" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+	</div>
+</ng-template>
+
+<ng-template #confirmationModal let-modal>
+	<div class="modal-header rt2-modal-header">
+		<div class="modal-title">Confirm Remove</div>
+		<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeConfirmDialog()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<p>Are you sure you want to remove this {{ removeType }}?</p>
+	</div>
+	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+		<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeConfirmDialog()">Cancel</button>
+		<button type="button" title="Confirm" class="rt2-btn rt2-action-btn" (click)="confirmRemoveItem()">Confirm</button>
 	</div>
 </ng-template>
 
 <ng-template #downloadModal let-modal>
 	<div class="modal-header rt2-modal-header">
-		<div class="modal-title">Download Map</div>
+		<div class="modal-title">Download Maps</div>
 		<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeDownloadModal()">
 			<span aria-hidden="true">&times;</span>
 		</button>

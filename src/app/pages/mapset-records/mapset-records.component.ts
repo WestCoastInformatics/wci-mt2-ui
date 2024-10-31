@@ -84,8 +84,6 @@ export class MapsetRecordsComponent implements OnInit {
 	showMapTable = 'table';
 	checkedNum = 0;
 	useDialog = false;
-
-	selectedAction = '';
 	showMappingsSection = true;
 	showMetadataSection = false;
 	showHistorySection = false;
@@ -97,6 +95,7 @@ export class MapsetRecordsComponent implements OnInit {
 	recordRows = [];
 	mapSetSubscription: Subscription;
 	isNewPageSize = false;
+	internationalId = '449080006';
 
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
@@ -510,6 +509,7 @@ export class MapsetRecordsComponent implements OnInit {
 										'spanned': spanned,
 										'downloadable': results[a].code !== '' ? true : false,
 										'mapEntries': results[a].mapEntries,
+										'descriptions': results[a].descriptions,
 										'entries': results[a].mapEntries.length,
 										'code': results[a].code,
 										'name': results[a].name,
@@ -525,6 +525,7 @@ export class MapsetRecordsComponent implements OnInit {
 										'group': results[a].mapEntries[b].group,
 										'priority': results[a].mapEntries[b].priority,
 										'released': results[a].mapEntries[b].released,
+										'moduleId': results[a].mapEntries[b].moduleId,
 									});
 									count++;
 								}
@@ -606,6 +607,26 @@ export class MapsetRecordsComponent implements OnInit {
 				this.checkedNum++;
 			}
 		}
+	}
+
+	getModuleLanguageIcon(moduleId: string, descriptions: Array<any>) {
+		let flag = 'en';
+		for (let e = 0; e < descriptions.length; e++) {
+			if (descriptions[e].moduleId === moduleId) {
+				flag = descriptions[e].language;
+			}
+		}
+		return flag;
+	}
+
+	getModuleLanguageName(moduleId: string, descriptions: Array<any>) {
+		let lang = 'EN';
+		for (let e = 0; e < descriptions.length; e++) {
+			if (descriptions[e].moduleId === moduleId) {
+				lang = descriptions[e].languageName;
+			}
+		}
+		return lang;
 	}
 
 	getValueLength(params): number {
@@ -694,8 +715,8 @@ export class MapsetRecordsComponent implements OnInit {
 		this.openToBeDevelopedModal(this.tbdModal);
 	}
 
-	selectAction() {
-		switch (this.selectedAction) {
+	selectAction(selectedAction: string) {
+		switch (selectedAction) {
 			case 'batch':
 				if (this.checkedNum > 1) {
 					const codes = [];
@@ -705,59 +726,44 @@ export class MapsetRecordsComponent implements OnInit {
 						}
 					}
 					if (codes.length > 0) {
-						this.actions.close();
 						const ddInterval = setInterval(() => {
 							this.goToBatchMappingsPage(codes);
 							clearInterval(ddInterval);
 						}, 2);
 					}
-					this.selectedAction = '';
-					this.actions.value = this.selectedAction;
 				}
 				break;
 			case 'select':
 				window['checkbox-table-all'].click();
-				this.selectedAction = '';
-				this.actions.value = this.selectedAction;
 				break;
 			case 'view':
 				if (this.checkedNum === 1) {
 					for (let c = 0; c < this.mapsetData.length; c++) {
 						if (this.mapsetData[c].checked === true) {
-							this.actions.close();
 							const ddInterval = setInterval(() => {
 								this.goToMappingPage(this.mapsetData[c].code);
 								clearInterval(ddInterval);
 							}, 2);
 						}
 					}
-					this.selectedAction = '';
-					this.actions.value = this.selectedAction;
 				}
 				break;
 			case 'edit':
 				if (this.checkedNum === 1) {
 					for (let c = 0; c < this.mapsetData.length; c++) {
 						if (this.mapsetData[c].checked === true) {
-							this.actions.close();
 							const ddInterval = setInterval(() => {
 								this.goToEditMappingPage(this.mapsetData[c].code);
 								clearInterval(ddInterval);
 							}, 2);
 						}
 					}
-					this.selectedAction = '';
-					this.actions.value = this.selectedAction;
 				}
 				break;
 			case 'selected':
-				this.selectedAction = '';
-				this.actions.value = this.selectedAction;
 				this.downloadMapsets();
 				break;
 			case 'all':
-				this.selectedAction = '';
-				this.actions.value = this.selectedAction;
 				this.downloadMapsets();
 				break;
 		}
@@ -811,6 +817,10 @@ export class MapsetRecordsComponent implements OnInit {
 			this.isNewPageSize = event.newPageSize ?? false;
 			if (this.isNewPageSize) {
 				this.loaded = false;
+			}
+			this.checkedNum = 0;
+			if (this.gridSelectAll) {
+				window['checkbox-table-all'].click();
 			}
 			this.refsetGridPaging.pageSize = this.refsetGridApi.paginationGetPageSize();
 			this.refsetGridApi.updateGridOptions({

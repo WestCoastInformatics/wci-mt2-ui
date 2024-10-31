@@ -136,13 +136,37 @@
 
 .dropdown-group {
 	background-color: #fff;
-	border: 1px solid #f0f0f0;
-	padding: 10px 10px 0 10px;
-	margin: 10px 7px 0 10px;
+	padding: 10px 20px 10px 10px;
+	margin-right: 7px;
+	margin-left: 10px;
 }
 
 .dropdown-actions {
 	width: 250px;
+}
+
+.mappings-section {
+	color: #666;
+	font-size: 12px;
+}
+
+.menu-button {
+	display: flex;
+	flex-direction: column;
+	background-color: #fff;
+}
+
+.menu-icon {
+	text-align: center;
+	width: 100%;
+}
+
+.menu-label {
+	font-size: 9px;
+}
+
+.menu-inline {
+	display: inline-block;
 }
 
 .grey-close-icon {
@@ -183,7 +207,7 @@
 
 .rt2-directory-chooser-column {
 	padding-right: 20px;
-	margin-top: -0.8em;
+	margin-top: -0.5em;
 }
 
 .member-search-icon {
@@ -339,7 +363,7 @@
 }
 
 .action-column {
-	margin-top: 5px;
+	margin-top: 15px;
 	text-align: right;
 	color: #666;
 }
@@ -393,7 +417,7 @@
 .mapset-download-icon {
 	cursor: pointer;
 	color: $mapset-blue;
-	font-size: 1.25em;
+	font-size: 1.15em;
 }
 
 .mapset-notes-icon {
@@ -405,14 +429,6 @@
 
 .mapset-name {
 	padding-left: 0.5em !important;
-}
-
-.discussion-icon {
-	cursor: pointer;
-	width: 22px;
-	height: 22px;
-	//color: #2269e8;
-	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 
 /*previous */
@@ -437,11 +453,6 @@
 	.mat-form-field-underline {
 		width: 125px;
 	}
-}
-
-.rt2-directory-chooser-column {
-	padding-right: 20px;
-	margin-top: -0.8em;
 }
 
 .member-search-icon {
@@ -478,10 +489,10 @@
 
 .mapset-notes-icon {
 	cursor: pointer;
-	width: 24px;
-	height: 24px;
+	width: 22px;
+	height: 22px;
 	//color: #2269e8;
-	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
+	filter: invert(10%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 
 .discussion-icon {
@@ -493,9 +504,27 @@
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 
+.rate-review-icon {
+	cursor: pointer;
+	margin-top: -0.2em;
+	width: 28px;
+	height: 28px;
+	//color: #2269e8;
+	filter: invert(60%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
+}
+
 .mapset-intl-icon {
 	cursor: pointer;
 	color: $mapset-blue;
 	font-size: 1.25em;
-	vertical-align: middle;
+	vertical-align: text-top;
+}
+
+.mapset-mod-icon {
+	margin-left: 10px;
+	height: 13px;
+}
+
+.mapset-edit-icon {
+	filter: brightness(0) saturate(100%) invert(51%) sepia(78%) saturate(6059%) hue-rotate(209deg) brightness(92%) contrast(97%);
 }

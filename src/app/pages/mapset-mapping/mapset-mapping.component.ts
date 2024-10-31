@@ -81,8 +81,8 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 	mapping: string;
 	routeParamsSubscription$: Subscription;
 	gridSelectAll = false;
+	internationalId = '449080006';
 
-	selectedAction = '';
 	loaded = false;
 	selectedFormat = {};
 	formats = [];
@@ -180,6 +180,7 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 						'spanned': spanned,
 						'downloadable': true,
 						'mapEntries': results.mapEntries,
+						'descriptions': results.descriptions,
 						'entries': results.mapEntries.length,
 						'code': results.code,
 						'name': results.name,
@@ -195,6 +196,7 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 						'group': results.mapEntries[b].group,
 						'priority': results.mapEntries[b].priority,
 						'released': results.mapEntries[b].released,
+						'moduleId': results.mapEntries[b].moduleId,
 					});
 					count++;
 				}
@@ -213,24 +215,55 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	selectAction() {
-		switch (this.selectedAction) {
+	getModuleLanguageIcon(moduleId: string, descriptions: Array<any>) {
+		let flag = 'en';
+		for (let e = 0; e < descriptions.length; e++) {
+			if (descriptions[e].moduleId === moduleId) {
+				flag = descriptions[e].language;
+			}
+		}
+		return flag;
+	}
+
+	getModuleLanguageName(moduleId: string, descriptions: Array<any>) {
+		let lang = 'EN';
+		for (let e = 0; e < descriptions.length; e++) {
+			if (descriptions[e].moduleId === moduleId) {
+				lang = descriptions[e].languageName;
+			}
+		}
+		return lang;
+	}
+
+	selectAction(action: string) {
+		switch (action) {
 			case 'edit':
-				if (this.selectedAction === 'edit') {
-					this.actions.close();
+				if (action === 'edit') {
 					const ddInterval = setInterval(() => {
 						this.goToEditMappingPage();
 						clearInterval(ddInterval);
 					}, 2);
 				}
-				this.selectedAction = '';
-				this.actions.value = this.selectedAction;
 				break;
 			case 'review':
-				this.selectedAction = '';
-				this.actions.value = this.selectedAction;
 				this.openToBeDevelopedModal(this.tbdModal);
 				break;
+		}
+	}
+
+	clearSearch() {
+		this.loaded = false;
+		if (this.searchInput) {
+			this.searchInput = '';
+			this.onSearchChange();
+		}
+	}
+
+	@Debounce()
+	onSearchChange() {
+		this.searchInput = this.searchInput.trim();
+		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
+			this.openToBeDevelopedModal(this.tbdModal);
 		}
 	}
 

@@ -68,11 +68,11 @@
 	font-weight: 400 !important;
 }
 
-.mapset-intl-icon {
-	cursor: pointer;
-	color: $mapset-blue;
-	font-size: 1.25em;
-	vertical-align: middle;
+.sub-header-font {
+	font-size: 12px;
+	margin-left: 15px;
+	margin-top: 5px;
+	color: #666;
 }
 
 .popup-handle {
@@ -119,7 +119,6 @@
 	height: 100%;
 	margin-left: 11px;
 	margin-right: 8px;
-	margin-top: 5px;
 }
 
 .directoryViewFilterField {
@@ -174,7 +173,9 @@
 .dropdown-group {
 	background-color: #fff;
 	border: 1px solid #f0f0f0;
-	padding: 10px 10px 0 10px;
+	border-bottom: none;
+	padding: 20px;
+	padding-left: 40px;
 	margin: 10px 7px 0 10px;
 }
 
@@ -215,7 +216,7 @@
 
 .rt2-directory-chooser-column {
 	padding-right: 20px;
-	margin-top: -0.8em;
+	margin-top: -0.5em;
 }
 
 .member-search-icon {
@@ -335,10 +336,9 @@
 }
 
 .record-row {
-	background-color: #fafafa;
+	background-color: #f2f2f2;
 	border: 1px solid #f0f0f0;
 	color: #666;
-	margin-top: 5px;
 }
 
 .second-row {
@@ -424,13 +424,19 @@
 	cursor: pointer;
 	color: $mapset-blue;
 	font-size: 1.25em;
+	background-color: #fff;
 }
 
 .mapset-intl-icon {
 	cursor: pointer;
 	color: $mapset-blue;
 	font-size: 1.25em;
-	vertical-align: middle;
+	vertical-align: text-top;
+}
+
+.mapset-mod-icon {
+	margin-left: 10px;
+	height: 13px;
 }
 
 .mapset-notes-icon {
@@ -442,6 +448,33 @@
 
 .mapset-name {
 	padding-left: 0.5em !important;
+}
+
+.metadata-section-background {
+	background-color: white;
+	height: 100%;
+	margin-right: 8px;
+	margin-left: 11px;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+.menu-button {
+	display: flex;
+	flex-direction: column;
+}
+
+.menu-icon {
+	text-align: center;
+	width: 100%;
+}
+
+.menu-label {
+	font-size: 9px;
+}
+
+.menu-inline {
+	display: inline-block;
 }
 
 .discussion-icon {

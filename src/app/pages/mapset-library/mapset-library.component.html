@@ -13,41 +13,47 @@
 <div class="rt2-container refsetDirectoryPage" (window:resize)="onResize($event)">
 	<div class="metadata-collapsible-container m-t-20">
 		<div class="metadata-collapsible-container-group-header row">
-			<div class="row d-flex dropdown-group">
-				<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
-					<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
-				</div>
-
-				<div class="col-md-auto">
-					<div class="dropdown directoryInput" *ngIf="showTable">
-						<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
-							<mat-label class="search-label" *ngIf="searchInput === ''">Search</mat-label>
-							<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
-						</mat-form-field>
-						<span class="clear-search" (click)="clearSearch()">&#10005;</span>
+			<div class="metadata-section-background">
+				<div class="row d-flex dropdown-group">
+					<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
+						<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
+					</div>
+					<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
+						<mat-menu #searchMenu="matMenu" class="search-box">
+							<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
+								<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
+									<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
+									<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" (click)="$event.stopPropagation()" />
+								</mat-form-field>
+								<span class="clear-search" title="Clear Search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span><br />
+								<span *ngIf="searchInput.length > 0" class="mappings-section"
+									>{{ refsetGridApi.getDisplayedRowCount() > 0 ? refsetGridApi.getDisplayedRowCount() : 'No ' }} result{{
+										refsetGridApi.getDisplayedRowCount() > 1 ? 's' : ''
+									}}
+									found</span
+								>
+							</div></mat-menu
+						>
+						<div class="menu-inline">
+							<button [matMenuTriggerFor]="searchMenu" aria-label="Search" title="Search" class="mapset-download-icon menu-button">
+								<mat-icon class="menu-icon">search</mat-icon>
+								<span class="menu-label">search</span>
+							</button>
+						</div>
 					</div>
 				</div>
-				<div class="col-md-auto p-l-5 hide">
-					<mat-form-field floatLabel="never" class="directoryViewFilterField" appearance="fill">
-						<mat-label></mat-label>
-						<mat-select title="Public/Private Refsets" #directoryViewSelect [(value)]="selectedView" (selectionChange)="changedViewFilter()">
-							<mat-option *ngFor="let option of viewOptions" [value]="option.value" class="no-checkbox"> {{ option.display }} </mat-option>
-						</mat-select>
-					</mat-form-field>
+				<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showTable && !showLoadingSearch"></div>
+				<div class="row loading-details dashboard-section" *ngIf="showLoadingSearch">
+					<div>Loading...</div>
 				</div>
-			</div>
-			<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showTable && !showLoadingSearch"></div>
-			<div class="row loading-details dashboard-section" *ngIf="showLoadingSearch">
-				<div>Loading...</div>
-			</div>
-			<!-- Page Title -->
-			<!-- <div class="container-fluid page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div> -->
+				<!-- Page Title -->
+				<!-- <div class="container-fluid page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div> -->
 
-			<!-- Reference Set Table -->
-			<ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct" [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
-			</ag-grid-angular>
+				<!-- Reference Set Table -->
+				<ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct" [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
+				</ag-grid-angular>
 
-			<!--<app-pagination
+				<!--<app-pagination
 				#directoryPaging
 				*ngIf="showTable"
 				[pageSize]="refsetGridPaging.pageSize"
@@ -56,111 +62,112 @@
 				[totalKnown]="refsetGridPaging.totalKnown"
 				[manualStateRefresh]="refsetGridPaging.manualStateRefresh">
 			</app-pagination>-->
-			<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
-			<div class="rt2-pagination-container" [hidden]="showLoadingSearch || numOfMembers === 0">
-				<div class="rt2-pagination-top-row">
-					<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons">
-						<button
-							#paginationFirstPage
-							mat-raised-button
-							(click)="goToPage(0)"
-							class="pagination-page-buttons"
-							[ngClass]="{ disabled: getCurrentPage() === 0 }"
-							title="Go To First Page"
-							attr.aria-label="Go To First Page">
-							<mat-icon aria-hidden="false">first_page</mat-icon>
-						</button>
-
-						<button
-							#paginationPreviousPage
-							mat-raised-button
-							(click)="this.refsetGridApi.paginationGoToPreviousPage()"
-							title="Go To Previous Page {{ getCurrentPage() }}"
-							class="pagination-page-buttons"
-							[ngClass]="{ disabled: getCurrentPage() === 0 }"
-							attr.aria-label="Go To Previous Page {{ getCurrentPage() }}">
-							<mat-icon aria-hidden="false">arrow_left</mat-icon>
-						</button>
-
-						<span *ngFor="let page of paginationPages.pages">
+				<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
+				<div class="rt2-pagination-container" [hidden]="showLoadingSearch || numOfMembers === 0">
+					<div class="rt2-pagination-top-row">
+						<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons">
 							<button
-								#paginationPageNumber
+								#paginationFirstPage
 								mat-raised-button
+								(click)="goToPage(0)"
 								class="pagination-page-buttons"
-								[color]="getCurrentPage() + 1 === page ? 'primary' : ''"
-								(click)="goToPage(page - 1)"
-								attr.aria-label="{{ getCurrentPage() + 1 === page ? 'Current' : 'Go To' }} Page {{ page }}"
-								title="{{ getCurrentPage() + 1 === page ? 'Current' : 'Go To' }} Page {{ page }}">
-								{{ page }}
+								[ngClass]="{ disabled: getCurrentPage() === 0 }"
+								title="Go To First Page"
+								attr.aria-label="Go To First Page">
+								<mat-icon aria-hidden="false">first_page</mat-icon>
 							</button>
-						</span>
 
-						<button
-							mat-button
-							*ngIf="paginationPages.totalPages - paginationPages.startPage > 5"
-							(click)="goToPage(paginationPages.startPage + 4)"
-							class="pagination-page-buttons w-min-32 p-0"
-							title="Go To Page {{ paginationPages.startPage + 5 }}"
-							attr.aria-label="Go To Page {{ paginationPages.startPage + 5 }}"
-							title="Go To Page {{ paginationPages.startPage + 5 }}">
-							...
-						</button>
+							<button
+								#paginationPreviousPage
+								mat-raised-button
+								(click)="refsetGridApi.paginationGoToPreviousPage()"
+								title="Go To Previous Page {{ getCurrentPage() }}"
+								class="pagination-page-buttons"
+								[ngClass]="{ disabled: getCurrentPage() === 0 }"
+								attr.aria-label="Go To Previous Page {{ getCurrentPage() }}">
+								<mat-icon aria-hidden="false">arrow_left</mat-icon>
+							</button>
 
-						<button
-							mat-raised-button
-							*ngIf="paginationPages.totalPages - paginationPages.startPage > 5"
-							(click)="goToPage(paginationPages.totalPages)"
-							class="pagination-page-buttons"
-							attr.aria-label="Go To Page {{ paginationPages.totalPages }}"
-							title="Go To Page {{ paginationPages.totalPages }}">
-							{{ paginationPages.totalPages }}
-						</button>
+							<span *ngFor="let page of paginationPages.pages">
+								<button
+									#paginationPageNumber
+									mat-raised-button
+									class="pagination-page-buttons"
+									[color]="getCurrentPage() + 1 === page ? 'primary' : ''"
+									(click)="goToPage(page - 1)"
+									attr.aria-label="{{ getCurrentPage() + 1 === page ? 'Current' : 'Go To' }} Page {{ page }}"
+									title="{{ getCurrentPage() + 1 === page ? 'Current' : 'Go To' }} Page {{ page }}">
+									{{ page }}
+								</button>
+							</span>
 
-						<button
-							#paginationNextPage
-							mat-raised-button
-							(click)="this.refsetGridApi.paginationGoToNextPage()"
-							title="Go To Next Page {{ getCurrentPage() + 2 }}"
-							class="pagination-page-buttons"
-							[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
-							attr.aria-label="Go To Next Page {{ getCurrentPage() + 2 }}">
-							<mat-icon aria-hidden="false">arrow_right</mat-icon>
-						</button>
+							<button
+								mat-button
+								*ngIf="paginationPages.totalPages - paginationPages.startPage > 5"
+								(click)="goToPage(paginationPages.startPage + 4)"
+								class="pagination-page-buttons w-min-32 p-0"
+								title="Go To Page {{ paginationPages.startPage + 5 }}"
+								attr.aria-label="Go To Page {{ paginationPages.startPage + 5 }}"
+								title="Go To Page {{ paginationPages.startPage + 5 }}">
+								...
+							</button>
 
-						<button
-							#paginationLastPage
-							mat-raised-button
-							(click)="goToPage(paginationPages.totalPages)"
-							title="Go To Last Page ({{ paginationPages.totalPages }})"
-							class="pagination-page-buttons"
-							[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
-							attr.aria-label="Go To Last Page {{ paginationPages.totalPages }}">
-							<mat-icon aria-hidden="false">last_page</mat-icon>
-						</button>
-					</div>
-
-					<div class="rt2-pagination-bottom-row" *ngIf="showPaging">
-						<span *ngFor="let sizeOption of refsetGridPaging.pageSizeOptions">
 							<button
 								mat-raised-button
-								[color]="refsetGridPaging.pageSize === sizeOption ? 'secondary' : ''"
-								class="pagination-page-buttons unthemed"
-								(click)="setPageSize(sizeOption)"
-								[hidden]="sizeOption > numOfMembers"
-								title="{{ sizeOption }} Members per Page">
-								{{ sizeOption }}
+								*ngIf="paginationPages.totalPages - paginationPages.startPage > 5"
+								(click)="goToPage(paginationPages.totalPages)"
+								class="pagination-page-buttons"
+								attr.aria-label="Go To Page {{ paginationPages.totalPages }}"
+								title="Go To Page {{ paginationPages.totalPages }}">
+								{{ paginationPages.totalPages }}
 							</button>
-						</span>
+
+							<button
+								#paginationNextPage
+								mat-raised-button
+								(click)="refsetGridApi.paginationGoToNextPage()"
+								title="Go To Next Page {{ getCurrentPage() + 2 }}"
+								class="pagination-page-buttons"
+								[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
+								attr.aria-label="Go To Next Page {{ getCurrentPage() + 2 }}">
+								<mat-icon aria-hidden="false">arrow_right</mat-icon>
+							</button>
+
+							<button
+								#paginationLastPage
+								mat-raised-button
+								(click)="goToPage(paginationPages.totalPages)"
+								title="Go To Last Page ({{ paginationPages.totalPages }})"
+								class="pagination-page-buttons"
+								[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
+								attr.aria-label="Go To Last Page {{ paginationPages.totalPages }}">
+								<mat-icon aria-hidden="false">last_page</mat-icon>
+							</button>
+						</div>
+
+						<div class="rt2-pagination-bottom-row" *ngIf="showPaging">
+							<span *ngFor="let sizeOption of refsetGridPaging.pageSizeOptions">
+								<button
+									mat-raised-button
+									[color]="refsetGridPaging.pageSize === sizeOption ? 'secondary' : ''"
+									class="pagination-page-buttons unthemed"
+									(click)="setPageSize(sizeOption)"
+									[hidden]="sizeOption > numOfMembers"
+									title="{{ sizeOption }} Members per Page">
+									{{ sizeOption }}
+								</button>
+							</span>
+						</div>
 					</div>
+					<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
+						Showing <span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }} </span> to
+						<span class="fw-bold p-l-5 p-r-5">
+							{{ numOfMembers < (getCurrentPage() + 1) * refsetGridPaging.pageSize ? numOfMembers : (getCurrentPage() + 1) * refsetGridPaging.pageSize }}
+						</span>
+						of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
+					</div>
+					<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
 				</div>
-				<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
-					Showing <span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }} </span> to
-					<span class="fw-bold p-l-5 p-r-5">
-						{{ numOfMembers < (getCurrentPage() + 1) * refsetGridPaging.pageSize ? numOfMembers : (getCurrentPage() + 1) * refsetGridPaging.pageSize }}
-					</span>
-					of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
-				</div>
-				<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
 			</div>
 		</div>
 	</div>

@@ -50,7 +50,6 @@
 	display: flex;
 	flex-direction: column;
 	gap: 17px;
-	margin: 17px;
 	margin-top: 25px;
 }
 
@@ -167,6 +166,30 @@
 .group-remove-btn,
 .target-remove-btn {
 	display: none;
+}
+
+.mapset-intl-icon {
+	cursor: pointer;
+	color: $mapset-blue;
+	font-size: 1.25em;
+	vertical-align: text-top;
+}
+
+.mapset-mod-icon {
+	margin-left: 10px;
+	height: 13px;
+}
+
+.metadata-collapsible-container {
+	background-color: #f2f2f2;
+
+	border: 1px solid #f2f2f2;
+	border-radius: 5px;
+	margin-bottom: 1rem;
+
+	&.white {
+		background-color: white;
+	}
 }
 
 .metadata-collapsible-container-group-header:hover {
@@ -352,6 +375,11 @@
 	width: 280px;
 }
 
+.adjust-mat-input-header {
+	height: 50px;
+	width: 280px;
+}
+
 .adjust-mat-input-sm {
 	height: 45px;
 	width: 150px;
@@ -366,8 +394,10 @@
 .dropdown-group {
 	background-color: #fff;
 	border: 1px solid #f0f0f0;
+	border-bottom: none;
 	padding: 10px 20px 10px 10px;
-	margin: 10px 7px 15px 10px;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
 .dropdown-actions {
@@ -411,13 +441,27 @@
 	}
 }
 
-.rt2-directory-chooser-column {
-	padding-right: 20px;
-	margin-top: -0.8em;
+.menu-button {
+	display: flex;
+	flex-direction: column;
+}
+
+.menu-icon {
+	text-align: center;
+	width: 100%;
+}
+
+.menu-label {
+	font-size: 9px;
+}
+
+.menu-inline {
+	display: inline-block;
 }
 
 .mappings-section {
 	color: #666;
+	font-size: 12px;
 }
 
 .member-search-icon {
@@ -550,7 +594,6 @@
 	background-color: #fafafa;
 	border: 1px solid #f0f0f0;
 	color: #666;
-	margin-top: 5px;
 }
 
 .second-row {
@@ -696,11 +739,6 @@
 	}
 }
 
-.rt2-directory-chooser-column {
-	padding-right: 20px;
-	margin-top: -0.8em;
-}
-
 .member-search-icon {
 	color: red;
 	margin-top: 1.1em;
@@ -764,6 +802,7 @@
 	min-height: 68px;
 	height: 68px;
 	max-height: 68px;
+	overflow: hidden;
 }
 
 /* Mapping table styles */
@@ -909,7 +948,17 @@
 	height: 100%;
 	margin-left: 11px;
 	margin-right: 8px;
-	margin-top: 5px;
+}
+
+.metadata-section-background {
+	background-color: white;
+	height: 100%;
+	margin-right: 11px;
+	margin-left: 11px;
+	padding-right: 10px;
+	padding-left: 10px;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .directoryViewFilterField {
@@ -926,13 +975,6 @@
 	.mat-form-field-underline {
 		width: 125px;
 	}
-}
-
-.mapset-intl-icon {
-	cursor: pointer;
-	color: $mapset-blue;
-	font-size: 1.25em;
-	vertical-align: middle;
 }
 
 .metadata-collapsible-container-group-header {
@@ -961,6 +1003,13 @@
 
 	top: 50% !important;
 	transform: translateY(-30%) !important;
+}
+
+.sub-header-font {
+	font-size: 12px;
+	margin-left: 15px;
+	margin-top: 5px;
+	color: #666;
 }
 
 .dropdown-actions {
@@ -999,8 +1048,7 @@
 }
 
 .rt2-directory-chooser-column {
-	padding-right: 20px;
-	margin-top: -0.8em;
+	margin-bottom: 10px;
 }
 
 .member-search-icon {
@@ -1104,13 +1152,6 @@
 	font-size: 14px;
 }
 
-.record-row {
-	background-color: #fafafa;
-	border: 1px solid #f0f0f0;
-	color: #666;
-	margin-top: 5px;
-}
-
 .second-row {
 	font-size: 13px;
 	margin-left: 60px;
@@ -1210,4 +1251,69 @@
 	height: 22px;
 	//color: #2269e8;
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
+}
+
+/* type ahead styles */
+
+.svg-inline {
+	position: absolute;
+	top: 11px;
+	left: 10px;
+}
+
+.clear-search {
+	color: #666;
+	position: relative;
+	left: -15px;
+	top: 0.15em;
+	cursor: pointer;
+}
+
+.clear-search-header {
+	color: #666;
+	position: relative;
+	left: -15px;
+	cursor: pointer;
+}
+
+.type-ahead-form {
+}
+
+.type-head-append input,
+.input-logo-field input {
+	width: 100%;
+	font-size: 12px !important;
+	padding: 0 10px 0 30px;
+}
+.type-head-append {
+	position: relative;
+	min-width: 280px;
+	max-width: 280px;
+	height: max-content;
+	display: flex;
+}
+
+.type-head-append i {
+	position: absolute;
+	left: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #ddd;
+}
+
+::ng-deep [id^='ngb-typeahead-'] {
+	width: 100% !important;
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+.type-head-overflow {
+	width: 100% !important;
+	white-space: nowrap !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+
+.max-width {
+	width: 100%;
 }

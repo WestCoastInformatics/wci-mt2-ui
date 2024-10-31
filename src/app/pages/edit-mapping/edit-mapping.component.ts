@@ -1,8 +1,10 @@
-import { FormControl } from '@angular/forms';
-import { Subscription, debounceTime, distinctUntilChanged, Observable, forkJoin, filter, map } from 'rxjs';
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, HostListener } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { AfterViewInit, ElementRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, HostListener, Renderer2 } from '@angular/core';
+import { Subscription, Observable, OperatorFunction, of, map } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -11,7 +13,6 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { Title } from '@angular/platform-browser';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -79,6 +80,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	showLoadingSearch = true;
 	toBeDevelopedModalRef: NgbModalRef;
 	downloadModalRef: NgbModalRef;
+	confirmModalRef: NgbModalRef;
 	isModalOpen = false;
 	mapsetName = 'Mapset Name';
 	selectedMapset: any;
@@ -90,21 +92,28 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	routeParamsSubscription$: Subscription;
 	gridSelectAll = false;
 	advicePopoverLocation = 0;
-
-	selectedAction = '';
+	removeId: any;
+	removeType: string;
 	loaded = false;
 	selectedFormat = {};
 	formats = [];
-	numOfGroups = 1;
+	numOfGroups = 0;
+	groupList = [];
 	foundConceptCode = false;
 	selectedTarget = '';
 	userChanged = false;
+	internationalId = '449080006';
 
 	tempModuleIdChangeBeforeRelease = '449080006';
 
-	targetFC = new FormControl('');
-	codeList: Observable<any[]>;
+	targetFC = new FormControl('a');
+	groupFC = new FormControl('');
 
+	public query: any;
+	//formatter = (result: any) => result || this.query;
+	formatter = (x: { name: string; code: string }) => x.code;
+	searchByKeyboard = false;
+	searchByTypeahead = false;
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
 
@@ -116,19 +125,21 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
 	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
 	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
+	@ViewChild('confirmationModal') confirmationModal: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
 	@ViewChild('actions') private actions: MatSelect;
 	@ViewChild('selectRelationship') private selectRelationship: MatSelect;
 	@ViewChild('selectRule') private selectRule: MatSelect;
 	@ViewChild('selectAdvice') private selectAdvice: MatSelect;
+	@ViewChild('groupInput') private groupInput: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
 		private titleService: Title,
-		private dialogFactoryService: DialogFactoryService,
 		private refsetService: RefsetService,
-		private changeDetectorRef: ChangeDetectorRef,
+		private renderer: Renderer2,
+		private elementRef: ElementRef,
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
 		private notificationService: NotificationService,
@@ -136,43 +147,16 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	) {
 		document.body.scrollTop = 0;
 		this.targetFC.valueChanges.pipe(debounceTime(600), distinctUntilChanged()).subscribe((res) => {
-			if (this.targetFC.dirty) {
+			if (this.targetFC.dirty && !this.searchByTypeahead) {
 				this.foundConceptCode = false;
 				this.targetNameInput = '';
-				this.onInputTargetChange();
+				if (this.targetFC.value.length >= 2) {
+					this.onInputTargetChange();
+				}
+			} else {
+				this.searchByTypeahead = false;
 			}
 		});
-		//setup for type-ahead search
-		/*this.codeList = this.targetFC.valueChanges.pipe(
-			debounceTime(600),
-			distinctUntilChanged(),
-			map((state) => this.filterStates(state))
-		);*/
-		//).subscribe((res) => {
-		//	if (this.targetFC.dirty) {
-		//		this.onInputTargetChange();
-		//	}
-		//	});
-		//refsetService.getTaxonomyRoot();
-	}
-
-	//setup for type-ahead search
-	/*constructor() {
-		this.stateCtrl = new FormControl();
-		this.filteredStates = this.stateCtrl.valueChanges.pipe(
-		  startWith(''),
-		  map((state) => (state ? this.filterStates(state) : this.states.slice()))
-		);
-	  }
-	
-	  filterStates(name: string) {
-		return this.states.filter(
-		  (state) =>
-			state.name.toLowerCase().indexOf(name.toLowerCase()) === 0 
-		);
-	  }*/
-	filterStates(name: string) {
-		return this.codeList; //.filter((state) => state.name.toLowerCase().indexOf(name.toLowerCase()) === 0);
 	}
 
 	//***** Framework Functions *****/
@@ -201,6 +185,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		}
 
 		this.disableChannel.postMessage(false);
+		this.targetFC.disable();
 	}
 
 	getMapsetInfo() {
@@ -222,7 +207,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		const projectId = '1';
 		this.refsetService.getMapProjectById(projectId, params).subscribe({
 			next: (results) => {
-				this.targetTerminology = results.destinationTerminology.replace(/-/g, '');
+				this.targetTerminology = results.destinationTerminology;
 				this.targetTerminologyVersion = results.destinationTerminologyVersion;
 				this.ruleBased = results.ruleBased;
 				this.projectRelations = results.mapRelations;
@@ -262,6 +247,26 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.getMapsetData();
 	}
 
+	getModuleLanguageIcon(moduleId: string, descriptions: Array<any>) {
+		let flag = 'en';
+		for (let e = 0; e < descriptions.length; e++) {
+			if (descriptions[e].moduleId === moduleId) {
+				flag = descriptions[e].language;
+			}
+		}
+		return flag;
+	}
+
+	getModuleLanguageName(moduleId: string, descriptions: Array<any>) {
+		let lang = 'EN';
+		for (let e = 0; e < descriptions.length; e++) {
+			if (descriptions[e].moduleId === moduleId) {
+				lang = descriptions[e].languageName;
+			}
+		}
+		return lang;
+	}
+
 	clearTargetInput() {
 		this.foundConceptCode = false;
 		this.targetCodeInput = '';
@@ -275,13 +280,74 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.targetCodeInput = this.targetFC.value;
 		this.targetCodeInput = this.targetCodeInput.trim();
 		if (this.targetCodeInput.length > 2) {
+			this.targetNameInput = 'Searching...';
 			this.getConceptByCode();
 		}
+	}
+
+	sortEntries() {
+		this.mapsetData[0].mapEntries.sort((a, b) => {
+			if (a.group !== b.group) {
+				return a.group - b.group;
+			} else {
+				return a.priority - b.priority;
+			}
+		});
+	}
+
+	drop(event: CdkDragDrop<string[]>) {
+		this.userChanged = true;
+		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
+			if (this.mapsetData[0].mapEntries[p].group - 1 === event.previousIndex) {
+				this.mapsetData[0].mapEntries[p].group = 'next';
+			}
+			if (this.mapsetData[0].mapEntries[p].group - 1 === event.currentIndex) {
+				this.mapsetData[0].mapEntries[p].group = 'prev';
+			}
+		}
+		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
+			if (this.mapsetData[0].mapEntries[p].group === 'next') {
+				this.mapsetData[0].mapEntries[p].group = event.currentIndex + 1;
+			}
+			if (this.mapsetData[0].mapEntries[p].group === 'prev') {
+				this.mapsetData[0].mapEntries[p].group = event.previousIndex + 1;
+			}
+		}
+		this.sortEntries();
+	}
+
+	dropT(event: CdkDragDrop<string[]>) {
+		this.userChanged = true;
+		let newGroup = [];
+		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
+			if (this.mapsetData[0].mapEntries[p].group === event.item.data.group) {
+				newGroup.push(this.mapsetData[0].mapEntries[p]);
+			}
+		}
+
+		const temp = newGroup[event.previousIndex];
+		const tempPriority = newGroup[event.previousIndex].priority;
+		const tempPriority2 = newGroup[event.currentIndex].priority;
+		newGroup[event.previousIndex] = newGroup[event.currentIndex];
+		newGroup[event.currentIndex] = temp;
+		newGroup[event.previousIndex].priority = tempPriority;
+		newGroup[event.currentIndex].priority = tempPriority2;
+
+		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
+			for (let i = 0; i < newGroup.length; i++) {
+				if (this.mapsetData[0].mapEntries[p].uuid === newGroup[i].uuid) {
+					this.mapsetData[0].mapEntries[p] = newGroup[i];
+				}
+			}
+		}
+
+		this.sortEntries();
 	}
 
 	reloadMapping() {
 		this.loaded = false;
 		this.userChanged = false;
+		this.targetFC.disable();
 		this.selectedTarget = '';
 		this.clearTargetInput();
 		this.getMapsetInfo();
@@ -292,15 +358,60 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		}, 250);
 	}
 
+	searchAutoComplete: OperatorFunction<string, readonly { name; code }[]> = (text$: Observable<string>) =>
+		text$.pipe(
+			debounceTime(600),
+			distinctUntilChanged(),
+			switchMap((term) => this.fetchData(term))
+		);
+	fetchData(term: string): Observable<any> {
+		if (term.length >= 2 && !this.searchByKeyboard) {
+			return this.refsetService.searchConceptByQuery(this.targetTerminology, this.targetTerminologyVersion, 'code:' + term.toUpperCase(), '10').pipe(map((data) => data.items));
+		} else {
+			return of([]); // return an empty array if the term length is less than 3
+		}
+	}
+
+	//for selecting item from suggestions
+	selectItemFromMenu(menu: any) {
+		this.searchByTypeahead = true;
+		this.targetCodeInput = menu.item.code;
+		this.targetNameInput = menu.item.name;
+		this.foundConceptCode = true;
+	}
+
+	//form submmision without selecting from dropdown
+	onKeyPress(e) {
+		this.searchByKeyboard = true;
+		this.targetNameInput = '';
+		this.targetCodeInput = this.targetFC.value;
+		this.getConceptByCode();
+		this.handleCloseDropDown();
+	}
+
+	handleCloseDropDown() {
+		//Quick search
+		setTimeout(() => {
+			const typeaheadElement = this.elementRef.nativeElement.querySelector('#ngb-typeahead-0');
+			if (typeaheadElement) {
+				this.renderer.removeClass(typeaheadElement, 'show');
+			}
+		}, 1400);
+	}
+
 	getConceptByCode() {
 		this.refsetService.getConceptByCode(this.targetTerminology, this.targetTerminologyVersion, this.targetCodeInput).subscribe({
 			next: (results) => {
-				if (results.name.indexOf('CONCEPT NOT FOUND') > -1) {
-					this.foundConceptCode = false;
+				this.searchByKeyboard = false;
+				this.foundConceptCode = false;
+				if (results === null) {
+					this.targetNameInput = 'CONCEPT NOT FOUND';
 				} else {
-					this.foundConceptCode = true;
+					if (results.name.indexOf('CONCEPT NOT FOUND') === -1) {
+						this.foundConceptCode = true;
+					}
+					this.targetNameInput = results.name;
 				}
-				this.targetNameInput = results.name;
 			},
 			error: (error) => {
 				//
@@ -315,6 +426,13 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				const data = [];
 				let count = 0;
 				const results = response.items[0];
+				results.mapEntries.sort((a, b) => {
+					if (a.group !== b.group) {
+						return a.group - b.group;
+					} else {
+						return a.priority - b.priority;
+					}
+				});
 
 				for (let b = 0; b < results.mapEntries.length; b++) {
 					let spanned = false;
@@ -328,6 +446,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 					if (this.numOfGroups < results.mapEntries[b].group) {
 						this.numOfGroups = results.mapEntries[b].group;
 					}
+
 					//remove advice ""
 					results.mapEntries[b].advices = results.mapEntries[b].advices.filter(function (res) {
 						return res !== '';
@@ -349,6 +468,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 							'spanned': spanned,
 							'downloadable': true,
 							'mapEntries': results.mapEntries,
+							'descriptions': results.descriptions,
 							'entries': results.mapEntries.length,
 							'code': results.code,
 							'name': results.name,
@@ -362,14 +482,20 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 							'modified': results.mapEntries[b].modified,
 							'advices': results.mapEntries[b].advices,
 							'group': results.mapEntries[b].group,
+							'groupTotal': results.mapEntries[b].group,
 							'priority': results.mapEntries[b].priority,
 							'released': results.mapEntries[b].released,
+							'moduleId': results.mapEntries[b].moduleId,
 						});
 						count++;
 					}
 				}
-				this.mapsetData = data;
+				this.groupList = [];
+				for (let i = 0; i < this.numOfGroups; i++) {
+					this.groupList.push('group' + i);
+				}
 
+				this.mapsetData = data;
 				this.breadcrumbService.setBreadcrumbs([
 					{ path: '/library', label: 'Library' },
 					{ path: '/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
@@ -384,20 +510,45 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 
 	addMapGroup() {
 		this.numOfGroups++;
+		this.groupList.push('group' + this.numOfGroups);
 	}
 
-	removeMapGroup(groupNum: number) {
-		this.mapsetData[0].mapEntries.forEach((entry, index) => {
-			if (entry.group === groupNum) {
-				this.mapsetData[0].mapEntries.splice(index, 1);
+	getGroupTotal(group) {
+		let total = 0;
+
+		for (let u = 0; u < this.mapsetData[0].mapEntries.length; u++) {
+			if (this.mapsetData[0].mapEntries[u].group === group) {
+				total++;
 			}
-		});
+		}
+
+		return total;
+	}
+
+	getGroupEntriesById(group) {
+		//order by group then priority list then drag and drop will work...
+		const groupEntries = [];
+		for (let u = 0; u < this.mapsetData[0].mapEntries.length; u++) {
+			if (this.mapsetData[0].mapEntries[u].group === group) {
+				groupEntries.push(this.mapsetData[0].mapEntries[u]);
+			}
+		}
+		return groupEntries;
+	}
+
+	removeMapGroup() {
+		const groupNum: number = this.removeId;
+		for (let d = this.mapsetData[0].mapEntries.length - 1; d > 0; d--) {
+			if (this.mapsetData[0].mapEntries[d].group === groupNum) {
+				this.mapsetData[0].mapEntries.splice(d, 1);
+			}
+		}
 		this.numOfGroups--;
+		this.groupList.pop();
 		this.userChanged = true;
 	}
 
 	addEmptyTargetToGroup(groupNum: number) {
-		//if (this.selectedTarget === '') {
 		let nextPriorityNum = 1;
 		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
 			if (this.mapsetData[0].mapEntries[p].group === groupNum) {
@@ -439,23 +590,15 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 			'uuid': String(groupNum + nextPriorityNum + Date.now()),
 		};
 
+		this.targetCodeInput = '';
+		this.targetNameInput = '';
 		this.mapsetData[0].mapEntries.push(newMapEntry);
 		this.setSelectedTarget(newMapEntry.uuid, newMapEntry.toCode, newMapEntry.toName);
-		/*} else {
-			for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
-				if (this.mapsetData[0].mapEntries[p].uuid === this.selectedTarget) {
-					this.mapsetData[0].mapEntries[p].toCode = '';
-					this.mapsetData[0].mapEntries[p].toName = '[NO TARGET]';
-				}
-			}
-			//this.selectedTarget = '';
-			this.foundConceptCode = false;
-			this.clearTargetInput();
-		}*/
 		this.userChanged = true;
 	}
 
-	removeTarget(uuid: string) {
+	removeTarget() {
+		const uuid: string = this.removeId;
 		let changedPriority = 0;
 		let groupNum = 0;
 		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
@@ -476,14 +619,27 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	setSelectedTarget(uuid: string, code: string, name: string) {
+		this.targetFC.enable();
 		this.selectedTarget = uuid;
 		this.targetCodeInput = code;
 		this.targetNameInput = name;
 		this.targetFC.reset();
 		this.targetFC.setValue(this.targetCodeInput);
+		this.query = { 'code': this.targetCodeInput };
 	}
 
 	setTargetCode() {
+		let defaultRule = '';
+		if (!this.ruleBased) {
+			defaultRule = 'TRUE';
+		}
+		let defaultRelationship = '';
+		for (let r = 0; r < this.projectRelations.length; r++) {
+			if (this.projectRelations[r].allowableForNullTarget === false) {
+				defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
+				break;
+			}
+		}
 		if (this.selectedTarget === '') {
 			let nextPriorityNum = 1;
 			for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
@@ -493,17 +649,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 					}
 				}
 			}
-			let defaultRule = '';
-			if (!this.ruleBased) {
-				defaultRule = 'TRUE';
-			}
-			let defaultRelationship = '';
-			for (let r = 0; r < this.projectRelations.length; r++) {
-				if (this.projectRelations[r].allowableForNullTarget === true) {
-					defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
-					break;
-				}
-			}
+
 			const newMapEntry = {
 				'active': true,
 				'additionalMapEntryInfos': [],
@@ -531,10 +677,19 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				if (this.mapsetData[0].mapEntries[p].uuid === this.selectedTarget) {
 					this.mapsetData[0].mapEntries[p].toCode = this.targetCodeInput;
 					this.mapsetData[0].mapEntries[p].toName = this.targetNameInput;
+					this.mapsetData[0].mapEntries[p].moduleId = this.tempModuleIdChangeBeforeRelease;
+					this.mapsetData[0].mapEntries[p].relation = defaultRelationship;
+					this.mapsetData[0].mapEntries[p].rule = defaultRule;
+					this.mapsetData[0].mapEntries[p].additionalMapEntryInfos = [];
+					this.mapsetData[0].mapEntries[p].mapAdvices = [];
+					this.mapsetData[0].mapEntries[p].adviceAlways = [];
+					this.mapsetData[0].mapEntries[p].advices = [];
+					this.mapsetData[0].mapEntries[p].descriptions = [];
 				}
 			}
 		}
 		this.selectedTarget = '';
+		this.targetFC.disable();
 		this.foundConceptCode = false;
 		this.clearTargetInput();
 		this.userChanged = true;
@@ -607,7 +762,80 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.toggleDropdown = !this.toggleDropdown;
 	}
 
+	openGroupPopover(event: any, uuid: string) {
+		this.closePopover();
+		this.groupFC.reset();
+		this.mapsetData.forEach((data) => {
+			data.mapEntries.forEach((entry) => {
+				if (entry.group_open) {
+					entry.group_open = false;
+				}
+				if (entry.uuid === uuid) {
+					entry.group_open = true;
+					entry.adviceToAdd = '';
+				}
+			});
+		});
+		const popHeight = 0;
+
+		const showInterval = setInterval(() => {
+			this.advicePopoverLocation = event.layerY + event.offsetY + 5;
+			this.groupInput.nativeElement.focus();
+			clearInterval(showInterval);
+		}, 5);
+	}
+
+	clearGroupInput() {
+		this.groupFC.reset();
+	}
+
+	numberOnly(event): boolean {
+		const charCode = event.which ? event.which : event.keyCode;
+		if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+			event.preventDefault();
+			return false;
+		}
+		if (event.key === '-') {
+			event.preventDefault();
+			return false;
+		}
+		return true;
+	}
+
+	setGroup(uuid: string) {
+		const addSetGroup = setInterval(() => {
+			if (Number(this.groupFC.value) > this.numOfGroups) {
+				this.addMapGroup();
+			} else {
+				this.userChanged = true;
+				this.mapsetData.forEach((data) => {
+					data.mapEntries.forEach((entry) => {
+						if (entry.uuid === uuid) {
+							entry.group = this.groupFC.value;
+							this.groupFC.reset();
+							entry.group_open = false;
+						}
+					});
+				});
+				this.sortEntries();
+				clearInterval(addSetGroup);
+			}
+		}, 5);
+	}
+
+	closeGroup() {
+		this.groupFC.reset();
+		this.mapsetData.forEach((data) => {
+			data.mapEntries.forEach((entry) => {
+				if (entry.group_open) {
+					entry.group_open = false;
+				}
+			});
+		});
+	}
+
 	openPopover(event: any, uuid: string) {
+		this.closeGroup();
 		this.mapsetData.forEach((data) => {
 			data.mapEntries.forEach((entry) => {
 				if (entry.advices_open) {
@@ -639,7 +867,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		const popHeight = 0;
 
 		const showInterval = setInterval(() => {
-			this.advicePopoverLocation = event.layerY + event.offsetY;
+			this.advicePopoverLocation = event.layerY + event.offsetY + 5;
 			clearInterval(showInterval);
 		}, 5);
 	}
@@ -707,9 +935,28 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	openDownloadModal(content) {
-		this.downloadModalRef = this.modalService.open(content, { centered: true });
+	openConfirmationModal(removeId, removeType) {
+		this.removeId = removeId;
+		this.removeType = removeType;
+		this.confirmModalRef = this.modalService.open(this.confirmationModal, { centered: true });
 		this.isModalOpen = true;
+	}
+
+	closeConfirmDialog() {
+		this.confirmModalRef.close();
+		this.isModalOpen = false;
+	}
+
+	confirmRemoveItem() {
+		switch (this.removeType) {
+			case 'group':
+				this.removeMapGroup();
+				break;
+			case 'target':
+				this.removeTarget();
+				break;
+		}
+		this.closeConfirmDialog();
 	}
 
 	startDownload() {
@@ -745,17 +992,21 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		return UiUtility.dateFormatter(val);
 	}
 
-	selectActionMenu() {
-		this.selectedAction = '';
-		this.actions.value = this.selectedAction;
-		this.openToBeDevelopedModal(this.tbdModal);
+	selectActionMenu(action: string) {
+		switch (action) {
+			case 'view':
+				this.goToMappingPage('_self');
+				break;
+			default:
+				this.openToBeDevelopedModal(this.tbdModal);
+		}
 	}
 
-	goToMappingPage() {
+	goToMappingPage(target: string) {
 		const url = new URL(window.location.href);
 		window.history.pushState({}, '', url.href);
 		this.router.navigate([]).then((result) => {
-			window.open('/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode, '_blank');
+			window.open('/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode, target);
 		});
 	}
 
