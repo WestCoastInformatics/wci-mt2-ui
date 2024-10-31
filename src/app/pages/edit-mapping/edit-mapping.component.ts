@@ -366,7 +366,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		);
 	fetchData(term: string): Observable<any> {
 		if (term.length >= 2 && !this.searchByKeyboard) {
-			return this.refsetService.searchConceptByQuery(this.targetTerminology, this.targetTerminologyVersion, 'code:' + term.toUpperCase(), '10').pipe(map((data) => data.items));
+			return this.refsetService.searchConceptByQuery(this.targetTerminology, this.targetTerminologyVersion, term, '10').pipe(map((data) => data.items));
 		} else {
 			return of([]); // return an empty array if the term length is less than 3
 		}
