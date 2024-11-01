@@ -324,14 +324,12 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				newGroup.push(this.mapsetData[0].mapEntries[p]);
 			}
 		}
-
-		const temp = newGroup[event.previousIndex];
-		const tempPriority = newGroup[event.previousIndex].priority;
-		const tempPriority2 = newGroup[event.currentIndex].priority;
-		newGroup[event.previousIndex] = newGroup[event.currentIndex];
-		newGroup[event.currentIndex] = temp;
-		newGroup[event.previousIndex].priority = tempPriority;
-		newGroup[event.currentIndex].priority = tempPriority2;
+		newGroup[event.previousIndex].priority = newGroup[event.currentIndex].priority;
+		const temp = newGroup.splice(event.previousIndex, 1);
+		newGroup.splice(event.currentIndex, 0, temp);
+		for (let n = 0; n < newGroup.length; n++) {
+			newGroup[n].priority = n + 1;
+		}
 
 		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
 			for (let i = 0; i < newGroup.length; i++) {
