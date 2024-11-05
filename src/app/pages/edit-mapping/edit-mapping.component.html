@@ -85,15 +85,15 @@
 											class="form-control"
 											[(ngModel)]="query"
 											[formControl]="targetFC"
-											title="Search Target Code (enter at least 2 characters)"
-											[placeholder]="'Search Target Code'"
+											title="Search Target Code or Name (enter at least 2 characters, case sensitive)"
+											[placeholder]="'Search Target Code or Name'"
 											[ngbTypeahead]="searchAutoComplete"
 											[resultFormatter]="formatter"
 											[inputFormatter]="formatter"
 											[resultTemplate]="rt"
 											(selectItem)="selectItemFromMenu($event)"
 											[focusFirst]="false" />
-										<span class="clear-search" title="Clear Search" (click)="clearTargetInput()">&#10005;</span>
+										<span *ngIf="targetFC.value" class="clear-search" title="Clear Search" (click)="clearTargetInput()">&#10005;</span>
 									</span>
 								</form>
 								<div class="target-btns">
