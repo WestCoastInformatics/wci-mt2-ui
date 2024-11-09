@@ -158,6 +158,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	@ViewChild('confirmationModal') confirmationModal: TemplateRef<any>;
 	@ViewChild('actions') private actions: MatSelect;
 	@ViewChild('groupInput') private groupInput: ElementRef;
+	@ViewChild('targetInput') private targetInput: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -783,6 +784,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 			'rule': defaultRule,
 			'toCode': groupNum + '/' + nextPriorityNum + '#' + '[Empty Target]',
 			'toName': '---',
+			'released': false,
 			'uuid': groupNum + nextPriorityNum + Date.now(),
 			'mapEntries': {
 				'id': null,
@@ -801,6 +803,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				'adviceAlways': [],
 				'group': groupNum,
 				'priority': nextPriorityNum,
+				'released': false,
 				'uuid': groupNum + nextPriorityNum + Date.now(),
 			},
 		};
@@ -878,6 +881,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				'rule': defaultRule,
 				'toCode': this.targetCodeInput,
 				'toName': this.targetNameInput,
+				'released': false,
 				'uuid': this.numOfGroups + nextPriorityNum + Date.now(),
 			};
 			this.mapsetData[0].mapEntries.push(newMapEntry);
@@ -886,6 +890,13 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				if (this.mapsetData[0].mapEntries[p].uuid === this.selectedTarget) {
 					this.mapsetData[0].mapEntries[p].toCode = this.targetCodeInput;
 					this.mapsetData[0].mapEntries[p].toName = this.targetNameInput;
+					this.mapsetData[0].mapEntries[p].moduleId = this.tempModuleIdChangeBeforeRelease;
+					this.mapsetData[0].mapEntries[p].released = false;
+					this.mapsetData[0].mapEntries[p].additionalMapEntryInfos = [];
+					this.mapsetData[0].mapEntries[p].mapAdvices = [];
+					this.mapsetData[0].mapEntries[p].adviceAlways = [];
+					this.mapsetData[0].mapEntries[p].advices = [];
+					this.mapsetData[0].mapEntries[p].descriptions = [];
 				}
 			}
 		}
@@ -1019,6 +1030,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 
 	editTarget(event: any, params: any): void {
 		this.targetFC.reset();
+		this.foundConceptCode = false;
 		this.targetToName = '';
 		this.selectedTarget = params.data.uuid;
 		if (params.data.mapEntries.toCode !== '[Empty Target]') {
@@ -1029,8 +1041,12 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.showTargetPopover = true;
 		this.showAdvicePopover = false;
 		this.showGroupPopover = false;
-		this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
-		this.popoverLocationX = event.x - 210;
+		const showInterval = setInterval(() => {
+			this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+			this.popoverLocationX = event.x - 210;
+			this.targetInput.nativeElement.focus();
+			clearInterval(showInterval);
+		}, 5);
 	}
 
 	closeTarget() {
@@ -1040,15 +1056,43 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	setEmptyTarget() {
+		this.foundConceptCode = false;
 		this.userChanged = true;
+		let defaultRule = '';
+		if (!this.ruleBased) {
+			defaultRule = 'TRUE';
+		}
+		let defaultRelationship = '';
+		for (let r = 0; r < this.projectRelations.length; r++) {
+			if (this.projectRelations[r].allowableForNullTarget === true) {
+				defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
+				break;
+			}
+		}
 		this.mapsetData.forEach((data) => {
 			if (data.uuid === this.selectedTarget) {
 				data.mapEntries.toCode = '[Empty Target]';
 				data.toCode = data.mapEntries.group + '/' + data.mapEntries.priority + '#' + '[Empty Target]';
 				data.mapEntries.toName = '---';
 				data.toName = '---';
-				data.relation = this.noTargetRelations[0];
-				data.mapEntries.relation = this.noTargetRelations[0];
+				data.relation = defaultRelationship;
+				data.mapEntries.relation = defaultRelationship;
+				data.mapEntries.moduleId = this.tempModuleIdChangeBeforeRelease;
+				data.mapEntries.rule = defaultRule;
+				data.mapEntries.additionalMapEntryInfos = [];
+				data.mapEntries.mapAdvices = [];
+				data.mapEntries.adviceAlways = [];
+				data.mapEntries.advices = [];
+				data.mapEntries.descriptions = [];
+				data.mapEntries.released = false;
+				data.moduleId = this.tempModuleIdChangeBeforeRelease;
+				data.rule = defaultRule;
+				data.additionalMapEntryInfos = [];
+				data.mapAdvices = [];
+				data.adviceAlways = [];
+				data.advices = [];
+				data.descriptions = [];
+				data.released = false;
 			}
 		});
 		this.gridApi.refreshCells(this.gridParams);
@@ -1058,6 +1102,17 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 
 	setTarget() {
 		this.userChanged = true;
+		let defaultRule = '';
+		if (!this.ruleBased) {
+			defaultRule = 'TRUE';
+		}
+		let defaultRelationship = '';
+		for (let r = 0; r < this.projectRelations.length; r++) {
+			if (this.projectRelations[r].allowableForNullTarget === false) {
+				defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
+				break;
+			}
+		}
 		this.mapsetData.forEach((data) => {
 			if (data.uuid === this.selectedTarget) {
 				const targetValue = this.targetFC.value;
@@ -1070,8 +1125,24 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				}
 				data.mapEntries.toName = this.targetToName;
 				data.toName = this.targetToName;
-				data.relation = this.targetRelations[0];
-				data.mapEntries.relation = this.targetRelations[0];
+				data.relation = defaultRelationship;
+				data.mapEntries.relation = defaultRelationship;
+				data.mapEntries.moduleId = this.tempModuleIdChangeBeforeRelease;
+				data.mapEntries.rule = defaultRule;
+				data.mapEntries.additionalMapEntryInfos = [];
+				data.mapEntries.mapAdvices = [];
+				data.mapEntries.adviceAlways = [];
+				data.mapEntries.advices = [];
+				data.mapEntries.descriptions = [];
+				data.mapEntries.released = false;
+				data.moduleId = this.tempModuleIdChangeBeforeRelease;
+				data.rule = defaultRule;
+				data.additionalMapEntryInfos = [];
+				data.mapAdvices = [];
+				data.adviceAlways = [];
+				data.advices = [];
+				data.descriptions = [];
+				data.released = false;
 			}
 		});
 		this.gridApi.refreshCells(this.gridParams);
@@ -1202,6 +1273,17 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		let checkList;
 		let modal = false;
 		let showInterval;
+		let defaultRule = '';
+		if (!this.ruleBased) {
+			defaultRule = 'TRUE';
+		}
+		let defaultRelationship = '';
+		for (let r = 0; r < this.projectRelations.length; r++) {
+			if (this.projectRelations[r].allowableForNullTarget === false) {
+				defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
+				break;
+			}
+		}
 		switch (action) {
 			case 'add':
 				checkList = this.mapsetData.filter((map) => {
@@ -1232,6 +1314,22 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 						map.toName = '---';
 						map.relation = this.noTargetRelations[0];
 						map.mapEntries.relation = this.noTargetRelations[0];
+						map.mapEntries.moduleId = this.tempModuleIdChangeBeforeRelease;
+						map.mapEntries.rule = defaultRule;
+						map.mapEntries.additionalMapEntryInfos = [];
+						map.mapEntries.mapAdvices = [];
+						map.mapEntries.adviceAlways = [];
+						map.mapEntries.advices = [];
+						map.mapEntries.descriptions = [];
+						map.mapEntries.released = false;
+						map.moduleId = this.tempModuleIdChangeBeforeRelease;
+						map.rule = defaultRule;
+						map.additionalMapEntryInfos = [];
+						map.mapAdvices = [];
+						map.adviceAlways = [];
+						map.advices = [];
+						map.descriptions = [];
+						map.released = false;
 					}
 				});
 				this.userChanged = true;
