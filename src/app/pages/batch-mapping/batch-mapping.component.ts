@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild, HostListener, Renderer2 } from '@angular/core';
 import { Subscription, Observable, OperatorFunction, of, map } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
@@ -159,6 +159,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	@ViewChild('actions') private actions: MatSelect;
 	@ViewChild('groupInput') private groupInput: ElementRef;
 	@ViewChild('targetInput') private targetInput: ElementRef;
+	@ViewChild('directorySearchInput') private directorySearchInput: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -968,6 +969,10 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		this.toggleDropdown = !this.toggleDropdown;
 	}
 
+	menuOpened() {
+		this.directorySearchInput.nativeElement.focus();
+	}
+
 	editGroup(event: any, params: any): void {
 		this.groupFC.reset();
 		this.priorityFC.reset();
@@ -1051,6 +1056,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 
 	closeTarget() {
 		this.targetFC.reset();
+		this.query = '';
 		this.selectedTarget = '';
 		this.showTargetPopover = false;
 	}

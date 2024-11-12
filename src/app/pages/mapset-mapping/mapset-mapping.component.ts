@@ -173,7 +173,9 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 					}
 					const adviceArray = [];
 					for (let i = 0; i < results.mapEntries[b].advices.length; i++) {
-						adviceArray.push(results.mapEntries[b].advices[i]);
+						if (results.mapEntries[b].advices[i] !== '') {
+							adviceArray.push(results.mapEntries[b].advices[i]);
+						}
 					}
 					data.push({
 						'index': results.code + count,
