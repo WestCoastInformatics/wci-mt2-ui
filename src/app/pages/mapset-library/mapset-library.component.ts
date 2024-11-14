@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
@@ -88,6 +88,7 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 	@ViewChild('directoryPaging') paginationComponent: PaginationComponent;
 	@ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
 	@ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
+	@ViewChild('directorySearchInput') private directorySearchInput: ElementRef;
 
 	constructor(
 		private router: Router,
@@ -254,6 +255,10 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 
 	showDropdown(): void {
 		this.toggleDropdown = !this.toggleDropdown;
+	}
+
+	menuOpened() {
+		this.directorySearchInput.nativeElement.focus();
 	}
 
 	//***** AG Grid Functions *****/

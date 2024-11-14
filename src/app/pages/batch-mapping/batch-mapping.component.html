@@ -61,14 +61,14 @@
 							<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
 							<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" (click)="$event.stopPropagation()" />
 						</mat-form-field>
-						<span class="clear-search" title="Clear Search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span><br />
+						<span class="clear-search" *ngIf="searchInput.length > 0" title="Clear Search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span><br />
 						<span *ngIf="searchInput.length > 0" class="mappings-section"
 							>{{ gridApi.getDisplayedRowCount() > 0 ? gridApi.getDisplayedRowCount() : 'No ' }} result{{ gridApi.getDisplayedRowCount() > 1 ? 's' : '' }} found</span
 						>
 					</div>
 				</mat-menu>
 				<div class="menu-inline">
-					<button [matMenuTriggerFor]="searchMenu" aria-label="Search" title="Search" class="mapset-download-icon menu-button">
+					<button [matMenuTriggerFor]="searchMenu" (menuOpened)="menuOpened()" aria-label="Search" title="Search" class="mapset-download-icon menu-button">
 						<mat-icon class="menu-icon">search</mat-icon>
 						<span class="menu-label">search</span>
 					</button>
@@ -180,6 +180,7 @@
 									<span class="type-head-append">
 										<i class="fa-solid fa-magnifying-glass svg-inline"></i>
 										<input
+											#targetInput
 											id="typeahead-basic"
 											type="text"
 											class="form-control"
@@ -210,7 +211,15 @@
 								(ngClass)="({ 'disabled': !foundConceptCode || !selectedTarget })">
 								Set as Target
 							</button>
-							<button type="button" title="Set Empty Target" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="setEmptyTarget()">Set Empty Target</button>
+							<button
+								type="button"
+								title="Set Empty Target"
+								class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
+								[disabled]="!selectedTarget"
+								(ngClass)="({ 'disabled': !selectedTarget })"
+								(click)="setEmptyTarget()">
+								Set Empty Target
+							</button>
 						</div>
 					</div>
 
@@ -315,8 +324,8 @@
 
 <!-- Name Templates -->
 <ng-template #directoryNameSection let-params>
-	<span class="blue-link">{{ params?.value }}</span>
-	<span *ngIf="params?.data?.released">
+	<span class="blue-link">{{ params?.value + '/' + params?.data?.released }}</span>
+	<span *ngIf="params?.data?.released === true">
 		<mat-icon
 			*ngIf="params?.data?.moduleId === internationalId"
 			aria-hidden="false"

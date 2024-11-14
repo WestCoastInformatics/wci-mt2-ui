@@ -68,7 +68,14 @@
 		<div class="metadata-collapsible-container col">
 			<div class="metadata-collapsible-container-group-header row no-hover">
 				<div class="metadata-collapsible-container-title page-header-font btn-header">
-					<div class="entry-column">Selected Target Concept</div>
+					<div class="entry-column">
+						Selected Target Concept
+						<div class="sub-header-font" [hidden]="!loaded">
+							<span [hidden]="selectedTarget.id === ''" title="Group {{ selectedTarget.group }},  Entry {{ selectedTarget.priority }}"
+								>( {{ selectedTarget.group }}/{{ selectedTarget.priority }} )
+							</span>
+						</div>
+					</div>
 				</div>
 				<div class="section-background mappings-section" *ngIf="loaded">
 					<div class="col-12">
@@ -80,6 +87,7 @@
 									<span class="type-head-append">
 										<i class="fa-solid fa-magnifying-glass svg-inline"></i>
 										<input
+											#targetInput
 											id="typeahead-basic"
 											type="text"
 											class="form-control"
@@ -102,11 +110,17 @@
 										title="Set as Target"
 										class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
 										(click)="setTargetCode()"
-										[disabled]="!foundConceptCode || !selectedTarget"
-										(ngClass)="({ 'disabled': !foundConceptCode || !selectedTarget })">
+										[disabled]="!foundConceptCode || selectedTarget.id === ''"
+										(ngClass)="({ 'disabled': !foundConceptCode || selectedTarget.id === '' })">
 										Set as Target
 									</button>
-									<button type="button" title="Set Empty Target" class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn" (click)="addEmptyTargetToGroup(numOfGroups)">
+									<button
+										type="button"
+										title="Set Empty Target"
+										class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
+										[disabled]="selectedTarget.id === ''"
+										(ngClass)="({ 'disabled': selectedTarget.id === '' })"
+										(click)="setEmptyTarget()">
 										Set Empty Target
 									</button>
 								</div>
@@ -168,7 +182,7 @@
 						[cdkDropListData]="getGroupEntriesById(g + 1)">
 						<div
 							class="metadata-collapsible-container-group-header target-row solid-target-border target-hover-background"
-							[ngClass]="{ 'target-selected-background': selectedTarget === entry.uuid }"
+							[ngClass]="{ 'target-selected-background': selectedTarget.id === entry.uuid }"
 							*ngFor="let entry of getGroupEntriesById(g + 1); index as x"
 							[cdkDragData]="entry"
 							[cdkDragDisabled]="getGroupTotal(g + 1) === 1"
@@ -186,10 +200,10 @@
 									</div>
 									<!--target-name-wrap-->
 									<span class="group-link"><template [ngTemplateOutlet]="targetGroupSection" [ngTemplateOutletContext]="{ $implicit: entry }"></template></span>
-									<span class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)">{{ entry.toCode }}</span
-									><span title="{{ entry.toName }}" class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName)"
+									<span class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName, entry.group, entry.priority)">{{ entry.toCode }}</span
+									><span title="{{ entry.toName }}" class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName, entry.group, entry.priority)"
 										>{{ entry.toName }}
-										<span *ngIf="entry.released">
+										<span *ngIf="entry.released === true">
 											<mat-icon
 												*ngIf="entry.moduleId === internationalId"
 												aria-hidden="false"

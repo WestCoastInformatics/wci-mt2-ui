@@ -100,7 +100,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	numOfGroups = 0;
 	groupList = [];
 	foundConceptCode = false;
-	selectedTarget = '';
+	selectedTarget = { 'id': '', 'group': 0, 'priority': 0 };
 	userChanged = false;
 	internationalId = '449080006';
 
@@ -132,6 +132,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	@ViewChild('selectRule') private selectRule: MatSelect;
 	@ViewChild('selectAdvice') private selectAdvice: MatSelect;
 	@ViewChild('groupInput') private groupInput: ElementRef;
+	@ViewChild('targetInput') private targetInput: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -273,6 +274,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.targetFC.reset();
 		this.targetFC.setValue(this.targetCodeInput);
 		this.targetNameInput = '';
+		this.targetInput.nativeElement.focus();
 	}
 
 	@Debounce()
@@ -346,7 +348,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.loaded = false;
 		this.userChanged = false;
 		this.targetFC.disable();
-		this.selectedTarget = '';
+		this.selectedTarget.id = '';
 		this.clearTargetInput();
 		this.getMapsetInfo();
 		this.getMapsetData();
@@ -546,6 +548,37 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.userChanged = true;
 	}
 
+	setEmptyTarget() {
+		this.clearTargetInput();
+		this.userChanged = true;
+		let defaultRule = '';
+		if (!this.ruleBased) {
+			defaultRule = 'TRUE';
+		}
+		let defaultRelationship = '';
+		for (let r = 0; r < this.projectRelations.length; r++) {
+			if (this.projectRelations[r].allowableForNullTarget === true) {
+				defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
+				break;
+			}
+		}
+		this.mapsetData[0].mapEntries.forEach((data) => {
+			if (data.uuid === this.selectedTarget.id) {
+				data.toCode = '';
+				data.toName = '[NO TARGET]';
+				data.relation = defaultRelationship;
+				data.moduleId = this.tempModuleIdChangeBeforeRelease;
+				data.rule = defaultRule;
+				data.additionalMapEntryInfos = [];
+				data.mapAdvices = [];
+				data.adviceAlways = [];
+				data.advices = [];
+				data.descriptions = [];
+				data.released = false;
+			}
+		});
+	}
+
 	addEmptyTargetToGroup(groupNum: number) {
 		let nextPriorityNum = 1;
 		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
@@ -585,13 +618,14 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 			'rule': defaultRule,
 			'toCode': '',
 			'toName': '[NO TARGET]',
+			'released': false,
 			'uuid': String(groupNum + nextPriorityNum + Date.now()),
 		};
 
 		this.targetCodeInput = '';
 		this.targetNameInput = '';
 		this.mapsetData[0].mapEntries.push(newMapEntry);
-		this.setSelectedTarget(newMapEntry.uuid, newMapEntry.toCode, newMapEntry.toName);
+		this.setSelectedTarget(newMapEntry.uuid, newMapEntry.toCode, newMapEntry.toName, newMapEntry.group, newMapEntry.priority);
 		this.userChanged = true;
 	}
 
@@ -616,14 +650,17 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		this.userChanged = true;
 	}
 
-	setSelectedTarget(uuid: string, code: string, name: string) {
+	setSelectedTarget(uuid: string, code: string, name: string, group: number, priority: number) {
 		this.targetFC.enable();
-		this.selectedTarget = uuid;
+		this.selectedTarget.id = uuid;
+		this.selectedTarget.group = group;
+		this.selectedTarget.priority = priority;
 		this.targetCodeInput = code;
-		this.targetNameInput = name;
+		this.targetNameInput = name === '[NO TARGET]' ? '' : name;
 		this.targetFC.reset();
 		this.targetFC.setValue(this.targetCodeInput);
 		this.query = { 'code': this.targetCodeInput };
+		this.targetInput.nativeElement.focus();
 	}
 
 	setTargetCode() {
@@ -638,7 +675,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				break;
 			}
 		}
-		if (this.selectedTarget === '') {
+		if (this.selectedTarget.id === '') {
 			let nextPriorityNum = 1;
 			for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
 				if (this.mapsetData[0].mapEntries[p].group === this.numOfGroups) {
@@ -662,6 +699,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				'modified': null,
 				'modifiedBy': null,
 				'moduleId': this.tempModuleIdChangeBeforeRelease,
+				'released': false,
 				'priority': nextPriorityNum,
 				'relation': defaultRelationship,
 				'rule': defaultRule,
@@ -672,7 +710,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 			this.mapsetData[0].mapEntries.push(newMapEntry);
 		} else {
 			for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
-				if (this.mapsetData[0].mapEntries[p].uuid === this.selectedTarget) {
+				if (this.mapsetData[0].mapEntries[p].uuid === this.selectedTarget.id) {
 					this.mapsetData[0].mapEntries[p].toCode = this.targetCodeInput;
 					this.mapsetData[0].mapEntries[p].toName = this.targetNameInput;
 					this.mapsetData[0].mapEntries[p].moduleId = this.tempModuleIdChangeBeforeRelease;
@@ -683,10 +721,11 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 					this.mapsetData[0].mapEntries[p].adviceAlways = [];
 					this.mapsetData[0].mapEntries[p].advices = [];
 					this.mapsetData[0].mapEntries[p].descriptions = [];
+					this.mapsetData[0].mapEntries[p].released = false;
 				}
 			}
 		}
-		this.selectedTarget = '';
+		this.selectedTarget.id = '';
 		this.targetFC.disable();
 		this.foundConceptCode = false;
 		this.clearTargetInput();

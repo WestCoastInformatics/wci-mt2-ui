@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PaginationChangedEvent } from 'ag-grid-community';
@@ -118,6 +118,7 @@ export class MapsetRecordsComponent implements OnInit {
 	@ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
 	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
 	@ViewChild('actions') private actions: MatSelect;
+	@ViewChild('directorySearchInput') private directorySearchInput: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -413,6 +414,10 @@ export class MapsetRecordsComponent implements OnInit {
 
 	showDropdown(): void {
 		this.toggleDropdown = !this.toggleDropdown;
+	}
+
+	menuOpened() {
+		this.directorySearchInput.nativeElement.focus();
 	}
 
 	changeMappingsView(value: string): void {

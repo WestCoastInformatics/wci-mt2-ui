@@ -112,7 +112,9 @@
 												<i class="fa-regular fa-handshake relation-icon"></i><span class="info-message">{{ entry.relation }}</span>
 											</div>
 											<div *ngFor="let advice of entry.advices; index as i" class="info-box" [hidden]="advice.indexOf('ALWAYS') > -1">
-												<i class="fa-solid fa-star-of-life advice-icon"></i><span class="info-message">{{ advice }}</span>
+												<span *ngIf="advice.length > 0"
+													><i class="fa-solid fa-star-of-life advice-icon"></i><span class="info-message">{{ advice }}</span></span
+												>
 											</div>
 										</div>
 									</div>

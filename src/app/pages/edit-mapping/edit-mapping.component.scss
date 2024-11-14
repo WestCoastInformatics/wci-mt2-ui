@@ -269,7 +269,7 @@
 .input-logo-field input {
 	width: 100%;
 	font-size: 12px !important;
-	padding: 0 10px 0 30px;
+	padding: 0 20px 0 30px;
 }
 .type-head-append {
 	position: relative;
@@ -344,6 +344,8 @@
 }
 
 .entry-column {
+	display: flex;
+	flex-direction: row;
 	width: 100%;
 }
 
