@@ -90,14 +90,6 @@
 											<div class="record-name col-8">
 												{{ entry.toName }}
 												<span *ngIf="entry.released">
-													<mat-icon
-														*ngIf="entry.moduleId === internationalId"
-														aria-hidden="false"
-														class="mat-button-wrapper mapset-intl-icon m-l-5"
-														aria-label="SNOMED International"
-														title="SNOMED International">
-														<span class="material-symbols-outlined"> language_international </span>
-													</mat-icon>
 													<img
 														class="mapset-mod-icon"
 														*ngIf="entry.moduleId !== internationalId"

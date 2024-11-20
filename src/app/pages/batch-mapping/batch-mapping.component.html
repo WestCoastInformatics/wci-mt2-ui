@@ -326,14 +326,6 @@
 <ng-template #directoryNameSection let-params>
 	<span class="blue-link">{{ params?.value + '/' + params?.data?.released }}</span>
 	<span *ngIf="params?.data?.released === true">
-		<mat-icon
-			*ngIf="params?.data?.moduleId === internationalId"
-			aria-hidden="false"
-			class="mat-button-wrapper mapset-intl-icon m-l-5"
-			aria-label="SNOMED International"
-			title="SNOMED International">
-			<span class="material-symbols-outlined"> language_international </span>
-		</mat-icon>
 		<img
 			class="mapset-mod-icon"
 			*ngIf="params?.data?.moduleId !== internationalId"
