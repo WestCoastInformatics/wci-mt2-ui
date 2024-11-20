@@ -469,6 +469,7 @@ export class MapsetRecordsComponent implements OnInit {
 				} else {
 					this.loaded = false;
 					let limit = endRow - startRow;
+
 					if (this.numOfMembers > 0) {
 						if (startRow + limit > this.numOfMembers) {
 							limit = this.numOfMembers - startRow;
@@ -476,7 +477,7 @@ export class MapsetRecordsComponent implements OnInit {
 					}
 					const restParams: any = {
 						offset: startRow,
-						limit: limit,
+						limit: this.refsetGridPaging.pageSize,
 					};
 
 					if (CodeUtility.hasValue(query)) {
@@ -803,7 +804,7 @@ export class MapsetRecordsComponent implements OnInit {
 		//this.refsetGridApi.purgeInfiniteCache();
 	}
 
-	@Debounce()
+	@Debounce(600)
 	onSearchChange() {
 		this.searchInput = this.searchInput.trim();
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
