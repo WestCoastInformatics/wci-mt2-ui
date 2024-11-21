@@ -204,14 +204,6 @@
 									><span title="{{ entry.toName }}" class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName, entry.group, entry.priority)"
 										>{{ entry.toName }}
 										<span *ngIf="entry.released === true">
-											<mat-icon
-												*ngIf="entry.moduleId === internationalId"
-												aria-hidden="false"
-												class="mat-button-wrapper mapset-intl-icon m-l-5"
-												aria-label="SNOMED International"
-												title="SNOMED International">
-												<span class="material-symbols-outlined"> language_international </span>
-											</mat-icon>
 											<img
 												class="mapset-mod-icon"
 												*ngIf="entry.moduleId !== internationalId"
