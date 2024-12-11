@@ -324,27 +324,15 @@
 
 <!-- Name Templates -->
 <ng-template #directoryNameSection let-params>
-	<span class="blue-link">{{ params?.value + '/' + params?.data?.released }}</span>
-	<span *ngIf="params?.data?.released === true">
+	<span class="blue-link">{{ params?.value }}</span>
+	<span *ngIf="params?.data?.released === true && params?.data?.modFlag !== ''">
 		<img
 			class="mapset-mod-icon"
 			*ngIf="params?.data?.moduleId !== internationalId"
-			src="{{ 'assets/flags/' + getModuleLanguageIcon(params?.data?.moduleId, params?.data?.descriptions) + '.png' }}"
-			title="{{ getModuleLanguageName(params?.data?.moduleId, params?.data?.descriptions) }}"
-			aria-label="{{ getModuleLanguageName(params?.data?.moduleId, params?.data?.descriptions) }}"
+			src="{{ 'assets/flags/' + params?.data?.modFlag + '.png' }}"
+			title="{{ params?.data?.modLang }}"
+			aria-label="{{ params?.data?.modLang }}"
 	/></span>
-</ng-template>
-
-<!-- Edition Templates -->
-<ng-template #directoryEditionSection let-params>
-	<img
-		(load)="showFlagIcon($event, true)"
-		(error)="showFlagIcon($event, false)"
-		src="{{ params?.data?.flagIcon }}"
-		class="rt2-edition-flag"
-		title="{{ params?.data?.editionName }} Flag"
-		aria-label="{{ params?.data?.editionName }} Flag" />
-	{{ params?.data?.edition?.name }}
 </ng-template>
 
 <!-- Action Templates -->

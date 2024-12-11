@@ -307,6 +307,10 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + 'refset/versionStatuses');
 	}
 
+	getMetadata(): Observable<any> {
+		return this.get(this.contextPath + 'metadata');
+	}
+
 	getMapsets(): Observable<any> {
 		return this.get(this.contextPath + 'mapset');
 	}

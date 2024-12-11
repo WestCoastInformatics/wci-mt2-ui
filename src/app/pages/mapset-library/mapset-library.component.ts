@@ -27,7 +27,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 	templateUrl: './mapset-library.component.html',
 	styleUrls: ['./mapset-library.component.scss'],
 })
-export class MapsetLibraryComponent implements OnInit, AfterViewInit {
+export class MapsetLibraryComponent implements OnInit {
 	user: User;
 	searchInput = '';
 	viewOptions = [
@@ -111,10 +111,11 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 		this.titleService.setTitle('Mapping Tool - Map Set Library');
 		this.breadcrumbService.setBreadcrumbs([{ label: 'Map Set Library' }]);
 
+		this.getMapsetData();
 		this.disableChannel.postMessage(false);
 	}
 
-	ngAfterViewInit() {
+	getMapsetData() {
 		this.refsetService.getMapsets().subscribe({
 			next: ([results]) => {
 				this.versionStatuses;
@@ -437,9 +438,6 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 	}
 
 	goToMapRecordsPage(code) {
-		const url = new URL(window.location.href);
-		url.searchParams.set('reload', 'true');
-		window.history.pushState({}, '', url.href);
 		this.router.navigate(['/mapset/' + code + '/mappings'], { replaceUrl: false, skipLocationChange: false });
 	}
 

@@ -146,13 +146,13 @@
 											<div class="record-code col-2">{{ entry.toCode }}</div>
 											<div class="record-name col-8">
 												{{ entry.toName }}
-												<span *ngIf="entry.released">
+												<span *ngIf="entry.released === true && entry.modFlag !== ''">
 													<img
 														class="mapset-mod-icon"
 														*ngIf="entry.moduleId !== internationalId"
-														src="{{ 'assets/flags/' + getModuleLanguageIcon(entry.moduleId, record.descriptions) + '.png' }}"
-														title="{{ getModuleLanguageName(entry.moduleId, record.descriptions) }}"
-														aria-label="{{ getModuleLanguageName(entry.moduleId, record.descriptions) }}"
+														src="{{ 'assets/flags/' + entry.modFlag + '.png' }}"
+														title="{{ entry.modLang }}"
+														aria-label="{{ entry.modLang }}"
 												/></span>
 											</div>
 										</div>
@@ -358,13 +358,13 @@
 	<!-- Name Templates -->
 	<ng-template #directoryNameSection let-params>
 		<span class="blue-link">{{ params?.value }}</span>
-		<span *ngIf="params?.data?.released">
+		<span *ngIf="params?.data?.released === true && params?.data?.modFlag !== ''">
 			<img
 				class="mapset-mod-icon"
 				*ngIf="params?.data?.moduleId !== internationalId"
-				src="{{ 'assets/flags/' + getModuleLanguageIcon(params?.data?.moduleId, params?.data?.descriptions) + '.png' }}"
-				title="{{ getModuleLanguageName(params?.data?.moduleId, params?.data?.descriptions) }}"
-				aria-label="{{ getModuleLanguageName(params?.data?.moduleId, params?.data?.descriptions) }}"
+				src="{{ 'assets/flags/' + params?.data?.modFlag + '.png' }}"
+				title="{{ params?.data?.modLang }}"
+				aria-label="{{ params?.data?.modLang }}"
 		/></span>
 	</ng-template>
 
