@@ -707,7 +707,6 @@ export class BatchMappingComponent implements OnInit {
 							'advices_open': false,
 							'group': results.mapEntries[b].group,
 							'priority': results.mapEntries[b].priority,
-							'released': results.mapEntries[b].released,
 							'moduleId': results.mapEntries[b].moduleId,
 							'modFlag': this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
 							'modLang': this.getModuleLanguageName(results.mapEntries[b].moduleId),
@@ -801,7 +800,6 @@ export class BatchMappingComponent implements OnInit {
 			'rule': defaultRule,
 			'toCode': groupNum + '/' + nextPriorityNum + '#' + '[Empty Target]',
 			'toName': '---',
-			'released': false,
 			'uuid': groupNum + nextPriorityNum + Date.now(),
 			'mapEntries': {
 				'id': null,
@@ -822,7 +820,6 @@ export class BatchMappingComponent implements OnInit {
 				'adviceAlways': [],
 				'group': groupNum,
 				'priority': nextPriorityNum,
-				'released': false,
 				'uuid': groupNum + nextPriorityNum + Date.now(),
 			},
 		};
@@ -902,7 +899,6 @@ export class BatchMappingComponent implements OnInit {
 				'rule': defaultRule,
 				'toCode': this.targetCodeInput,
 				'toName': this.targetNameInput,
-				'released': false,
 				'uuid': this.numOfGroups + nextPriorityNum + Date.now(),
 			};
 			this.mapsetData[0].mapEntries.push(newMapEntry);
@@ -914,7 +910,6 @@ export class BatchMappingComponent implements OnInit {
 					this.mapsetData[0].mapEntries[p].moduleId = this.tempModuleIdChangeBeforeRelease;
 					this.mapsetData[0].mapEntries[p].modFlag = '';
 					this.mapsetData[0].mapEntries[p].modLang = '';
-					this.mapsetData[0].mapEntries[p].released = false;
 					this.mapsetData[0].mapEntries[p].additionalMapEntryInfos = [];
 					this.mapsetData[0].mapEntries[p].mapAdvices = [];
 					this.mapsetData[0].mapEntries[p].adviceAlways = [];
@@ -1114,7 +1109,6 @@ export class BatchMappingComponent implements OnInit {
 				data.mapEntries.adviceAlways = [];
 				data.mapEntries.advices = [];
 				data.mapEntries.descriptions = [];
-				data.mapEntries.released = false;
 				data.moduleId = this.tempModuleIdChangeBeforeRelease;
 				data.modFlag = '';
 				data.modLang = '';
@@ -1124,7 +1118,6 @@ export class BatchMappingComponent implements OnInit {
 				data.adviceAlways = [];
 				data.advices = [];
 				data.descriptions = [];
-				data.released = false;
 			}
 		});
 		this.gridApi.refreshCells(this.gridParams);
@@ -1168,7 +1161,6 @@ export class BatchMappingComponent implements OnInit {
 				data.mapEntries.adviceAlways = [];
 				data.mapEntries.advices = [];
 				data.mapEntries.descriptions = [];
-				data.mapEntries.released = false;
 				data.moduleId = this.tempModuleIdChangeBeforeRelease;
 				data.modFlag = '';
 				data.modLang = '';
@@ -1178,7 +1170,6 @@ export class BatchMappingComponent implements OnInit {
 				data.adviceAlways = [];
 				data.advices = [];
 				data.descriptions = [];
-				data.released = false;
 			}
 		});
 		this.gridApi.refreshCells(this.gridParams);
@@ -1359,7 +1350,6 @@ export class BatchMappingComponent implements OnInit {
 						map.mapEntries.adviceAlways = [];
 						map.mapEntries.advices = [];
 						map.mapEntries.descriptions = [];
-						map.mapEntries.released = false;
 						map.moduleId = this.tempModuleIdChangeBeforeRelease;
 						map.modFlag = '';
 						map.modLang = '';
@@ -1369,7 +1359,6 @@ export class BatchMappingComponent implements OnInit {
 						map.adviceAlways = [];
 						map.advices = [];
 						map.descriptions = [];
-						map.released = false;
 					}
 				});
 				this.userChanged = true;

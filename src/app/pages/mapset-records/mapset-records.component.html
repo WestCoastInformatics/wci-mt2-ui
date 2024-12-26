@@ -146,7 +146,7 @@
 											<div class="record-code col-2">{{ entry.toCode }}</div>
 											<div class="record-name col-8">
 												{{ entry.toName }}
-												<span *ngIf="entry.released === true && entry.modFlag !== ''">
+												<span *ngIf="entry.modFlag !== ''">
 													<img
 														class="mapset-mod-icon"
 														*ngIf="entry.moduleId !== internationalId"
@@ -358,7 +358,7 @@
 	<!-- Name Templates -->
 	<ng-template #directoryNameSection let-params>
 		<span class="blue-link">{{ params?.value }}</span>
-		<span *ngIf="params?.data?.released === true && params?.data?.modFlag !== ''">
+		<span *ngIf="params?.data?.modFlag !== ''">
 			<img
 				class="mapset-mod-icon"
 				*ngIf="params?.data?.moduleId !== internationalId"

@@ -642,7 +642,7 @@
 												<div class="library-app-refset-download">
 													<button
 														mat-icon-button
-														*ngIf="params?.data?.historyVisible && params.data.released"
+														*ngIf="params?.data?.historyVisible"
 														(click)="openMemberHistory(params.data.code)"
 														aria-hidden="false"
 														#detailsDownloadIcon
@@ -655,9 +655,7 @@
 											</div>
 
 											<div class="col-6">
-												<div
-													class="library-app-refset-discussion-list"
-													[ngClass]="{ 'library-app-refset-discussion-list-alt': params?.data?.historyVisible && params.data.released }">
+												<div class="library-app-refset-discussion-list" [ngClass]="{ 'library-app-refset-discussion-list-alt': params?.data?.historyVisible }">
 													<app-refset-discussion-list
 														*ngIf="refsetData && params && params.data"
 														type="REFSET_MEMBER"

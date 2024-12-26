@@ -496,7 +496,6 @@ export class EditMappingComponent implements OnInit {
 							'group': results.mapEntries[b].group,
 							'groupTotal': results.mapEntries[b].group,
 							'priority': results.mapEntries[b].priority,
-							'released': results.mapEntries[b].released,
 							'moduleId': results.mapEntries[b].moduleId,
 							'modFlag': this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
 							'modLang': this.getModuleLanguageName(results.mapEntries[b].moduleId),
@@ -590,7 +589,6 @@ export class EditMappingComponent implements OnInit {
 				data.adviceAlways = [];
 				data.advices = [];
 				data.descriptions = [];
-				data.released = false;
 			}
 		});
 	}
@@ -636,7 +634,6 @@ export class EditMappingComponent implements OnInit {
 			'rule': defaultRule,
 			'toCode': '',
 			'toName': '[NO TARGET]',
-			'released': false,
 			'uuid': String(groupNum + nextPriorityNum + Date.now()),
 		};
 
@@ -719,7 +716,6 @@ export class EditMappingComponent implements OnInit {
 				'moduleId': this.tempModuleIdChangeBeforeRelease,
 				'modFlag': '',
 				'modLang': '',
-				'released': false,
 				'priority': nextPriorityNum,
 				'relation': defaultRelationship,
 				'rule': defaultRule,
@@ -743,7 +739,6 @@ export class EditMappingComponent implements OnInit {
 					this.mapsetData[0].mapEntries[p].adviceAlways = [];
 					this.mapsetData[0].mapEntries[p].advices = [];
 					this.mapsetData[0].mapEntries[p].descriptions = [];
-					this.mapsetData[0].mapEntries[p].released = false;
 				}
 			}
 		}

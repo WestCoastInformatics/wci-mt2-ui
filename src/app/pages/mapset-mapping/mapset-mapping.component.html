@@ -89,7 +89,7 @@
 											<div class="record-code col-2">{{ entry.toCode }}</div>
 											<div class="record-name col-8">
 												{{ entry.toName }}
-												<span *ngIf="record.released === true && record.modFlag !== ''">
+												<span *ngIf="record.modFlag !== ''">
 													<img
 														class="mapset-mod-icon"
 														*ngIf="record.moduleId !== internationalId"

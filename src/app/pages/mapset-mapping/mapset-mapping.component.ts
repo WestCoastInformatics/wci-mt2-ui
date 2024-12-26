@@ -203,7 +203,6 @@ export class MapsetMappingComponent implements OnInit {
 						'advices': { 'number': adviceArray.length, 'list': adviceArray },
 						'group': results.mapEntries[b].group,
 						'priority': results.mapEntries[b].priority,
-						'released': results.mapEntries[b].released,
 						'moduleId': results.mapEntries[b].moduleId,
 						'modFlag': this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
 						'modLang': this.getModuleLanguageName(results.mapEntries[b].moduleId),
