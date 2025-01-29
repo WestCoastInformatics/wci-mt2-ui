@@ -9,6 +9,7 @@ import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
@@ -25,7 +26,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 	templateUrl: './batch-mapping.component.html',
 	styleUrls: ['./batch-mapping.component.scss'],
 })
-export class BatchMappingComponent implements OnInit, AfterViewInit {
+export class BatchMappingComponent implements OnInit {
 	user: User;
 	searchInput = '';
 	targetCodeInput = '';
@@ -128,6 +129,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	gridColumnDefs = [];
 	gridInterval: any;
 	useDialog = false;
+	moduleMetadata: any;
 	internationalId = '449080006';
 
 	checkedNum = 0;
@@ -137,7 +139,6 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	@ViewChild('selectRelationship') private selectRelationship: MatSelect;
 	@ViewChild('selectRule') private selectRule: MatSelect;
 	@ViewChild('selectAdvice') private selectAdvice: MatSelect;
-
 	@ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
 	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
@@ -149,7 +150,6 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	@ViewChild('directoryToNameSection') toNameSection: TemplateRef<any>;
 	@ViewChild('targetAdviceSection') adviceSection: TemplateRef<any>;
 	@ViewChild('targetRuleSection') ruleSection: TemplateRef<any>;
-	@ViewChild('directoryEditionSection') editionSection: TemplateRef<any>;
 	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
 	@ViewChild('directoryPaging') paginationComponent: PaginationComponent;
 	@ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
@@ -172,6 +172,7 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
 		private notificationService: NotificationService,
+		private mt2Service: MT2Service,
 		private modalService: NgbModal
 	) {
 		document.body.scrollTop = 0;
@@ -192,12 +193,14 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	//***** Framework Functions *****/
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
-		this.titleService.setTitle('Mapping Tool - Edit Map');
+		this.titleService.setTitle('Mapping Tool - Batch Edit Mappings');
 
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.conceptCodes = routeParams.concepts.split('_');
+			this.getMapsetData();
 			this.getMapsetInfo();
+			this.getModuleMetadata();
 			this.getMapProject();
 		});
 
@@ -478,11 +481,24 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		});
 	}
 
+	getModuleMetadata() {
+		if (this.mt2Service.moduleMetadata.value?.length === 0) {
+			this.refsetService.getMetadata().subscribe({
+				next: (results) => {
+					this.mt2Service.setModuleMetadata(results);
+					this.moduleMetadata = results;
+				},
+			});
+		} else {
+			this.moduleMetadata = this.mt2Service.moduleMetadata.value;
+		}
+	}
+
 	getMapProject() {
 		const params: any = {
 			includeMembers: false,
 		};
-		const projectId = '1';
+		const projectId = '1'; //TEST ONLY
 		this.refsetService.getMapProjectById(projectId, params).subscribe({
 			next: (results) => {
 				this.targetTerminology = results.destinationTerminology;
@@ -520,10 +536,6 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	titleCaseWord(word: string) {
 		if (!word) return word;
 		return word[0].toUpperCase() + word.substr(1).toLowerCase();
-	}
-
-	ngAfterViewInit() {
-		this.getMapsetData();
 	}
 
 	clearTargetInput() {
@@ -671,6 +683,8 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 						});
 						results.mapEntries[b].mapAdvices = mapAdvices;
 						results.mapEntries[b].adviceAlways = adviceAlways;
+						let flag = '';
+						let lang = '';
 						data = {
 							'uuid': results.code + results.mapEntries[b].modified + b,
 							'index': results.code + count,
@@ -693,8 +707,9 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 							'advices_open': false,
 							'group': results.mapEntries[b].group,
 							'priority': results.mapEntries[b].priority,
-							'released': results.mapEntries[b].released,
 							'moduleId': results.mapEntries[b].moduleId,
+							'modFlag': this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
+							'modLang': this.getModuleLanguageName(results.mapEntries[b].moduleId),
 						};
 						count++;
 						batch.push(data);
@@ -785,13 +800,14 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 			'rule': defaultRule,
 			'toCode': groupNum + '/' + nextPriorityNum + '#' + '[Empty Target]',
 			'toName': '---',
-			'released': false,
 			'uuid': groupNum + nextPriorityNum + Date.now(),
 			'mapEntries': {
 				'id': null,
 				'modified': null,
 				'modifiedBy': null,
 				'moduleId': this.tempModuleIdChangeBeforeRelease,
+				'modFlag': '',
+				'modLang': '',
 				'active': true,
 				'descriptions': [],
 				'additionalMapEntryInfos': [],
@@ -804,7 +820,6 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				'adviceAlways': [],
 				'group': groupNum,
 				'priority': nextPriorityNum,
-				'released': false,
 				'uuid': groupNum + nextPriorityNum + Date.now(),
 			},
 		};
@@ -877,12 +892,13 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				'modified': null,
 				'modifiedBy': null,
 				'moduleId': this.tempModuleIdChangeBeforeRelease,
+				'modFlag': '',
+				'modLang': '',
 				'priority': nextPriorityNum,
 				'relation': defaultRelationship,
 				'rule': defaultRule,
 				'toCode': this.targetCodeInput,
 				'toName': this.targetNameInput,
-				'released': false,
 				'uuid': this.numOfGroups + nextPriorityNum + Date.now(),
 			};
 			this.mapsetData[0].mapEntries.push(newMapEntry);
@@ -892,7 +908,8 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 					this.mapsetData[0].mapEntries[p].toCode = this.targetCodeInput;
 					this.mapsetData[0].mapEntries[p].toName = this.targetNameInput;
 					this.mapsetData[0].mapEntries[p].moduleId = this.tempModuleIdChangeBeforeRelease;
-					this.mapsetData[0].mapEntries[p].released = false;
+					this.mapsetData[0].mapEntries[p].modFlag = '';
+					this.mapsetData[0].mapEntries[p].modLang = '';
 					this.mapsetData[0].mapEntries[p].additionalMapEntryInfos = [];
 					this.mapsetData[0].mapEntries[p].mapAdvices = [];
 					this.mapsetData[0].mapEntries[p].adviceAlways = [];
@@ -1084,21 +1101,23 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				data.relation = defaultRelationship;
 				data.mapEntries.relation = defaultRelationship;
 				data.mapEntries.moduleId = this.tempModuleIdChangeBeforeRelease;
+				data.mapEntries.modFlag = '';
+				data.mapEntries.modLang = '';
 				data.mapEntries.rule = defaultRule;
 				data.mapEntries.additionalMapEntryInfos = [];
 				data.mapEntries.mapAdvices = [];
 				data.mapEntries.adviceAlways = [];
 				data.mapEntries.advices = [];
 				data.mapEntries.descriptions = [];
-				data.mapEntries.released = false;
 				data.moduleId = this.tempModuleIdChangeBeforeRelease;
+				data.modFlag = '';
+				data.modLang = '';
 				data.rule = defaultRule;
 				data.additionalMapEntryInfos = [];
 				data.mapAdvices = [];
 				data.adviceAlways = [];
 				data.advices = [];
 				data.descriptions = [];
-				data.released = false;
 			}
 		});
 		this.gridApi.refreshCells(this.gridParams);
@@ -1134,21 +1153,23 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 				data.relation = defaultRelationship;
 				data.mapEntries.relation = defaultRelationship;
 				data.mapEntries.moduleId = this.tempModuleIdChangeBeforeRelease;
+				data.mapEntries.modFlag = '';
+				data.mapEntries.modLang = '';
 				data.mapEntries.rule = defaultRule;
 				data.mapEntries.additionalMapEntryInfos = [];
 				data.mapEntries.mapAdvices = [];
 				data.mapEntries.adviceAlways = [];
 				data.mapEntries.advices = [];
 				data.mapEntries.descriptions = [];
-				data.mapEntries.released = false;
 				data.moduleId = this.tempModuleIdChangeBeforeRelease;
+				data.modFlag = '';
+				data.modLang = '';
 				data.rule = defaultRule;
 				data.additionalMapEntryInfos = [];
 				data.mapAdvices = [];
 				data.adviceAlways = [];
 				data.advices = [];
 				data.descriptions = [];
-				data.released = false;
 			}
 		});
 		this.gridApi.refreshCells(this.gridParams);
@@ -1321,21 +1342,23 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 						map.relation = this.noTargetRelations[0];
 						map.mapEntries.relation = this.noTargetRelations[0];
 						map.mapEntries.moduleId = this.tempModuleIdChangeBeforeRelease;
+						map.mapEntries.modFlag = '';
+						map.mapEntries.modLang = '';
 						map.mapEntries.rule = defaultRule;
 						map.mapEntries.additionalMapEntryInfos = [];
 						map.mapEntries.mapAdvices = [];
 						map.mapEntries.adviceAlways = [];
 						map.mapEntries.advices = [];
 						map.mapEntries.descriptions = [];
-						map.mapEntries.released = false;
 						map.moduleId = this.tempModuleIdChangeBeforeRelease;
+						map.modFlag = '';
+						map.modLang = '';
 						map.rule = defaultRule;
 						map.additionalMapEntryInfos = [];
 						map.mapAdvices = [];
 						map.adviceAlways = [];
 						map.advices = [];
 						map.descriptions = [];
-						map.released = false;
 					}
 				});
 				this.userChanged = true;
@@ -1429,23 +1452,23 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	getModuleLanguageIcon(moduleId: string, descriptions: Array<any>) {
-		let flag = 'en';
-		for (let e = 0; e < descriptions.length; e++) {
-			if (descriptions[e].moduleId === moduleId) {
-				flag = descriptions[e].language;
+	getModuleLanguageIcon(moduleId: string) {
+		let flag = '';
+		this.moduleMetadata.module.forEach((data) => {
+			if (data.id === moduleId) {
+				flag = data.countryCode;
 			}
-		}
+		});
 		return flag;
 	}
 
-	getModuleLanguageName(moduleId: string, descriptions: Array<any>) {
-		let lang = 'EN';
-		for (let e = 0; e < descriptions.length; e++) {
-			if (descriptions[e].moduleId === moduleId) {
-				lang = descriptions[e].languageName;
+	getModuleLanguageName(moduleId: string) {
+		let lang = '';
+		this.moduleMetadata.module.forEach((data) => {
+			if (data.id === moduleId) {
+				lang = data.name;
 			}
-		}
+		});
 		return lang;
 	}
 
@@ -1472,8 +1495,6 @@ export class BatchMappingComponent implements OnInit, AfterViewInit {
 	/*end functions*/
 
 	goToMappingPage(code) {
-		const url = new URL(window.location.href);
-		window.history.pushState({}, '', url.href);
 		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + code], { replaceUrl: false, skipLocationChange: false });
 	}
 

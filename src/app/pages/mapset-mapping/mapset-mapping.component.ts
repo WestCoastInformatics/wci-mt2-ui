@@ -1,23 +1,17 @@
 import { Subscription } from 'rxjs';
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { MatSelect } from '@angular/material/select';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
-import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
-import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
-import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
-import { RefsetUtility } from 'src/app/utilities/refset.utility';
-import { Constants } from 'src/app/utilities/constants.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
-import { forkJoin } from 'rxjs';
 import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
@@ -26,7 +20,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 	templateUrl: './mapset-mapping.component.html',
 	styleUrls: ['./mapset-mapping.component.scss'],
 })
-export class MapsetMappingComponent implements OnInit, AfterViewInit {
+export class MapsetMappingComponent implements OnInit {
 	user: User;
 	searchInput = '';
 	viewOptions = [
@@ -89,7 +83,7 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
-
+	moduleMetadata: any;
 	refsetData: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
@@ -105,26 +99,25 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 		private route: ActivatedRoute,
 		private router: Router,
 		private titleService: Title,
-		private dialogFactoryService: DialogFactoryService,
 		private refsetService: RefsetService,
-		private changeDetectorRef: ChangeDetectorRef,
+		private mt2Service: MT2Service,
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
 		private modalService: NgbModal
 	) {
 		document.body.scrollTop = 0;
-		refsetService.getTaxonomyRoot();
 	}
 
 	//***** Framework Functions *****/
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
 		this.titleService.setTitle('Mapping Tool - Map');
-
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.conceptCode = routeParams.concept;
 			this.getMapsetInfo();
+			this.getMapsetData();
+			this.getModuleMetadata();
 		});
 
 		this.formats = [
@@ -154,7 +147,20 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	ngAfterViewInit() {
+	getModuleMetadata() {
+		if (this.mt2Service.moduleMetadata.value?.length === 0) {
+			this.refsetService.getMetadata().subscribe({
+				next: (results) => {
+					this.mt2Service.setModuleMetadata(results);
+					this.moduleMetadata = results;
+				},
+			});
+		} else {
+			this.moduleMetadata = this.mt2Service.moduleMetadata.value;
+		}
+	}
+
+	getMapsetData() {
 		this.refsetService.getMappingByMapsetConceptList(this.mapsetCode, this.conceptCode).subscribe({
 			next: (response) => {
 				this.loaded = true;
@@ -197,8 +203,9 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 						'advices': { 'number': adviceArray.length, 'list': adviceArray },
 						'group': results.mapEntries[b].group,
 						'priority': results.mapEntries[b].priority,
-						'released': results.mapEntries[b].released,
 						'moduleId': results.mapEntries[b].moduleId,
+						'modFlag': this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
+						'modLang': this.getModuleLanguageName(results.mapEntries[b].moduleId),
 					});
 					count++;
 				}
@@ -217,23 +224,23 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	getModuleLanguageIcon(moduleId: string, descriptions: Array<any>) {
-		let flag = 'en';
-		for (let e = 0; e < descriptions.length; e++) {
-			if (descriptions[e].moduleId === moduleId) {
-				flag = descriptions[e].language;
+	getModuleLanguageIcon(moduleId: string) {
+		let flag = '';
+		this.moduleMetadata.module.forEach((data) => {
+			if (data.id === moduleId) {
+				flag = data.countryCode;
 			}
-		}
+		});
 		return flag;
 	}
 
-	getModuleLanguageName(moduleId: string, descriptions: Array<any>) {
-		let lang = 'EN';
-		for (let e = 0; e < descriptions.length; e++) {
-			if (descriptions[e].moduleId === moduleId) {
-				lang = descriptions[e].languageName;
+	getModuleLanguageName(moduleId: string) {
+		let lang = '';
+		this.moduleMetadata.module.forEach((data) => {
+			if (data.id === moduleId) {
+				lang = data.name;
 			}
-		}
+		});
 		return lang;
 	}
 
@@ -270,9 +277,6 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	goToEditMappingPage() {
-		const url = new URL(window.location.href);
-		url.searchParams.set('reload', 'true');
-		window.history.pushState({}, '', url.href);
 		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode + '/edit'], { replaceUrl: false, skipLocationChange: false });
 	}
 

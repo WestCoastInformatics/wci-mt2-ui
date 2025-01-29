@@ -203,13 +203,13 @@
 									<span class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName, entry.group, entry.priority)">{{ entry.toCode }}</span
 									><span title="{{ entry.toName }}" class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName, entry.group, entry.priority)"
 										>{{ entry.toName }}
-										<span *ngIf="entry.released === true">
+										<span *ngIf="entry.modFlag !== ''">
 											<img
 												class="mapset-mod-icon"
 												*ngIf="entry.moduleId !== internationalId"
-												src="{{ 'assets/flags/' + getModuleLanguageIcon(entry.moduleId, record.descriptions) + '.png' }}"
-												title="{{ getModuleLanguageName(entry.moduleId, record.descriptions) }}"
-												aria-label="{{ getModuleLanguageName(entry.moduleId, record.descriptions) }}" /></span
+												src="{{ 'assets/flags/' + entry.modFlag + '.png' }}"
+												title="{{ entry.modLang }}"
+												aria-label="{{ entry.modLang }}" /></span
 									></span>
 								</div>
 							</div>

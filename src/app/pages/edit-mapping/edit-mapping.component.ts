@@ -6,10 +6,10 @@ import { MatSelect } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
-import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
@@ -22,7 +22,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 	templateUrl: './edit-mapping.component.html',
 	styleUrls: ['./edit-mapping.component.scss'],
 })
-export class EditMappingComponent implements OnInit, AfterViewInit {
+export class EditMappingComponent implements OnInit {
 	user: User;
 	targetCodeInput = '';
 	targetNameInput = '';
@@ -116,7 +116,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	searchByTypeahead = false;
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
-
+	moduleMetadata: any;
 	refsetData: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
@@ -139,6 +139,7 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		private router: Router,
 		private titleService: Title,
 		private refsetService: RefsetService,
+		private mt2Service: MT2Service,
 		private renderer: Renderer2,
 		private elementRef: ElementRef,
 		private breadcrumbService: BreadcrumbService,
@@ -164,14 +165,14 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
 		this.titleService.setTitle('Mapping Tool - Edit Map');
-
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.conceptCode = routeParams.concept;
+			this.getMapsetData();
 			this.getMapsetInfo();
+			this.getModuleMetadata();
 			this.getMapProject();
 		});
-
 		this.formats = [
 			{ value: 'rf2', display: 'RF2' },
 			{ value: 'sctids', display: 'List Of SCTIDs' },
@@ -199,6 +200,19 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				this.selectedMapset = thisResult[0];
 			},
 		});
+	}
+
+	getModuleMetadata() {
+		if (this.mt2Service.moduleMetadata.value?.length === 0) {
+			this.refsetService.getMetadata().subscribe({
+				next: (results) => {
+					this.mt2Service.setModuleMetadata(results);
+					this.moduleMetadata = results;
+				},
+			});
+		} else {
+			this.moduleMetadata = this.mt2Service.moduleMetadata.value;
+		}
 	}
 
 	getMapProject() {
@@ -244,27 +258,23 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 		return word[0].toUpperCase() + word.substr(1).toLowerCase();
 	}
 
-	ngAfterViewInit() {
-		this.getMapsetData();
-	}
-
-	getModuleLanguageIcon(moduleId: string, descriptions: Array<any>) {
-		let flag = 'en';
-		for (let e = 0; e < descriptions.length; e++) {
-			if (descriptions[e].moduleId === moduleId) {
-				flag = descriptions[e].language;
+	getModuleLanguageIcon(moduleId: string) {
+		let flag = '';
+		this.moduleMetadata.module.forEach((data) => {
+			if (data.id === moduleId) {
+				flag = data.countryCode;
 			}
-		}
+		});
 		return flag;
 	}
 
-	getModuleLanguageName(moduleId: string, descriptions: Array<any>) {
-		let lang = 'EN';
-		for (let e = 0; e < descriptions.length; e++) {
-			if (descriptions[e].moduleId === moduleId) {
-				lang = descriptions[e].languageName;
+	getModuleLanguageName(moduleId: string) {
+		let lang = '';
+		this.moduleMetadata.module.forEach((data) => {
+			if (data.id === moduleId) {
+				lang = data.name;
 			}
-		}
+		});
 		return lang;
 	}
 
@@ -461,6 +471,8 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 					});
 					results.mapEntries[b].mapAdvices = mapAdvices;
 					results.mapEntries[b].adviceAlways = adviceAlways;
+					results.mapEntries[b].modFlag = this.getModuleLanguageIcon(results.mapEntries[b].moduleId);
+					results.mapEntries[b].modLang = this.getModuleLanguageName(results.mapEntries[b].moduleId);
 					if (!spanned) {
 						data.push({
 							'index': results.code + count,
@@ -484,8 +496,9 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 							'group': results.mapEntries[b].group,
 							'groupTotal': results.mapEntries[b].group,
 							'priority': results.mapEntries[b].priority,
-							'released': results.mapEntries[b].released,
 							'moduleId': results.mapEntries[b].moduleId,
+							'modFlag': this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
+							'modLang': this.getModuleLanguageName(results.mapEntries[b].moduleId),
 						});
 						count++;
 					}
@@ -568,13 +581,14 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				data.toName = '[NO TARGET]';
 				data.relation = defaultRelationship;
 				data.moduleId = this.tempModuleIdChangeBeforeRelease;
+				data.modFlag = '';
+				data.modLang = '';
 				data.rule = defaultRule;
 				data.additionalMapEntryInfos = [];
 				data.mapAdvices = [];
 				data.adviceAlways = [];
 				data.advices = [];
 				data.descriptions = [];
-				data.released = false;
 			}
 		});
 	}
@@ -613,12 +627,13 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 			'modified': null,
 			'modifiedBy': null,
 			'moduleId': this.tempModuleIdChangeBeforeRelease,
+			'modFlag': '',
+			'modLang': '',
 			'priority': nextPriorityNum,
 			'relation': defaultRelationship,
 			'rule': defaultRule,
 			'toCode': '',
 			'toName': '[NO TARGET]',
-			'released': false,
 			'uuid': String(groupNum + nextPriorityNum + Date.now()),
 		};
 
@@ -699,7 +714,8 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 				'modified': null,
 				'modifiedBy': null,
 				'moduleId': this.tempModuleIdChangeBeforeRelease,
-				'released': false,
+				'modFlag': '',
+				'modLang': '',
 				'priority': nextPriorityNum,
 				'relation': defaultRelationship,
 				'rule': defaultRule,
@@ -714,6 +730,8 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 					this.mapsetData[0].mapEntries[p].toCode = this.targetCodeInput;
 					this.mapsetData[0].mapEntries[p].toName = this.targetNameInput;
 					this.mapsetData[0].mapEntries[p].moduleId = this.tempModuleIdChangeBeforeRelease;
+					this.mapsetData[0].mapEntries[p].modFlag = '';
+					this.mapsetData[0].mapEntries[p].modLang = '';
 					this.mapsetData[0].mapEntries[p].relation = defaultRelationship;
 					this.mapsetData[0].mapEntries[p].rule = defaultRule;
 					this.mapsetData[0].mapEntries[p].additionalMapEntryInfos = [];
@@ -721,7 +739,6 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 					this.mapsetData[0].mapEntries[p].adviceAlways = [];
 					this.mapsetData[0].mapEntries[p].advices = [];
 					this.mapsetData[0].mapEntries[p].descriptions = [];
-					this.mapsetData[0].mapEntries[p].released = false;
 				}
 			}
 		}
@@ -1040,11 +1057,15 @@ export class EditMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	goToMappingPage(target: string) {
-		const url = new URL(window.location.href);
-		window.history.pushState({}, '', url.href);
-		this.router.navigate([]).then((result) => {
-			window.open('/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode, target);
-		});
+		switch (target) {
+			case '_blank':
+				this.router.navigate([]).then((result) => {
+					window.open('/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode, target);
+				});
+				break;
+			default:
+				this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode], { replaceUrl: false, skipLocationChange: false });
+		}
 	}
 
 	toggleSectionView(section: string) {

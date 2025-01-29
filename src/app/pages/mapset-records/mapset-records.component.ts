@@ -10,6 +10,7 @@ import { CategoryFilterComponent } from 'src/app/components/categoryFilter/categ
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
@@ -96,7 +97,7 @@ export class MapsetRecordsComponent implements OnInit {
 	mapSetSubscription: Subscription;
 	isNewPageSize = false;
 	internationalId = '449080006';
-
+	moduleMetadata: any;
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
 
@@ -126,6 +127,7 @@ export class MapsetRecordsComponent implements OnInit {
 		private titleService: Title,
 		private dialogFactoryService: DialogFactoryService,
 		private refsetService: RefsetService,
+		private mt2Service: MT2Service,
 		private changeDetectorRef: ChangeDetectorRef,
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
@@ -139,10 +141,10 @@ export class MapsetRecordsComponent implements OnInit {
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
 		this.titleService.setTitle('Mapping Tool - Mappings');
-
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.getMapsetInfo();
+			this.getModuleMetadata();
 		});
 
 		this.formats = [
@@ -393,6 +395,19 @@ export class MapsetRecordsComponent implements OnInit {
 		});
 	}
 
+	getModuleMetadata() {
+		if (this.mt2Service.moduleMetadata.value?.length === 0) {
+			this.refsetService.getMetadata().subscribe({
+				next: (results) => {
+					this.mt2Service.setModuleMetadata(results);
+					this.moduleMetadata = results;
+				},
+			});
+		} else {
+			this.moduleMetadata = this.mt2Service.moduleMetadata.value;
+		}
+	}
+
 	dateFormatter(val): any {
 		return UiUtility.dateFormatter(val);
 	}
@@ -530,8 +545,9 @@ export class MapsetRecordsComponent implements OnInit {
 										'advices': results[a].code !== '' ? { 'number': adviceArray.length, 'list': adviceArray } : { 'number': -1, 'list': [] },
 										'group': results[a].mapEntries[b].group,
 										'priority': results[a].mapEntries[b].priority,
-										'released': results[a].mapEntries[b].released,
 										'moduleId': results[a].mapEntries[b].moduleId,
+										'modFlag': this.getModuleLanguageIcon(results[a].mapEntries[b].moduleId),
+										'modLang': this.getModuleLanguageName(results[a].mapEntries[b].moduleId),
 									});
 									count++;
 								}
@@ -615,23 +631,23 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 	}
 
-	getModuleLanguageIcon(moduleId: string, descriptions: Array<any>) {
-		let flag = 'en';
-		for (let e = 0; e < descriptions.length; e++) {
-			if (descriptions[e].moduleId === moduleId) {
-				flag = descriptions[e].language;
+	getModuleLanguageIcon(moduleId: string) {
+		let flag = '';
+		this.moduleMetadata.module.forEach((data) => {
+			if (data.id === moduleId) {
+				flag = data.countryCode;
 			}
-		}
+		});
 		return flag;
 	}
 
-	getModuleLanguageName(moduleId: string, descriptions: Array<any>) {
-		let lang = 'EN';
-		for (let e = 0; e < descriptions.length; e++) {
-			if (descriptions[e].moduleId === moduleId) {
-				lang = descriptions[e].languageName;
+	getModuleLanguageName(moduleId: string) {
+		let lang = '';
+		this.moduleMetadata.module.forEach((data) => {
+			if (data.id === moduleId) {
+				lang = data.name;
 			}
-		}
+		});
 		return lang;
 	}
 
@@ -872,29 +888,18 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	goToDetailsPage(refsetId, versionDate) {
-		const url = new URL(window.location.href);
-		url.searchParams.set('reload', 'true');
-		window.history.pushState({}, '', url.href);
-		this.router.navigate(['/details', refsetId, versionDate], { replaceUrl: false, skipLocationChange: false });
+		this.router.navigate(['/details', refsetId, versionDate]);
 	}
 
 	goToMappingPage(code) {
-		const url = new URL(window.location.href);
-		window.history.pushState({}, '', url.href);
 		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + code], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	goToEditMappingPage(code) {
-		const url = new URL(window.location.href);
-		url.searchParams.set('reload', 'true');
-		window.history.pushState({}, '', url.href);
 		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + code + '/edit'], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	goToBatchMappingsPage(codes) {
-		const url = new URL(window.location.href);
-		url.searchParams.set('reload', 'true');
-		window.history.pushState({}, '', url.href);
 		this.router.navigate(['/mapset/' + this.mapsetCode + '/mappings/' + codes.join('_') + '/batch'], { replaceUrl: false, skipLocationChange: false });
 	}
 
