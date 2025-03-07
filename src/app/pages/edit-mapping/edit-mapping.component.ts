@@ -330,7 +330,7 @@ export class EditMappingComponent implements OnInit {
 
 	dropT(event: CdkDragDrop<string[]>) {
 		this.userChanged = true;
-		let newGroup = [];
+		const newGroup = [];
 		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
 			if (this.mapsetData[0].mapEntries[p].group === event.item.data.group) {
 				newGroup.push(this.mapsetData[0].mapEntries[p]);
@@ -1011,17 +1011,6 @@ export class EditMappingComponent implements OnInit {
 				break;
 		}
 		this.closeConfirmDialog();
-	}
-
-	startDownload() {
-		this.closeDownloadModal();
-		console.log('selected download format', this.selectedFormat['value']);
-		this.openToBeDevelopedModal(this.tbdModal);
-	}
-
-	closeDownloadModal() {
-		this.downloadModalRef.close();
-		this.isModalOpen = false;
 	}
 
 	openToBeDevelopedModal(content) {

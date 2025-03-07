@@ -157,7 +157,6 @@ form-control {
 /******** AG Grid Styles **********/
 
 .refset_tool_inactive_row,
-.refsetDetailsPage .refset-title.refset_tool_inactive_row,
 tr.refset_tool_inactive_row {
 	background-color: $inactive_row_color;
 }
@@ -900,7 +899,6 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 	margin: 0 1.5rem 0 0;
 }
 
-.refsetDetailsPage > .refset-title-container > .detailsMemberSection > .row > .detailsMemberSection-container .ag-overlay-no-rows-center,
 .ag-overlay-loading-center {
 	position: absolute;
 	top: 0;

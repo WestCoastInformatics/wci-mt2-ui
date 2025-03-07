@@ -683,8 +683,6 @@ export class BatchMappingComponent implements OnInit {
 						});
 						results.mapEntries[b].mapAdvices = mapAdvices;
 						results.mapEntries[b].adviceAlways = adviceAlways;
-						let flag = '';
-						let lang = '';
 						data = {
 							'uuid': results.code + results.mapEntries[b].modified + b,
 							'index': results.code + count,
@@ -1241,22 +1239,6 @@ export class BatchMappingComponent implements OnInit {
 			}
 		});
 		this.closePopover();
-	}
-
-	openDownloadModal(content) {
-		this.downloadModalRef = this.modalService.open(content, { centered: true });
-		this.isModalOpen = true;
-	}
-
-	startDownload() {
-		this.closeDownloadModal();
-		console.log('selected download format', this.selectedFormat['value']);
-		this.openToBeDevelopedModal(this.tbdModal);
-	}
-
-	closeDownloadModal() {
-		this.downloadModalRef.close();
-		this.isModalOpen = false;
 	}
 
 	openToBeDevelopedModal(content) {

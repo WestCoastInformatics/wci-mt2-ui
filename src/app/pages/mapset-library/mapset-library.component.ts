@@ -16,6 +16,7 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
+import { formatDate } from '@angular/common';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { PaginationService } from 'src/app/services/pagination.service';
 
@@ -72,10 +73,20 @@ export class MapsetLibraryComponent implements OnInit {
 	uiUtility = UiUtility;
 	showLoadingSearch = true;
 	toBeDevelopedModalRef: NgbModalRef;
+	downloadModalRef: NgbModalRef;
 	isModalOpen = false;
 	showPaging = false;
 	paginationPages: any = {};
 	private isNewPageSize = false;
+	downloadError = '';
+	selectedFormat = {};
+	formats = [];
+	selectedType = {};
+	types = [];
+	selectExportMetadata = false;
+	downloadTitle = 'Download';
+	mapsetInfo: any = {};
+	selectedVersion: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -89,6 +100,7 @@ export class MapsetLibraryComponent implements OnInit {
 	@ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
 	@ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
 	@ViewChild('directorySearchInput') private directorySearchInput: ElementRef;
+	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
 
 	constructor(
 		private router: Router,
@@ -418,6 +430,79 @@ export class MapsetLibraryComponent implements OnInit {
 
 	openEclBuilder(fieldId) {
 		UiUtility.openEclBuilder(fieldId, 'MAIN');
+	}
+
+	downloadMapsets(params) {
+		this.mapsetInfo = params.data;
+		this.downloadTitle = 'Download ' + this.mapsetInfo.refSetCode + ' ' + this.mapsetInfo.refSetName;
+		this.types = [
+			{ value: 'SNAPSHOT', display: 'SNAPSHOT' },
+			{ value: 'DELTA', display: 'DELTA' },
+		];
+		this.formats = [
+			{ value: 'RF2', display: 'RF2' },
+			{ value: 'RF2_WITH_NAMES', display: 'RF2 With Names' },
+			{ value: 'SCTIDS', display: 'List Of SCTIDs' },
+		];
+		this.openDownloadModal(this.downloadModal);
+	}
+
+	startDownload() {
+		this.downloadError = '';
+		if (this.selectedFormat['value'] !== undefined && this.selectedType['value'] !== undefined) {
+			// console.log('selected download type', this.selectedType['value']);
+			// console.log('selected download format', this.selectedFormat['value']);
+			// console.log(' select metadata ', this.selectExportMetadata);
+			// console.log(' mapset Inf d ', this.mapsetInfo);
+			// {
+			// 	"branch": "MAIN/SNOMEDCT-NO/2024-04-15/WCITEST",
+			// 	"mapSetCode": "447562003",
+			// 	"fileFormatType": "SNAPSHOT",
+			// 	"fileExportType": "RF2",
+			// 	"fileNameDate": "20250110",
+			// 	"languageId": "900000000000509007PT",
+			// 	"startEffectiveTime": "20240101",
+			// 	"transientEffectiveTime": "20240101",
+			// 	"exportMetadata": false
+			//   }
+			const params = {
+				'branch': this.mapsetInfo.branchPath,
+				'mapSetCode': this.mapsetInfo.refSetCode,
+				'fileFormatType': this.selectedType['value'],
+				'fileExportType': this.selectedFormat['value'],
+				'fileNameDate': CodeUtility.getCurrentDate().split('-').join(''),
+				'languageId': this.mapsetInfo.moduleId,
+				'startEffectiveTime': '', //this.mapsetInfo.modified,
+				'transientEffectiveTime': '', //CodeUtility.getCurrentDate(),
+				'exportMetadata': this.selectExportMetadata,
+			};
+			//console.log(' exp para ', params);
+			this.refsetService.exportMapset(params).subscribe(
+				(data) => {
+					//console.log(' data ', data);
+					this.closeDownloadModal();
+				},
+				(err) => {
+					console.error(err);
+				}
+			);
+		} else {
+			this.downloadError = 'Please select a download type and format.';
+		}
+	}
+
+	openDownloadModal(content) {
+		this.downloadModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+	}
+
+	closeDownloadModal() {
+		this.downloadError = '';
+		this.selectedFormat = {};
+		this.selectedType = {};
+		this.selectExportMetadata = false;
+		this.downloadModalRef.close();
+		this.isModalOpen = false;
 	}
 
 	openToBeDevelopedModal(content) {
