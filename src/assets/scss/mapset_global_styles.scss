@@ -179,7 +179,12 @@ tr.refset_tool_inactive_row {
 
 	.ag-row.refset_tool_grid_inactive_row {
 		background-color: $inactive_row_color;
+		border: 1px solid #aaaaaa !important;
 	}
+}
+
+.inactive-text {
+	text-decoration: line-through;
 }
 
 .ag-theme-alpine .ag-header-row {

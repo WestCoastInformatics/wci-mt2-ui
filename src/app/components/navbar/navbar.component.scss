@@ -260,6 +260,11 @@ nav {
 	height: 78px;
 	cursor: pointer;
 }
+.navbar-divider:hover,
+.dropdown-item:hover,
+.active-page {
+	background: #2196f3;
+}
 
 .navbar-divider {
 	height: 78px;

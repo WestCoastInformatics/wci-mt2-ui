@@ -67,7 +67,10 @@ import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
 
 // PAGE IMPORTS
 import { MapsetRecordsComponent } from './pages/mapset-records/mapset-records.component';
+import { MapsetInactivesComponent } from './pages/mapset-inactives/mapset-inactives.component';
 import { MapsetLibraryComponent } from './pages/mapset-library/mapset-library.component';
+import { MapsetProjectsComponent } from './pages/mapset-projects/mapset-projects.component';
+import { MapsetDetailsComponent } from './pages/mapset-details/mapset-details.component';
 import { MapsetMappingComponent } from './pages/mapset-mapping/mapset-mapping.component';
 import { EditMappingComponent } from './pages/edit-mapping/edit-mapping.component';
 import { BatchMappingComponent } from './pages/batch-mapping/batch-mapping.component';
@@ -138,7 +141,9 @@ const appRoutes: Routes = [
 	{ path: '', component: LandingComponent },
 	{ path: 'conflict', component: ConflictComponent },
 	{ path: 'library', component: MapsetLibraryComponent, data: { breadcrumbLabel: 'Map Set Library' } },
+	{ path: 'projects', component: MapsetProjectsComponent, data: { breadcrumbLabel: 'Map Set Projects' } },
 	{ path: 'mapset/:code/mappings', component: MapsetRecordsComponent, data: { breadcrumbLabel: 'Mappings' } },
+	{ path: 'mapset/:code/mappings/inactives', component: MapsetInactivesComponent, data: { breadcrumbLabel: 'Manage Inactivated Concepts' } },
 	{ path: 'mapset/:code/mappings/:concepts/batch', component: BatchMappingComponent, data: { breadcrumbLabel: 'Batch Edit Mappings' } },
 	{ path: 'mapset/:code/mapping/:concept', component: MapsetMappingComponent, data: { breadcrumbLabel: 'Mapping' } },
 	{ path: 'mapset/:code/mapping/:concept/edit', component: EditMappingComponent, data: { breadcrumbLabel: 'Edit Map' } },
@@ -290,7 +295,9 @@ const appRoutes: Routes = [
 		DashboardComponent,
 		SidebarComponent,
 		MapsetLibraryComponent,
+		MapsetProjectsComponent,
 		MapsetRecordsComponent,
+		MapsetInactivesComponent,
 		MapsetMappingComponent,
 		EditMappingComponent,
 		BatchMappingComponent,

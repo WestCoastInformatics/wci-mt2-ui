@@ -1,0 +1,272 @@
+<div *ngIf="showLoadingSpinner" class="loading"></div>
+
+<!-- Search Bar -->
+<div class="top-search-bar content-header">
+	<div class="row justify-content-end align-items-baseline">
+		<div class="col page-title">
+			Map Set Projects
+			<span [hidden]="!numOfMembers">{{ '(' + numOfMembers + ')' }}</span>
+		</div>
+	</div>
+</div>
+
+<div class="rt2-container refsetDirectoryPage" (window:resize)="onResize($event)">
+	<div class="metadata-collapsible-container m-t-20">
+		<div class="metadata-collapsible-container-group-header row">
+			<div class="metadata-section-background">
+				<div class="row d-flex dropdown-group">
+					<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
+						<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
+					</div>
+					<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
+						<mat-menu #searchMenu="matMenu" class="search-box">
+							<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
+								<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
+									<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
+									<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" (click)="$event.stopPropagation()" />
+								</mat-form-field>
+								<span class="clear-search" title="Clear Search" (click)="$event.stopPropagation(); clearSearch()" *ngIf="searchInput.length > 0">&#10005;</span><br />
+								<span *ngIf="searchInput.length > 0" class="mappings-section"
+									>{{ refsetGridApi.getDisplayedRowCount() > 0 ? refsetGridApi.getDisplayedRowCount() : 'No ' }} result{{
+										refsetGridApi.getDisplayedRowCount() > 1 ? 's' : ''
+									}}
+									found</span
+								>
+							</div></mat-menu
+						>
+						<div class="menu-inline">
+							<button [matMenuTriggerFor]="searchMenu" (menuOpened)="menuOpened()" aria-label="Search" title="Search" class="mapset-download-icon menu-button">
+								<mat-icon class="menu-icon">search</mat-icon>
+								<span class="menu-label">search</span>
+							</button>
+						</div>
+					</div>
+				</div>
+				<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showTable && !showLoadingSearch"></div>
+				<div class="row loading-details dashboard-section" *ngIf="showLoadingSearch">
+					<div>Loading...</div>
+				</div>
+				<!-- Page Title -->
+				<!-- <div class="container-fluid page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div> -->
+
+				<!-- Reference Set Table -->
+				<ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct" [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
+				</ag-grid-angular>
+
+				<!--<app-pagination
+				#directoryPaging
+				*ngIf="showTable"
+				[pageSize]="refsetGridPaging.pageSize"
+				[gridOptions]="refsetGridOptions"
+				[pageSizeOptions]="refsetGridPaging.pageSizeOptions"
+				[totalKnown]="refsetGridPaging.totalKnown"
+				[manualStateRefresh]="refsetGridPaging.manualStateRefresh">
+			</app-pagination>-->
+				<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
+				<div class="rt2-pagination-container" [hidden]="showLoadingSearch || numOfMembers === 0">
+					<div class="rt2-pagination-top-row">
+						<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons">
+							<button
+								#paginationFirstPage
+								mat-raised-button
+								(click)="goToPage(0)"
+								class="pagination-page-buttons"
+								[ngClass]="{ disabled: getCurrentPage() === 0 }"
+								title="Go To First Page"
+								attr.aria-label="Go To First Page">
+								<mat-icon aria-hidden="false">first_page</mat-icon>
+							</button>
+
+							<button
+								#paginationPreviousPage
+								mat-raised-button
+								(click)="refsetGridApi.paginationGoToPreviousPage()"
+								title="Go To Previous Page {{ getCurrentPage() }}"
+								class="pagination-page-buttons"
+								[ngClass]="{ disabled: getCurrentPage() === 0 }"
+								attr.aria-label="Go To Previous Page {{ getCurrentPage() }}">
+								<mat-icon aria-hidden="false">arrow_left</mat-icon>
+							</button>
+
+							<span *ngFor="let page of paginationPages.pages">
+								<button
+									#paginationPageNumber
+									mat-raised-button
+									class="pagination-page-buttons"
+									[color]="getCurrentPage() + 1 === page ? 'primary' : ''"
+									(click)="goToPage(page - 1)"
+									attr.aria-label="{{ getCurrentPage() + 1 === page ? 'Current' : 'Go To' }} Page {{ page }}"
+									title="{{ getCurrentPage() + 1 === page ? 'Current' : 'Go To' }} Page {{ page }}">
+									{{ page }}
+								</button>
+							</span>
+
+							<button
+								mat-button
+								*ngIf="paginationPages.totalPages - paginationPages.startPage > 5"
+								(click)="goToPage(paginationPages.startPage + 4)"
+								class="pagination-page-buttons w-min-32 p-0"
+								title="Go To Page {{ paginationPages.startPage + 5 }}"
+								attr.aria-label="Go To Page {{ paginationPages.startPage + 5 }}"
+								title="Go To Page {{ paginationPages.startPage + 5 }}">
+								...
+							</button>
+
+							<button
+								mat-raised-button
+								*ngIf="paginationPages.totalPages - paginationPages.startPage > 5"
+								(click)="goToPage(paginationPages.totalPages)"
+								class="pagination-page-buttons"
+								attr.aria-label="Go To Page {{ paginationPages.totalPages }}"
+								title="Go To Page {{ paginationPages.totalPages }}">
+								{{ paginationPages.totalPages }}
+							</button>
+
+							<button
+								#paginationNextPage
+								mat-raised-button
+								(click)="refsetGridApi.paginationGoToNextPage()"
+								title="Go To Next Page {{ getCurrentPage() + 2 }}"
+								class="pagination-page-buttons"
+								[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
+								attr.aria-label="Go To Next Page {{ getCurrentPage() + 2 }}">
+								<mat-icon aria-hidden="false">arrow_right</mat-icon>
+							</button>
+
+							<button
+								#paginationLastPage
+								mat-raised-button
+								(click)="goToPage(paginationPages.totalPages)"
+								title="Go To Last Page ({{ paginationPages.totalPages }})"
+								class="pagination-page-buttons"
+								[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
+								attr.aria-label="Go To Last Page {{ paginationPages.totalPages }}">
+								<mat-icon aria-hidden="false">last_page</mat-icon>
+							</button>
+						</div>
+
+						<div class="rt2-pagination-bottom-row" *ngIf="showPaging">
+							<span *ngFor="let sizeOption of refsetGridPaging.pageSizeOptions">
+								<button
+									mat-raised-button
+									[color]="refsetGridPaging.pageSize === sizeOption ? 'secondary' : ''"
+									class="pagination-page-buttons unthemed"
+									(click)="setPageSize(sizeOption)"
+									[hidden]="sizeOption > numOfMembers"
+									title="{{ sizeOption }} Members per Page">
+									{{ sizeOption }}
+								</button>
+							</span>
+						</div>
+					</div>
+					<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
+						Showing <span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }} </span> to
+						<span class="fw-bold p-l-5 p-r-5">
+							{{ numOfMembers < (getCurrentPage() + 1) * refsetGridPaging.pageSize ? numOfMembers : (getCurrentPage() + 1) * refsetGridPaging.pageSize }}
+						</span>
+						of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
+					</div>
+					<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Information Templates -->
+	<ng-template #directoryInfoSection let-params>
+		<div class="d-flex rt2-wrap">
+			<div class="col-6">
+				<div
+					aria-hidden="false"
+					#directoryInfoIcon
+					class="mat-button-wrapper mapset-notes-icon"
+					aria-label="View Map Set Metadata"
+					title="View Map Set Metadata"
+					(click)="openToBeDevelopedModal(toBeDevelopedModal)">
+					<mat-icon class="scale-85-pct">information</mat-icon>
+				</div>
+			</div>
+			<div class="col-6">
+				<div *ngIf="params.data.memberSearchMatch" title="Search matches reference set member" class="member-search-icon general-icon-font">M</div>
+			</div>
+		</div>
+	</ng-template>
+
+	<ng-template #directoryInfoDialog let-data>
+		<div class="container-fluid w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
+			<div class="row rt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
+				<p class="fs-18 mb-0 ml-10">{{ data.name }}</p>
+				<p class="fs-16 ml-10">
+					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span
+					><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
+				</p>
+			</div>
+			<refset-meta [refset]="data"></refset-meta>
+		</div>
+	</ng-template>
+
+	<!-- Workflow Status Templates -->
+	<ng-template #directoryWorkflowStatusSection let-params>
+		<object [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)">{{ params?.value }}</object>
+	</ng-template>
+
+	<!-- Name Templates -->
+	<ng-template #directoryNameSection let-params>
+		{{ params?.value }}
+
+		<mat-icon
+			*ngIf="params?.data?.privateRefset"
+			aria-hidden="false"
+			#directoryPrivateIcon
+			class="rt2-table-action-icon rt2-table-action-form-icon"
+			aria-label="Private Reference Set"
+			title="Private Reference Set">
+			lock
+		</mat-icon>
+		<mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="rt2-table-action-icon rt2-table-action-form-icon" aria-label="Local Set" title="Local Set"> my_location </mat-icon>
+	</ng-template>
+
+	<ng-template #directoryVersionDate let-params> {{ formatVersionDate(params?.value) }} </ng-template>
+
+	<!-- Action Templates -->
+	<ng-template #directoryActionSection let-params>
+		<div class="d-flex">
+			<div class="col-6">
+				<div class="library-app-refset-download" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+					<div class="mat-button-wrapper mapset-notes-icon">
+						<i class="fa fa-download fa-lg" title="Download Map Set" aria-label="Download Map Set"></i>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-6">
+				<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+					<img src="/assets/comment-dots-regular.svg" title="Add Feedback" aria-label="Add Feedback" class="discussion-icon" />
+				</div>
+			</div>
+		</div>
+	</ng-template>
+
+	<ng-template #directoryFeedbackDialog let-data>
+		This functionality will be implemented in subsequent phases.
+		<mat-form-field floatLabel="never" *ngIf="false">
+			<mat-label>Feedback</mat-label>
+			<input matInput [(ngModel)]="data.feedback" />
+		</mat-form-field>
+	</ng-template>
+
+	<ng-template #toBeDevelopedModal let-modal>
+		<div class="modal-header rt2-modal-header">
+			<h4 class="modal-title">Coming Soon</h4>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p>This feature is not yet available. Please check back later.</p>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		</div>
+	</ng-template>
+</div>
+<scroll-top></scroll-top>
