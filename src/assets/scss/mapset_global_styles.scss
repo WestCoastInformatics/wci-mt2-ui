@@ -181,10 +181,28 @@ tr.refset_tool_inactive_row {
 		background-color: $inactive_row_color;
 		border: 1px solid #aaaaaa !important;
 	}
+
+	.ag-row.refset_tool_grid_processed_row {
+		background-color: $processed_row_color;
+		border: 1px solid #aaaaaa !important;
+	}
+
+	.ag-row.refset_tool_grid_processed_inactive_row {
+		background-color: $processed_inactive_row_color;
+		border: 1px solid #aaaaaa !important;
+	}
 }
 
 .inactive-text {
 	text-decoration: line-through;
+}
+
+.only-label .mat-button-toggle-button .mat-button-toggle-label-content {
+	line-height: 12px !important;
+	text-wrap: auto;
+	letter-spacing: 0.5px;
+	margin-top: 13px;
+	font-size: 12px;
 }
 
 .ag-theme-alpine .ag-header-row {

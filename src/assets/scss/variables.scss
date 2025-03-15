@@ -237,8 +237,10 @@ $add_color: green;
 $delete_color: red;
 $action_button_color: #2169e8;
 $inactive_text_color: rgb(170, 170, 170);
-$inactive_row_color: rgb(241 222 222);
-$concept_details_color: #2169e8;
+$inactive_row_color: #ffeeee;
+$processed_row_color: #e2e2e2;
+$processed_inactive_row_color: #ded7d7;
+$concept_details_color: rgba(0, 169, 224, 1);
 
 @font-face {
 	font-family: 'Poppins';

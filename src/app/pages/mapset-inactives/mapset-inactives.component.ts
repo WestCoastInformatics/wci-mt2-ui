@@ -76,6 +76,8 @@ export class MapsetInactivesComponent implements OnInit {
 	uiUtility = UiUtility;
 	toBeDevelopedModalRef: NgbModalRef;
 	downloadModalRef: NgbModalRef;
+	notesModalRef: NgbModalRef;
+	feedbackModalRef: NgbModalRef;
 	isModalOpen = false;
 	mapsetName = 'Mapset Name';
 	mapsetCode: string;
@@ -89,6 +91,17 @@ export class MapsetInactivesComponent implements OnInit {
 	showBrowserSection = false;
 	selectedFormat = {};
 	formats = [];
+	selectedType = {};
+	types = [];
+	downloadTitle = '';
+	downloadError = '';
+	notesEditor = '';
+	notesError = '';
+	notesTitle = '';
+	feedbackSubject = '';
+	feedbackEditor = '';
+	selectFeedbackPrivate = false;
+	feedbackError = '';
 	loaded = false;
 	showPaging = false;
 	datasource: any;
@@ -119,6 +132,8 @@ export class MapsetInactivesComponent implements OnInit {
 	@ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
 	@ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
 	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
+	@ViewChild('notesModal') notesModal: TemplateRef<any>;
+	@ViewChild('feedbackModal') feedbackModal: TemplateRef<any>;
 	@ViewChild('actions') private actions: MatSelect;
 	@ViewChild('directorySearchInput') private directorySearchInput: ElementRef;
 
@@ -433,12 +448,24 @@ export class MapsetInactivesComponent implements OnInit {
 				rowClassRules: {
 					'refset_tool_grid_inactive_row': function (params) {
 						let inactivatedRow = false;
-
 						if (params.data) {
 							inactivatedRow = params.data.active === false;
 						}
-
 						return inactivatedRow;
+					},
+					'refset_tool_grid_processed_row': function (params) {
+						let processedRow = false;
+						if (params.data) {
+							processedRow = params.data.processed === true;
+						}
+						return processedRow;
+					},
+					'refset_tool_grid_processed_inactive_row': function (params) {
+						let processedInactiveRow = false;
+						if (params.data) {
+							processedInactiveRow = params.data.processed === true && params.data.active === false;
+						}
+						return processedInactiveRow;
 					},
 				},
 			};
@@ -688,12 +715,10 @@ export class MapsetInactivesComponent implements OnInit {
 	}
 
 	onStatusChange(status, index) {
-		console.log('change ', status, index);
 		for (let d = 0; d < this.mapsetData.length; d++) {
 			if (this.mapsetData[d].index === index) {
 				this.mapsetData[d].active = status;
 				this.refsetGridApi.setRowData(this.mapsetData);
-				//this.refsetGridApi.refreshCells(this.refsetGridOptions);
 				this.refsetGridApi.redrawRows();
 			}
 		}
@@ -807,66 +832,138 @@ export class MapsetInactivesComponent implements OnInit {
 
 	selectAction(selectedAction: string) {
 		switch (selectedAction) {
-			case 'batch':
-				if (this.checkedNum > 1) {
+			case 'processed':
+				if (this.checkedNum > 0) {
 					const codes = [];
 					for (let c = 0; c < this.mapsetData.length; c++) {
 						if (this.mapsetData[c].checked === true) {
-							codes.push(this.mapsetData[c].code);
+							this.mapsetData[c].processed = true;
+							this.refsetGridApi.setRowData(this.mapsetData);
+							this.refsetGridApi.redrawRows();
 						}
-					}
-					if (codes.length > 0) {
-						const ddInterval = setInterval(() => {
-							this.goToBatchMappingsPage(codes);
-							clearInterval(ddInterval);
-						}, 2);
 					}
 				}
 				break;
-			case 'select':
-				window['checkbox-table-all'].click();
-				break;
-			case 'view':
-				if (this.checkedNum === 1) {
+			case 'include':
+				if (this.checkedNum > 0) {
 					for (let c = 0; c < this.mapsetData.length; c++) {
 						if (this.mapsetData[c].checked === true) {
-							const ddInterval = setInterval(() => {
-								this.goToMappingPage(this.mapsetData[c].code);
-								clearInterval(ddInterval);
-							}, 2);
+							this.onStatusChange(true, this.mapsetData[c].index);
 						}
 					}
 				}
 				break;
-			case 'edit':
-				if (this.checkedNum === 1) {
+			case 'exclude':
+				if (this.checkedNum > 0) {
 					for (let c = 0; c < this.mapsetData.length; c++) {
 						if (this.mapsetData[c].checked === true) {
-							const ddInterval = setInterval(() => {
-								this.goToEditMappingPage(this.mapsetData[c].code);
-								clearInterval(ddInterval);
-							}, 2);
+							this.onStatusChange(false, this.mapsetData[c].index);
 						}
 					}
 				}
 				break;
-			case 'selected':
-				this.downloadMapsets();
+			case 'download':
+				this.downloadReports();
 				break;
-			case 'all':
-				this.downloadMapsets();
+			case 'note':
+				this.openNotes();
 				break;
+			case 'feedback':
+				this.openFeedback();
+				break;
+			default:
+				this.openToBeDevelopedModal(this.tbdModal);
 		}
+		this.unCheckAll();
 	}
 
-	downloadMapsets() {
+	unCheckAll() {
+		this.mapsetData.forEach((map) => {
+			if (map.checked) {
+				map.checked = false;
+			}
+		});
+		this.checkedNum = 0;
+		this.refsetGridApi.redrawRows();
+	}
+
+	downloadReports() {
+		this.selectedFormat = {};
+		this.selectedType = {};
+		this.downloadError = '';
+		this.downloadTitle = 'Download report for ' + this.mapsetName;
+		this.formats = [{ value: 'tab', display: 'Tab-Delimited Text File' }];
+		this.types = [
+			{ value: 'change', display: 'Change Report' },
+			{ value: 'inactive', display: 'Inactives Report' },
+		];
 		this.openDownloadModal(this.downloadModal);
 	}
 
 	startDownload() {
-		this.closeDownloadModal();
-		console.log('selected download format', this.selectedFormat['value']);
-		this.openToBeDevelopedModal(this.tbdModal);
+		this.downloadError = '';
+		if (this.selectedFormat['value'] !== undefined && this.selectedType['value'] !== undefined) {
+			//console.log('selected download type', this.selectedType['value']);
+
+			this.closeDownloadModal();
+			this.openToBeDevelopedModal(this.tbdModal);
+			const params = {
+				'fileExportType': this.selectedFormat['value'],
+			};
+			//console.log(' exp para ', params);
+			/*
+			this.refsetService.exportMapset(params).subscribe(
+				(data) => {
+					//console.log(' data ', data);
+					this.closeDownloadModal();
+				},
+				(err) => {
+					console.error(err);
+				}
+			);*/
+		} else {
+			this.downloadError = 'Please select a download type and format.';
+		}
+	}
+
+	openNotes() {
+		this.notesEditor = '';
+		this.notesError = '';
+		this.notesTitle = 'Create Note';
+		this.openNotesModal(this.notesModal);
+	}
+
+	saveNotes() {
+		this.notesError = '';
+		if (this.notesEditor !== '' && this.notesEditor !== null) {
+			console.log('notes entry ', this.notesEditor);
+
+			this.closeNotesModal();
+			this.openToBeDevelopedModal(this.tbdModal);
+		} else {
+			this.notesError = 'Please enter your notes.';
+		}
+	}
+
+	openFeedback() {
+		this.feedbackSubject = '';
+		this.selectFeedbackPrivate = false;
+		this.feedbackEditor = '';
+		this.feedbackError = '';
+		this.openFeedbackModal(this.feedbackModal);
+	}
+
+	saveFeedback() {
+		this.feedbackError = '';
+		if (this.feedbackEditor !== '' && this.feedbackEditor !== null && this.feedbackSubject !== '' && this.feedbackSubject !== null) {
+			console.log('feedback entry ', this.feedbackEditor);
+			console.log('feedback subject ', this.feedbackSubject);
+			console.log('feedback selectFeedbackPrivate ', this.selectFeedbackPrivate);
+			this.closeFeedbackModal();
+			this.openToBeDevelopedModal(this.tbdModal);
+		} else {
+			this.feedbackError = 'Please enter your feedback topic and message.';
+		}
 	}
 
 	clearSearch() {
@@ -952,6 +1049,26 @@ export class MapsetInactivesComponent implements OnInit {
 
 	closeDownloadModal() {
 		this.downloadModalRef.close();
+		this.isModalOpen = false;
+	}
+
+	openNotesModal(content) {
+		this.notesModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+	}
+
+	closeNotesModal() {
+		this.notesModalRef.close();
+		this.isModalOpen = false;
+	}
+
+	openFeedbackModal(content) {
+		this.feedbackModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+	}
+
+	closeFeedbackModal() {
+		this.feedbackModalRef.close();
 		this.isModalOpen = false;
 	}
 
@@ -1068,30 +1185,6 @@ export class MapsetInactivesComponent implements OnInit {
 					this.goToDetailsPage(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset));
 				}
 			});
-		});
-	}
-
-	openFeedback(refsetId: string) {
-		const refset = this.getRefsetRow(refsetId);
-		const dialogId = 'directoryFeedbackDialog';
-
-		const dialogData = {
-			headerText: `Reference Set Feedback for ${refset.name} (${refset.refsetId})`,
-			template: this.feedbackDialog,
-			data: refset,
-		};
-
-		const dialogOptions = {
-			id: dialogId,
-			disableClose: false,
-		};
-
-		this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
-
-		this.dialog.confirmed().subscribe((data) => {
-			if (data) {
-				refset.feedback = data.feedback;
-			}
 		});
 	}
 

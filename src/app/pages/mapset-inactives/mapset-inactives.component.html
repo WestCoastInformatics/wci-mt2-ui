@@ -17,21 +17,16 @@
 			</div>
 		</div>
 		<div class="col-md-auto d-flex p-r-40 mr-10">
-			<div class="col-4">
-				<button class="library-app-refset-download" (click)="openDownloadModal(downloadModal)" [disabled]="!selectedVersion || numOfMembers === 0">
+			<div class="col-6">
+				<button class="library-app-refset-download" (click)="downloadReports()" [disabled]="!selectedVersion || numOfMembers === 0">
 					<div class="mat-button-wrapper mapset-download-icon">
-						<i class="fa fa-download fa-lg" title="Download Map Set" aria-label="Download Map Set"></i>
+						<i class="fa fa-download fa-lg" title="Download Report" aria-label="Download Report"></i>
 					</div>
 				</button>
 			</div>
-			<div class="col-4 p-l-5">
+			<div class="col-6 p-l-5">
 				<div (click)="goToMappingsPage(mapsetCode)">
 					<img src="/assets/preview-icon.svg" title="View Mappings" aria-label="View Mappings" class="no-preview-icon" />
-				</div>
-			</div>
-			<div class="col-4 p-l-10">
-				<div (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-					<img src="/assets/comment-dots-regular.svg" title="Add Feedback" aria-label="Add Feedback" class="discussion-icon" />
 				</div>
 			</div>
 		</div>
@@ -87,20 +82,26 @@
 					</button>
 				</div>
 				<mat-menu #actionMenu="matMenu">
-					<button mat-menu-item (click)="selectAction('view')" [disabled]="checkedNum !== 1">
-						<span>View Selected Mapping</span>
+					<button mat-menu-item (click)="selectAction('include')" [disabled]="checkedNum < 1">
+						<span>Include selected in Scope</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('edit')" [disabled]="checkedNum !== 1">
-						<span>Edit Selected Mapping</span>
+					<button mat-menu-item (click)="selectAction('exclude')" [disabled]="checkedNum < 1">
+						<span>Exclude selected from Scope</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('batch')" [disabled]="checkedNum < 2">
-						<span>Batch Edit Selected Mappings</span>
+					<button mat-menu-item (click)="selectAction('processed')" [disabled]="checkedNum < 1">
+						<span>Mark as Processed</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('selected')" [disabled]="checkedNum < 1">
-						<span>Download Selected Mappings</span>
+					<button mat-menu-item (click)="selectAction('review')" [disabled]="checkedNum < 1">
+						<span>Request Review</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('all')">
-						<span>Download Entire Map Set</span>
+					<button mat-menu-item (click)="selectAction('note')" [disabled]="checkedNum < 1">
+						<span>View or Add Authoring Note</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('feedback')" [disabled]="checkedNum < 1">
+						<span>View or Add Authoring Communication</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('download')">
+						<span>Download Report</span>
 					</button>
 				</mat-menu>
 			</div>
@@ -351,14 +352,14 @@
 	<ng-template #directoryActionSection let-params>
 		<div class="d-flex" *ngIf="params?.value === true">
 			<div class="col-6">
-				<div class="library-app-refset-notes" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-					<img src="/assets/sticky-note.svg" title="View Notes" aria-label="View Notes" class="mapset-notes-icon" />
+				<div class="library-app-refset-notes" (click)="selectAction('note')">
+					<img src="/assets/sticky-note.svg" title="View or Add Authoring Notes" aria-label="View or Add Authoring Notes" class="mapset-notes-icon" />
 				</div>
 			</div>
 
 			<div class="col-6">
-				<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-					<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
+				<div class="library-app-refset-discussion-list" (click)="selectAction('feedback')">
+					<img src="/assets/comment-dots-regular.svg" title="View or Add Authoring Communication" aria-label="View or Add Authoring Communication" class="discussion-icon" />
 				</div>
 			</div>
 		</div>
@@ -422,15 +423,32 @@
 
 	<ng-template #downloadModal let-modal>
 		<div class="modal-header rt2-modal-header">
-			<div class="modal-title">Download Map Set</div>
+			<div class="modal-title">Download Report</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeDownloadModal()">
 				<span aria-hidden="true">&times;</span>
 			</button>
 		</div>
 		<div class="modal-body">
-			<p>Download {{ mapsetName }} {{ selectedVersion }}</p>
+			<p>{{ downloadTitle }}</p>
+			<div class="modal-error-message" *ngIf="downloadError">
+				<div>{{ downloadError }}</div>
+			</div>
 			<div class="modal-select">
-				<label class="modal-label">Format: </label>
+				<label class="modal-label">File Type: <span class="mandatory-field">*</span></label>
+				<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
+					<mat-select placeholder="Select a type" [ngModel]="types" [(value)]="selectedType" class="rt2-column-chooser-select">
+						<mat-select-trigger class="trigger"
+							><span *ngIf="!selectedType"> Select a type </span><span *ngIf="selectedType">{{ selectedType.display }}</span></mat-select-trigger
+						>
+
+						<mat-option *ngFor="let type of types" [value]="type" class="no-checkbox">
+							{{ type.display }}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<div class="modal-select">
+				<label class="modal-label">File Format: <span class="mandatory-field">*</span></label>
 				<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
 					<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="rt2-column-chooser-select">
 						<mat-select-trigger class="trigger"
@@ -447,6 +465,81 @@
 		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
 			<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
 			<button type="button" title="Download" class="rt2-btn rt2-action-btn" (click)="startDownload()">Download</button>
+		</div>
+	</ng-template>
+
+	<ng-template #notesModal let-modal>
+		<div class="modal-header rt2-modal-header">
+			<div class="modal-title">Authoring Notes</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeNotesModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p>{{ notesTitle }}</p>
+			<div class="modal-error-message" *ngIf="notesError">
+				<div>{{ notesError }}</div>
+			</div>
+			<editor
+				class="fill-height"
+				id="notesEditor"
+				[(ngModel)]="notesEditor"
+				[init]="{
+					base_url: '/tinymce',
+					suffix: '.min',
+					height: 200,
+					menubar: false,
+					auto_focus: 'notesEditor',
+					placeholder: 'Enter your notes',
+					plugins: ['lists', 'advlist', 'wordcount'],
+					toolbar: 'undo redo | bold italic | bullist numlist outdent indent | wordcount'
+				}">
+			</editor>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeNotesModal()">Cancel</button>
+			<button type="button" title="Save" class="rt2-btn rt2-action-btn" (click)="saveNotes()">Save</button>
+		</div>
+	</ng-template>
+
+	<ng-template #feedbackModal let-modal>
+		<div class="modal-header rt2-modal-header">
+			<div class="modal-title">Authoring Communication</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeFeedbackModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<div class="modal-error-message" *ngIf="feedbackError">
+				<div>{{ feedbackError }}</div>
+			</div>
+			<mat-form-field floatLabel="never" appearance="fill" class="d-flex">
+				<label class="modal-label">Feedback Topic: <span class="mandatory-field">*</span></label>
+				<input matInput type="text" [(ngModel)]="feedbackSubject" placeholder="Add a descriptive title for your feedback topic" />
+			</mat-form-field>
+			<editor
+				class="fill-height"
+				id="feedbackEditor"
+				[(ngModel)]="feedbackEditor"
+				[init]="{
+					base_url: '/tinymce',
+					suffix: '.min',
+					height: 200,
+					menubar: false,
+					auto_focus: 'feedbackEditor',
+					placeholder: 'Enter your feedback message',
+					plugins: ['lists', 'advlist', 'wordcount'],
+					toolbar: 'undo redo | bold italic | bullist numlist outdent indent | wordcount'
+				}">
+			</editor>
+			<div class="d-flex align-items-center justify-content-center m-3">
+				<label class="modal-label">Mark Feedback Private: </label>
+				<mat-checkbox class="menu-checkbox" [(ngModel)]="selectFeedbackPrivate"></mat-checkbox>
+			</div>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeFeedbackModal()">Cancel</button>
+			<button type="button" title="Save" class="rt2-btn rt2-action-btn" (click)="saveFeedback()">Save</button>
 		</div>
 	</ng-template>
 
