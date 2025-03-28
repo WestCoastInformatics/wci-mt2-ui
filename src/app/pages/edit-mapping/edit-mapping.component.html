@@ -4,8 +4,41 @@
 <div class="top-search-bar content-header">
 	<div class="d-flex justify-content-end">
 		<div class="col-md-8 d-flex">
-			<div class="page-title rt2-wrap" *ngIf="loaded" title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}">
-				<span>{{ mapsetData[0].code + ' ' + mapsetData[0].name }} </span>
+			<div class="page-title" *ngIf="loaded" title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}">
+				<div class="rt2-wrap">{{ mapsetData[0].code + ' ' + mapsetData[0].name }}</div>
+				<!-- Status Stepper if in edit mode and Reference Set not locked -->
+				<mat-horizontal-stepper class="col-1 details-page-stepper" [linear]="true" labelPosition="bottom" #stepper>
+					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_EDIT_STARTED']">
+						<ng-template matStepperIcon="number">
+							<mat-icon>done</mat-icon>
+						</ng-template>
+						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_EDIT_COLOR']">Ready for Edit</span></ng-template>
+					</mat-step>
+
+					<mat-step [editable]="false" [completed]="stepperInfo['IN_EDIT_STARTED']">
+						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_EDIT_COLOR']">In Edit</span></ng-template>
+					</mat-step>
+
+					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_REVIEW_STARTED']">
+						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_REVIEW_COLOR']">Ready for Review</span> </ng-template>
+					</mat-step>
+
+					<mat-step [editable]="false" [completed]="stepperInfo['IN_REVIEW_STARTED']">
+						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_REVIEW_COLOR']">In Review</span></ng-template>
+					</mat-step>
+
+					<mat-step [editable]="false" [completed]="stepperInfo['REVIEW_COMPLETED_STARTED']">
+						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['REVIEW_COMPLETED_COLOR']">Review Completed</span> </ng-template>
+					</mat-step>
+
+					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_PUBLICATION_STARTED']">
+						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_PUBLICATION_COLOR']">Ready for Publication</span></ng-template>
+					</mat-step>
+
+					<ng-template matStepperIcon="done">
+						<mat-icon>done</mat-icon>
+					</ng-template>
+				</mat-horizontal-stepper>
 			</div>
 		</div>
 		<div class="col-md-auto d-flex p-r-30 m-t-5">

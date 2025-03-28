@@ -3,36 +3,68 @@
 <!-- Search Bar -->
 <div class="top-search-bar content-header">
 	<div class="d-flex justify-content-end">
-		<div class="col-md-auto d-flex">
-			<div class="page-title rt2-wrap" title="{{ mapsetName }}">
-				<span>{{ mapsetName }} </span>
+		<div class="d-flex">
+			<div class="col-md-8 page-title" title="{{ mapsetName }}">
+				<div class="rt2-wrap">{{ mapsetName }}</div>
+				<!-- Status Stepper if in edit mode and Reference Set not locked -->
+				<mat-horizontal-stepper class="col-1 details-page-stepper" [linear]="true" labelPosition="bottom" #stepper>
+					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_EDIT_STARTED']">
+						<ng-template matStepperIcon="number">
+							<mat-icon>done</mat-icon>
+						</ng-template>
+						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_EDIT_COLOR']">Ready for Edit</span></ng-template>
+					</mat-step>
+
+					<mat-step [editable]="false" [completed]="stepperInfo['IN_EDIT_STARTED']">
+						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_EDIT_COLOR']">In Edit</span></ng-template>
+					</mat-step>
+
+					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_REVIEW_STARTED']">
+						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_REVIEW_COLOR']">Ready for Review</span> </ng-template>
+					</mat-step>
+
+					<mat-step [editable]="false" [completed]="stepperInfo['IN_REVIEW_STARTED']">
+						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_REVIEW_COLOR']">In Review</span></ng-template>
+					</mat-step>
+
+					<mat-step [editable]="false" [completed]="stepperInfo['REVIEW_COMPLETED_STARTED']">
+						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['REVIEW_COMPLETED_COLOR']">Review Completed</span> </ng-template>
+					</mat-step>
+
+					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_PUBLICATION_STARTED']">
+						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_PUBLICATION_COLOR']">Ready for Publication</span></ng-template>
+					</mat-step>
+
+					<ng-template matStepperIcon="done">
+						<mat-icon>done</mat-icon>
+					</ng-template>
+				</mat-horizontal-stepper>
 			</div>
-			<div class="col-md-auto p-l-20">
+			<div class="col-md-3 d-flex header-menu">
 				<mat-form-field floatLabel="never" class="directoryViewFilterField format-version-drop-down" appearance="fill">
 					<mat-label></mat-label>
 					<mat-select title="Choose Version" placeholder="Choose Version" #directoryViewSelect [(value)]="selectedVersion" (selectionChange)="changedVersionStatus()">
 						<mat-option *ngFor="let option of versionStatuses" [value]="option" class="no-checkbox"> {{ option }} </mat-option>
 					</mat-select>
 				</mat-form-field>
-			</div>
-		</div>
-		<div class="col-md-auto d-flex p-r-40 mr-10">
-			<div class="col-6">
-				<button class="library-app-refset-download" (click)="openDownloadModal(downloadModal)" [disabled]="!selectedVersion || numOfMembers === 0">
-					<div class="mat-button-wrapper mapset-download-icon">
-						<i class="fa fa-download fa-lg" title="Download Map Set" aria-label="Download Map Set"></i>
+				<div class="col-md-auto d-flex p-r-40 mr-10 p-l-10">
+					<div class="col-6">
+						<button class="library-app-refset-download" (click)="openDownloadModal(downloadModal)" [disabled]="!selectedVersion || numOfMembers === 0">
+							<div class="mat-button-wrapper mapset-download-icon">
+								<i class="fa fa-download fa-lg" title="Download Map Set" aria-label="Download Map Set"></i>
+							</div>
+						</button>
 					</div>
-				</button>
-			</div>
-			<div class="col-6 p-l-10">
-				<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-					<img src="/assets/comment-dots-regular.svg" title="Add Feedback" aria-label="Add Feedback" class="discussion-icon" />
+					<div class="col-6">
+						<div class="library-app-refset-discussion-list p-l-10" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+							<img src="/assets/comment-dots-regular.svg" title="Add Feedback" aria-label="Add Feedback" class="discussion-icon" />
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
 <div class="rt2-container" (window:resize)="onResize($event)">
 	<div class="metadata-collapsible-container m-t-20">
 		<div class="switch-view" *ngIf="showMappingsSection && loaded" [hidden]="numOfMembers === 0">
@@ -277,7 +309,9 @@
 			</div>
 			<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
 				Showing <span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }} </span> to
-				<span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers < (getCurrentPage() + 1) * refsetGridPaging.pageSize ? numOfMembers : (getCurrentPage() + 1) * refsetGridPaging.pageSize }} </span>
+				<span class="fw-bold p-l-5 p-r-5">
+					{{ numOfMembers < (getCurrentPage() + 1) * refsetGridPaging.pageSize ? numOfMembers : (getCurrentPage() + 1) * refsetGridPaging.pageSize }}
+				</span>
 				of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
 			</div>
 			<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
