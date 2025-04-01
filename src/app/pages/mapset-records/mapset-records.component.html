@@ -178,13 +178,13 @@
 											<div class="record-code col-2">{{ entry.toCode }}</div>
 											<div class="record-name col-8">
 												{{ entry.toName }}
-												<span *ngIf="entry.modFlag !== ''">
+												<span *ngIf="getModuleLanguageIcon(entry.moduleId) !== ''">
 													<img
 														class="mapset-mod-icon"
 														*ngIf="entry.moduleId !== internationalId"
-														src="{{ 'assets/flags/' + entry.modFlag + '.png' }}"
-														title="{{ entry.modLang }}"
-														aria-label="{{ entry.modLang }}"
+														src="{{ 'assets/flags/' + getModuleLanguageIcon(entry.moduleId) + '.png' }}"
+														title="{{ getModuleLanguageName(entry.moduleId) }}"
+														aria-label="{{ getModuleLanguageName(entry.moduleId) }}"
 												/></span>
 											</div>
 										</div>
