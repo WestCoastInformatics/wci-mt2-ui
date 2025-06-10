@@ -89,6 +89,7 @@ export class MapsetRecordsComponent implements OnInit {
 	showMetadataSection = false;
 	showHistorySection = false;
 	downloadError = '';
+	downloading = false;
 	selectedFormat = {};
 	formats = [];
 	selectedType = {};
@@ -915,7 +916,7 @@ export class MapsetRecordsComponent implements OnInit {
 		this.downloadError = '';
 		if (this.downloadType === 'selected') {
 			if (this.selectedFormat['value'] !== undefined) {
-				console.log('selected download format', this.selectedFormat['value']);
+				this.downloading = true;
 				const selected = [];
 				for (let c = 0; c < this.mapsetData.length; c++) {
 					if (this.mapsetData[c].checked === true) {
@@ -932,26 +933,11 @@ export class MapsetRecordsComponent implements OnInit {
 					'conceptCodes': selected,
 					'columnNames': cols,
 				};
-				//console.log(' exp para ', params);
+
 				this.refsetService.exportMapsetByCode(this.mapsetInfo.refSetCode, params).subscribe(
 					(data) => {
-						//console.log(' data ', data);
-
-						// const downloadUrl = results?.url;
-						// if (downloadUrl) {
-						// 	const authToken = this.authenticationService.getUser().authToken;
-						// 	fetch("refsetservice/" + downloadUrl, { headers: {"Authorization": "Bearer " + authToken } } )
-						// 		.then((response) => response.blob())
-						// 		.then((blob) => {
-						// 			const link = document.createElement('a');
-						// 			link.href = window.URL.createObjectURL(blob);
-						// 			link.download = /[^/]*$/.exec(downloadUrl)[0];
-						// 			link.click();
-						// 		}).catch((err) => {
-						// 			console.log(err);
-						// 		});
-						// }
-
+						this.uiUtility.createMapsetReport(this.mapsetInfo.refSetCode, data);
+						this.downloading = false;
 						this.unCheckAll();
 						this.closeDownloadModal();
 					},
@@ -979,6 +965,7 @@ export class MapsetRecordsComponent implements OnInit {
 				// 	"transientEffectiveTime": "20240101",
 				// 	"exportMetadata": false
 				//   }
+				this.downloading = true;
 				const params = {
 					'branch': this.mapsetInfo.branchPath,
 					'mapSetCode': this.mapsetInfo.refSetCode,
@@ -990,13 +977,14 @@ export class MapsetRecordsComponent implements OnInit {
 					'transientEffectiveTime': '', //CodeUtility.getCurrentDate(),
 					'exportMetadata': this.selectExportMetadata,
 				};
-				//console.log(' exp para ', params);
 				this.refsetService.exportMapset(params).subscribe(
 					(data) => {
-						//console.log(' data ', data);
+						this.downloading = false;
+						console.log(' data ', data);
 						this.closeDownloadModal();
 					},
 					(err) => {
+						this.downloading = false;
 						console.error(err);
 					}
 				);

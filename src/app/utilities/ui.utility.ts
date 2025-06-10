@@ -626,10 +626,19 @@ export class UiUtility {
 		this.downloadFile(data, headerObject, fileName, true, false, true);
 	}
 
-	static downloadFile(data, headerlist, fileName = 'download' + '_' + CodeUtility.getReverseDate(), merge = false, isFinishedChangeReport = false, isAuditReport = false) {
-		let csvData;
+	static createMapsetReport(refsetId: string, data): void {
+		const fileName = 'Mapset_' + refsetId + '_download_' + CodeUtility.getReverseDate();
+		const headerObject = {
+			'mapsetHeader': ['Source', 'Source PT', 'Target', 'Target PT', 'Group', 'Priority', 'Relationship', 'Rule', 'Advices', 'Last Modified'],
+		};
 
-		if (!merge) {
+		this.downloadFile(data, headerObject, fileName, false, false, false, true);
+	}
+
+	static downloadFile(data, headerlist, fileName = 'download' + '_' + CodeUtility.getReverseDate(), merge = false, isFinishedChangeReport = false, isAuditReport = false, isMapsetReport = false) {
+		let csvData;
+		console.log('here s', isMapsetReport);
+		if (!merge && !isMapsetReport) {
 			csvData = this.convertToCsv(data, headerlist);
 		} else if (isFinishedChangeReport) {
 			csvData =
@@ -646,6 +655,9 @@ export class UiUtility {
 				this.convertToCsv(data.membersInCommon, headerlist.membersInCommonHeader);
 		} else if (isAuditReport) {
 			csvData = this.convertToCsv(data.auditData, headerlist.auditHeader);
+		} else if (isMapsetReport) {
+			csvData = data;
+			console.log('here s');
 		} else {
 			csvData =
 				this.convertToCsv(data.oldMember, headerlist.oldMemberHeader) +
