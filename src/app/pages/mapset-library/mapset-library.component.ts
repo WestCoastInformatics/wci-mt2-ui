@@ -18,6 +18,7 @@ import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
 import { formatDate } from '@angular/common';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { PaginationService } from 'src/app/services/pagination.service';
 
 /**
@@ -79,6 +80,7 @@ export class MapsetLibraryComponent implements OnInit {
 	paginationPages: any = {};
 	private isNewPageSize = false;
 	downloadError = '';
+	downloading = false;
 	selectedFormat = {};
 	formats = [];
 	selectedType = {};
@@ -111,7 +113,8 @@ export class MapsetLibraryComponent implements OnInit {
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
 		private modalService: NgbModal,
-		private pagerService: PaginationService
+		private pagerService: PaginationService,
+		private notificationService: NotificationService
 	) {
 		document.body.scrollTop = 0;
 		refsetService.getTaxonomyRoot();
@@ -450,45 +453,68 @@ export class MapsetLibraryComponent implements OnInit {
 	startDownload() {
 		this.downloadError = '';
 		if (this.selectedFormat['value'] !== undefined && this.selectedType['value'] !== undefined) {
-			// console.log('selected download type', this.selectedType['value']);
-			// console.log('selected download format', this.selectedFormat['value']);
-			// console.log(' select metadata ', this.selectExportMetadata);
-			// console.log(' mapset Inf d ', this.mapsetInfo);
-			// {
-			// 	"branch": "MAIN/SNOMEDCT-NO/2024-04-15/WCITEST",
-			// 	"mapSetCode": "447562003",
-			// 	"fileFormatType": "SNAPSHOT",
-			// 	"fileExportType": "RF2",
-			// 	"fileNameDate": "20250110",
-			// 	"languageId": "900000000000509007PT",
-			// 	"startEffectiveTime": "20240101",
-			// 	"transientEffectiveTime": "20240101",
-			// 	"exportMetadata": false
-			//   }
-			const params = {
-				'branch': this.mapsetInfo.branchPath,
-				'mapSetCode': this.mapsetInfo.refSetCode,
-				'fileFormatType': this.selectedType['value'],
-				'fileExportType': this.selectedFormat['value'],
-				'fileNameDate': CodeUtility.getCurrentDate().split('-').join(''),
-				'languageId': this.mapsetInfo.moduleId,
-				'startEffectiveTime': '', //this.mapsetInfo.modified,
-				'transientEffectiveTime': '', //CodeUtility.getCurrentDate(),
-				'exportMetadata': this.selectExportMetadata,
-			};
-			//console.log(' exp para ', params);
-			this.refsetService.exportMapset(params).subscribe(
-				(data) => {
-					//console.log(' data ', data);
-					this.closeDownloadModal();
-				},
-				(err) => {
-					console.error(err);
-				}
-			);
+			this.downloading = true;
+			this.refsetService.getMapsetByCode(this.mapsetInfo.refSetCode).subscribe((results) => {
+				this.mapsetInfo = results;
+				const params = {
+					'branch': this.mapsetInfo.branchPath,
+					'mapSetCode': this.mapsetInfo.refSetCode,
+					'fileFormatType': this.selectedType['value'],
+					'fileExportType': this.selectedFormat['value'],
+					'fileNameDate': CodeUtility.getCurrentDate().split('-').join(''),
+					'languageId': this.mapsetInfo.moduleId,
+					'startEffectiveTime': this.mapsetInfo.version.replace('-', ''),
+					'transientEffectiveTime': this.mapsetInfo.version.replace('-', ''),
+					'exportMetadata': this.selectExportMetadata,
+				};
+				this.refsetService.exportMapset(params).subscribe(
+					(data) => {
+						this.getMapsetDownloadStatus(data.url);
+					},
+					(err) => {
+						this.downloading = false;
+						console.error(err);
+					}
+				);
+			});
 		} else {
 			this.downloadError = 'Please select a download type and format.';
 		}
+	}
+
+	getMapsetDownloadStatus(url: string) {
+		this.refsetService.getDownloadMapsetStatus(url).subscribe(
+			(data) => {
+				switch (data.status) {
+					case 'FAILED':
+						this.downloading = false;
+						this.notificationService.show('Failed to download Mapset.', 'Error', 'error', { timeOut: 3000, extendedTimeOut: 0 });
+						this.closeDownloadModal();
+						break;
+					case 'COMPLETED':
+						this.refsetService.getDownloadMapsetFile(data.result).subscribe(
+							(data) => {
+								this.downloading = false;
+								this.closeDownloadModal();
+							},
+							(err) => {
+								this.downloading = false;
+								this.closeDownloadModal();
+								console.error(err);
+							}
+						);
+						break;
+					default:
+						setTimeout(() => {
+							this.getMapsetDownloadStatus(url);
+						}, 200);
+				}
+			},
+			(err) => {
+				this.downloading = false;
+				console.error(err);
+			}
+		);
 	}
 
 	openDownloadModal(content) {

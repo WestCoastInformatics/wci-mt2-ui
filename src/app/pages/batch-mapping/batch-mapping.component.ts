@@ -72,7 +72,6 @@ export class BatchMappingComponent implements OnInit {
 	searchCallArray = [];
 	showLoadingSearch = true;
 	toBeDevelopedModalRef: NgbModalRef;
-	downloadModalRef: NgbModalRef;
 	confirmModalRef: NgbModalRef;
 	headerGroupModal: NgbModalRef;
 	isModalOpen = false;
@@ -154,7 +153,6 @@ export class BatchMappingComponent implements OnInit {
 	@ViewChild('directoryPaging') paginationComponent: PaginationComponent;
 	@ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
 	@ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
-	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
 	@ViewChild('confirmationModal') confirmationModal: TemplateRef<any>;
 	@ViewChild('actions') private actions: MatSelect;
 	@ViewChild('groupInput') private groupInput: ElementRef;

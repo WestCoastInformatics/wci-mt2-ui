@@ -12,6 +12,7 @@ import { NotificationService } from '../notification.service';
 export class RefsetService extends RestService {
 	taxonomyRootNode: any = null;
 	contextPath = '/refsetservice/';
+	contextPathMapsetDownload = '';
 	assignedUser: string;
 
 	constructor(http: HttpClient, notificationService: NotificationService) {
@@ -350,6 +351,14 @@ export class RefsetService extends RestService {
 
 	exportMapset(params: any): Observable<any> {
 		return this.post(this.contextPath + 'mapset/export', params);
+	}
+
+	getDownloadMapsetStatus(job: string): Observable<any> {
+		return this.get(this.contextPath + '/' + job);
+	}
+
+	getDownloadMapsetFile(url: string): Observable<any> {
+		return this.get(this.contextPathMapsetDownload + url);
 	}
 
 	exportMapsetByCode(mapsetCode: any, params: any): Observable<any> {

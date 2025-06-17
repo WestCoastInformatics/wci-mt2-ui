@@ -175,7 +175,7 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body" *ngIf="!downloading">
 				<p>{{ downloadTitle }}</p>
 				<div class="modal-error-message" *ngIf="downloadError">
 					<div>{{ downloadError }}</div>
@@ -195,7 +195,10 @@
 					</mat-form-field>
 				</div>
 			</div>
-			<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<div class="modal-body" *ngIf="downloading">
+				<p>Please wait, downloading...</p>
+			</div>
+			<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group" *ngIf="!downloading">
 				<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
 				<button type="button" title="Download" class="rt2-btn rt2-action-btn" (click)="startDownload()">Download</button>
 			</div>

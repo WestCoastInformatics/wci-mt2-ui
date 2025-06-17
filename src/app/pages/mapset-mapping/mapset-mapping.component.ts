@@ -79,6 +79,7 @@ export class MapsetMappingComponent implements OnInit {
 	internationalId = '449080006';
 	loaded = false;
 	downloadError = '';
+	downloading = false;
 	selectedFormat = {};
 	formats = [];
 	downloadTitle = 'Download';
@@ -294,32 +295,16 @@ export class MapsetMappingComponent implements OnInit {
 	startDownload() {
 		this.downloadError = '';
 		if (this.selectedFormat['value'] !== undefined) {
-			console.log('selected download format', this.selectedFormat['value']);
+			this.downloading = true;
 			const cols = ['Source', 'Source PT', 'Target', 'Target PT', 'Relationship', 'Rule', 'Advices', 'Last Modified'];
 			const params = {
 				'conceptCodes': [this.mapsetData[0].code],
 				'columnNames': cols,
 			};
-			//console.log(' exp para ', params);
 			this.refsetService.exportMapsetByCode(this.mapsetInfo.refSetCode, params).subscribe(
 				(data) => {
-					//console.log(' data ', data);
-
-					// const downloadUrl = results?.url;
-					// if (downloadUrl) {
-					// 	const authToken = this.authenticationService.getUser().authToken;
-					// 	fetch("refsetservice/" + downloadUrl, { headers: {"Authorization": "Bearer " + authToken } } )
-					// 		.then((response) => response.blob())
-					// 		.then((blob) => {
-					// 			const link = document.createElement('a');
-					// 			link.href = window.URL.createObjectURL(blob);
-					// 			link.download = /[^/]*$/.exec(downloadUrl)[0];
-					// 			link.click();
-					// 		}).catch((err) => {
-					// 			console.log(err);
-					// 		});
-					// }
-
+					this.uiUtility.createMapsetReport(this.mapsetInfo.refSetCode, data);
+					this.downloading = false;
 					this.closeDownloadModal();
 				},
 				(err) => {
