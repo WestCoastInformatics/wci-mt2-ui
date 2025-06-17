@@ -4,6 +4,7 @@ import { Subscription, Observable, OperatorFunction, of, map } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -116,6 +117,22 @@ export class EditMappingComponent implements OnInit {
 	searchByTypeahead = false;
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
+	stepperInfo: any = {};
+	stepperStartInfo = {
+		'READY_FOR_EDIT_COLOR': 'details-page-stepper-unstarted-step',
+		'READY_FOR_EDIT_STARTED': false,
+		'IN_EDIT_COLOR': 'details-page-stepper-unstarted-step',
+		'IN_EDIT_STARTED': false,
+		'READY_FOR_REVIEW_COLOR': 'details-page-stepper-unstarted-step',
+		'READY_FOR_REVIEW_STARTED': false,
+		'IN_REVIEW_COLOR': 'details-page-stepper-unstarted-step',
+		'IN_REVIEW_STARTED': false,
+		'REVIEW_COMPLETED_COLOR': 'details-page-stepper-unstarted-step',
+		'REVIEW_COMPLETED_STARTED': false,
+		'READY_FOR_PUBLICATION_COLOR': 'details-page-stepper-unstarted-step',
+		'READY_FOR_PUBLICATION_STARTED': false,
+	};
+
 	moduleMetadata: any;
 	refsetData: any;
 
@@ -187,6 +204,14 @@ export class EditMappingComponent implements OnInit {
 		}
 
 		this.disableChannel.postMessage(false);
+		const stepperClass = 'details-page-stepper-started-step';
+		this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
+		//his.refsetStatus?.includes('IN_EDIT')) {
+		this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+		this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+		this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
+		this.stepperInfo['IN_EDIT_STARTED'] = true;
+
 		this.targetFC.disable();
 	}
 
@@ -330,7 +355,7 @@ export class EditMappingComponent implements OnInit {
 
 	dropT(event: CdkDragDrop<string[]>) {
 		this.userChanged = true;
-		let newGroup = [];
+		const newGroup = [];
 		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
 			if (this.mapsetData[0].mapEntries[p].group === event.item.data.group) {
 				newGroup.push(this.mapsetData[0].mapEntries[p]);

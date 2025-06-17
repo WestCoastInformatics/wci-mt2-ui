@@ -102,6 +102,21 @@ export class MapsetRecordsComponent implements OnInit {
 	moduleMetadata: any;
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
+	stepperInfo: any = {};
+	stepperStartInfo = {
+		'READY_FOR_EDIT_COLOR': 'details-page-stepper-unstarted-step',
+		'READY_FOR_EDIT_STARTED': false,
+		'IN_EDIT_COLOR': 'details-page-stepper-unstarted-step',
+		'IN_EDIT_STARTED': false,
+		'READY_FOR_REVIEW_COLOR': 'details-page-stepper-unstarted-step',
+		'READY_FOR_REVIEW_STARTED': false,
+		'IN_REVIEW_COLOR': 'details-page-stepper-unstarted-step',
+		'IN_REVIEW_STARTED': false,
+		'REVIEW_COMPLETED_COLOR': 'details-page-stepper-unstarted-step',
+		'REVIEW_COMPLETED_STARTED': false,
+		'READY_FOR_PUBLICATION_COLOR': 'details-page-stepper-unstarted-step',
+		'READY_FOR_PUBLICATION_STARTED': false,
+	};
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -164,9 +179,19 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 
 		this.disableChannel.postMessage(false);
+
 		if (localStorage.getItem('showMapTable')) {
 			this.changeMappingsView(JSON.parse(localStorage.getItem('showMapTable')));
 		}
+
+		const stepperClass = 'details-page-stepper-started-step';
+		this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
+		//his.refsetStatus?.includes('IN_EDIT')) {
+		this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+		this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+		this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
+		this.stepperInfo['IN_EDIT_STARTED'] = true;
+
 	}
 
 	getMapsetInfo() {
