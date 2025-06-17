@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { ElementRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { MatSelect } from '@angular/material/select';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
@@ -94,6 +94,7 @@ export class MapsetMappingComponent implements OnInit {
 	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
 	@ViewChild('actions') private actions: MatSelect;
+	@ViewChild('directorySearchInput') private directorySearchInput: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -242,6 +243,10 @@ export class MapsetMappingComponent implements OnInit {
 			}
 		});
 		return lang;
+	}
+
+	menuOpened() {
+		this.directorySearchInput.nativeElement.focus();
 	}
 
 	selectAction(action: string) {

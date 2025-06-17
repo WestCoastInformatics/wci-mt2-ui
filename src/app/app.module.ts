@@ -19,6 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RouteReuseStrategy, RouterModule, Routes } from '@angular/router';
@@ -151,7 +152,6 @@ const appRoutes: Routes = [
 	{ path: 'mapset/:code/mappings/:concepts/batch', component: BatchMappingComponent, data: { breadcrumbLabel: 'Batch Edit Mappings' } },
 	{ path: 'mapset/:code/mapping/:concept', component: MapsetMappingComponent, data: { breadcrumbLabel: 'Mapping' } },
 	{ path: 'mapset/:code/mapping/:concept/edit', component: EditMappingComponent, data: { breadcrumbLabel: 'Edit Map' } },
-	{ path: 'details/:mapsetId/:versionDate', component: MapsetDetailsComponent, data: { breadcrumbLabel: 'Map Set Details', editMode: false } },
 	{ path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
 	//mapset/{mapSetCode}/mapping/{conceptCode}
 	{
@@ -367,6 +367,7 @@ const appRoutes: Routes = [
 		MatFormFieldModule,
 		MatStepperModule,
 		MatButtonModule,
+		MatBadgeModule,
 		MatButtonToggleModule,
 		MatDatepickerModule,
 		MatNativeDateModule,

@@ -16,7 +16,8 @@
 			<div class="metadata-section-background">
 				<div class="row d-flex dropdown-group">
 					<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
-						<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
+						<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog" [columnStorage]="mapsetLibraryColumnStorage">
+						</app-column-chooser>
 					</div>
 					<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
 						<mat-menu #searchMenu="matMenu" class="search-box">
@@ -35,9 +36,17 @@
 							</div></mat-menu
 						>
 						<div class="menu-inline">
-							<button [matMenuTriggerFor]="searchMenu" (menuOpened)="menuOpened()" aria-label="Search" title="Search" class="mapset-download-icon menu-button">
+							<button
+								[matMenuTriggerFor]="searchMenu"
+								(menuOpened)="menuOpened()"
+								[matBadgeHidden]="searchInput === ''"
+								matBadgeSize="small"
+								[matBadge]="'.'"
+								aria-label="Search"
+								title="Search"
+								class="mapset-download-icon menu-button">
 								<mat-icon class="menu-icon">search</mat-icon>
-								<span class="menu-label">search</span>
+								<span class="menu-label">Search</span>
 							</button>
 						</div>
 					</div>
@@ -46,22 +55,10 @@
 				<div class="row loading-details dashboard-section" *ngIf="showLoadingSearch">
 					<div>Loading...</div>
 				</div>
-				<!-- Page Title -->
-				<!-- <div class="container-fluid page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div> -->
 
-				<!-- Reference Set Table -->
 				<ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct" [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
 				</ag-grid-angular>
 
-				<!--<app-pagination
-				#directoryPaging
-				*ngIf="showTable"
-				[pageSize]="refsetGridPaging.pageSize"
-				[gridOptions]="refsetGridOptions"
-				[pageSizeOptions]="refsetGridPaging.pageSizeOptions"
-				[totalKnown]="refsetGridPaging.totalKnown"
-				[manualStateRefresh]="refsetGridPaging.manualStateRefresh">
-			</app-pagination>-->
 				<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
 				<div class="rt2-pagination-container" [hidden]="showLoadingSearch || numOfMembers === 0">
 					<div class="rt2-pagination-top-row">
@@ -160,11 +157,14 @@
 						</div>
 					</div>
 					<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
-						Showing <span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }} </span> to
-						<span class="fw-bold p-l-5 p-r-5">
-							{{ numOfMembers < (getCurrentPage() + 1) * refsetGridPaging.pageSize ? numOfMembers : (getCurrentPage() + 1) * refsetGridPaging.pageSize }}
-						</span>
-						of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
+						<div *ngIf="searchInput === ''">
+							Showing <span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }} </span> to
+							<span class="fw-bold p-l-5 p-r-5">
+								{{ numOfMembers < (getCurrentPage() + 1) * refsetGridPaging.pageSize ? numOfMembers : (getCurrentPage() + 1) * refsetGridPaging.pageSize }}
+							</span>
+							of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
+						</div>
+						<div *ngIf="searchInput !== ''">Showing {{ refsetGridApi.getDisplayedRowCount() }} search results</div>
 					</div>
 					<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
 				</div>

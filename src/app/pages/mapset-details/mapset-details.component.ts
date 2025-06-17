@@ -161,6 +161,7 @@ export class MapsetDetailsComponent implements OnInit {
 	uiUtility = UiUtility;
 	localsetPublishValid = true;
 	stepperInfo: any = {};
+	mapsetDetailsColumnStorage = 'mapsetDetailsColumnStorage';
 	changeRefsetStatusText: string;
 	changeRefsetStatusButtonText: string;
 	eclString: any;
@@ -235,6 +236,7 @@ export class MapsetDetailsComponent implements OnInit {
 
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.refsetId = routeParams.refsetId;
+			this.mapsetDetailsColumnStorage += this.refsetId;
 			this.versionDate = routeParams.versionDate;
 			this.initializeDetailsPage();
 		});
