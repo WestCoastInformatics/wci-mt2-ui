@@ -3,9 +3,9 @@
 <!-- Search Bar -->
 <div class="top-search-bar content-header">
 	<div class="d-flex justify-content-end">
-		<div class="col-md-auto d-flex">
-			<div class="page-title rt2-wrap" title="{{ mapsetInfo.refSetName }}">
-				<span>{{ mapsetInfo.refSetName }} </span>
+		<div class="d-flex">
+			<div class="col-md-8 page-title" title="{{ mapsetInfo.refSetName }}">
+				<div class="rt2-wrap">{{ mapsetInfo.refSetName }}</div>
 				<!-- Status Stepper if in edit mode and Reference Set not locked -->
 				<mat-horizontal-stepper class="col-1 details-page-stepper" [linear]="true" labelPosition="bottom" #stepper>
 					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_EDIT_STARTED']">
@@ -47,13 +47,12 @@
 						<mat-option *ngFor="let option of versionStatuses" [value]="option" class="no-checkbox"> {{ option }} </mat-option>
 					</mat-select>
 				</mat-form-field>
-			</div>
-		</div>
-		<div class="col-md-auto d-flex p-r-40 mr-10">
-			<div class="col-6">
-				<button class="library-app-refset-download" (click)="downloadType = 'all'; downloadMapsets()" [disabled]="!selectedVersion || numOfMembers === 0">
-					<div class="mat-button-wrapper mapset-download-icon">
-						<i class="fa fa-download fa-lg" title="Download Map Set" aria-label="Download Map Set"></i>
+
+				<div class="col-md-auto d-flex p-r-40 mr-10">
+					<div class="col-6">
+						<button class="library-app-refset-download" (click)="downloadType = 'all'; downloadMapsets()" [disabled]="!selectedVersion || numOfMembers === 0">
+							<div class="mat-button-wrapper mapset-download-icon">
+								<i class="fa fa-download fa-lg" title="Download Map Set" aria-label="Download Map Set"></i>
 							</div>
 						</button>
 					</div>
