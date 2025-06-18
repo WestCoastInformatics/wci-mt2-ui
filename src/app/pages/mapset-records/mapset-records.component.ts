@@ -103,6 +103,8 @@ export class MapsetRecordsComponent implements OnInit {
 	mapSetSubscription: Subscription;
 	isNewPageSize = false;
 	internationalId = '449080006';
+	mapsetRecordsColumnStorage = 'mapsetRecordsColumnStorage';
+	mapsetSearchInput = 'mapsetSearchInput';
 	moduleMetadata: any;
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
@@ -130,7 +132,6 @@ export class MapsetRecordsComponent implements OnInit {
 	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
 	@ViewChild('directoryCheckSection') checkSection: TemplateRef<any>;
-	@ViewChild('directoryInfoSection') infoSection: TemplateRef<any>;
 	@ViewChild('directoryCodeSection') codeSection: TemplateRef<any>;
 	@ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
 	@ViewChild('directoryToNameSection') toNameSection: TemplateRef<any>;
@@ -167,6 +168,8 @@ export class MapsetRecordsComponent implements OnInit {
 		this.titleService.setTitle('Mapping Tool - Mappings');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
+			this.mapsetRecordsColumnStorage += this.mapsetCode;
+			this.mapsetSearchInput += this.mapsetCode;
 			this.getMapsetInfo();
 			this.getModuleMetadata();
 		});
@@ -181,6 +184,10 @@ export class MapsetRecordsComponent implements OnInit {
 
 		this.disableChannel.postMessage(false);
 
+		if (localStorage.getItem('showMapTable')) {
+			this.changeMappingsView(JSON.parse(localStorage.getItem('showMapTable')));
+		}
+
 		const stepperClass = 'details-page-stepper-started-step';
 		this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
 		//his.refsetStatus?.includes('IN_EDIT')) {
@@ -188,6 +195,7 @@ export class MapsetRecordsComponent implements OnInit {
 		this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
 		this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
 		this.stepperInfo['IN_EDIT_STARTED'] = true;
+
 	}
 
 	getMapsetInfo() {
@@ -463,6 +471,7 @@ export class MapsetRecordsComponent implements OnInit {
 
 	changeMappingsView(value: string): void {
 		this.showMapTable = value;
+		localStorage.setItem('showMapTable', JSON.stringify(this.showMapTable));
 	}
 
 	checkboxAllClick() {
@@ -500,6 +509,11 @@ export class MapsetRecordsComponent implements OnInit {
 				this.refsetGridApi.showLoadingOverlay();
 
 				let query = '';
+
+				if (localStorage.getItem(this.mapsetSearchInput)) {
+					this.searchInput = JSON.parse(localStorage.getItem(this.mapsetSearchInput));
+					// this.refsetGridApi.setQuickFilter(this.searchInput);
+				}
 
 				if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
 					query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
@@ -852,12 +866,11 @@ export class MapsetRecordsComponent implements OnInit {
 	onSearchChange() {
 		this.searchInput = this.searchInput.trim();
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-			//this.refsetGridApi.setQuickFilter(this.searchInput);
-			//	this.onGridReady(this.originalGridParams);
 			this.setPageSize(10);
 			this.goToPage(0);
 			this.loaded = false;
 			this.refsetGridApi.purgeInfiniteCache();
+			localStorage.setItem(this.mapsetSearchInput, JSON.stringify(this.searchInput));
 		}
 	}
 
@@ -1103,65 +1116,6 @@ export class MapsetRecordsComponent implements OnInit {
 				break;
 		}
 		return icon;
-	}
-
-	openInformation(refsetId: string) {
-		const refsetDirectoryData = this.getRefsetRow(refsetId);
-
-		this.refsetService.getRefset(refsetDirectoryData.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refsetDirectoryData)).subscribe((results) => {
-			const refset = results;
-			const dialogId = 'directoryInfoDialog';
-			this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url).replace(
-				'library',
-				'details/' + refset.refsetId + '/' + RefsetUtility.getVersionDateForRefsetApiCall(refset)
-			);
-
-			if (CodeUtility.hasValue(refset)) {
-				refset.status = RefsetUtility.getStatus(refset.active);
-				if (CodeUtility.hasValue(refset.narrative)) {
-					refset.narrativeShortText = refset.narrative;
-				}
-
-				if (CodeUtility.hasValue(refset.versionNotes)) {
-					refset.versionNotesShortText = refset.versionNotes;
-				}
-
-				refset.versionDate = CodeUtility.formatJsonDate(refset.versionDate);
-				refset.flagIcon = RefsetUtility.getEditionFlagIcon(refset.edition.branch);
-
-				//change to use: = refset.edition.LibrarySortField;
-				refset.librarySortField = refset.edition.branch;
-			}
-
-			refset.versionList = results.versionList;
-
-			const dialogData = {
-				dialogId: dialogId,
-				showCancel: false,
-				cancelText: 'Close',
-				actionText: 'View Complete Reference Set',
-				showConfirm: false,
-				template: this.infoDialog,
-				headerText: 'Reference Set Metadata',
-				data: refset,
-				showAction: true,
-				showCloseIcon: true,
-			};
-
-			const dialogOptions = {
-				id: dialogId,
-				width: '1000px',
-				disableClose: false,
-			};
-
-			this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
-
-			this.dialog.confirmed().subscribe((data) => {
-				if (data) {
-					this.goToDetailsPage(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset));
-				}
-			});
-		});
 	}
 
 	openFeedback(refsetId: string) {

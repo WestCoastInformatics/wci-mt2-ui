@@ -33,24 +33,34 @@
 
 			<div class="row d-flex dropdown-group m-t-10" *ngIf="loaded">
 				<div class="col-md-10 row p-l-30 p-t-10">
-					<div class="col-md-auto rt2-directory-chooser-column">
+					<!-- <div class="col-md-auto rt2-directory-chooser-column">
 						<mat-menu #searchMenu="matMenu" class="search-box">
 							<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
 								<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
 									<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
 									<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" (click)="$event.stopPropagation()" />
 								</mat-form-field>
-								<span class="clear-search" title="Clear Search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span>
-							</div></mat-menu
-						>
+								<span class="clear-search" *ngIf="searchInput.length > 0" title="Clear Search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span><br />
+								<span *ngIf="searchInput.length > 0" class="mappings-section"
+									>{{ gridApi.getDisplayedRowCount() > 0 ? gridApi.getDisplayedRowCount() : 'No ' }} result{{ gridApi.getDisplayedRowCount() > 1 ? 's' : '' }} found</span
+								>
+							</div>
+						</mat-menu>
 						<div class="menu-inline">
-							<!--[matMenuTriggerFor]="searchMenu"-->
-							<button (click)="openToBeDevelopedModal(tbdModal)" aria-label="Search" title="Search" class="mapset-download-icon menu-button">
+							<button
+								[matMenuTriggerFor]="searchMenu"
+								(menuOpened)="menuOpened()"
+								[matBadgeHidden]="searchInput === ''"
+								matBadgeSize="small"
+								[matBadge]="'.'"
+								aria-label="Search"
+								title="Search"
+								class="mapset-download-icon menu-button">
 								<mat-icon class="menu-icon">search</mat-icon>
-								<span class="menu-label">search</span>
+								<span class="menu-label">Search</span>
 							</button>
 						</div>
-					</div>
+					</div> -->
 					<div class="col-md-auto rt2-directory-chooser-column">
 						<div class="menu-inline">
 							<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="mapset-download-icon menu-button">

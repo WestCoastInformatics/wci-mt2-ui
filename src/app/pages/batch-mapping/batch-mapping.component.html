@@ -85,7 +85,7 @@
 		</div>
 		<div class="row d-flex dropdown-group" *ngIf="showConfigSection && loaded">
 			<div class="col-md-auto rt2-directory-chooser-column m-l-20">
-				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="gridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
+				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="gridColumnApi" [useDialog]="useDialog" [columnStorage]="mapsetBatchColumnStorage"> </app-column-chooser>
 			</div>
 			<div class="col-md-auto rt2-directory-chooser-column">
 				<mat-menu #searchMenu="matMenu" class="search-box">
@@ -101,9 +101,17 @@
 					</div>
 				</mat-menu>
 				<div class="menu-inline">
-					<button [matMenuTriggerFor]="searchMenu" (menuOpened)="menuOpened()" aria-label="Search" title="Search" class="mapset-download-icon menu-button">
+					<button
+						[matMenuTriggerFor]="searchMenu"
+						(menuOpened)="menuOpened()"
+						[matBadgeHidden]="searchInput === ''"
+						matBadgeSize="small"
+						[matBadge]="'.'"
+						aria-label="Search"
+						title="Search"
+						class="mapset-download-icon menu-button">
 						<mat-icon class="menu-icon">search</mat-icon>
-						<span class="menu-label">search</span>
+						<span class="menu-label">Search</span>
 					</button>
 				</div>
 			</div>
@@ -306,27 +314,6 @@
 <ng-template #rt let-r="result" let-t="term">
 	<div class="type-head-overflow" title="{{ r.code + ': ' + r.name }}">
 		<ngb-highlight [result]="r.code + ': ' + r.name" [term]="t"></ngb-highlight>
-	</div>
-</ng-template>
-
-<!-- Information Templates -->
-<ng-template #directoryInfoSection let-params>
-	<div class="d-flex rt2-wrap">
-		<div class="col-6">
-			<button
-				mat-icon-button
-				aria-hidden="false"
-				#directoryInfoIcon
-				class="rt2-table-action-icon w-30 h-30"
-				aria-label="View All Reference Set Metadata"
-				title="View Reference Set Metadata"
-				(click)="openInformation(params.data.refsetId)">
-				<mat-icon class="scale-85-pct">information</mat-icon>
-			</button>
-		</div>
-		<div class="col-6">
-			<div *ngIf="params.data.memberSearchMatch" title="Search matches reference set member" class="member-search-icon general-icon-font">M</div>
-		</div>
 	</div>
 </ng-template>
 

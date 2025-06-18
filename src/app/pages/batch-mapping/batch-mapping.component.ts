@@ -102,20 +102,19 @@ export class BatchMappingComponent implements OnInit {
 	showGroupPopover = false;
 	showTargetPopover = false;
 	tempModuleIdChangeBeforeRelease = '449080006';
-
+	mapsetBatchColumnStorage = 'mapsetBatchColumnStorage';
+	batchSearchInput = 'batchSearchInput';
 	targetFC = new FormControl('a');
 	public query: any;
 	//formatter = (result: any) => result || this.query;
 	formatter = (x: { name: string; code: string }) => x.code;
 	searchByKeyboard = false;
 	searchByTypeahead = false;
-
 	groupFC = new FormControl('');
 	headerGroupFC = new FormControl('');
 	priorityFC = new FormControl('');
 	codeList: Observable<any[]>;
 	targetToName = '';
-
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
 	stepperInfo: any = {};
@@ -158,7 +157,6 @@ export class BatchMappingComponent implements OnInit {
 	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
 	@ViewChild('headerGroupModal') headerGroup: TemplateRef<any>;
 	@ViewChild('directoryCheckSection') checkSection: TemplateRef<any>;
-	@ViewChild('directoryInfoSection') infoSection: TemplateRef<any>;
 	@ViewChild('directoryCodeSection') codeSection: TemplateRef<any>;
 	@ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
 	@ViewChild('directoryToNameSection') toNameSection: TemplateRef<any>;
@@ -211,6 +209,8 @@ export class BatchMappingComponent implements OnInit {
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.conceptCodes = routeParams.concepts.split('_');
+			this.mapsetBatchColumnStorage += routeParams.concepts;
+			this.batchSearchInput += routeParams.concepts;
 			this.getMapsetData();
 			this.getMapsetInfo();
 			this.getModuleMetadata();
@@ -592,6 +592,7 @@ export class BatchMappingComponent implements OnInit {
 
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
 			this.gridApi.setQuickFilter(this.searchInput);
+			localStorage.setItem(this.batchSearchInput, JSON.stringify(this.searchInput));
 			this.checkedNum = 0;
 			if (this.gridSelectAll) {
 				window['checkbox-table-all'].click();
@@ -745,6 +746,10 @@ export class BatchMappingComponent implements OnInit {
 					{ path: '/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
 					{ label: 'Batch Edit Mappings' },
 				]);
+				if (localStorage.getItem(this.batchSearchInput)) {
+					this.searchInput = JSON.parse(localStorage.getItem(this.batchSearchInput));
+					this.gridApi.setQuickFilter(this.searchInput);
+				}
 			},
 			error: (error) => {
 				//

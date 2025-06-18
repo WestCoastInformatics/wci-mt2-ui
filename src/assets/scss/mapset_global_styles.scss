@@ -154,6 +154,12 @@ form-control {
 	font-size: 10px;
 }
 
+.mat-badge {
+	position: relative;
+	margin-top: 23px !important;
+	padding: 0 !important;
+}
+
 /******** AG Grid Styles **********/
 
 .refset_tool_inactive_row,
@@ -1668,6 +1674,22 @@ input[type='checkbox'] {
 
 .mat-horizontal-stepper-header-container {
 	height: 65px;
+}
+
+.mat-badge-small .mat-badge-content {
+	width: 10px;
+	height: 10px;
+	font-size: 10px;
+	color: #00a9e0;
+	line-height: 10px;
+}
+
+.mat-badge-small.mat-badge-above .mat-badge-content {
+	top: -2px;
+}
+
+.mat-badge-small.mat-badge-overlap.mat-badge-after .mat-badge-content {
+	right: -2px;
 }
 
 .details-page-stepper-started-step {

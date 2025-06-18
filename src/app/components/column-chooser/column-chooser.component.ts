@@ -21,6 +21,7 @@ export class ColumnChooserComponent {
 	@Input() disabled = false;
 	@Input() useDialog = true;
 	@Input() manualStateRefresh = false;
+	@Input() columnStorage;
 	@ViewChild('columnChooserSection') columnChooserDialog: TemplateRef<any>;
 
 	constructor(private dialogFactoryService: DialogFactoryService) {}
@@ -74,6 +75,33 @@ export class ColumnChooserComponent {
 
 				this.columns.push(columnData);
 			}
+
+			if (this.columnStorage) {
+				const columnSelection = sessionStorage.getItem(this.columnStorage);
+
+				if (columnSelection) {
+					const columnsSelected = JSON.parse(columnSelection);
+					if (columnsSelected.hasOwnProperty('state')) {
+						this.gridColumnApi.applyColumnState(columnsSelected);
+						const storedState = columnsSelected.state;
+						storedState.forEach((selectCol) => {
+							this.columns.forEach((col) => {
+								if (selectCol.colId == col.colId) {
+									if (selectCol.hide) {
+										col.show = false;
+									} else {
+										col.show = true;
+										this.selectedColumns.push(col);
+									}
+								}
+							});
+						});
+					}
+				}
+			}
+			if (this.selectedColumns.length == 0) {
+				this.selectedColumns = JSON.parse(JSON.stringify(this.columns));
+			}
 		}
 	}
 
@@ -125,7 +153,11 @@ export class ColumnChooserComponent {
 			column.show = found;
 			state.push({ colId: column.colId, hide: !column.show });
 		}
+		const saveState = JSON.stringify({ state: state });
 		this.gridColumnApi.applyColumnState({ state: state });
+		if (this.columnStorage) {
+			sessionStorage.setItem(this.columnStorage, saveState);
+		}
 	}
 
 	applyColumns() {
@@ -148,8 +180,11 @@ export class ColumnChooserComponent {
 
 			state.push({ colId: column.colId, hide: !column.show });
 		}
-
+		const saveState = JSON.stringify({ state: state });
 		this.gridColumnApi.applyColumnState({ state: state });
+		if (this.columnStorage) {
+			sessionStorage.setItem(this.columnStorage, saveState);
+		}
 		// set placeholders on the grid floating filter fields
 		Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
 			if (obj.attributes['disabled']) {

@@ -19,6 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RouteReuseStrategy, RouterModule, Routes } from '@angular/router';
@@ -342,6 +343,7 @@ const appRoutes: Routes = [
 		MatFormFieldModule,
 		MatStepperModule,
 		MatButtonModule,
+		MatBadgeModule,
 		MatButtonToggleModule,
 		MatDatepickerModule,
 		MatNativeDateModule,

@@ -69,6 +69,7 @@ export class MapsetLibraryComponent implements OnInit {
 	numOfResults = 0;
 	directUrl: string;
 	numOfMembers: any;
+	mapsetLibraryColumnStorage = 'mapsetLibraryColumnStorage';
 	disableChannel = new BroadcastChannel('disable-button-channel');
 	originalGridParams: any;
 	uiUtility = UiUtility;
@@ -339,6 +340,10 @@ export class MapsetLibraryComponent implements OnInit {
 				} else {
 					this.showPaging = true;
 				}
+				if (localStorage.getItem('librarySearchInput')) {
+					this.searchInput = JSON.parse(localStorage.getItem('librarySearchInput'));
+					this.refsetGridApi.setQuickFilter(this.searchInput);
+				}
 
 				UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
 			},
@@ -426,6 +431,7 @@ export class MapsetLibraryComponent implements OnInit {
 
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
 			this.refsetGridApi.setQuickFilter(this.searchInput);
+			localStorage.setItem('librarySearchInput', JSON.stringify(this.searchInput));
 		}
 	}
 
@@ -563,62 +569,6 @@ export class MapsetLibraryComponent implements OnInit {
 		}
 
 		return refset;
-	}
-
-	openInformation(refsetId: string) {
-		const refsetDirectoryData = this.getRefsetRow(refsetId);
-
-		this.refsetService.getRefset(refsetDirectoryData.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refsetDirectoryData)).subscribe((results) => {
-			const refset = results;
-			const dialogId = 'directoryInfoDialog';
-			this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url).replace(
-				'library',
-				'details/' + refset.refsetId + '/' + RefsetUtility.getVersionDateForRefsetApiCall(refset)
-			);
-
-			if (CodeUtility.hasValue(refset)) {
-				refset.status = RefsetUtility.getStatus(refset.active);
-				if (CodeUtility.hasValue(refset.narrative)) {
-					refset.narrativeShortText = refset.narrative;
-				}
-
-				if (CodeUtility.hasValue(refset.versionNotes)) {
-					refset.versionNotesShortText = refset.versionNotes;
-				}
-
-				refset.versionDate = CodeUtility.formatJsonDate(refset.versionDate);
-				refset.flagIcon = RefsetUtility.getEditionFlagIcon(refset.edition.branch);
-			}
-
-			refset.versionList = results.versionList;
-
-			const dialogData = {
-				dialogId: dialogId,
-				showCancel: false,
-				cancelText: 'Close',
-				actionText: 'View Complete Map Set',
-				showConfirm: false,
-				template: this.infoDialog,
-				headerText: 'Map Set Metadata',
-				data: refset,
-				showAction: true,
-				showCloseIcon: true,
-			};
-
-			const dialogOptions = {
-				id: dialogId,
-				width: '1000px',
-				disableClose: false,
-			};
-
-			this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
-
-			this.dialog.confirmed().subscribe((data) => {
-				if (data) {
-					this.goToDetailsPage(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset));
-				}
-			});
-		});
 	}
 
 	formatVersionDate(date): string {
