@@ -47,17 +47,12 @@ import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy
 import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { RefsetDownloadComponent } from 'src/app/components/refsetDownload/refset-download.component';
 import { ColumnChooserComponent } from 'src/app/components/column-chooser/column-chooser.component';
-import { LaunchComparisonModalComponent } from 'src/app/components/comparison/launch-comparison-modal.component';
 import { NotificationComponent } from 'src/app/components/notification/notification.component';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { GridHeaderFilterComponent } from 'src/app/components/grid-header-filter/grid-header-filter.component';
-import { CreateNewRefsetComponent } from './components/create-new-refset/create-new-refset.component';
 import { ImportFromFileModalComponent } from 'src/app/components/import-from-file-modal/import-from-file-modal.component';
 import { ImportFromListModalComponent } from 'src/app/components/import-from-list-modal/import-from-list-modal.component';
-import { CreateNewOrganizationModalComponent } from 'src/app/components/create-new-organization-modal/create-new-organization-modal.component';
-import { EmailRefsetModalComponent } from 'src/app/components/email-refset-modal/email-refset-modal.component';
-import { CreateNewTeamModalComponent } from 'src/app/components/create-new-team-modal/create-new-team-modal.component';
 import { BulkUpgradeModalComponent } from 'src/app/components/bulk-upgrade-modal/bulk-upgrade-modal.component';
 import { HeadingWithCountComponent } from 'src/app/components/heading-with-count/heading-with-count.component';
 import { PageContainerComponent } from 'src/app/components/page-container/page-container.component';
@@ -73,7 +68,6 @@ import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
 // PAGE IMPORTS
 import { MapsetRecordsComponent } from './pages/mapset-records/mapset-records.component';
 import { MapsetLibraryComponent } from './pages/mapset-library/mapset-library.component';
-import { MapsetDetailsComponent } from './pages/mapset-details/mapset-details.component';
 import { MapsetMappingComponent } from './pages/mapset-mapping/mapset-mapping.component';
 import { EditMappingComponent } from './pages/edit-mapping/edit-mapping.component';
 import { BatchMappingComponent } from './pages/batch-mapping/batch-mapping.component';
@@ -123,9 +117,6 @@ import { AuthGuardGuard } from 'src/app/services/authentication/auth-guard.guard
 import { LoginComponent } from 'src/app/auth/login/login.component';
 import { InviteComponent } from 'src/app/auth/invite/invite.component';
 import { ReviewModalComponent } from 'src/app/components/review-modal/review-modal.component';
-import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.component';
-import { FinishUpgradeModalComponent } from './components/finish-upgrade-modal/finish-upgrade-modal.component';
-import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
 import { UsersService } from './services/rest/users.service';
 import { RemoveDashboardComponentModalComponent } from './components/remove-dashboard-component-modal/remove-dashboard-component-modal.component';
 import { RefsetFeedbackListComponent } from './components/refset-feedback-list/refset-feedback-list.component';
@@ -135,9 +126,6 @@ import { ArtifactsService } from './services/rest/artifacts.service';
 import { AuditService } from './services/rest/audit.service';
 import { DirectivesModule } from './directives/directives.module';
 import { RefsetMetaTableComponent } from './components/refset-meta-table/refset-meta-table.component';
-import { CreateRefsetComponent } from './components/create-refset/create-refset.component';
-import { InvitePeopleModalComponent } from './components/invite-people-modal/invite-people-modal.component';
-import { RequestAccessModalComponent } from './components/request-access-modal/request-access-modal.component';
 import { LandingComponent } from './pages/landing/landing-page.component';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -275,21 +263,13 @@ const appRoutes: Routes = [
 		RefsetDownloadComponent,
 		ColumnChooserComponent,
 		NotificationComponent,
-		UpgradeModalComponent,
-		FinishUpgradeModalComponent,
-		AdjudicateUpgradeModalComponent,
 		SafeUrlPipe,
 		CategoryFilterComponent,
 		DateTextFilterComponent,
 		GridHeaderFilterComponent,
-		CreateNewRefsetComponent,
-		CreateRefsetComponent,
 		ProjectsRefsetComponent,
 		ImportFromFileModalComponent,
 		ImportFromListModalComponent,
-		CreateNewOrganizationModalComponent,
-		EmailRefsetModalComponent,
-		CreateNewTeamModalComponent,
 		AddMemberToOrganizationModalComponent,
 		AddMemberToTeamModalComponent,
 		CreateNewProjectModalComponent,
@@ -309,7 +289,6 @@ const appRoutes: Routes = [
 		SidebarComponent,
 		MapsetLibraryComponent,
 		MapsetRecordsComponent,
-		MapsetDetailsComponent,
 		MapsetMappingComponent,
 		EditMappingComponent,
 		BatchMappingComponent,
@@ -332,13 +311,10 @@ const appRoutes: Routes = [
 		PersonalComponent,
 		PersonalLandingComponent,
 		PersonalConfigurationComponent,
-		LaunchComparisonModalComponent,
 		RemoveDashboardComponentModalComponent,
 		RefsetFeedbackListComponent,
 		WorkflowStatusBadgeComponent,
 		RefsetMetaTableComponent,
-		InvitePeopleModalComponent,
-		RequestAccessModalComponent,
 	],
 	imports: [
 		RouterModule.forChild(appRoutes),

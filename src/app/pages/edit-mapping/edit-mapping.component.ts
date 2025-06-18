@@ -80,7 +80,6 @@ export class EditMappingComponent implements OnInit {
 	uiUtility = UiUtility;
 	showLoadingSearch = true;
 	toBeDevelopedModalRef: NgbModalRef;
-	downloadModalRef: NgbModalRef;
 	confirmModalRef: NgbModalRef;
 	isModalOpen = false;
 	mapsetName = 'Mapset Name';
@@ -141,7 +140,6 @@ export class EditMappingComponent implements OnInit {
 	@ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
 	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
 	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
-	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
 	@ViewChild('confirmationModal') confirmationModal: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
 	@ViewChild('actions') private actions: MatSelect;
@@ -1036,17 +1034,6 @@ export class EditMappingComponent implements OnInit {
 				break;
 		}
 		this.closeConfirmDialog();
-	}
-
-	startDownload() {
-		this.closeDownloadModal();
-		console.log('selected download format', this.selectedFormat['value']);
-		this.openToBeDevelopedModal(this.tbdModal);
-	}
-
-	closeDownloadModal() {
-		this.downloadModalRef.close();
-		this.isModalOpen = false;
 	}
 
 	openToBeDevelopedModal(content) {

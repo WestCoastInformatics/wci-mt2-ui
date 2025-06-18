@@ -21,6 +21,7 @@ import { PaginationComponent } from 'src/app/components/pagination/pagination.co
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { formatDate } from '@angular/common';
 import { PaginationService } from 'src/app/services/pagination.service';
 
@@ -77,7 +78,7 @@ export class MapsetRecordsComponent implements OnInit {
 	toBeDevelopedModalRef: NgbModalRef;
 	downloadModalRef: NgbModalRef;
 	isModalOpen = false;
-	mapsetName = 'Mapset Name';
+	mapsetInfo: any = {};
 	mapsetCode: string;
 	routeParamsSubscription$: Subscription;
 	gridSelectAll = false;
@@ -88,8 +89,13 @@ export class MapsetRecordsComponent implements OnInit {
 	showMappingsSection = true;
 	showMetadataSection = false;
 	showHistorySection = false;
+	downloadError = '';
+	downloading = false;
 	selectedFormat = {};
 	formats = [];
+	selectedType = {};
+	types = [];
+	selectExportMetadata = false;
 	loaded = false;
 	showPaging = false;
 	datasource: any;
@@ -102,6 +108,8 @@ export class MapsetRecordsComponent implements OnInit {
 	moduleMetadata: any;
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
+	downloadTitle = 'Download';
+	downloadType = 'all';
 	stepperInfo: any = {};
 	stepperStartInfo = {
 		'READY_FOR_EDIT_COLOR': 'details-page-stepper-unstarted-step',
@@ -148,7 +156,8 @@ export class MapsetRecordsComponent implements OnInit {
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
 		private modalService: NgbModal,
-		private pagerService: PaginationService
+		private pagerService: PaginationService,
+		private notificationService: NotificationService
 	) {
 		document.body.scrollTop = 0;
 	}
@@ -165,18 +174,13 @@ export class MapsetRecordsComponent implements OnInit {
 			this.getModuleMetadata();
 		});
 
-		this.formats = [
-			{ value: 'rf2', display: 'RF2' },
-			{ value: 'sctids', display: 'List Of SCTIDs' },
-		];
+		// if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
+		// 	this.formats.splice(1, 0, { value: 'rf2_with_names', display: 'RF2 With Names' });
+		// }
 
-		if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
-			this.formats.splice(1, 0, { value: 'rf2_with_names', display: 'RF2 With Names' });
-		}
-
-		if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
-			this.formats.splice(-1, 0, { value: 'freeset', display: 'Free Set' });
-		}
+		// if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
+		// 	this.formats.splice(-1, 0, { value: 'freeset', display: 'Free Set' });
+		// }
 
 		this.disableChannel.postMessage(false);
 
@@ -196,10 +200,9 @@ export class MapsetRecordsComponent implements OnInit {
 
 	getMapsetInfo() {
 		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
-			const thisResult = results;
-			this.mapsetName = thisResult.refSetName;
-			this.breadcrumbService.setBreadcrumbs([{ path: '/library', label: 'Library' }, { label: this.mapsetName }]);
-			this.versionStatuses.push(formatDate(thisResult.modified, 'MM-dd-yyyy', 'en-US') + ' (' + thisResult.versionStatus + ') ');
+			this.mapsetInfo = results;
+			this.breadcrumbService.setBreadcrumbs([{ path: '/library', label: 'Library' }, { label: this.mapsetInfo.refSetName }]);
+			this.versionStatuses.push(formatDate(this.mapsetInfo.modified, 'MM-dd-yyyy', 'en-US') + ' (' + this.mapsetInfo.versionStatus + ') ');
 			if (this.versionStatuses.length == 1) {
 				this.selectedVersion = this.versionStatuses;
 			}
@@ -668,6 +671,16 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 	}
 
+	unCheckAll() {
+		this.mapsetData.forEach((map) => {
+			if (map.checked) {
+				map.checked = false;
+			}
+		});
+		this.checkedNum = 0;
+		this.refsetGridApi.redrawRows();
+	}
+
 	getModuleLanguageIcon(moduleId: string) {
 		let flag = '';
 		this.moduleMetadata.module.forEach((data) => {
@@ -820,22 +833,14 @@ export class MapsetRecordsComponent implements OnInit {
 				}
 				break;
 			case 'selected':
+				this.downloadType = 'selected';
 				this.downloadMapsets();
 				break;
 			case 'all':
+				this.downloadType = 'all';
 				this.downloadMapsets();
 				break;
 		}
-	}
-
-	downloadMapsets() {
-		this.openDownloadModal(this.downloadModal);
-	}
-
-	startDownload() {
-		this.closeDownloadModal();
-		console.log('selected download format', this.selectedFormat['value']);
-		this.openToBeDevelopedModal(this.tbdModal);
 	}
 
 	clearSearch() {
@@ -913,12 +918,149 @@ export class MapsetRecordsComponent implements OnInit {
 		this.isModalOpen = false;
 	}
 
+	downloadMapsets() {
+		//default All
+		this.downloadTitle = 'Download ' + this.mapsetInfo.refSetName + ' ' + this.selectedVersion;
+		this.types = [
+			{ value: 'SNAPSHOT', display: 'SNAPSHOT' },
+			{ value: 'DELTA', display: 'DELTA' },
+		];
+
+		this.formats = [
+			{ value: 'RF2', display: 'RF2' },
+			{ value: 'RF2_WITH_NAMES', display: 'RF2 With Names' },
+			{ value: 'SCTIDS', display: 'List Of SCTIDs' },
+		];
+		if (this.downloadType === 'selected') {
+			const selected = [];
+			for (let c = 0; c < this.mapsetData.length; c++) {
+				if (this.mapsetData[c].checked === true) {
+					selected.push(this.mapsetData[c].code + ' ' + this.mapsetData[c].name + ' to ' + this.mapsetData[c].toCode?.split('#')[1] + ' ' + this.mapsetData[c].toName);
+				}
+			}
+			if (selected.length > 0 && selected.length < 3) {
+				this.downloadTitle = 'Download ' + selected.join(', ') + '.';
+			} else {
+				if (selected.length > 2) {
+					this.downloadTitle = 'Download ' + selected.splice(0, 2).join(', ') + '... and ' + selected.length + ' more selected map sets.';
+				}
+			}
+			this.formats = [{ value: 'tab', display: 'Tab-Delimited Text File' }];
+		}
+		this.openDownloadModal(this.downloadModal);
+	}
+
+	startDownload() {
+		this.downloadError = '';
+		if (this.downloadType === 'selected') {
+			if (this.selectedFormat['value'] !== undefined) {
+				this.downloading = true;
+				const selected = [];
+				for (let c = 0; c < this.mapsetData.length; c++) {
+					if (this.mapsetData[c].checked === true) {
+						selected.push(this.mapsetData[c].code);
+					}
+				}
+				const cols = [];
+				for (let d = 0; d < this.refsetGridApi.columnModel.columnDefs.length; d++) {
+					if (this.refsetGridApi.columnModel.columnDefs[d].headerName !== undefined) {
+						cols.push(this.refsetGridApi.columnModel.columnDefs[d].headerName);
+					}
+				}
+				const params = {
+					'conceptCodes': selected,
+					'columnNames': cols,
+				};
+
+				this.refsetService.exportMapsetByCode(this.mapsetInfo.refSetCode, params).subscribe(
+					(data) => {
+						this.uiUtility.createMapsetReport(this.mapsetInfo.refSetCode, data);
+						this.downloading = false;
+						this.unCheckAll();
+						this.closeDownloadModal();
+					},
+					(err) => {
+						console.error(err);
+					}
+				);
+			} else {
+				this.downloadError = 'Please select a download format.';
+			}
+		} else {
+			if (this.selectedFormat['value'] !== undefined && this.selectedType['value'] !== undefined) {
+				this.downloading = true;
+				const params = {
+					'branch': this.mapsetInfo.branchPath,
+					'mapSetCode': this.mapsetInfo.refSetCode,
+					'fileFormatType': this.selectedType['value'],
+					'fileExportType': this.selectedFormat['value'],
+					'fileNameDate': CodeUtility.getCurrentDate().split('-').join(''),
+					'languageId': this.mapsetInfo.moduleId,
+					'startEffectiveTime': this.mapsetInfo.version.replace('-', ''),
+					'transientEffectiveTime': this.mapsetInfo.version.replace('-', ''),
+					'exportMetadata': this.selectExportMetadata,
+				};
+
+				this.refsetService.exportMapset(params).subscribe(
+					(data) => {
+						this.getMapsetDownloadStatus(data.url);
+					},
+					(err) => {
+						this.downloading = false;
+						console.error(err);
+					}
+				);
+			} else {
+				this.downloadError = 'Please select a download type and format.';
+			}
+		}
+	}
+
+	getMapsetDownloadStatus(url: string) {
+		this.refsetService.getDownloadMapsetStatus(url).subscribe(
+			(data) => {
+				switch (data.status) {
+					case 'FAILED':
+						this.downloading = false;
+						this.notificationService.show('Failed to download Mapset.', 'Error', 'error', { timeOut: 3000, extendedTimeOut: 0 });
+						this.closeDownloadModal();
+						break;
+					case 'COMPLETED':
+						this.refsetService.getDownloadMapsetFile(data.result).subscribe(
+							(data) => {
+								this.downloading = false;
+								this.closeDownloadModal();
+							},
+							(err) => {
+								this.downloading = false;
+								this.closeDownloadModal();
+								console.error(err);
+							}
+						);
+						break;
+					default:
+						setTimeout(() => {
+							this.getMapsetDownloadStatus(url);
+						}, 200);
+				}
+			},
+			(err) => {
+				this.downloading = false;
+				console.error(err);
+			}
+		);
+	}
+
 	openDownloadModal(content) {
 		this.downloadModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
 	}
 
 	closeDownloadModal() {
+		this.downloadError = '';
+		this.selectedFormat = {};
+		this.selectedType = {};
+		this.selectExportMetadata = false;
 		this.downloadModalRef.close();
 		this.isModalOpen = false;
 	}

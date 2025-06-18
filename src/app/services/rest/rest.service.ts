@@ -73,6 +73,18 @@ export class RestService {
 			);
 	}
 
+	postExport(url: string, params?: any, ignoreErrors = false, errorHandler: Function = null): Observable<any> {
+		const headers = new HttpHeaders({ 'Content-Type': 'text/plain' });
+		return this.http.post(this.restUrl + url, params, { responseType: 'text' }).pipe(
+			catchError((err) => {
+				if (errorHandler) {
+					return errorHandler(err);
+				}
+				return this.giveErrorNotification(err, ignoreErrors);
+			})
+		);
+	}
+
 	put(url: string, params: any, ignoreErrors = false): Observable<any> {
 		return this.http.put<any>(this.restUrl + url, params).pipe(
 			catchError((err) => {
