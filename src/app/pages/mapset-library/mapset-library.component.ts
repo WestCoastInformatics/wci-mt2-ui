@@ -469,8 +469,8 @@ export class MapsetLibraryComponent implements OnInit {
 					'fileExportType': this.selectedFormat['value'],
 					'fileNameDate': CodeUtility.getCurrentDate().split('-').join(''),
 					'languageId': this.mapsetInfo.moduleId,
-					'startEffectiveTime': this.mapsetInfo.version.replace('-', ''),
-					'transientEffectiveTime': this.mapsetInfo.version.replace('-', ''),
+					'startEffectiveTime': this.mapsetInfo.version.replaceAll('-', ''),
+					'transientEffectiveTime': this.mapsetInfo.version.replaceAll('-', ''),
 					'exportMetadata': this.selectExportMetadata,
 				};
 				this.refsetService.exportMapset(params).subscribe(
