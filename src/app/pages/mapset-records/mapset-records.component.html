@@ -153,7 +153,7 @@
 				<div *ngIf="showMapTable === 'table'" [hidden]="loaded" class="section-loading">Loading...</div>
 				<div [hidden]="!loaded" *ngIf="numOfMembers === 0" class="status-no-results">No Results to Show</div>
 				<div class="content-wrapper" [hidden]="showMapTable !== 'table' || !loaded">
-					<div class="grid-wrapper">
+					<div #gridWrapper class="grid-wrapper">
 						<ag-grid-angular
 							*ngIf="showTable"
 							id="directoryTable"
@@ -240,7 +240,7 @@
 					<button
 						#paginationPreviousPage
 						mat-raised-button
-						(click)="refsetGridApi.paginationGoToPreviousPage()"
+						(click)="goToPage(getCurrentPage() - 1)"
 						title="Go To Previous Page {{ getCurrentPage() }}"
 						class="pagination-page-buttons"
 						[ngClass]="{ disabled: getCurrentPage() === 0 }"
@@ -285,7 +285,7 @@
 					<button
 						#paginationNextPage
 						mat-raised-button
-						(click)="refsetGridApi.paginationGoToNextPage()"
+						(click)="goToPage(getCurrentPage() + 1)"
 						title="Go To Next Page {{ getCurrentPage() + 2 }}"
 						class="pagination-page-buttons"
 						[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
