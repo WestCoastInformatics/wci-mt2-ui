@@ -133,7 +133,7 @@
 					</div>
 				</div>
 				<div class="col">
-					<button class="library-app-refset-download p-r-20" (click)="openDownloadModal(downloadModal)">
+					<button class="library-app-refset-download p-r-20" (click)="downloadMapsets()">
 						<div class="mat-button-wrapper mapset-download-icon">
 							<i class="fa fa-download fa-lg" title="Download Maps" aria-label="Download Maps"></i>
 						</div>
@@ -170,15 +170,18 @@
 
 		<ng-template #downloadModal let-modal>
 			<div class="modal-header rt2-modal-header">
-				<div class="modal-title">Download Maps</div>
+				<div class="modal-title">Download Map Set</div>
 				<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeDownloadModal()">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<div class="modal-body">
-				<p>Download {{ mapsetData[0].name }}</p>
+			<div class="modal-body" *ngIf="!downloading">
+				<p>{{ downloadTitle }}</p>
+				<div class="modal-error-message" *ngIf="downloadError">
+					<div>{{ downloadError }}</div>
+				</div>
 				<div class="modal-select">
-					<label class="modal-label">Format: </label>
+					<label class="modal-label">File Format: <span class="mandatory-field">*</span></label>
 					<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
 						<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="rt2-column-chooser-select">
 							<mat-select-trigger class="trigger"
@@ -192,7 +195,10 @@
 					</mat-form-field>
 				</div>
 			</div>
-			<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<div class="modal-body" *ngIf="downloading">
+				<p>Please wait, downloading...</p>
+			</div>
+			<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group" *ngIf="!downloading">
 				<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
 				<button type="button" title="Download" class="rt2-btn rt2-action-btn" (click)="startDownload()">Download</button>
 			</div>

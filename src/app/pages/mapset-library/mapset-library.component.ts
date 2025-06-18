@@ -16,7 +16,9 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
+import { formatDate } from '@angular/common';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { PaginationService } from 'src/app/services/pagination.service';
 
 /**
@@ -72,10 +74,21 @@ export class MapsetLibraryComponent implements OnInit {
 	uiUtility = UiUtility;
 	showLoadingSearch = true;
 	toBeDevelopedModalRef: NgbModalRef;
+	downloadModalRef: NgbModalRef;
 	isModalOpen = false;
 	showPaging = false;
 	paginationPages: any = {};
 	private isNewPageSize = false;
+	downloadError = '';
+	downloading = false;
+	selectedFormat = {};
+	formats = [];
+	selectedType = {};
+	types = [];
+	selectExportMetadata = false;
+	downloadTitle = 'Download';
+	mapsetInfo: any = {};
+	selectedVersion: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -89,6 +102,7 @@ export class MapsetLibraryComponent implements OnInit {
 	@ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
 	@ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
 	@ViewChild('directorySearchInput') private directorySearchInput: ElementRef;
+	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
 
 	constructor(
 		private router: Router,
@@ -99,7 +113,8 @@ export class MapsetLibraryComponent implements OnInit {
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
 		private modalService: NgbModal,
-		private pagerService: PaginationService
+		private pagerService: PaginationService,
+		private notificationService: NotificationService
 	) {
 		document.body.scrollTop = 0;
 		refsetService.getTaxonomyRoot();
@@ -418,6 +433,102 @@ export class MapsetLibraryComponent implements OnInit {
 
 	openEclBuilder(fieldId) {
 		UiUtility.openEclBuilder(fieldId, 'MAIN');
+	}
+
+	downloadMapsets(params) {
+		this.mapsetInfo = params.data;
+		this.downloadTitle = 'Download ' + this.mapsetInfo.refSetCode + ' ' + this.mapsetInfo.refSetName;
+		this.types = [
+			{ value: 'SNAPSHOT', display: 'SNAPSHOT' },
+			{ value: 'DELTA', display: 'DELTA' },
+		];
+		this.formats = [
+			{ value: 'RF2', display: 'RF2' },
+			{ value: 'RF2_WITH_NAMES', display: 'RF2 With Names' },
+			{ value: 'SCTIDS', display: 'List Of SCTIDs' },
+		];
+		this.openDownloadModal(this.downloadModal);
+	}
+
+	startDownload() {
+		this.downloadError = '';
+		if (this.selectedFormat['value'] !== undefined && this.selectedType['value'] !== undefined) {
+			this.downloading = true;
+			this.refsetService.getMapsetByCode(this.mapsetInfo.refSetCode).subscribe((results) => {
+				this.mapsetInfo = results;
+				const params = {
+					'branch': this.mapsetInfo.branchPath,
+					'mapSetCode': this.mapsetInfo.refSetCode,
+					'fileFormatType': this.selectedType['value'],
+					'fileExportType': this.selectedFormat['value'],
+					'fileNameDate': CodeUtility.getCurrentDate().split('-').join(''),
+					'languageId': this.mapsetInfo.moduleId,
+					'startEffectiveTime': this.mapsetInfo.version.replace('-', ''),
+					'transientEffectiveTime': this.mapsetInfo.version.replace('-', ''),
+					'exportMetadata': this.selectExportMetadata,
+				};
+				this.refsetService.exportMapset(params).subscribe(
+					(data) => {
+						this.getMapsetDownloadStatus(data.url);
+					},
+					(err) => {
+						this.downloading = false;
+						console.error(err);
+					}
+				);
+			});
+		} else {
+			this.downloadError = 'Please select a download type and format.';
+		}
+	}
+
+	getMapsetDownloadStatus(url: string) {
+		this.refsetService.getDownloadMapsetStatus(url).subscribe(
+			(data) => {
+				switch (data.status) {
+					case 'FAILED':
+						this.downloading = false;
+						this.notificationService.show('Failed to download Mapset.', 'Error', 'error', { timeOut: 3000, extendedTimeOut: 0 });
+						this.closeDownloadModal();
+						break;
+					case 'COMPLETED':
+						this.refsetService.getDownloadMapsetFile(data.result).subscribe(
+							(data) => {
+								this.downloading = false;
+								this.closeDownloadModal();
+							},
+							(err) => {
+								this.downloading = false;
+								this.closeDownloadModal();
+								console.error(err);
+							}
+						);
+						break;
+					default:
+						setTimeout(() => {
+							this.getMapsetDownloadStatus(url);
+						}, 200);
+				}
+			},
+			(err) => {
+				this.downloading = false;
+				console.error(err);
+			}
+		);
+	}
+
+	openDownloadModal(content) {
+		this.downloadModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+	}
+
+	closeDownloadModal() {
+		this.downloadError = '';
+		this.selectedFormat = {};
+		this.selectedType = {};
+		this.selectExportMetadata = false;
+		this.downloadModalRef.close();
+		this.isModalOpen = false;
 	}
 
 	openToBeDevelopedModal(content) {

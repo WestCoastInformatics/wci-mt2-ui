@@ -72,7 +72,6 @@ export class BatchMappingComponent implements OnInit {
 	searchCallArray = [];
 	showLoadingSearch = true;
 	toBeDevelopedModalRef: NgbModalRef;
-	downloadModalRef: NgbModalRef;
 	confirmModalRef: NgbModalRef;
 	headerGroupModal: NgbModalRef;
 	isModalOpen = false;
@@ -169,7 +168,6 @@ export class BatchMappingComponent implements OnInit {
 	@ViewChild('directoryPaging') paginationComponent: PaginationComponent;
 	@ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
 	@ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
-	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
 	@ViewChild('confirmationModal') confirmationModal: TemplateRef<any>;
 	@ViewChild('actions') private actions: MatSelect;
 	@ViewChild('groupInput') private groupInput: ElementRef;
@@ -1262,22 +1260,6 @@ export class BatchMappingComponent implements OnInit {
 			}
 		});
 		this.closePopover();
-	}
-
-	openDownloadModal(content) {
-		this.downloadModalRef = this.modalService.open(content, { centered: true });
-		this.isModalOpen = true;
-	}
-
-	startDownload() {
-		this.closeDownloadModal();
-		console.log('selected download format', this.selectedFormat['value']);
-		this.openToBeDevelopedModal(this.tbdModal);
-	}
-
-	closeDownloadModal() {
-		this.downloadModalRef.close();
-		this.isModalOpen = false;
 	}
 
 	openToBeDevelopedModal(content) {

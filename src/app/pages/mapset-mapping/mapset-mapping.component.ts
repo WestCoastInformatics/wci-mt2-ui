@@ -13,6 +13,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
+import { formatDate } from '@angular/common';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
@@ -76,11 +77,13 @@ export class MapsetMappingComponent implements OnInit {
 	routeParamsSubscription$: Subscription;
 	gridSelectAll = false;
 	internationalId = '449080006';
-
 	loaded = false;
+	downloadError = '';
+	downloading = false;
 	selectedFormat = {};
 	formats = [];
-
+	downloadTitle = 'Download';
+	mapsetInfo: any = {};
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
 	moduleMetadata: any;
@@ -120,11 +123,6 @@ export class MapsetMappingComponent implements OnInit {
 			this.getModuleMetadata();
 		});
 
-		this.formats = [
-			{ value: 'rf2', display: 'RF2' },
-			{ value: 'sctids', display: 'List Of SCTIDs' },
-		];
-
 		if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
 			this.formats.splice(1, 0, { value: 'rf2_with_names', display: 'RF2 With Names' });
 		}
@@ -144,6 +142,10 @@ export class MapsetMappingComponent implements OnInit {
 				});
 				this.mapsetName = thisResult[0]?.refSetName;
 			},
+		});
+
+		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
+			this.mapsetInfo = results;
 		});
 	}
 
@@ -284,18 +286,44 @@ export class MapsetMappingComponent implements OnInit {
 		this.toggleDropdown = !this.toggleDropdown;
 	}
 
+	downloadMapsets() {
+		this.downloadTitle = 'Download ' + this.mapsetData[0].code + ' ' + this.mapsetData[0].name;
+		this.formats = [{ value: 'tab', display: 'Tab-Delimited Text File' }];
+		this.openDownloadModal(this.downloadModal);
+	}
+
+	startDownload() {
+		this.downloadError = '';
+		if (this.selectedFormat['value'] !== undefined) {
+			this.downloading = true;
+			const cols = ['Source', 'Source PT', 'Target', 'Target PT', 'Relationship', 'Rule', 'Advices', 'Last Modified'];
+			const params = {
+				'conceptCodes': [this.mapsetData[0].code],
+				'columnNames': cols,
+			};
+			this.refsetService.exportMapsetByCode(this.mapsetInfo.refSetCode, params).subscribe(
+				(data) => {
+					this.uiUtility.createMapsetReport(this.mapsetInfo.refSetCode, data);
+					this.downloading = false;
+					this.closeDownloadModal();
+				},
+				(err) => {
+					console.error(err);
+				}
+			);
+		} else {
+			this.downloadError = 'Please select a download format.';
+		}
+	}
+
 	openDownloadModal(content) {
 		this.downloadModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
 	}
 
-	startDownload() {
-		this.closeDownloadModal();
-		console.log('selected download format', this.selectedFormat['value']);
-		this.openToBeDevelopedModal(this.tbdModal);
-	}
-
 	closeDownloadModal() {
+		this.downloadError = '';
+		this.selectedFormat = {};
 		this.downloadModalRef.close();
 		this.isModalOpen = false;
 	}
