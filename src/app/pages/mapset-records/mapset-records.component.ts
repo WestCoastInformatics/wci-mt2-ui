@@ -105,6 +105,8 @@ export class MapsetRecordsComponent implements OnInit {
 	internationalId = '449080006';
 	mapsetRecordsColumnStorage = 'mapsetRecordsColumnStorage';
 	mapsetSearchInput = 'mapsetSearchInput';
+	mapsetGridCurrentPageNum = 'mapsetGridCurrentPageNum';
+	mapsetGridCurrentPageSize = 'mapsetGridCurrentPageSize';
 	moduleMetadata: any;
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
@@ -144,6 +146,7 @@ export class MapsetRecordsComponent implements OnInit {
 	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
 	@ViewChild('actions') private actions: MatSelect;
 	@ViewChild('directorySearchInput') private directorySearchInput: ElementRef;
+	@ViewChild('gridWrapper') gridWrapper: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -170,6 +173,8 @@ export class MapsetRecordsComponent implements OnInit {
 			this.mapsetCode = routeParams.code;
 			this.mapsetRecordsColumnStorage += this.mapsetCode;
 			this.mapsetSearchInput += this.mapsetCode;
+			this.mapsetGridCurrentPageNum += this.mapsetCode;
+			this.mapsetGridCurrentPageSize += this.mapsetCode;
 			this.getMapsetInfo();
 			this.getModuleMetadata();
 		});
@@ -195,7 +200,6 @@ export class MapsetRecordsComponent implements OnInit {
 		this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
 		this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
 		this.stepperInfo['IN_EDIT_STARTED'] = true;
-
 	}
 
 	getMapsetInfo() {
@@ -530,6 +534,7 @@ export class MapsetRecordsComponent implements OnInit {
 							limit = this.numOfMembers - startRow;
 						}
 					}
+
 					const restParams: any = {
 						offset: startRow,
 						limit: this.refsetGridPaging.pageSize,
@@ -625,6 +630,7 @@ export class MapsetRecordsComponent implements OnInit {
 								rowParams.successCallback([], 0);
 							}
 
+							this.checkStored();
 							this.refsetGridPaging.manualStateRefresh = Boolean(true);
 							// set placeholders on the grid floating filter fields
 							Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
@@ -894,12 +900,41 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	setPageSize(size: number) {
+		localStorage.setItem(this.mapsetGridCurrentPageSize, JSON.stringify(size));
 		this.refsetGridApi.paginationGoToFirstPage();
 		this.refsetGridApi.paginationSetPageSize(size);
 	}
 
 	goToPage(number: number) {
+		if (this.showMapTable === 'table') {
+			this.gridWrapper.nativeElement.scrollTo(0, 0);
+		}
+		localStorage.setItem(this.mapsetGridCurrentPageNum, JSON.stringify(number));
 		this.refsetGridApi.paginationGoToPage(number);
+	}
+
+	checkStored() {
+		if (this.mapsetGridCurrentPageSize !== undefined && this.mapsetGridCurrentPageNum !== undefined) {
+			if (localStorage.getItem(this.mapsetGridCurrentPageSize) !== null) {
+				this.refsetGridApi.paginationSetPageSize(Number(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageSize))));
+			}
+			setTimeout(() => {
+				if (localStorage.getItem(this.mapsetGridCurrentPageNum) !== null) {
+					this.goToPage(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageNum)));
+				}
+			}, 5);
+		} else {
+			if (this.mapsetGridCurrentPageSize !== undefined) {
+				if (localStorage.getItem(this.mapsetGridCurrentPageSize) !== null) {
+					this.setPageSize(Number(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageSize))));
+				}
+			}
+			if (this.mapsetGridCurrentPageNum !== undefined) {
+				if (localStorage.getItem(this.mapsetGridCurrentPageNum) !== null) {
+					this.goToPage(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageNum)));
+				}
+			}
+		}
 	}
 
 	//***** General Functions *****/
