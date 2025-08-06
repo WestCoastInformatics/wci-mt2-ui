@@ -127,6 +127,7 @@ import { AuditService } from './services/rest/audit.service';
 import { DirectivesModule } from './directives/directives.module';
 import { RefsetMetaTableComponent } from './components/refset-meta-table/refset-meta-table.component';
 import { LandingComponent } from './pages/landing/landing-page.component';
+import { ConflictComponent } from './pages/conflict/conflict.component';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 
@@ -135,6 +136,7 @@ const appRoutes: Routes = [
 	{ path: 'invite/response', component: InviteComponent },
 	{ path: 'login', component: LoginComponent },
 	{ path: '', component: LandingComponent },
+	{ path: 'conflict', component: ConflictComponent },
 	{ path: 'library', component: MapsetLibraryComponent, data: { breadcrumbLabel: 'Map Set Library' } },
 	{ path: 'mapset/:code/mappings', component: MapsetRecordsComponent, data: { breadcrumbLabel: 'Mappings' } },
 	{ path: 'mapset/:code/mappings/:concepts/batch', component: BatchMappingComponent, data: { breadcrumbLabel: 'Batch Edit Mappings' } },
