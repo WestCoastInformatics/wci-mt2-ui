@@ -491,6 +491,7 @@ export class MapsetLibraryComponent implements OnInit {
 	getMapsetDownloadStatus(url: string) {
 		this.refsetService.getDownloadMapsetStatus(url).subscribe(
 			(data) => {
+				const a = document.createElement('a');
 				switch (data.status) {
 					case 'FAILED':
 						this.downloading = false;
@@ -498,17 +499,13 @@ export class MapsetLibraryComponent implements OnInit {
 						this.closeDownloadModal();
 						break;
 					case 'COMPLETED':
-						this.refsetService.getDownloadMapsetFile(data.result).subscribe(
-							(data) => {
-								this.downloading = false;
-								this.closeDownloadModal();
-							},
-							(err) => {
-								this.downloading = false;
-								this.closeDownloadModal();
-								console.error(err);
-							}
-						);
+						a.href = this.refsetService.contextPath + data.result;
+						a.download = url.split('/').pop();
+						document.body.appendChild(a);
+						a.click();
+						document.body.removeChild(a);
+						this.downloading = false;
+						this.closeDownloadModal();
 						break;
 					default:
 						setTimeout(() => {
