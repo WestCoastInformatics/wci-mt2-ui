@@ -1,9 +1,11 @@
 import { FormControl } from '@angular/forms';
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild, HostListener, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild, HostListener, Renderer2 } from '@angular/core';
+import { PaginationChangedEvent } from 'ag-grid-community';
 import { Subscription, Observable, OperatorFunction, of, map } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -20,6 +22,7 @@ import { TemplateRendererComponent } from 'src/app/components/cellRenderers/temp
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
 	selector: 'app-batch-mapping',
@@ -29,6 +32,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 export class BatchMappingComponent implements OnInit {
 	user: User;
 	searchInput = '';
+	searchBrowserInput = '';
 	targetCodeInput = '';
 	targetNameInput = '';
 	ruleBased = false;
@@ -91,12 +95,15 @@ export class BatchMappingComponent implements OnInit {
 	popover_updateAdviceList = [];
 	popover_addAdviceList = [];
 	loaded = false;
+	showPaging = false;
+	browserLoaded = false;
 	saving = false;
 	selectedFormat = {};
 	formats = [];
 	numOfGroups = 1;
 	foundConceptCode = false;
 	selectedTarget = '';
+	selectedBrowser = '';
 	userChanged = false;
 	showAdvicePopover = false;
 	showGroupPopover = false;
@@ -140,12 +147,29 @@ export class BatchMappingComponent implements OnInit {
 	gridApi: any;
 	gridColumnApi: any;
 	gridColumnDefs = [];
-	gridInterval: any;
 	useDialog = false;
 	moduleMetadata: any;
 	internationalId = '449080006';
-
 	checkedNum = 0;
+
+	isNewPageSize = false;
+	browserGridPaging = {
+		pageSize: 10,
+		pageSizeOptions: [10, 25, 50, 100],
+		totalKnown: false,
+		totalRows: null,
+		manualStateRefresh: Boolean(true),
+	};
+	paginationPages: any = {};
+	browserData: any;
+	browserOptions: any;
+	browserPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
+	browserParams: any;
+	browserApi: any;
+	browserColumnApi: any;
+	browserColumnDefs = [];
+	conceptDetail = false;
+	currentConcept: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -157,6 +181,7 @@ export class BatchMappingComponent implements OnInit {
 	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
 	@ViewChild('headerGroupModal') headerGroup: TemplateRef<any>;
 	@ViewChild('directoryCheckSection') checkSection: TemplateRef<any>;
+	@ViewChild('browserCheckSection') checkBrowserSection: TemplateRef<any>;
 	@ViewChild('directoryCodeSection') codeSection: TemplateRef<any>;
 	@ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
 	@ViewChild('directoryToNameSection') toNameSection: TemplateRef<any>;
@@ -171,6 +196,9 @@ export class BatchMappingComponent implements OnInit {
 	@ViewChild('groupInput') private groupInput: ElementRef;
 	@ViewChild('targetInput') private targetInput: ElementRef;
 	@ViewChild('directorySearchInput') private directorySearchInput: ElementRef;
+	@ViewChild('browserSearchInput') private browserSearchInput: ElementRef;
+	@ViewChild('searchMenuTrigger') searchMenuTrigger: MatMenuTrigger;
+	@ViewChild('secondWindow') secondWindow: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -184,7 +212,8 @@ export class BatchMappingComponent implements OnInit {
 		private authenticationService: AuthenticationService,
 		private notificationService: NotificationService,
 		private mt2Service: MT2Service,
-		private modalService: NgbModal
+		private modalService: NgbModal,
+		private pagerService: PaginationService
 	) {
 		document.body.scrollTop = 0;
 		this.targetFC.valueChanges.pipe(debounceTime(600), distinctUntilChanged()).subscribe((res) => {
@@ -282,12 +311,46 @@ export class BatchMappingComponent implements OnInit {
 			},
 		};
 
-		this.changeDetectorRef.detectChanges();
+		this.browserOptions = {
+			context: { componentParent: this },
+			pagination: false,
+			angularCompileHeaders: true,
+			suppressColumnVirtualisation: true,
+			suppressPaginationPanel: true,
+			paginationPageSize: this.browserPaging.pageSize,
+			rowSelection: 'single',
+			animateRows: false,
+			enableCellTextSelection: true,
+			onGridReady: this.onBrowserReady,
+			onCellClicked: this.onBrowserCellClick,
+			frameworkComponents: {
+				'templateRenderer': TemplateRendererComponent,
+			},
+			defaultColDef: {
+				sortable: false,
+				filter: false,
+				sortingOrder: ['asc', 'desc'],
+				floatingFilter: false,
+				suppressMenu: true,
+				resizable: true,
+				suppressSorting: true,
+				suppressMovable: true,
+			},
+			enableBrowserTooltips: true,
+			rowClassRules: {
+				'refset_tool_grid_inactive_row': function (params) {
+					let inactivatedRow = false;
 
-		this.gridInterval = setInterval(() => {
-			//this.loadGridColumns();
-			clearInterval(this.gridInterval);
-		}, 5);
+					if (params.data) {
+						inactivatedRow = params.data.active == false;
+					}
+
+					return inactivatedRow;
+				},
+			},
+		};
+
+		this.changeDetectorRef.detectChanges();
 	}
 
 	loadGridColumns(): void {
@@ -326,7 +389,6 @@ export class BatchMappingComponent implements OnInit {
 					return '';
 				},
 			},
-
 			{
 				field: 'code',
 				tooltipField: 'code',
@@ -467,6 +529,32 @@ export class BatchMappingComponent implements OnInit {
 				},
 			},
 		];
+		this.browserColumnDefs = [
+			{
+				field: 'code',
+				tooltipField: 'code',
+				headerName: 'Code',
+				headerTooltip: 'Code',
+				flex: 1,
+				minWidth: 125,
+				cellClass: 'blue-link',
+				resizable: true,
+				sortable: false,
+				suppressSorting: true,
+			},
+			{
+				field: 'name',
+				tooltipField: 'name',
+				headerName: 'Name',
+				headerTooltip: 'Name',
+				flex: 2,
+				resizable: true,
+				minWidth: 165,
+				sortable: false,
+				unSortIcon: false,
+				suppressSorting: true,
+			},
+		];
 	}
 
 	onGridReady = (params) => {
@@ -489,6 +577,34 @@ export class BatchMappingComponent implements OnInit {
 			this.goToMappingPage(event.data.code);
 		}
 	};
+
+	onBrowserReady = (params) => {
+		this.browserParams = params;
+		this.browserApi = params.api;
+		this.browserColumnApi = params.columnApi.api;
+	};
+
+	onBrowserCellClick = (event) => {
+		if (event.column.colId !== 'checkbox' && event.column.colId !== 'action-btns' && event.column.colId !== 'relation-select' && event.column.colId !== 'rule-select') {
+			this.loadConceptDetail(event.data.code);
+		}
+	};
+
+	loadConceptDetail(code: string) {
+		this.refsetService.getConceptByCode(this.targetTerminology, this.targetTerminologyVersion, code).subscribe({
+			next: (results) => {
+				this.currentConcept = results;
+				this.conceptDetail = true;
+			},
+			error: (error) => {
+				//
+			},
+		});
+	}
+
+	closeConceptDetails() {
+		this.conceptDetail = false;
+	}
 
 	getMapsetInfo() {
 		this.refsetService.getMapsets().subscribe({
@@ -549,6 +665,7 @@ export class BatchMappingComponent implements OnInit {
 				this.mapAdvices = results.mapAdvices.map((res) => {
 					return res.name;
 				});
+				this.getBrowserData();
 				this.loadGridColumns();
 			},
 		});
@@ -600,6 +717,46 @@ export class BatchMappingComponent implements OnInit {
 				this.unCheckAll();
 			}
 		}
+	}
+
+	clearBrowserSearch() {
+		this.showLoadingSearch = false;
+		if (this.searchBrowserInput) {
+			this.searchBrowserInput = '';
+			this.onBrowserSearchChange();
+		}
+	}
+
+	@Debounce()
+	onBrowserSearchChange() {
+		this.searchBrowserInput = this.searchBrowserInput.trim();
+
+		if (!CodeUtility.hasValue(this.searchBrowserInput) || (CodeUtility.hasValue(this.searchBrowserInput) && this.searchBrowserInput.length > 2)) {
+			this.setPageSize(10);
+			this.goToPage(0);
+			this.getBrowserData();
+		}
+	}
+
+	/*Pagination functions */
+	onPaginationChanged(event: PaginationChangedEvent) {
+		if (this.browserApi) {
+			this.isNewPageSize = event.newPageSize ?? false;
+			this.browserGridPaging.pageSize = this.browserApi.paginationGetPageSize();
+			this.browserApi.updateGridOptions({
+				paginationPageSize: this.browserGridPaging.pageSize,
+				cacheBlockSize: this.browserGridPaging.pageSize,
+			});
+		}
+	}
+
+	setPageSize(size: number) {
+		this.browserApi.paginationGoToFirstPage();
+		this.browserApi.paginationSetPageSize(size);
+	}
+
+	goToPage(number: number) {
+		this.browserApi.paginationGoToPage(number);
 	}
 
 	reloadMapping() {
@@ -676,6 +833,59 @@ export class BatchMappingComponent implements OnInit {
 		});
 	}
 
+	getBrowserData() {
+		console.log(' browser data - fix this API call');
+		let query = this.searchBrowserInput;
+		if (this.searchBrowserInput === '') {
+			query = 'A0';
+		}
+		this.refsetService.searchConceptByQuery(this.targetTerminology, this.targetTerminologyVersion, query, '10').subscribe({
+			next: (response) => {
+				console.log(' browser data response ', response.items);
+				this.numOfMembers = response.total;
+				this.browserData = response.items;
+				this.browserLoaded = true;
+
+				const lastIndexP = document.getElementsByClassName('ag-paging-panel').length - 1;
+				const childP = document.getElementsByClassName('ag-paging-panel')[lastIndexP];
+				document.getElementById('directoryPaging').appendChild(childP);
+
+				this.showPaging = true;
+
+				if (this.numOfMembers > 0) {
+					this.showPaging = true;
+					this.browserApi.hideOverlay();
+					this.paginationPages = Math.ceil(this.numOfMembers / this.browserGridPaging.pageSize)
+						? this.pagerService.getPager(Math.ceil(this.numOfMembers / this.browserApi.pageSize), this.browserApi.paginationGetCurrentPage(), true)
+						: {};
+
+					this.paginationPages.currentPage = this.getCurrentPage();
+
+					const lastRow = this.numOfMembers;
+				} else {
+					this.showPaging = false;
+					this.browserApi.showNoRowsOverlay();
+				}
+
+				if (this.browserData.length > 0) {
+					const showInterval = setInterval(() => {
+						this.browserApi.getRowNode(0).selectThisNode(true);
+						this.loadConceptDetail(this.browserData[0].code);
+						clearInterval(showInterval);
+					}, 10);
+				}
+			},
+		});
+	}
+
+	getCurrentPage() {
+		let current = 1;
+		if (this.browserApi) {
+			current = this.browserApi.paginationGetCurrentPage();
+		}
+		return current;
+	}
+
 	getMapsetData() {
 		this.refsetService.getMappingByMapsetConceptList(this.mapsetCode, this.conceptCodes.join(',')).subscribe({
 			next: (response) => {
@@ -736,9 +946,9 @@ export class BatchMappingComponent implements OnInit {
 					}
 				}
 				this.mapsetData = batch;
-
 				const lastIndex = document.getElementsByClassName('ag-header').length - 1;
-				const child = document.getElementsByClassName('ag-header')[lastIndex];
+				const child = document.getElementsByClassName('ag-header')[0]; //lastIndex];
+				console.log(' header ', document.getElementsByClassName('ag-header'));
 				document.getElementById('directoryHeader').appendChild(child);
 
 				this.breadcrumbService.setBreadcrumbs([
@@ -1014,6 +1224,10 @@ export class BatchMappingComponent implements OnInit {
 		this.directorySearchInput.nativeElement.focus();
 	}
 
+	menuBrowserOpened() {
+		this.browserSearchInput.nativeElement.focus();
+	}
+
 	editGroup(event: any, params: any): void {
 		this.groupFC.reset();
 		this.priorityFC.reset();
@@ -1035,12 +1249,15 @@ export class BatchMappingComponent implements OnInit {
 	clearHeaderGroupInput() {
 		this.headerGroupFC.reset();
 	}
+
 	clearGroupInput() {
 		this.groupFC.reset();
 	}
+
 	clearPriorityInput() {
 		this.priorityFC.reset();
 	}
+
 	closeGroup() {
 		this.showGroupPopover = false;
 	}
@@ -1102,6 +1319,22 @@ export class BatchMappingComponent implements OnInit {
 		this.showTargetPopover = false;
 	}
 
+	searchBrowser() {
+		if (!this.showBrowserSection) {
+			this.toggleSectionView('showBrowserSection');
+		}
+		const showInterval = setInterval(() => {
+			this.secondWindow.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			const openInterval = setInterval(() => {
+				// this.searchMenuTrigger.openMenu();
+				this.searchBrowserInput = this.targetFC.value['code'];
+				this.getBrowserData();
+				clearInterval(openInterval);
+			}, 100);
+			clearInterval(showInterval);
+		}, 10);
+	}
+
 	setEmptyTarget() {
 		this.foundConceptCode = false;
 		this.userChanged = true;
@@ -1149,7 +1382,9 @@ export class BatchMappingComponent implements OnInit {
 		this.closeTarget();
 	}
 
-	setTarget() {
+	setTarget(value: string, name: string) {
+		this.targetCodeInput = value;
+		this.targetToName = name;
 		this.userChanged = true;
 		let defaultRule = '';
 		if (!this.ruleBased) {
@@ -1164,9 +1399,9 @@ export class BatchMappingComponent implements OnInit {
 		}
 		this.mapsetData.forEach((data) => {
 			if (data.uuid === this.selectedTarget) {
-				const targetValue = this.targetFC.value;
+				const targetValue = value;
 				if (targetValue['code'] === undefined) {
-					data.mapEntries.toCode = this.targetFC.value;
+					data.mapEntries.toCode = value;
 					data.toCode = data.mapEntries.group + '/' + data.mapEntries.priority + '#' + this.targetFC.value;
 				} else {
 					data.mapEntries.toCode = targetValue['code'];
@@ -1379,6 +1614,10 @@ export class BatchMappingComponent implements OnInit {
 				});
 				this.checkedNum = 0;
 				this.gridApi.redrawRows();
+				break;
+			case 'select':
+				//?selectedTarget
+				//(click)="setTarget(currentConcept.code)"
 				break;
 			default:
 				this.openToBeDevelopedModal(this.tbdModal);

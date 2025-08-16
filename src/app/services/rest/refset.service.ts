@@ -341,6 +341,11 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + `concept/${terminology}/${version}?limit=${limit}&offset=0&query=${query}`, '', false);
 	}
 
+	//http://localhost:8080/refsetservice/concept/ICD-10-NO/20240723/autocomplete?limit=10&offset=0&query=K03
+	searchTerminologyByQuery(terminology: string, version: string, query: string, limit: string): Observable<any> {
+		return this.get(this.contextPath + `concept/${terminology}/${version}/autocomplete?limit=${limit}&offset=0&query=${query}`, '', false);
+	}
+
 	updateMapsetMapping(mapSetCode: string, params): Observable<any> {
 		return this.put(this.contextPath + `mapset/${mapSetCode}`, params);
 	}
