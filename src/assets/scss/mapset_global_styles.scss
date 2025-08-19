@@ -543,6 +543,11 @@ tr.refset_tool_inactive_row {
 	padding: 5px;
 }
 
+.browser-scrolling {
+	height: 400px;
+	overflow: auto;
+}
+
 .overflow {
 	min-height: 100%;
 	overflow: auto;

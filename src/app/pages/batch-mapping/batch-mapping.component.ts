@@ -87,6 +87,7 @@ export class BatchMappingComponent implements OnInit {
 	conceptCodes: [];
 	mapping: string;
 	routeParamsSubscription$: Subscription;
+	browserSubscription: Subscription;
 	gridSelectAll = false;
 	popoverLocationY = 0;
 	popoverLocationX = 0;
@@ -153,15 +154,8 @@ export class BatchMappingComponent implements OnInit {
 	checkedNum = 0;
 
 	isNewPageSize = false;
-	browserGridPaging = {
-		pageSize: 10,
-		pageSizeOptions: [10, 25, 50, 100],
-		totalKnown: false,
-		totalRows: null,
-		manualStateRefresh: Boolean(true),
-	};
 	paginationPages: any = {};
-	browserData: any;
+	browserData = [];
 	browserOptions: any;
 	browserPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
 	browserParams: any;
@@ -199,6 +193,7 @@ export class BatchMappingComponent implements OnInit {
 	@ViewChild('browserSearchInput') private browserSearchInput: ElementRef;
 	@ViewChild('searchMenuTrigger') searchMenuTrigger: MatMenuTrigger;
 	@ViewChild('secondWindow') secondWindow: ElementRef;
+	@ViewChild('browserWrapper') browserWrapper: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -311,18 +306,37 @@ export class BatchMappingComponent implements OnInit {
 			},
 		};
 
+		this.changeDetectorRef.detectChanges();
+	}
+
+	firstLoadBrowser() {
 		this.browserOptions = {
 			context: { componentParent: this },
-			pagination: false,
+			pagination: true,
 			angularCompileHeaders: true,
 			suppressColumnVirtualisation: true,
 			suppressPaginationPanel: true,
-			paginationPageSize: this.browserPaging.pageSize,
-			rowSelection: 'single',
+			rowModelType: 'infinite',
+			suppressScrollOnNewData: true,
+			suppressColumnMoveAnimation: true,
+			suppressDragLeaveHidesColumns: true,
+			debounceVerticalScrollbar: true,
 			animateRows: false,
+			debug: false,
+			cacheOverflowSize: 2,
+			maxBlocksInCache: 2,
+			maxConcurrentDatasourceRequests: 2,
+			serverSideEnableClientSideSort: true,
+			cacheBlockSize: this.browserPaging.pageSize,
+			paginationPageSize: this.browserPaging.pageSize,
+			paginationPageSizeSelector: this.browserPaging.pageSizeOptions,
+			rowSelection: 'single',
+			datasource: this.createDataSource(),
 			enableCellTextSelection: true,
 			onGridReady: this.onBrowserReady,
 			onCellClicked: this.onBrowserCellClick,
+			onPaginationChanged: (event: any) => this.onPaginationChanged(event),
+			domLayout: 'autoHeight',
 			frameworkComponents: {
 				'templateRenderer': TemplateRendererComponent,
 			},
@@ -349,8 +363,7 @@ export class BatchMappingComponent implements OnInit {
 				},
 			},
 		};
-
-		this.changeDetectorRef.detectChanges();
+		this.showTable = true;
 	}
 
 	loadGridColumns(): void {
@@ -536,9 +549,9 @@ export class BatchMappingComponent implements OnInit {
 				headerName: 'Code',
 				headerTooltip: 'Code',
 				flex: 1,
-				minWidth: 125,
+				width: 65,
 				cellClass: 'blue-link',
-				resizable: true,
+				resizable: false,
 				sortable: false,
 				suppressSorting: true,
 			},
@@ -548,10 +561,9 @@ export class BatchMappingComponent implements OnInit {
 				headerName: 'Name',
 				headerTooltip: 'Name',
 				flex: 2,
-				resizable: true,
 				minWidth: 165,
+				resizable: false,
 				sortable: false,
-				unSortIcon: false,
 				suppressSorting: true,
 			},
 		];
@@ -665,7 +677,7 @@ export class BatchMappingComponent implements OnInit {
 				this.mapAdvices = results.mapAdvices.map((res) => {
 					return res.name;
 				});
-				this.getBrowserData();
+				//this.getBrowserData();
 				this.loadGridColumns();
 			},
 		});
@@ -734,7 +746,8 @@ export class BatchMappingComponent implements OnInit {
 		if (!CodeUtility.hasValue(this.searchBrowserInput) || (CodeUtility.hasValue(this.searchBrowserInput) && this.searchBrowserInput.length > 2)) {
 			this.setPageSize(10);
 			this.goToPage(0);
-			this.getBrowserData();
+			this.browserLoaded = false;
+			this.browserApi.purgeInfiniteCache();
 		}
 	}
 
@@ -742,21 +755,24 @@ export class BatchMappingComponent implements OnInit {
 	onPaginationChanged(event: PaginationChangedEvent) {
 		if (this.browserApi) {
 			this.isNewPageSize = event.newPageSize ?? false;
-			this.browserGridPaging.pageSize = this.browserApi.paginationGetPageSize();
+			this.browserPaging.pageSize = this.browserApi.paginationGetPageSize();
 			this.browserApi.updateGridOptions({
-				paginationPageSize: this.browserGridPaging.pageSize,
-				cacheBlockSize: this.browserGridPaging.pageSize,
+				paginationPageSize: this.browserPaging.pageSize,
+				cacheBlockSize: this.browserPaging.pageSize,
 			});
+			// this.getBrowserData();
 		}
 	}
 
 	setPageSize(size: number) {
-		this.browserApi.paginationGoToFirstPage();
+		// this.browserApi.paginationGoToFirstPage();
+		this.goToPage(0);
 		this.browserApi.paginationSetPageSize(size);
 	}
 
 	goToPage(number: number) {
 		this.browserApi.paginationGoToPage(number);
+		//this.getBrowserData();
 	}
 
 	reloadMapping() {
@@ -833,49 +849,102 @@ export class BatchMappingComponent implements OnInit {
 		});
 	}
 
-	getBrowserData() {
-		console.log(' browser data - fix this API call');
-		let query = this.searchBrowserInput;
-		if (this.searchBrowserInput === '') {
-			query = 'A0';
-		}
-		this.refsetService.searchConceptByQuery(this.targetTerminology, this.targetTerminologyVersion, query, '10').subscribe({
-			next: (response) => {
-				console.log(' browser data response ', response.items);
-				this.numOfMembers = response.total;
-				this.browserData = response.items;
-				this.browserLoaded = true;
+	createDataSource() {
+		return {
+			rowCount: null,
+			getRows: (rowParams) => {
+				const startRow = rowParams.startRow;
+				const endRow = rowParams.endRow;
+				const sortModel = rowParams.sortModel;
+				this.browserApi.showLoadingOverlay();
 
-				const lastIndexP = document.getElementsByClassName('ag-paging-panel').length - 1;
-				const childP = document.getElementsByClassName('ag-paging-panel')[lastIndexP];
-				document.getElementById('directoryPaging').appendChild(childP);
-
-				this.showPaging = true;
-
-				if (this.numOfMembers > 0) {
-					this.showPaging = true;
-					this.browserApi.hideOverlay();
-					this.paginationPages = Math.ceil(this.numOfMembers / this.browserGridPaging.pageSize)
-						? this.pagerService.getPager(Math.ceil(this.numOfMembers / this.browserApi.pageSize), this.browserApi.paginationGetCurrentPage(), true)
-						: {};
-
-					this.paginationPages.currentPage = this.getCurrentPage();
-
-					const lastRow = this.numOfMembers;
-				} else {
-					this.showPaging = false;
-					this.browserApi.showNoRowsOverlay();
+				let query = this.searchBrowserInput;
+				if (this.searchBrowserInput === '') {
+					query = 'A0';
 				}
 
-				if (this.browserData.length > 0) {
-					const showInterval = setInterval(() => {
-						this.browserApi.getRowNode(0).selectThisNode(true);
-						this.loadConceptDetail(this.browserData[0].code);
-						clearInterval(showInterval);
-					}, 10);
+				if (this.isNewPageSize) {
+					rowParams.failCallback();
+				} else {
+					this.browserLoaded = false;
+					let limit = endRow - startRow;
+
+					if (this.numOfMembers > 0) {
+						if (startRow + limit > this.numOfMembers) {
+							limit = this.numOfMembers - startRow;
+						}
+					}
+
+					const restParams: any = {
+						offset: startRow,
+						limit: this.browserPaging.pageSize,
+					};
+
+					if (CodeUtility.hasValue(query)) {
+						query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
+						restParams.filter = query;
+					} else {
+						restParams.filter = '';
+					}
+					console.log(' browser data - fix this API call');
+					this.browserSubscription = this.refsetService.searchBrowserByQuery(this.targetTerminology, this.targetTerminologyVersion, query, restParams.offset, restParams.limit).subscribe({
+						next: (response) => {
+							this.numOfMembers = response.total;
+							this.browserData = response.items;
+							this.browserLoaded = true;
+
+							this.changeDetectorRef.detectChanges();
+
+							const lastIndex = document.getElementsByClassName('ag-header').length - 1;
+							const child = document.getElementsByClassName('ag-header')[lastIndex];
+							document.getElementById('browserHeader').appendChild(child);
+							const lastIndexP = document.getElementsByClassName('ag-paging-panel').length - 1;
+							const childP = document.getElementsByClassName('ag-paging-panel')[lastIndexP];
+							document.getElementById('directoryPaging').appendChild(childP);
+
+							this.showPaging = true;
+
+							if (this.browserData?.length > 0) {
+								this.showPaging = true;
+								this.browserApi.hideOverlay();
+								this.paginationPages = Math.ceil(this.numOfMembers / this.browserPaging.pageSize)
+									? this.pagerService.getPager(Math.ceil(this.numOfMembers / this.browserPaging.pageSize), this.browserApi.paginationGetCurrentPage(), true)
+									: {};
+
+								this.paginationPages.currentPage = this.getCurrentPage();
+
+								const lastRow = this.numOfMembers;
+								rowParams.successCallback(this.browserData, lastRow);
+							}
+							if (this.numOfMembers === 0) {
+								this.showPaging = false;
+								this.browserApi.showNoRowsOverlay();
+								rowParams.successCallback([], 0);
+							}
+
+							this.browserPaging.manualStateRefresh = Boolean(true);
+							// set placeholders on the grid floating filter fields
+							Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
+								if (obj.attributes['disabled']) {
+									// skip columns with disabled filter
+									return;
+								}
+
+								const label = obj.getAttribute('aria-label');
+								const value = label.substring(0, label.indexOf('Filter Input')) + '...';
+								obj.setAttribute('placeholder', value);
+							});
+							this.browserSubscription.unsubscribe();
+						},
+						error: (error) => {
+							this.showPaging = false;
+							this.browserApi.showNoRowsOverlay();
+							rowParams.successCallback([], 0);
+						},
+					});
 				}
 			},
-		});
+		};
 	}
 
 	getCurrentPage() {
@@ -948,7 +1017,6 @@ export class BatchMappingComponent implements OnInit {
 				this.mapsetData = batch;
 				const lastIndex = document.getElementsByClassName('ag-header').length - 1;
 				const child = document.getElementsByClassName('ag-header')[0]; //lastIndex];
-				console.log(' header ', document.getElementsByClassName('ag-header'));
 				document.getElementById('directoryHeader').appendChild(child);
 
 				this.breadcrumbService.setBreadcrumbs([
@@ -1322,17 +1390,13 @@ export class BatchMappingComponent implements OnInit {
 	searchBrowser() {
 		if (!this.showBrowserSection) {
 			this.toggleSectionView('showBrowserSection');
-		}
-		const showInterval = setInterval(() => {
 			this.secondWindow.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-			const openInterval = setInterval(() => {
-				// this.searchMenuTrigger.openMenu();
-				this.searchBrowserInput = this.targetFC.value['code'];
-				this.getBrowserData();
-				clearInterval(openInterval);
-			}, 100);
-			clearInterval(showInterval);
-		}, 10);
+		}
+		const openInterval = setInterval(() => {
+			this.searchBrowserInput = this.targetFC.value['code'];
+			this.onBrowserSearchChange();
+			clearInterval(openInterval);
+		}, 100);
 	}
 
 	setEmptyTarget() {
@@ -1744,8 +1808,12 @@ export class BatchMappingComponent implements OnInit {
 	goToMappingPage(code) {
 		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + code], { replaceUrl: false, skipLocationChange: false });
 	}
-
+	loadedBrowser = false;
 	toggleSectionView(section: string) {
+		if (section === 'showBrowserSection' && !this.loadedBrowser) {
+			this.loadedBrowser;
+			this.firstLoadBrowser();
+		}
 		if (this[section]) {
 			this[section] = false;
 		} else {
@@ -1754,9 +1822,7 @@ export class BatchMappingComponent implements OnInit {
 		}
 	}
 
-	onResize(event) {
-		//this.closePopover();
-	}
+	onResize(event) {}
 
 	@HostListener('window:scroll', ['$event'])
 	onScroll(event) {
