@@ -268,6 +268,25 @@
 	display: inline-flex;
 }
 
+.search-btn {
+	margin-right: 35px;
+}
+
+.browser-split {
+	height: 530px;
+}
+
+.metadata-section-background {
+	background-color: white;
+	height: 100%;
+	margin-right: 11px;
+	margin-left: 11px;
+	padding-right: 10px;
+	padding-left: 10px;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+
 .type-ahead-form {
 	position: absolute;
 	margin-left: 50px;
@@ -793,28 +812,6 @@
 }
 
 /*previous */
-#directorySearchInputField {
-	width: 340px;
-	margin-top: 0.25em;
-
-	// set this to 20px less than the field to leave room for the cancel 'X'
-	.mat-form-field-flex {
-		width: 320px;
-	}
-}
-
-.directoryViewFilterField.mat-form-field {
-	width: 125px;
-	padding-left: 5px;
-
-	.mat-form-field-flex {
-		width: 125px;
-	}
-
-	.mat-form-field-underline {
-		width: 125px;
-	}
-}
 
 .rt2-directory-chooser-column {
 	padding-right: 20px;
@@ -871,10 +868,9 @@
 	height: 100%;
 }
 
-.browser-section {
-	min-height: 68px;
-	height: 68px;
-	max-height: 68px;
+.details-scrolling {
+	min-height: 40px;
+	max-height: 140px;
 }
 
 .concept-detail-area {
@@ -892,4 +888,12 @@
 .dialog-close-x-dark {
 	color: #666666 !important;
 	font-size: 20px;
+}
+
+.no-wrap {
+	text-wrap: nowrap;
+}
+
+.rt2-pagination-container {
+	padding-right: 5px;
 }

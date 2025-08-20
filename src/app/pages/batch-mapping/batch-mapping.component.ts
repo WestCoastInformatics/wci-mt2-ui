@@ -152,7 +152,7 @@ export class BatchMappingComponent implements OnInit {
 	moduleMetadata: any;
 	internationalId = '449080006';
 	checkedNum = 0;
-
+	loadedBrowser = false;
 	isNewPageSize = false;
 	paginationPages: any = {};
 	browserData = [];
@@ -1808,7 +1808,7 @@ export class BatchMappingComponent implements OnInit {
 	goToMappingPage(code) {
 		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + code], { replaceUrl: false, skipLocationChange: false });
 	}
-	loadedBrowser = false;
+
 	toggleSectionView(section: string) {
 		if (section === 'showBrowserSection' && !this.loadedBrowser) {
 			this.loadedBrowser;

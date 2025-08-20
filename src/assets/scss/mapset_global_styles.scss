@@ -548,6 +548,11 @@ tr.refset_tool_inactive_row {
 	overflow: auto;
 }
 
+.as-split-gutter {
+	cursor: pointer;
+	display: none !important;
+}
+
 .overflow {
 	min-height: 100%;
 	overflow: auto;
