@@ -48,7 +48,7 @@
 		</div>
 	</div>
 </div>
-<div [hidden]="loaded" class="section-loading">Loading...</div>
+<div [hidden]="loaded" class="section-loading m-b-20">Loading...</div>
 <div class="dropdown-group row edit-actions" *ngIf="loaded">
 	<div class="col-10"></div>
 	<div class="action-column col-2 no-margin-top">
@@ -73,7 +73,7 @@
 			</button>
 		</span>
 	</div>
-	<div class="edit-container mt-10">
+	<div class="edit-container m-t-10">
 		<div class="metadata-collapsible-container col">
 			<div class="metadata-collapsible-container-group-header row no-hover">
 				<div class="metadata-collapsible-container-title page-header-font">
@@ -370,7 +370,7 @@
 						<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
 						<div class="rt2-pagination-container" [hidden]="!browserLoaded" *ngIf="showBrowserSection">
 							<div class="rt2-pagination-top-row" *ngIf="showPaging">
-								<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons">
+								<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons no-wrap">
 									<button
 										#paginationFirstPage
 										mat-raised-button
@@ -464,7 +464,7 @@
 									</span>
 								</div>
 							</div>
-							<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine no-wrap" [hidden]="!showPaging">
+							<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
 								Showing <span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * browserPaging.pageSize - browserPaging.pageSize + 1 }} </span> to
 								<span class="fw-bold p-l-5 p-r-5">
 									{{ numOfMembers < (getCurrentPage() + 1) * browserPaging.pageSize ? numOfMembers : (getCurrentPage() + 1) * browserPaging.pageSize }}

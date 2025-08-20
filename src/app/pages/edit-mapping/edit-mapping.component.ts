@@ -1088,7 +1088,7 @@ export class EditMappingComponent implements OnInit {
 
 				let query = this.searchBrowserInput;
 				if (this.searchBrowserInput === '') {
-					query = 'A0';
+					query = '';
 				}
 
 				if (this.isNewPageSize) {
@@ -1114,7 +1114,7 @@ export class EditMappingComponent implements OnInit {
 					} else {
 						restParams.filter = '';
 					}
-					console.log(' browser data - fix this API call');
+
 					this.browserSubscription = this.refsetService.searchBrowserByQuery(this.targetTerminology, this.targetTerminologyVersion, query, restParams.offset, restParams.limit).subscribe({
 						next: (response) => {
 							this.numOfMembers = response.total;

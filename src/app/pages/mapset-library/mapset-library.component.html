@@ -9,9 +9,9 @@
 		</div>
 	</div>
 </div>
-
+<div [hidden]="!showLoadingSearch" class="section-loading">Loading...</div>
 <div class="rt2-container refsetDirectoryPage" (window:resize)="onResize($event)">
-	<div class="metadata-collapsible-container m-t-20">
+	<div class="metadata-collapsible-container" [ngClass]="{ 'm-t-20': !showLoadingSearch }">
 		<div class="metadata-collapsible-container-group-header row">
 			<div class="metadata-section-background">
 				<div class="row d-flex dropdown-group">
@@ -52,9 +52,6 @@
 					</div>
 				</div>
 				<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showTable && !showLoadingSearch"></div>
-				<div class="row loading-details dashboard-section" *ngIf="showLoadingSearch">
-					<div>Loading...</div>
-				</div>
 
 				<ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct" [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
 				</ag-grid-angular>
@@ -62,7 +59,7 @@
 				<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
 				<div class="rt2-pagination-container" [hidden]="showLoadingSearch || numOfMembers === 0">
 					<div class="rt2-pagination-top-row">
-						<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons">
+						<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons no-wrap">
 							<button
 								#paginationFirstPage
 								mat-raised-button

@@ -24,8 +24,9 @@
 	</div>
 </div>
 
+<div [hidden]="loaded" class="section-loading">Loading...</div>
 <div class="rt2-container">
-	<div class="metadata-collapsible-container m-t-20">
+	<div class="metadata-collapsible-container" [ngClass]="{ 'm-t-20': loaded }">
 		<div class="metadata-collapsible-container-group-header row">
 			<div class="metadata-collapsible-container-title page-header-font" *ngIf="mapsetData.length > 0">
 				<span>Maps&nbsp; </span><span>{{ '(' + mapsetData[0].mapEntries.length + ')' }}</span>
@@ -82,7 +83,6 @@
 					<span class="date-column second-row" [hidden]="!mapsetData[0].modified">Last Updated: {{ dateFormatter(mapsetData[0].modified) }}</span>
 				</div>
 			</div>
-			<div [hidden]="loaded" class="section-loading">Loading...</div>
 			<div class="dropdown-group section-background mappings-section" *ngIf="loaded">
 				<div class="col-12">
 					<div *ngFor="let record of mapsetData; index as i">
