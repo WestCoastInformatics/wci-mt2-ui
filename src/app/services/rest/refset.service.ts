@@ -341,6 +341,10 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + `concept/${terminology}/${version}?limit=${limit}&offset=0&query=${query}`, '', false);
 	}
 
+	searchBrowserByQuery(terminology: string, version: string, query: string, offset: string, limit: string): Observable<any> {
+		return this.get(this.contextPath + `concept/${terminology}/${version}?limit=${limit}&offset=${offset}&query=${query}`, '', false);
+	}
+
 	updateMapsetMapping(mapSetCode: string, params): Observable<any> {
 		return this.put(this.contextPath + `mapset/${mapSetCode}`, params);
 	}

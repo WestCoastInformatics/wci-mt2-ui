@@ -66,8 +66,9 @@
 		</div>
 	</div>
 </div>
+<div [hidden]="loaded" class="section-loading">Loading...</div>
 <div class="rt2-container" (window:resize)="onResize($event)">
-	<div class="metadata-collapsible-container m-t-20">
+	<div class="metadata-collapsible-container" [ngClass]="{ 'm-t-20': loaded }">
 		<div class="switch-view" *ngIf="showMappingsSection && loaded" [hidden]="numOfMembers === 0">
 			<mat-label class="switch-label">view by</mat-label>
 			<mat-button-toggle-group #group="matButtonToggleGroup" [value]="showMapTable" (change)="changeMappingsView(group.value)">
@@ -150,7 +151,6 @@
 		<div class="metadata-section-background" *ngIf="showMappingsSection">
 			<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showMappingsSection || !loaded || numOfMembers === 0 || showMapTable !== 'table'"></div>
 			<div [hidden]="!showMappingsSection" class="section-background mappings-section" [ngClass]="{ 'overflow': showMapTable !== 'table' }">
-				<div *ngIf="showMapTable === 'table'" [hidden]="loaded" class="section-loading">Loading...</div>
 				<div [hidden]="!loaded" *ngIf="numOfMembers === 0" class="status-no-results">No Results to Show</div>
 				<div class="content-wrapper" [hidden]="showMapTable !== 'table' || !loaded">
 					<div #gridWrapper class="grid-wrapper">
@@ -169,7 +169,7 @@
 						</ag-grid-angular>
 					</div>
 				</div>
-				<div [hidden]="loaded" *ngIf="showMapTable !== 'table'" class="section-loading record-loading">Loading...</div>
+
 				<div [hidden]="!loaded" *ngIf="showMapTable !== 'table'" class="content-wrapper">
 					<div *ngFor="let record of mapsetData; index as i">
 						<div class="record-row" [ngClass]="{ 'odd-row': 0 === i % 2 }" *ngIf="!record.spanned">
@@ -225,7 +225,7 @@
 		<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
 		<div class="rt2-pagination-container" [hidden]="!loaded || numOfMembers === 0" *ngIf="showMappingsSection">
 			<div class="rt2-pagination-top-row">
-				<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons">
+				<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons no-wrap">
 					<button
 						#paginationFirstPage
 						mat-raised-button

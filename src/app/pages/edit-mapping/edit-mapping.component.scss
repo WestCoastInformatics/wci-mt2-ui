@@ -268,6 +268,25 @@
 	display: inline-flex;
 }
 
+.search-btn {
+	margin-right: 35px;
+}
+
+.browser-split {
+	height: 530px;
+}
+
+.metadata-section-background {
+	background-color: white;
+	height: 100%;
+	margin-right: 11px;
+	margin-left: 11px;
+	padding-right: 10px;
+	padding-left: 10px;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+
 .type-ahead-form {
 	position: absolute;
 	margin-left: 50px;
@@ -420,7 +439,8 @@
 	left: 0 !important;
 }
 
-#directorySearchInputField {
+#directorySearchInputField,
+#browserSearchInputField {
 	width: 340px;
 	margin-top: 0.25em;
 
@@ -582,7 +602,7 @@
 .loading-details {
 	position: absolute;
 	z-index: 100;
-	background: white;
+	background: rgba(232, 240, 255, 1) !important;
 	border: 0.5px solid #333;
 	border-radius: 0;
 	margin-left: 45%;
@@ -643,7 +663,7 @@
 }
 
 .section-loading {
-	background: white !important;
+	background: rgba(232, 240, 255, 1) !important;
 	border: 0.2px groove #999 !important;
 	border-radius: 0 !important;
 	margin-left: 45% !important;
@@ -792,28 +812,6 @@
 }
 
 /*previous */
-#directorySearchInputField {
-	width: 340px;
-	margin-top: 0.25em;
-
-	// set this to 20px less than the field to leave room for the cancel 'X'
-	.mat-form-field-flex {
-		width: 320px;
-	}
-}
-
-.directoryViewFilterField.mat-form-field {
-	width: 125px;
-	padding-left: 5px;
-
-	.mat-form-field-flex {
-		width: 125px;
-	}
-
-	.mat-form-field-underline {
-		width: 125px;
-	}
-}
 
 .rt2-directory-chooser-column {
 	padding-right: 20px;
@@ -840,16 +838,6 @@
 
 .library-app-refset-discussion-list {
 	cursor: pointer;
-}
-
-.loading-details {
-	position: absolute;
-	z-index: 100;
-	background: white;
-	border: 0.5px solid #333;
-	border-radius: 0;
-	margin-left: 45%;
-	margin-top: 10%;
 }
 
 .discussion-icon {
@@ -880,8 +868,36 @@
 	height: 100%;
 }
 
-.browser-section {
-	min-height: 68px;
-	height: 68px;
-	max-height: 68px;
+.details-scrolling {
+	min-height: 40px;
+	max-height: 140px;
+}
+
+.rt2-pagination-container {
+	padding: 20px 10px;
+}
+
+.concept-detail-area {
+	background-color: #f2f2f2;
+	padding: 20px;
+}
+
+.concept-detail-body {
+	height: 100%;
+	padding: 20px;
+	background-color: #fff;
+}
+
+.col-header-font,
+.dialog-close-x-dark {
+	color: #666666 !important;
+	font-size: 20px;
+}
+
+.no-wrap {
+	text-wrap: nowrap;
+}
+
+.rt2-pagination-container {
+	padding-right: 5px;
 }

@@ -43,7 +43,7 @@
 		</div>
 	</div>
 </div>
-<div [hidden]="loaded" class="section-loading">Loading...</div>
+<div [hidden]="loaded" class="section-loading m-b-20">Loading...</div>
 
 <div [hidden]="!saving" class="section-saving">Please wait, save in progress...</div>
 <div class="dropdown-group row edit-actions m-b-10 m-t-10" *ngIf="loaded && !saving">
@@ -83,7 +83,7 @@
 			<img src="assets/caret-up-solid.svg" *ngIf="!showConfigSection" alt="Collapse Button" title="Collapse Target Configuration" aria-label="Collapse Button" class="caret-up-solid" />
 			<img src="assets/caret-down-solid.svg" *ngIf="showConfigSection" alt="Expand Button" title="Expand Target Configuration" aria-label="Expand Button" class="caret-down-solid" />
 		</div>
-		<div class="row d-flex dropdown-group" *ngIf="showConfigSection && loaded">
+		<div class="row d-flex dropdown-group" *ngIf="showConfigSection && loaded && !saving">
 			<div class="col-md-auto rt2-directory-chooser-column m-l-20">
 				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="gridColumnApi" [useDialog]="useDialog" [columnStorage]="mapsetBatchColumnStorage"> </app-column-chooser>
 			</div>
@@ -132,17 +132,18 @@
 					<button mat-menu-item (click)="selectAction('group')" [disabled]="checkedNum < 1">
 						<span>Change Group of Mappings</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('advice')" [disabled]="checkedNum < 1">
+					<!-- <button mat-menu-item (click)="selectAction('advice')" [disabled]="checkedNum < 1">
 						<span>Add Advice to Mappings</span>
-					</button>
+					</button> -->
 					<button mat-menu-item (click)="openConfirmationModal()" [disabled]="checkedNum < 1 || mapsetData.length < 2">
-						<span>Remove selected Mappings</span></button
-					><button mat-menu-item (click)="selectAction('note')" [disabled]="checkedNum < 1">
+						<span>Remove selected Mappings</span>
+					</button>
+					<!-- <button mat-menu-item (click)="selectAction('note')" [disabled]="checkedNum < 1">
 						<span>View or Add Authoring Note</span>
 					</button>
 					<button mat-menu-item (click)="selectAction('comm')" [disabled]="checkedNum < 1">
 						<span>View or Add Authoring Communication</span>
-					</button>
+					</button> -->
 					<button mat-menu-item (click)="selectAction('review')" [disabled]="checkedNum < 1">
 						<span>Request Review</span>
 					</button>
@@ -152,7 +153,7 @@
 		<div class="metadata-section-background" [hidden]="!showConfigSection">
 			<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showConfigSection || !loaded || saving"></div>
 			<div id="config-background" [hidden]="!showConfigSection || !loaded || saving" class="section-background config-section">
-				<div class="grid-wrapper">
+				<div class="grid-wrapper config-scrolling">
 					<ag-grid-angular
 						[columnDefs]="gridColumnDefs"
 						[rowData]="mapsetData"
@@ -242,12 +243,19 @@
 							<span class="mappings-section m-b-10">{{ targetToName }}</span>
 						</div>
 
-						<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
+						<div class="modal-footer mt-20 mb-10 rt2-lockable rt2-btn-group">
+							<div class="mappings-section code-link no-wrap" title="Search Browser" (click)="searchBrowser()">
+								<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#2269e8">
+									<path
+										d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+								</svg>
+								Search Browser
+							</div>
 							<button
 								type="button"
 								title="Set as Target"
 								class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
-								(click)="setTarget()"
+								(click)="setTarget(targetFC.value, targetToName)"
 								[disabled]="!foundConceptCode || !selectedTarget"
 								(ngClass)="({ 'disabled': !foundConceptCode || !selectedTarget })">
 								Set as Target
@@ -296,7 +304,7 @@
 		</div>
 	</div>
 
-	<div class="metadata-collapsible-container col-md-12 mb-10">
+	<div class="metadata-collapsible-container col-md-12 mb-10" #secondWindow>
 		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showBrowserSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
 				<span>ICD10 Terminology Browser</span>
@@ -304,184 +312,462 @@
 			<img src="assets/caret-up-solid.svg" *ngIf="!showBrowserSection" alt="Collapse Button" title="Collapse ICD10 Terminology Browser" aria-label="Collapse Button" class="caret-up-solid" />
 			<img src="assets/caret-down-solid.svg" *ngIf="showBrowserSection" alt="Expand Button" title="Expand ICD10 Terminology Browser" aria-label="Expand Button" class="caret-down-solid" />
 		</div>
-		<div [hidden]="!showBrowserSection" class="section-background browser-section">
-			<div class="d-flex dropdown-group">This feature is not yet available. Please check back later.</div>
+		<div class="row d-flex dropdown-group" *ngIf="showBrowserSection && !saving">
+			<div class="col-md-auto rt2-directory-chooser-column m-l-20">
+				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="browserColumnApi" [useDialog]="useDialog"> </app-column-chooser>
+			</div>
+			<div class="col-md-auto rt2-directory-chooser-column">
+				<mat-menu #browserSearchMenu="matMenu" class="search-box">
+					<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
+						<mat-form-field floatLabel="never" id="browserSearchInputField" title="Enter Search Criteria">
+							<mat-label *ngIf="searchBrowserInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
+							<input matInput #browserSearchInput id="browserSearchInput" [(ngModel)]="searchBrowserInput" (input)="onBrowserSearchChange()" (click)="$event.stopPropagation()" />
+						</mat-form-field>
+						<span class="clear-search" *ngIf="searchBrowserInput !== ''" title="Clear Search" (click)="$event.stopPropagation(); clearBrowserSearch()">&#10005;</span><br />
+						<span *ngIf="searchBrowserInput.length > 0" class="mappings-section"
+							>{{ browserApi.getDisplayedRowCount() > 0 ? browserApi.getDisplayedRowCount() : 'No ' }} result{{ browserApi.getDisplayedRowCount() > 1 ? 's' : '' }} found</span
+						>
+					</div>
+				</mat-menu>
+				<div class="menu-inline">
+					<button
+						#searchMenuTrigger="matMenuTrigger"
+						[matMenuTriggerFor]="browserSearchMenu"
+						(menuOpened)="menuBrowserOpened()"
+						[matBadgeHidden]="searchBrowserInput === ''"
+						matBadgeSize="small"
+						[matBadge]="'.'"
+						aria-label="Search"
+						title="Search"
+						class="mapset-download-icon menu-button">
+						<mat-icon class="menu-icon">search</mat-icon>
+						<span class="menu-label">Search</span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="metadata-section-background" [hidden]="!showBrowserSection && !saving">
+			<div id="browserHeader" class="directory-header ag-theme-alpine" [hidden]="!showBrowserSection || saving"></div>
+			<div id="config-background" [hidden]="!showBrowserSection || !browserLoaded || saving" class="section-background config-section">
+				<as-split direction="horizontal" gutterSize="4" class="browser-split">
+					<as-split-area [lockSize]="true" [size]="conceptDetail ? 50 : 100">
+						<div #browserWrapper class="grid-wrapper browser-scrolling" [hidden]="numOfMembers === 0">
+							<ag-grid-angular
+								*ngIf="showTable"
+								[columnDefs]="browserColumnDefs"
+								[rowData]="browserData"
+								style="width: 100%; height: 100%"
+								(gridReady)="onBrowserReady($event)"
+								[gridOptions]="browserOptions"
+								class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter">
+							</ag-grid-angular>
+						</div>
+
+						<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
+						<div class="rt2-pagination-container" [hidden]="!browserLoaded" *ngIf="showBrowserSection && !saving">
+							<div class="rt2-pagination-top-row" *ngIf="showPaging">
+								<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons no-wrap">
+									<button
+										#paginationFirstPage
+										mat-raised-button
+										(click)="goToPage(0)"
+										class="pagination-page-buttons"
+										[ngClass]="{ disabled: getCurrentPage() === 0 }"
+										title="Go To First Page"
+										attr.aria-label="Go To First Page">
+										<mat-icon aria-hidden="false">first_page</mat-icon>
+									</button>
+
+									<button
+										#paginationPreviousPage
+										mat-raised-button
+										(click)="goToPage(getCurrentPage() - 1)"
+										title="Go To Previous Page {{ getCurrentPage() }}"
+										class="pagination-page-buttons"
+										[ngClass]="{ disabled: getCurrentPage() === 0 }"
+										attr.aria-label="Go To Previous Page {{ getCurrentPage() }}">
+										<mat-icon aria-hidden="false">arrow_left</mat-icon>
+									</button>
+
+									<span *ngFor="let page of paginationPages.pages">
+										<button
+											#paginationPageNumber
+											mat-raised-button
+											class="pagination-page-buttons"
+											[color]="getCurrentPage() + 1 === page ? 'primary' : ''"
+											(click)="goToPage(page - 1)"
+											attr.aria-label="{{ getCurrentPage() + 1 === page ? 'Current' : 'Go To' }} Page {{ page }}"
+											title="{{ getCurrentPage() + 1 === page ? 'Current' : 'Go To' }} Page {{ page }}">
+											{{ page }}
+										</button>
+									</span>
+
+									<button
+										mat-button
+										*ngIf="paginationPages.totalPages - paginationPages.startPage > 5"
+										(click)="goToPage(paginationPages.startPage + 4)"
+										class="pagination-page-buttons w-min-32 p-0"
+										title="Go To Page {{ paginationPages.startPage + 5 }}"
+										attr.aria-label="Go To Page {{ paginationPages.startPage + 5 }}"
+										title="Go To Page {{ paginationPages.startPage + 5 }}">
+										...
+									</button>
+
+									<button
+										mat-raised-button
+										*ngIf="paginationPages.totalPages - paginationPages.startPage > 5"
+										(click)="goToPage(paginationPages.totalPages)"
+										class="pagination-page-buttons"
+										attr.aria-label="Go To Page {{ paginationPages.totalPages }}"
+										title="Go To Page {{ paginationPages.totalPages }}">
+										{{ paginationPages.totalPages }}
+									</button>
+
+									<button
+										#paginationNextPage
+										mat-raised-button
+										(click)="goToPage(getCurrentPage() + 1)"
+										title="Go To Next Page {{ getCurrentPage() + 2 }}"
+										class="pagination-page-buttons"
+										[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
+										attr.aria-label="Go To Next Page {{ getCurrentPage() + 2 }}">
+										<mat-icon aria-hidden="false">arrow_right</mat-icon>
+									</button>
+
+									<button
+										#paginationLastPage
+										mat-raised-button
+										(click)="goToPage(paginationPages.totalPages)"
+										title="Go To Last Page ({{ paginationPages.totalPages }})"
+										class="pagination-page-buttons"
+										[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
+										attr.aria-label="Go To Last Page {{ paginationPages.totalPages }}">
+										<mat-icon aria-hidden="false">last_page</mat-icon>
+									</button>
+								</div>
+
+								<div class="rt2-pagination-bottom-row" *ngIf="showPaging">
+									<span *ngFor="let sizeOption of browserPaging.pageSizeOptions">
+										<button
+											mat-raised-button
+											[color]="browserPaging.pageSize === sizeOption ? 'secondary' : ''"
+											class="pagination-page-buttons unthemed"
+											(click)="setPageSize(sizeOption)"
+											[hidden]="sizeOption > numOfMembers"
+											title="{{ sizeOption }} Members per Page">
+											{{ sizeOption }}
+										</button>
+									</span>
+								</div>
+							</div>
+							<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
+								Showing <span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * browserPaging.pageSize - browserPaging.pageSize + 1 }} </span> to
+								<span class="fw-bold p-l-5 p-r-5">
+									{{ numOfMembers < (getCurrentPage() + 1) * browserPaging.pageSize ? numOfMembers : (getCurrentPage() + 1) * browserPaging.pageSize }}
+								</span>
+								of <span class="fw-bold p-l-5"> {{ numOfMembers }} </span> results
+							</div>
+							<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine text-center" [hidden]="showPaging">No results to show</div>
+						</div>
+					</as-split-area>
+					<as-split-area [lockSize]="true" [size]="conceptDetail ? 50 : 0" class="concept-detail-area">
+						<div class="concept-detail-body">
+							<div class="row align-items-center no-gutters m-b-20">
+								<div class="col col-header-font">Concept Details</div>
+								<div class="col-md-auto">
+									<div class="text-right close-button rt2-concept-details-close-btn">
+										<button
+											type="button"
+											class="close dialog-close-x-dark"
+											(click)="closeConceptDetails()"
+											aria-hidden="false"
+											aria-label="Close Concept Details"
+											title="Close Concept Details">
+											<span aria-hidden="true" class="close-icon-font">&times;</span>
+										</button>
+									</div>
+								</div>
+							</div>
+
+							<!-- Parents Section -->
+							<div class="rt2-concept-details-taxonomy-section">
+								<div class="d-flex">
+									<div class="rt2-concept-details-section-title p-l-10">
+										Parents <span [hidden]="!currentConcept?.parentRefs.length">{{ '(' + currentConcept?.parentRefs.length + ')' }}</span>
+									</div>
+								</div>
+
+								<div class="d-flex p-20" *ngIf="currentConcept?.parentRefs.length === 0">
+									<div class="rt2-concept-details-no-relationships p-l-20">No Parents</div>
+								</div>
+								<div class="p-20" *ngIf="currentConcept?.parentRefs.length > 0" class="overflow details-scrolling">
+									<div *ngFor="let parent of currentConcept?.parentRefs" class="concept-details-refs m-l-15 d-flex">
+										<span *ngIf="parent.leaf || parent.hasChildren"
+											><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#2269e8">
+												<path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+											</svg>
+										</span>
+										<span *ngIf="!parent.leaf && !parent.hasChildren"
+											><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#2269e8">
+												<path d="M240-440v-80h480v80H240Z" />
+											</svg>
+										</span>
+										<span class="pointer" (click)="loadConceptDetail(parent.code)">
+											<span class="blue-link p-r-5" title="{{ parent.code }}" aria-label="{{ parent.code }}">{{ parent.code }}</span>
+											<span title="{{ parent.name }}" aria-label="{{ parent.name }}">{{ parent.name }}</span>
+										</span>
+									</div>
+								</div>
+							</div>
+
+							<!-- Details Section -->
+							<div class="container-fluid rt2-concept-details-concept-section">
+								<div class="row no-margin">
+									<div class="col rt2-concept-details-concept-info-column default-font p-t-20">
+										<div>
+											<div class="row rt2-concept-details-concept-row m-l-40">
+												<div class="col-md-9 rt2-concept-details-concept-id-label m-b-20" title="{{ currentConcept?.name }}" aria-label="{{ currentConcept?.name }}">
+													{{ currentConcept?.name }}
+												</div>
+												<div class="col-md-3">
+													<button
+														type="button"
+														title="Set as Target"
+														class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
+														(click)="setTarget(currentConcept, currentConcept.name)"
+														[disabled]="!selectedTarget"
+														(ngClass)="({ 'disabled': !selectedTarget })">
+														Set as Target
+													</button>
+												</div>
+
+												<div class="col-md-12 rt2-concept-details-concept-id-text fw-bold m-b-20" title="{{ currentConcept?.code }}" aria-label="{{ currentConcept?.code }}">
+													{{ currentConcept?.code }}
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Children Section -->
+							<div class="rt2-concept-details-taxonomy-section">
+								<div class="d-flex">
+									<div class="rt2-concept-details-section-title p-l-10">
+										Children
+										<span [hidden]="!currentConcept?.childRefs.length">{{ '(' + currentConcept?.childRefs.length + ')' }}</span>
+									</div>
+								</div>
+								<div class="d-flex p-20" *ngIf="currentConcept?.childRefs.length === 0">
+									<div class="rt2-concept-details-no-relationships p-l-20">No Children</div>
+								</div>
+								<div class="p-10 overflow details-scrolling" *ngIf="currentConcept?.childRefs.length > 0">
+									<div *ngFor="let child of currentConcept?.childRefs" class="concept-details-refs m-l-20 d-flex">
+										<span *ngIf="child.leaf || child.hasChildren"
+											><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#2269e8">
+												<path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+											</svg>
+										</span>
+										<span *ngIf="!child.leaf && !child.hasChildren"
+											><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#2269e8">
+												<path d="M240-440v-80h480v80H240Z" />
+											</svg>
+										</span>
+										<span class="pointer" (click)="loadConceptDetail(child.code)">
+											<span class="blue-link p-r-5" title="{{ child.code }}" aria-label="{{ child.code }}">{{ child.code }}</span>
+											<span title="{{ child.name }}" aria-label="{{ child.name }}">{{ child.name }}</span>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</as-split-area>
+				</as-split>
+			</div>
 		</div>
 	</div>
-</div>
 
-<!--Type Ahead Result Template-->
-<ng-template #rt let-r="result" let-t="term">
-	<div class="type-head-overflow" title="{{ r.code + ': ' + r.name }}">
-		<ngb-highlight [result]="r.code + ': ' + r.name" [term]="t"></ngb-highlight>
-	</div>
-</ng-template>
-
-<ng-template #directoryInfoDialog let-data>
-	<div class="container-fluid w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
-		<div class="row rt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
-			<p class="fs-18 mb-0 ml-10">{{ data.name }}</p>
-			<p class="fs-16 ml-10">
-				<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span
-				><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
-			</p>
+	<!--Type Ahead Result Template-->
+	<ng-template #rt let-r="result" let-t="term">
+		<div class="type-head-overflow" title="{{ r.code + ': ' + r.name }}">
+			<ngb-highlight [result]="r.code + ': ' + r.name" [term]="t"></ngb-highlight>
 		</div>
-		<refset-meta [refset]="data"></refset-meta>
-	</div>
-</ng-template>
+	</ng-template>
 
-<!-- Workflow Status Templates -->
-<ng-template #directoryWorkflowStatusSection let-params>
-	<object [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)">{{ params?.value }}</object>
-</ng-template>
-
-<!-- Check Templates -->
-<ng-template #directoryCheckSection let-params>
-	<label class="checkbox-override" *ngIf="params?.value"
-		><input type="checkbox" (change)="checkboxRowSelect($event, params?.data?.index)" [checked]="params?.data?.checked" />' + ' <span class="checkbox-container"></span
-	></label>
-</ng-template>
-
-<!-- Name Templates -->
-<ng-template #directoryNameSection let-params>
-	<span class="blue-link">{{ params?.value }}</span>
-	<span *ngIf="params?.data?.modFlag !== ''">
-		<img
-			class="mapset-mod-icon"
-			*ngIf="params?.data?.moduleId !== internationalId"
-			src="{{ 'assets/flags/' + params?.data?.modFlag + '.png' }}"
-			title="{{ params?.data?.modLang }}"
-			aria-label="{{ params?.data?.modLang }}"
-	/></span>
-</ng-template>
-
-<!-- Action Templates -->
-<ng-template #directoryActionSection let-params>
-	<div class="d-flex" *ngIf="params?.value === true">
-		<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-			<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
+	<ng-template #directoryInfoDialog let-data>
+		<div class="container-fluid w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
+			<div class="row rt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
+				<p class="fs-18 mb-0 ml-10">{{ data.name }}</p>
+				<p class="fs-16 ml-10">
+					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span
+					><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
+				</p>
+			</div>
+			<refset-meta [refset]="data"></refset-meta>
 		</div>
-	</div>
-</ng-template>
+	</ng-template>
 
-<!-- Advice Templates -->
-<ng-template #directoryAdviceSection let-params>
-	<div class="advice-column" [ngStyle]="{ 'line-height': 50 / getValueLength(params) > 10 ? 50 / getValueLength(params) + 'px' : 10 + 'px' }" [hidden]="getValueLength(params) < 1">
-		<div *ngFor="let item of getValueList(params)">
-			<span title="{{ item }}" [hidden]="item.indexOf('ALWAYS') > -1">{{ item }}</span>
+	<!-- Workflow Status Templates -->
+	<ng-template #directoryWorkflowStatusSection let-params>
+		<object [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)">{{ params?.value }}</object>
+	</ng-template>
+
+	<!-- Check Templates -->
+	<ng-template #directoryCheckSection let-params>
+		<label class="checkbox-override" *ngIf="params?.value"
+			><input type="checkbox" (change)="checkboxRowSelect($event, params?.data?.index)" [checked]="params?.data?.checked" />' + ' <span class="checkbox-container"></span
+		></label>
+	</ng-template>
+
+	<!-- Name Templates -->
+	<ng-template #directoryNameSection let-params>
+		<span class="blue-link">{{ params?.value }}</span>
+		<span *ngIf="params?.data?.modFlag !== ''">
+			<img
+				class="mapset-mod-icon"
+				*ngIf="params?.data?.moduleId !== internationalId"
+				src="{{ 'assets/flags/' + params?.data?.modFlag + '.png' }}"
+				title="{{ params?.data?.modLang }}"
+				aria-label="{{ params?.data?.modLang }}"
+		/></span>
+	</ng-template>
+
+	<!-- Action Templates -->
+	<ng-template #directoryActionSection let-params>
+		<div class="d-flex" *ngIf="params?.value === true">
+			<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+				<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
+			</div>
 		</div>
-	</div>
-	<div [hidden]="getValueLength(params) !== 0">---</div>
-</ng-template>
+	</ng-template>
 
-<!--Rule Template-->
-<ng-template #targetRuleSection let-params>
-	<div class="target-selection-grid">
-		<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box target-selection-box-grid">
-			<mat-select #selectRule title="Select a Rule" placeholder="Select a Rule" [(value)]="params.value" (selectionChange)="userChangeSelection('rule')">
-				<mat-option value="TRUE" class="no-checkbox">TRUE</mat-option>
-				<mat-option value="Gender - Female" class="no-checkbox" [hidden]="!ruleBased">Gender - Female</mat-option>
-				<mat-option value="Gender - Male" class="no-checkbox" [hidden]="!ruleBased">Gender - Male</mat-option>
-			</mat-select>
-		</mat-form-field>
-	</div>
-</ng-template>
+	<!-- Advice Templates -->
+	<ng-template #directoryAdviceSection let-params>
+		<div class="advice-column" [ngStyle]="{ 'line-height': 50 / getValueLength(params) > 10 ? 50 / getValueLength(params) + 'px' : 10 + 'px' }" [hidden]="getValueLength(params) < 1">
+			<div *ngFor="let item of getValueList(params)">
+				<span title="{{ item }}" [hidden]="item.indexOf('ALWAYS') > -1">{{ item }}</span>
+			</div>
+		</div>
+		<div [hidden]="getValueLength(params) !== 0">---</div>
+	</ng-template>
 
-<!-- Advice Templates -->
-<ng-template #targetAdviceSection let-params>
-	<div id="{{ 'popover_' + params.data.uuid }}">
-		<ul [hidden]="params.value.mapAdvices.length === 0" class="max-list">
-			<li *ngFor="let advice of params.value.mapAdvices; index as i" class="advice-line">
-				<span class="advice-name-wrap" title="{{ advice }}">{{ advice }}</span>
-			</li>
-		</ul>
-		<ul [hidden]="params.value.mapAdvices.length === 0">
-			<li class="advice-line">
-				<span class="code-link" (click)="openPopover($event, params)" title="Add/Edit Advice">Add/Edit Advice ({{ params.value.mapAdvices.length }})</span>
-			</li>
-		</ul>
-		<span class="code-link p-l-10 advice-line" (click)="openPopover($event, params)" title="Add an Advice" [hidden]="params.value.mapAdvices.length !== 0">+ Add Advice</span>
-	</div>
-</ng-template>
-
-<ng-template #directoryCodeSection let-params>
-	<span *ngIf="params?.value !== undefined" class="pointer">
-		<mat-chip-list *ngIf="params?.value.split('#')[0] !== '1/1&1'" (click)="editGroup($event, params)" class="pointer">
-			<mat-chip
-				class="mapset-chip pointer"
-				title="{{ 'Group ' + params?.value.split('#')[0].split('&')[0].split('/')[0] + ', Entry ' + params?.value.split('#')[0].split('&')[0].split('/')[1] }}">
-				{{ params?.value.split('#')[0].split('&')[0] }}
-			</mat-chip>
-		</mat-chip-list>
-		<span class="blue-link" title="{{ params?.value.split('#')[1] }}" (click)="editTarget($event, params)">{{ params?.value.split('#')[1] }}</span></span
-	>
-</ng-template>
-
-<ng-template #directoryToNameSection let-params>
-	<span *ngIf="params?.value === '---'">
-		{{ params?.value }}
-	</span>
-	<span *ngIf="params?.value !== '---'">
-		<span>{{ params?.value }}</span></span
-	>
-</ng-template>
-
-<ng-template #directoryFeedbackDialog let-data>
-	This functionality will be implemented in subsequent phases.
-	<mat-form-field floatLabel="never" *ngIf="false">
-		<mat-label>Feedback</mat-label>
-		<input matInput [(ngModel)]="data.feedback" />
-	</mat-form-field>
-</ng-template>
-
-<ng-template #toBeDevelopedModal let-modal>
-	<div class="modal-header rt2-modal-header">
-		<div class="modal-title">Coming Soon</div>
-		<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</div>
-	<div class="modal-body">
-		<p>This feature is not yet available. Please check back later.</p>
-	</div>
-	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-		<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
-	</div>
-</ng-template>
-
-<ng-template #confirmationModal let-modal>
-	<div class="modal-header rt2-modal-header">
-		<div class="modal-title">Confirm Remove</div>
-		<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeConfirmDialog()">
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</div>
-	<div class="modal-body">
-		<p>Are you sure you want to remove this entry?</p>
-	</div>
-	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-		<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeConfirmDialog()">Cancel</button>
-		<button type="button" title="Confirm" class="rt2-btn rt2-action-btn" (click)="confirmRemoveItem()">Confirm</button>
-	</div>
-</ng-template>
-
-<ng-template #headerGroupModal let-modal>
-	<div class="modal-header rt2-modal-header">
-		<div class="modal-title">Change Group</div>
-		<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeHeaderGroupModal()">
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</div>
-	<div class="modal-body">
-		<div>
-			<label class="m-r-10">Group</label>
-			<mat-form-field floatLabel="never" id="groupInputField" title="Enter Group" class="adjust-mat-input-header">
-				<input type="number" matInput #headerGroupInput placeholder="Enter Group" id="headerGroupCodeInput" (keydown)="numberOnly($event)" [formControl]="headerGroupFC" class="target-input" />
+	<!--Rule Template-->
+	<ng-template #targetRuleSection let-params>
+		<div class="target-selection-grid">
+			<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box target-selection-box-grid">
+				<mat-select #selectRule title="Select a Rule" placeholder="Select a Rule" [(value)]="params.value" (selectionChange)="userChangeSelection('rule')">
+					<mat-option value="TRUE" class="no-checkbox">TRUE</mat-option>
+					<mat-option value="Gender - Female" class="no-checkbox" [hidden]="!ruleBased">Gender - Female</mat-option>
+					<mat-option value="Gender - Male" class="no-checkbox" [hidden]="!ruleBased">Gender - Male</mat-option>
+				</mat-select>
 			</mat-form-field>
-			<span class="clear-search-header" title="Clear Group" (click)="clearHeaderGroupInput()">&#10005;</span>
 		</div>
-	</div>
-	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-		<button type="button" class="rt2-btn rt2-action-btn" (click)="setHeaderGroup()">Save</button>
-	</div>
-</ng-template>
+	</ng-template>
+
+	<!-- Advice Templates -->
+	<ng-template #targetAdviceSection let-params>
+		<div id="{{ 'popover_' + params.data.uuid }}">
+			<ul [hidden]="params.value.mapAdvices.length === 0" class="max-list">
+				<li *ngFor="let advice of params.value.mapAdvices; index as i" class="advice-line">
+					<span class="advice-name-wrap" title="{{ advice }}">{{ advice }}</span>
+				</li>
+			</ul>
+			<ul [hidden]="params.value.mapAdvices.length === 0">
+				<li class="advice-line">
+					<span class="code-link" (click)="openPopover($event, params)" title="Add/Edit Advice">Add/Edit Advice ({{ params.value.mapAdvices.length }})</span>
+				</li>
+			</ul>
+			<span class="code-link p-l-10 advice-line" (click)="openPopover($event, params)" title="Add an Advice" [hidden]="params.value.mapAdvices.length !== 0">+ Add Advice</span>
+		</div>
+	</ng-template>
+
+	<ng-template #directoryCodeSection let-params>
+		<span *ngIf="params?.value !== undefined" class="pointer">
+			<mat-chip-list *ngIf="params?.value.split('#')[0] !== '1/1&1'" (click)="editGroup($event, params)" class="pointer">
+				<mat-chip
+					class="mapset-chip pointer"
+					title="{{ 'Group ' + params?.value.split('#')[0].split('&')[0].split('/')[0] + ', Entry ' + params?.value.split('#')[0].split('&')[0].split('/')[1] }}">
+					{{ params?.value.split('#')[0].split('&')[0] }}
+				</mat-chip>
+			</mat-chip-list>
+			<span class="blue-link" title="{{ params?.value.split('#')[1] }}" (click)="editTarget($event, params)">{{ params?.value.split('#')[1] }}</span></span
+		>
+	</ng-template>
+
+	<ng-template #directoryToNameSection let-params>
+		<span *ngIf="params?.value === '---'">
+			{{ params?.value }}
+		</span>
+		<span *ngIf="params?.value !== '---'">
+			<span>{{ params?.value }}</span></span
+		>
+	</ng-template>
+
+	<ng-template #directoryFeedbackDialog let-data>
+		This functionality will be implemented in subsequent phases.
+		<mat-form-field floatLabel="never" *ngIf="false">
+			<mat-label>Feedback</mat-label>
+			<input matInput [(ngModel)]="data.feedback" />
+		</mat-form-field>
+	</ng-template>
+
+	<ng-template #toBeDevelopedModal let-modal>
+		<div class="modal-header rt2-modal-header">
+			<div class="modal-title">Coming Soon</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p>This feature is not yet available. Please check back later.</p>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		</div>
+	</ng-template>
+
+	<ng-template #confirmationModal let-modal>
+		<div class="modal-header rt2-modal-header">
+			<div class="modal-title">Confirm Remove</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeConfirmDialog()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p>Are you sure you want to remove this entry?</p>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeConfirmDialog()">Cancel</button>
+			<button type="button" title="Confirm" class="rt2-btn rt2-action-btn" (click)="confirmRemoveItem()">Confirm</button>
+		</div>
+	</ng-template>
+
+	<ng-template #headerGroupModal let-modal>
+		<div class="modal-header rt2-modal-header">
+			<div class="modal-title">Change Group</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeHeaderGroupModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<div>
+				<label class="m-r-10">Group</label>
+				<mat-form-field floatLabel="never" id="groupInputField" title="Enter Group" class="adjust-mat-input-header">
+					<input
+						type="number"
+						matInput
+						#headerGroupInput
+						placeholder="Enter Group"
+						id="headerGroupCodeInput"
+						(keydown)="numberOnly($event)"
+						[formControl]="headerGroupFC"
+						class="target-input" />
+				</mat-form-field>
+				<span class="clear-search-header" title="Clear Group" (click)="clearHeaderGroupInput()">&#10005;</span>
+			</div>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" class="rt2-btn rt2-action-btn" (click)="setHeaderGroup()">Save</button>
+		</div>
+	</ng-template>
+</div>

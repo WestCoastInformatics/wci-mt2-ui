@@ -35,7 +35,13 @@
 <mat-menu #columnChooser="matMenu" class="menu">
 	<div class="heading">TABLE SETTINGS</div>
 	COLUMNS (Show/Hide)
-	<mat-checkbox class="menu-checkbox" *ngFor="let column of columns; let i = index" [(ngModel)]="column.show" (click)="$event.stopPropagation()" (change)="selectColumns()">
+	<mat-checkbox
+		class="menu-checkbox"
+		*ngFor="let column of columns; let i = index"
+		[(ngModel)]="column.show"
+		(click)="$event.stopPropagation()"
+		(change)="selectColumns()"
+		[disabled]="selectedColumns.length === 1 && column.show">
 		{{ column.name }}
 	</mat-checkbox>
 </mat-menu>

@@ -235,7 +235,7 @@
 .loading-details {
 	position: absolute;
 	z-index: 100;
-	background: white;
+	background: rgba(232, 240, 255, 1) !important;
 	border: 0.5px solid #333;
 	border-radius: 0;
 	margin-left: 45%;
@@ -300,7 +300,7 @@
 }
 
 .section-loading {
-	background: white !important;
+	background: rgba(232, 240, 255, 1) !important;
 	border: 0.2px groove #999 !important;
 	border-radius: 0 !important;
 	margin-left: 45% !important;
@@ -479,16 +479,6 @@
 
 .library-app-refset-discussion-list {
 	cursor: pointer;
-}
-
-.loading-details {
-	position: absolute;
-	z-index: 100;
-	background: white;
-	border: 0.5px solid #333;
-	border-radius: 0;
-	margin-left: 45%;
-	margin-top: 10%;
 }
 
 .mapset-notes-icon {

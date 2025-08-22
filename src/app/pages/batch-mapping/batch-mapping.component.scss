@@ -307,7 +307,8 @@
 	left: 0 !important;
 }
 
-#directorySearchInputField {
+#directorySearchInputField,
+#browserSearchInputField {
 	width: 340px;
 	margin-top: 0.25em;
 
@@ -494,16 +495,6 @@
 .library-app-refset-discussion-list {
 }
 
-.loading-details {
-	position: absolute;
-	z-index: 100;
-	background: white;
-	border: 0.5px solid #333;
-	border-radius: 0;
-	margin-left: 45%;
-	margin-top: 10%;
-}
-
 .modal-select {
 	text-align: center;
 }
@@ -558,7 +549,7 @@
 }
 
 .section-loading {
-	background: white !important;
+	background: rgba(232, 240, 255, 1) !important;
 	border: 0.2px groove #999 !important;
 	border-radius: 0 !important;
 	margin-left: 45% !important;
@@ -568,7 +559,7 @@
 }
 
 .section-saving {
-	background: white !important;
+	background: rgba(232, 240, 255, 1) !important;
 	border: 0.2px groove #999 !important;
 	border-radius: 0 !important;
 	margin-left: 40% !important;
@@ -724,46 +715,6 @@
 }
 
 /*previous */
-#directorySearchInputField {
-	width: 340px;
-	margin-top: 0.25em;
-
-	// set this to 20px less than the field to leave room for the cancel 'X'
-	.mat-form-field-flex {
-		width: 320px;
-	}
-}
-
-.directoryViewFilterField.mat-form-field {
-	width: 125px;
-	padding-left: 5px;
-
-	.mat-form-field-flex {
-		width: 125px;
-	}
-
-	.mat-form-field-underline {
-		width: 125px;
-	}
-}
-
-.member-search-icon {
-	color: red;
-	margin-top: 1.1em;
-	font-size: 1em;
-	font-weight: 500 !important;
-}
-
-.rt2-ag-cell {
-	width: 90px;
-	text-align: center;
-	align-items: center;
-}
-
-.library-app-refset-download {
-	cursor: pointer;
-	margin-top: 0;
-}
 
 .library-app-refset-discussion-list {
 	cursor: pointer;
@@ -772,7 +723,7 @@
 .loading-details {
 	position: absolute;
 	z-index: 100;
-	background: white;
+	background: rgba(232, 240, 255, 1) !important;
 	border: 0.5px solid #333;
 	border-radius: 0;
 	margin-left: 45%;
@@ -804,13 +755,6 @@
 
 .config-scrolling-section {
 	height: 100%;
-}
-
-.browser-section {
-	min-height: 68px;
-	height: 68px;
-	max-height: 68px;
-	overflow: hidden;
 }
 
 /* Mapping table styles */
@@ -958,6 +902,23 @@
 	margin-right: 8px;
 }
 
+.config-scrolling {
+	max-height: 300px;
+}
+
+.rt2-pagination-container {
+	padding: 20px 10px;
+}
+
+.details-scrolling {
+	min-height: 40px;
+	max-height: 140px;
+}
+
+.browser-split {
+	height: 530px;
+}
+
 .metadata-section-background {
 	background-color: white;
 	height: 100%;
@@ -1066,16 +1027,6 @@
 	font-weight: 500 !important;
 }
 
-.loading-details {
-	position: absolute;
-	z-index: 100;
-	background: white;
-	border: 0.5px solid #333;
-	border-radius: 0;
-	margin-left: 45%;
-	margin-top: 10%;
-}
-
 .modal-select {
 	text-align: center;
 }
@@ -1129,16 +1080,6 @@
 	margin-right: 2em;
 }
 
-.section-loading {
-	background: white !important;
-	border: 0.2px groove #999 !important;
-	border-radius: 0 !important;
-	margin-left: 45% !important;
-	margin-top: 1% !important;
-	padding: 0.25em;
-	width: 5.5em;
-}
-
 .switch-view {
 	position: relative;
 	height: 0;
@@ -1164,12 +1105,6 @@
 	font-size: 13px;
 	margin-left: 60px;
 	margin-bottom: 20px;
-}
-
-.date-column {
-	margin: 0;
-	padding: 0;
-	text-wrap: nowrap;
 }
 
 .checkbox-column {
@@ -1324,4 +1259,29 @@
 
 .max-width {
 	width: 100%;
+}
+
+.concept-detail-area {
+	background-color: #f2f2f2;
+	padding: 20px;
+}
+
+.concept-detail-body {
+	height: 100%;
+	padding: 20px;
+	background-color: #fff;
+}
+
+.col-header-font,
+.dialog-close-x-dark {
+	color: #666666 !important;
+	font-size: 20px;
+}
+
+.no-wrap {
+	text-wrap: nowrap;
+}
+
+.rt2-pagination-container {
+	padding-right: 5px;
 }

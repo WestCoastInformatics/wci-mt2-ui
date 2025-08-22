@@ -535,6 +535,9 @@ export class MapsetRecordsComponent implements OnInit {
 						}
 					}
 
+					if (this.refsetGridPaging.pageSize === undefined) {
+						this.refsetGridPaging.pageSize = Number(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageSize)));
+					}
 					const restParams: any = {
 						offset: startRow,
 						limit: this.refsetGridPaging.pageSize,
