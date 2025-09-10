@@ -67,6 +67,7 @@ import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
 
 // PAGE IMPORTS
 import { MapsetRecordsComponent } from './pages/mapset-records/mapset-records.component';
+import { MapsetNewRecordsComponent } from './pages/mapset-new-records/mapset-new-records.component';
 import { MapsetLibraryComponent } from './pages/mapset-library/mapset-library.component';
 import { MapsetMappingComponent } from './pages/mapset-mapping/mapset-mapping.component';
 import { EditMappingComponent } from './pages/edit-mapping/edit-mapping.component';
@@ -139,6 +140,7 @@ const appRoutes: Routes = [
 	{ path: 'conflict', component: ConflictComponent },
 	{ path: 'library', component: MapsetLibraryComponent, data: { breadcrumbLabel: 'Map Set Library' } },
 	{ path: 'mapset/:code/mappings', component: MapsetRecordsComponent, data: { breadcrumbLabel: 'Mappings' } },
+	{ path: 'mapset/:code/mappings/new', component: MapsetNewRecordsComponent, data: { breadcrumbLabel: 'New Mappings' } },
 	{ path: 'mapset/:code/mappings/:concepts/batch', component: BatchMappingComponent, data: { breadcrumbLabel: 'Batch Edit Mappings' } },
 	{ path: 'mapset/:code/mapping/:concept', component: MapsetMappingComponent, data: { breadcrumbLabel: 'Mapping' } },
 	{ path: 'mapset/:code/mapping/:concept/edit', component: EditMappingComponent, data: { breadcrumbLabel: 'Edit Map' } },
@@ -291,6 +293,7 @@ const appRoutes: Routes = [
 		SidebarComponent,
 		MapsetLibraryComponent,
 		MapsetRecordsComponent,
+		MapsetNewRecordsComponent,
 		MapsetMappingComponent,
 		EditMappingComponent,
 		BatchMappingComponent,

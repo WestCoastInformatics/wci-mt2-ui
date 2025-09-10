@@ -324,6 +324,10 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + `mapset/${mapset}/mappings?limit=` + params.limit + `&offset=` + params.offset + `&filter=` + params.filter, '', false);
 	}
 
+	getNewMappingsByMapset(mapset: string, params): Observable<any> {
+		return this.get(this.contextPath + `mapset/${mapset}/mappings/new?limit=` + params.limit + `&offset=` + params.offset + `&filter=` + params.filter, '', false);
+	}
+
 	//not used
 	getMappingByMapsetAndConcept(mapset: string, concept: string): Observable<any> {
 		return this.get(this.contextPath + `mapset/${mapset}/mappings/${concept}`, '', false);
