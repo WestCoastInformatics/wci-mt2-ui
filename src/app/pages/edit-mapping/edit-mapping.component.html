@@ -244,7 +244,7 @@
 									</div>
 									<!--target-name-wrap-->
 									<span class="group-link"><template [ngTemplateOutlet]="targetGroupSection" [ngTemplateOutletContext]="{ $implicit: entry }"></template></span>
-									<span class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName, entry.group, entry.priority)">{{ entry.toCode ? entry.toCode : '[NO TARGET]' }}</span
+									<span class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName, entry.group, entry.priority)">{{ entry.toCode }}</span
 									><span title="{{ entry.toName }}" class="code-link p-l-5 p-r-5" (click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName, entry.group, entry.priority)"
 										>{{ entry.toName }}
 										<span *ngIf="entry.modFlag !== ''">
