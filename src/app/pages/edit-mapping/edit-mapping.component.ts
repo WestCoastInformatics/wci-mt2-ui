@@ -530,7 +530,7 @@ export class EditMappingComponent implements OnInit {
 							'entries': results.mapEntries.length,
 							'code': results.code,
 							'name': results.name,
-							'toName': results.mapEntries[b].toName.length > 0 && results.mapEntries[b].toName !== ' DOES NOT EXIST' ? results.mapEntries[b].toName : '[NO TARGET]',
+							'toName': (results.mapEntries[b].toName && results.mapEntries[b].toName.length > 0 && results.mapEntries[b].toName !== ' DOES NOT EXIST') ? results.mapEntries[b].toName : '[NO TARGET]',
 							'toCode':
 								results.mapEntries[b].toCode.length > 0
 									? results.mapEntries[b].group + '/' + results.mapEntries[b].priority + '#' + results.mapEntries[b].toCode
