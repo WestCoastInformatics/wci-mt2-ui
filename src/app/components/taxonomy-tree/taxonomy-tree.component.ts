@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { TreeComponent, TreeNode } from '@circlon/angular-tree-component';
+import { TreeComponent, TreeNode } from '@ali-hm/angular-tree-component';
 import { lastValueFrom, Observable } from 'rxjs';
 import { TreeOptionDefaults, TreeOptions } from 'src/app/models/tree-options.model';
 import { RefsetService } from 'src/app/services/rest/refset.service';

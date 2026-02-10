@@ -56,7 +56,7 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 			}
 		});
 
-		this.routerEventSubscription = this.router.events.subscribe((event: RouterEvent) => {
+		this.routerEventSubscription = this.router.events.subscribe((event: any) => {
 			if (event instanceof Scroll) {
 				if (this.router.url.includes('organizations')) {
 					this.checkLocationPath(this.router.url);

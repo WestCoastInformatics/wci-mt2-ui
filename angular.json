@@ -117,15 +117,15 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "angular-template:build",
-            "liveReload": false
+            "liveReload": false,
+            "buildTarget": "angular-template:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "angular-template:build:production"
+              "buildTarget": "angular-template:build:production"
             },
             "development": {
-              "browserTarget": "angular-template:build:development"
+              "buildTarget": "angular-template:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -133,9 +133,9 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular-template:build",
             "format": "xlf",
-            "outputPath": "src/locale"
+            "outputPath": "src/locale",
+            "buildTarget": "angular-template:build"
           }
         },
         "i18n": {
@@ -155,6 +155,5 @@
         }
       }
     }
-  },
-  "defaultProject": "angular-template"
+  }
 }
