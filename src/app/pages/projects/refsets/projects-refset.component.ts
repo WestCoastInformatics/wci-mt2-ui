@@ -20,6 +20,7 @@ import { ProjectsComponentService } from 'src/app/pages/projects/projects-compon
 import { User } from 'src/app/models/user';
 
 @Component({
+	standalone: false,
 	selector: 'projects-refset',
 	templateUrl: './projects-refset.component.html',
 	styleUrls: ['./projects-refset.component.scss'],

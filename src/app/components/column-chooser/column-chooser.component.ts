@@ -7,6 +7,7 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
  * @title Tree with nested nodes
  */
 @Component({
+	standalone: false,
 	selector: 'app-column-chooser',
 	templateUrl: './column-chooser.component.html',
 	styleUrls: ['./column-chooser.component.scss'],

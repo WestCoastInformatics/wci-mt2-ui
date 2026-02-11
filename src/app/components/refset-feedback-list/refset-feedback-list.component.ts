@@ -11,6 +11,7 @@ import { User } from 'src/app/models/user';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 
 @Component({
+	standalone: false,
 	selector: 'app-refset-discussion-list',
 	templateUrl: './refset-feedback-list.component.html',
 	styleUrls: ['refset-feedback-list.component.scss'],

@@ -9,6 +9,7 @@ import { TemplateRendererComponent } from 'src/app/components/cellRenderers/temp
 import { OrganizationsComponentService } from 'src/app/pages/organizations/organizations-component.service';
 
 @Component({
+	standalone: false,
 	selector: 'organization-projects',
 	templateUrl: './projects.component.html',
 })

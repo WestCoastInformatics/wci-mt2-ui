@@ -5,6 +5,7 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 
 @Component({
+	standalone: false,
 	selector: 'add-member-to-organization-modal',
 	templateUrl: './add-member-to-organization-modal.component.html',
 	styleUrls: ['add-member-to-organization-modal.component.scss'],

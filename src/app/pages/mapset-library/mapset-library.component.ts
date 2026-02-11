@@ -25,6 +25,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
  * @title Tree with nested nodes
  */
 @Component({
+	standalone: false,
 	selector: 'app-mapset-library',
 	templateUrl: './mapset-library.component.html',
 	styleUrls: ['./mapset-library.component.scss'],

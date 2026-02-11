@@ -8,6 +8,7 @@ import { CategoryFilterComponent } from 'src/app/components/categoryFilter/categ
 import { OrganizationsComponentService } from 'src/app/pages/organizations/organizations-component.service';
 
 @Component({
+	standalone: false,
 	selector: 'organization-teams',
 	templateUrl: './teams.component.html',
 })

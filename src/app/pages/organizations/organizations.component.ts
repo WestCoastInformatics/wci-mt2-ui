@@ -9,6 +9,7 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { OrganizationsComponentService } from 'src/app/pages/organizations/organizations-component.service';
 
 @Component({
+	standalone: false,
 	selector: 'organizations-page',
 	templateUrl: './organizations.component.html',
 })

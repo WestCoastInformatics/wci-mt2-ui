@@ -10,6 +10,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { UsersService } from 'src/app/services/rest/users.service';
 
 @Component({
+	standalone: false,
 	selector: 'personal-page',
 	templateUrl: './personal.component.html',
 })

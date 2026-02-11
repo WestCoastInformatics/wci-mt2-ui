@@ -8,6 +8,7 @@ import { OrganizationsComponentService } from 'src/app/pages/organizations/organ
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
+	standalone: false,
 	selector: 'organization-configuration',
 	templateUrl: './configuration.component.html',
 	styleUrls: ['configuration.component.scss'],

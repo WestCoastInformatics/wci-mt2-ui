@@ -4,6 +4,7 @@ import { ArtifactsService } from '../../../services/rest/artifacts.service';
 import { Artifact } from '../../../models/artifact';
 
 @Component({
+	standalone: false,
 	selector: 'artifact-form',
 	templateUrl: './artifact-form.component.html',
 })

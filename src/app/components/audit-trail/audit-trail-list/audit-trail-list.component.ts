@@ -9,6 +9,7 @@ import { AuditService } from 'src/app/services/rest/audit.service';
 import { DateTextFilterComponent } from '../../dateTextFilter/date-text-filter.component';
 
 @Component({
+	standalone: false,
 	selector: 'audit-trail-list',
 	templateUrl: './audit-trail-list.component.html',
 })

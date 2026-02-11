@@ -10,6 +10,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
+	standalone: false,
 	selector: 'organization-people',
 	templateUrl: './people.component.html',
 })

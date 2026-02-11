@@ -17,6 +17,7 @@ import { formatDate } from '@angular/common';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
+	standalone: false,
 	selector: 'app-mapset-mapping',
 	templateUrl: './mapset-mapping.component.html',
 	styleUrls: ['./mapset-mapping.component.scss'],

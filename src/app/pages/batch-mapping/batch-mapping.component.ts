@@ -25,6 +25,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
+	standalone: false,
 	selector: 'app-batch-mapping',
 	templateUrl: './batch-mapping.component.html',
 	styleUrls: ['./batch-mapping.component.scss'],

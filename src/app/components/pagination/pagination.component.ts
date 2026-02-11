@@ -5,6 +5,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 @Component({
 	selector: 'app-pagination',
 	templateUrl: './pagination.component.html',
+	standalone: false,
 })
 
 // AG Grid page numbers are 0 based, all other page variables here are 1 based

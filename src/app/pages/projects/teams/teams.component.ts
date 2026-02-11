@@ -12,6 +12,7 @@ import { ProjectsComponentService } from 'src/app/pages/projects/projects-compon
 import { User } from 'src/app/models/user';
 
 @Component({
+	standalone: false,
 	selector: 'projects-teams',
 	templateUrl: './teams.component.html',
 	styleUrls: ['./teams.component.scss'],

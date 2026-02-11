@@ -22,6 +22,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
+	standalone: false,
 	selector: 'app-edit-mapping',
 	templateUrl: './edit-mapping.component.html',
 	styleUrls: ['./edit-mapping.component.scss'],

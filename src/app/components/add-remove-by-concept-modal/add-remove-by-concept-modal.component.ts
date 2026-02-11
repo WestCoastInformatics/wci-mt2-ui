@@ -17,6 +17,7 @@ import { AddRemoveConceptsComponent } from '../add-remove-concepts/add-remove-co
 import { TemplateRendererComponent } from '../cellRenderers/template.renderer';
 
 @Component({
+	standalone: false,
 	selector: 'add-remove-by-concept-modal',
 	templateUrl: './add-remove-by-concept-modal.component.html',
 	styleUrls: ['add-remove-by-concept-modal.component.scss'],

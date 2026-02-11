@@ -8,6 +8,7 @@ import { ProjectsComponentService } from 'src/app/pages/projects/projects-compon
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
+	standalone: false,
 	selector: 'projects-people',
 	templateUrl: './people.component.html',
 	styleUrls: ['./people.component.scss'],

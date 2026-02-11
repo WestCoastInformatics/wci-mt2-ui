@@ -13,6 +13,7 @@ import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
+	standalone: false,
 	selector: 'app-dashboard',
 	templateUrl: './dashboard.component.html',
 })

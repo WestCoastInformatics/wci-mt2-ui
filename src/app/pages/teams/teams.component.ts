@@ -9,6 +9,7 @@ import { TeamsComponentService } from 'src/app/pages/teams/teams-component.servi
 import { CodeUtility } from 'src/app/utilities/code.utility';
 
 @Component({
+	standalone: false,
 	selector: 'teams-page',
 	templateUrl: './teams.component.html',
 })

@@ -5,6 +5,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 
 @Component({
+	standalone: false,
 	selector: 'add-member-to-team-modal',
 	templateUrl: './add-member-to-team-modal.component.html',
 	styleUrls: ['add-member-to-team-modal.component.scss'],

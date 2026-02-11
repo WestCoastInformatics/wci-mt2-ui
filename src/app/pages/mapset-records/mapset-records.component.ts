@@ -26,6 +26,7 @@ import { formatDate } from '@angular/common';
 import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
+	standalone: false,
 	selector: 'app-mapset-records',
 	templateUrl: './mapset-records.component.html',
 	styleUrls: ['./mapset-records.component.scss'],

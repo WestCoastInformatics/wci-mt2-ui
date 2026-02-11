@@ -16,6 +16,7 @@ import { RefsetUtility } from 'src/app/utilities/refset.utility';
  * @title Tree with nested nodes
  */
 @Component({
+	standalone: false,
 	selector: 'app-taxonomy-tree',
 	templateUrl: 'taxonomy-tree.component.html',
 })

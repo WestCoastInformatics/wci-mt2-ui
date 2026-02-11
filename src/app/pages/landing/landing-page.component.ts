@@ -17,6 +17,7 @@ import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
+	standalone: false,
 	selector: 'landing',
 	templateUrl: './landing-page.component.html',
 	styleUrls: ['./landing-page.component.scss'],

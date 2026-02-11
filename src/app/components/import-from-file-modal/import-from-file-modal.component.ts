@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 
 @Component({
+	standalone: false,
 	selector: 'import-from-file-modal',
 	templateUrl: './import-from-file-modal.component.html',
 	styleUrls: ['import-from-file-modal.component.scss'],

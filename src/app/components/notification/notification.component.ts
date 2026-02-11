@@ -8,6 +8,7 @@ export interface IToastButton {
 }
 
 @Component({
+	standalone: false,
 	selector: '[app-notifiction]',
 	templateUrl: 'notification.component.html',
 })

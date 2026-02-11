@@ -7,6 +7,7 @@ import { PersonalComponentService } from 'src/app/pages/personal/personal-compon
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
+	standalone: false,
 	selector: 'personal-landing',
 	templateUrl: './landing.component.html',
 	styleUrls: ['landing.component.scss'],

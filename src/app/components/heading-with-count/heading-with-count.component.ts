@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
+	standalone: false,
 	selector: 'heading-with-count',
 	templateUrl: './heading-with-count.component.html',
 	styleUrls: ['./heading-with-count.component.scss'],

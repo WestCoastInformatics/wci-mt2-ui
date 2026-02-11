@@ -10,6 +10,7 @@ import { CategoryFilterComponent } from '../categoryFilter/category-filter.compo
 import { TemplateRendererComponent } from '../cellRenderers/template.renderer';
 
 @Component({
+	standalone: false,
 	selector: 'bulk-upgrade-modal',
 	templateUrl: './bulk-upgrade-modal.component.html',
 	styleUrls: ['bulk-upgrade-modal.component.scss'],
