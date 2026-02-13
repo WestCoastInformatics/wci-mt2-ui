@@ -1,0 +1,69 @@
+
+
+.rt2-logo {
+width: 40px;
+height: 40px;
+margin: 5px;
+}
+
+.mt2-logo {
+width: 74px;
+height: 45px;
+margin: 2.5px;
+}
+
+
+.rt2-table-icon,
+.rt2-table-action-icon,
+button.rt2-table-icon,
+button.rt2-table-action-icon {
+
+position: relative;
+overflow: hidden;
+margin-top: auto;
+margin-bottom: auto;
+border-radius: 0.25rem;
+z-index: 1;
+
+mat-icon {
+overflow: hidden;
+height: 24px;
+width: 24px;
+font-family: 'Material Icons' !important;
+}
+}
+
+.rt2-table-action-form-icon {
+margin-top: 0;
+}
+
+.refset-id-icons {
+margin-left: 3px;
+height: 16px !important;
+width: 16px !important;
+}
+
+.mat-icon-button i,
+.mat-icon-button .mat-icon {
+line-height: 24px !important;
+width: 25px !important;
+height: 25px !important;
+}
+
+.file-icon {
+width: 50px;
+}
+
+.rt2-standard-icon-button {
+width: 40px;
+height: 31px;
+box-sizing: border-box;
+
+border-style: transparent;
+
+background-color: rgba(255, 255, 255, 1);
+
+&.inactive {
+background-color: var(--inactive_text_color);
+}
+}

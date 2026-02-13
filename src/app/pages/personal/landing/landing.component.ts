@@ -10,7 +10,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 	standalone: false,
 	selector: 'personal-landing',
 	templateUrl: './landing.component.html',
-	styleUrls: ['landing.component.scss'],
+	styleUrls: ['landing.component.css'],
 })
 export class PersonalLandingComponent implements OnInit, OnDestroy {
 	routerParamsSubscription: Subscription;

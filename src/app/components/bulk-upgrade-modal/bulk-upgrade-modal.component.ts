@@ -13,7 +13,7 @@ import { TemplateRendererComponent } from '../cellRenderers/template.renderer';
 	standalone: false,
 	selector: 'bulk-upgrade-modal',
 	templateUrl: './bulk-upgrade-modal.component.html',
-	styleUrls: ['bulk-upgrade-modal.component.scss'],
+	styleUrls: ['bulk-upgrade-modal.component.css'],
 })
 export class BulkUpgradeModalComponent {
 	refsetsForUpgrade: any[] = [];

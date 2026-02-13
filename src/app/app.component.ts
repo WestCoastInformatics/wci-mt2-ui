@@ -9,7 +9,7 @@ import { filter } from 'rxjs/operators';
 	standalone: false,
 	selector: 'app-root',
 	templateUrl: './app.component.html',
-	styleUrls: ['app.component.scss'],
+	styleUrls: ['app.component.css'],
 })
 export class AppComponent implements OnInit {
 	versions: object;

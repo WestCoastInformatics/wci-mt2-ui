@@ -1,0 +1,20 @@
+.grid-header-filter-field {
+width: 90%;
+}
+
+.grid-header-filter-select {
+width: 100%;
+padding-left: 0;
+border: 0;
+border-bottom: 1px solid #aaa !important;
+background-color: transparent;
+border-radius: 0;
+margin-bottom: 0.7em;
+
+font-size: 1.4rem !important;
+font-weight: 300;
+}
+.grid-header-filter-select:focus {
+border-bottom: 2px solid #00a9e0 !important;
+box-shadow: none;
+}

@@ -11,7 +11,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 	standalone: false,
 	selector: 'add-remove-concepts',
 	templateUrl: './add-remove-concepts.component.html',
-	styleUrls: ['add-remove-concepts.component.scss'],
+	styleUrls: ['add-remove-concepts.component.css'],
 })
 export class AddRemoveConceptsComponent implements OnInit {
 	selectedOption: string;

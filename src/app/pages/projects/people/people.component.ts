@@ -11,7 +11,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 	standalone: false,
 	selector: 'projects-people',
 	templateUrl: './people.component.html',
-	styleUrls: ['./people.component.scss'],
+	styleUrls: ['./people.component.css'],
 })
 export class ProjectsPeopleComponent implements OnInit, OnDestroy {
 	routerParamsSubscription: Subscription;

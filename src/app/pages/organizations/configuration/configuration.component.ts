@@ -11,7 +11,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 	standalone: false,
 	selector: 'organization-configuration',
 	templateUrl: './configuration.component.html',
-	styleUrls: ['configuration.component.scss'],
+	styleUrls: ['configuration.component.css'],
 })
 export class OrganizationConfigurationComponent implements OnInit, AfterViewInit, OnDestroy {
 	routerParamsSubscription: Subscription;

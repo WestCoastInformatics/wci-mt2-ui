@@ -5,7 +5,7 @@ import { Component, Inject, HostListener } from '@angular/core';
 	standalone: false,
 	selector: 'scroll-top',
 	templateUrl: './scroll-top.component.html',
-	styleUrls: ['scroll-top.component.scss'],
+	styleUrls: ['scroll-top.component.css'],
 })
 export class ScrollTopComponent {
 	windowScrolled: boolean;

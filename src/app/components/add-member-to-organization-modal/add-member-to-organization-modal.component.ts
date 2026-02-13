@@ -8,7 +8,7 @@ import { OrganizationsService } from 'src/app/services/rest/organizations.servic
 	standalone: false,
 	selector: 'add-member-to-organization-modal',
 	templateUrl: './add-member-to-organization-modal.component.html',
-	styleUrls: ['add-member-to-organization-modal.component.scss'],
+	styleUrls: ['add-member-to-organization-modal.component.css'],
 })
 export class AddMemberToOrganizationModalComponent {
 	email = '';

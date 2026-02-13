@@ -9,7 +9,7 @@ declare const tinymce: any;
 	standalone: false,
 	selector: 'workflow-history-notes-modal',
 	templateUrl: './workflow-history-notes-modal.component.html',
-	styleUrls: ['workflow-history-notes-modal.component.scss'],
+	styleUrls: ['workflow-history-notes-modal.component.css'],
 })
 export class WorkflowHistoryNotesModalComponent implements OnInit {
 	characterCount = 0;

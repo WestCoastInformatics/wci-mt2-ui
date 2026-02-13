@@ -15,7 +15,7 @@ import { User } from 'src/app/models/user';
 	standalone: false,
 	selector: 'projects-teams',
 	templateUrl: './teams.component.html',
-	styleUrls: ['./teams.component.scss'],
+	styleUrls: ['./teams.component.css'],
 })
 export class ProjectsTeamsComponent implements OnInit, OnDestroy {
 	routerParamsSubscription: Subscription;

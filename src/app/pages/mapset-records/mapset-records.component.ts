@@ -29,7 +29,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 	standalone: false,
 	selector: 'app-mapset-records',
 	templateUrl: './mapset-records.component.html',
-	styleUrls: ['./mapset-records.component.scss'],
+	styleUrls: ['./mapset-records.component.css'],
 })
 export class MapsetRecordsComponent implements OnInit {
 	user: User;

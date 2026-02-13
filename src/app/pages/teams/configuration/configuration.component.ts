@@ -11,7 +11,7 @@ import { TeamsComponentService } from 'src/app/pages/teams/teams-component.servi
 	standalone: false,
 	selector: 'teams-configuration',
 	templateUrl: './configuration.component.html',
-	styleUrls: ['configuration.component.scss'],
+	styleUrls: ['configuration.component.css'],
 })
 export class TeamsConfigurationComponent implements OnInit, OnDestroy {
 	routerParamsSubscription: Subscription;

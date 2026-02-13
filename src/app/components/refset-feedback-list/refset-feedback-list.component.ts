@@ -14,7 +14,7 @@ import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-
 	standalone: false,
 	selector: 'app-refset-discussion-list',
 	templateUrl: './refset-feedback-list.component.html',
-	styleUrls: ['refset-feedback-list.component.scss'],
+	styleUrls: ['refset-feedback-list.component.css'],
 })
 export class RefsetFeedbackListComponent implements OnInit {
 	user: User;

@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core';
 	standalone: false,
 	selector: 'workflow-status-badge',
 	templateUrl: './workflow-status-badge.component.html',
-	styleUrls: ['workflow-status-badge.component.scss'],
+	styleUrls: ['workflow-status-badge.component.css'],
 })
 export class WorkflowStatusBadgeComponent {
 	@Input() status: any;

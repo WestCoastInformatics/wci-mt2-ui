@@ -10,7 +10,7 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 	standalone: false,
 	selector: 'app-column-chooser',
 	templateUrl: './column-chooser.component.html',
-	styleUrls: ['./column-chooser.component.scss'],
+	styleUrls: ['./column-chooser.component.css'],
 	encapsulation: ViewEncapsulation.None,
 })
 export class ColumnChooserComponent {

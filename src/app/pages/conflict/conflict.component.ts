@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 	standalone: false,
 	selector: 'conflict',
 	templateUrl: './conflict.component.html',
-	styleUrls: ['./conflict.component.scss'],
+	styleUrls: ['./conflict.component.css'],
 })
 export class ConflictComponent {
 	constructor() {}

@@ -1,0 +1,82 @@
+:root {
+--main-color: #00a4e4;
+--sidebar-width: 294px;
+}
+
+@import 'src/assets/css/variables.css';
+
+
+.sidebar {
+width: 72px;
+overflow-x: visible;
+height: 100%;
+z-index: 1;
+position: relative;
+
+.wrapper {
+min-height: 100%;
+background-color: var(--mapset-blue);
+width: 72px;
+overflow: hidden;
+transition: width 0.2s;
+
+ul {
+margin-bottom: 0;
+padding: 0 0 0;
+
+li {
+color: #fff;
+width: var(--sidebar-width);
+
+a {
+display: flex;
+align-items: center;
+padding: 7px 10px;
+margin: 10px 0;
+cursor: pointer;
+color: inherit;
+text-decoration: none !important;
+
+i {
+margin-left: 10px;
+margin-right: 15px;
+min-width: 37.5px;
+text-align: center;
+}
+}
+}
+
+li:hover {
+color: var(--main-color);
+}
+
+li.unactive {
+color: #fff !important;
+}
+
+li.active {
+border-left: 5px solid var(--main-color);
+color: var(--main-color);
+
+a {
+padding-left: 5px;
+}
+}
+
+.nav-label {
+opacity: 0;
+transition: opacity 0.25s;
+}
+}
+}
+}
+
+.sidebar:hover .wrapper {
+width: var(--sidebar-width);
+
+ul {
+.nav-label {
+opacity: 1;
+}
+}
+}

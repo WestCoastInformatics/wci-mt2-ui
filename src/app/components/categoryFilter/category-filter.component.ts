@@ -11,7 +11,7 @@ export interface SelectFloatingFilterParams extends IFloatingFilterParams {
 	standalone: false,
 	selector: 'app-category-floating-filter',
 	templateUrl: 'category-filter.component.html',
-	styleUrls: ['category-filter.component.scss'],
+	styleUrls: ['category-filter.component.css'],
 })
 export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComponent<SelectFloatingFilterParams> {
 	params: SelectFloatingFilterParams;

@@ -11,7 +11,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 	standalone: false,
 	selector: 'personal-configuration',
 	templateUrl: './configuration.component.html',
-	styleUrls: ['configuration.component.scss'],
+	styleUrls: ['configuration.component.css'],
 })
 export class PersonalConfigurationComponent implements OnInit, OnDestroy {
 	routerParamsSubscription: Subscription;

@@ -20,7 +20,7 @@ import { TemplateRendererComponent } from '../cellRenderers/template.renderer';
 	standalone: false,
 	selector: 'add-remove-by-concept-modal',
 	templateUrl: './add-remove-by-concept-modal.component.html',
-	styleUrls: ['add-remove-by-concept-modal.component.scss'],
+	styleUrls: ['add-remove-by-concept-modal.component.css'],
 })
 export class AddRemoveByConceptModalComponent implements OnInit {
 	searchInput: string;

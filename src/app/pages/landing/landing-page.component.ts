@@ -20,7 +20,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 	standalone: false,
 	selector: 'landing',
 	templateUrl: './landing-page.component.html',
-	styleUrls: ['./landing-page.component.scss'],
+	styleUrls: ['./landing-page.component.css'],
 })
 export class LandingComponent implements OnInit {
 	year: number = new Date().getFullYear();

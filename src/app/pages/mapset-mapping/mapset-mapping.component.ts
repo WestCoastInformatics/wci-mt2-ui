@@ -20,7 +20,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 	standalone: false,
 	selector: 'app-mapset-mapping',
 	templateUrl: './mapset-mapping.component.html',
-	styleUrls: ['./mapset-mapping.component.scss'],
+	styleUrls: ['./mapset-mapping.component.css'],
 })
 export class MapsetMappingComponent implements OnInit {
 	user: User;

@@ -11,7 +11,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 	standalone: false,
 	selector: 'app-navbar',
 	templateUrl: './navbar.component.html',
-	styleUrls: ['./navbar.component.scss'],
+	styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
 	environment: string;

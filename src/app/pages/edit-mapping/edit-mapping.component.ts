@@ -25,7 +25,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 	standalone: false,
 	selector: 'app-edit-mapping',
 	templateUrl: './edit-mapping.component.html',
-	styleUrls: ['./edit-mapping.component.scss'],
+	styleUrls: ['./edit-mapping.component.css'],
 })
 export class EditMappingComponent implements OnInit {
 	user: User;

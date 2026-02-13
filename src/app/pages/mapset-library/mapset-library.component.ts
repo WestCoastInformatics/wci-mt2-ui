@@ -28,7 +28,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 	standalone: false,
 	selector: 'app-mapset-library',
 	templateUrl: './mapset-library.component.html',
-	styleUrls: ['./mapset-library.component.scss'],
+	styleUrls: ['./mapset-library.component.css'],
 })
 export class MapsetLibraryComponent implements OnInit {
 	user: User;

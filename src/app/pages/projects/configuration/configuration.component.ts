@@ -12,7 +12,7 @@ import { ProjectsComponentService } from 'src/app/pages/projects/projects-compon
 	standalone: false,
 	selector: 'projects-configuration',
 	templateUrl: './configuration.component.html',
-	styleUrls: ['configuration.component.scss'],
+	styleUrls: ['configuration.component.css'],
 })
 export class ProjectsConfigurationComponent implements OnInit, OnDestroy {
 	routerParamsSubscription: Subscription;

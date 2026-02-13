@@ -28,7 +28,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 	standalone: false,
 	selector: 'app-batch-mapping',
 	templateUrl: './batch-mapping.component.html',
-	styleUrls: ['./batch-mapping.component.scss'],
+	styleUrls: ['./batch-mapping.component.css'],
 })
 export class BatchMappingComponent implements OnInit {
 	user: User;

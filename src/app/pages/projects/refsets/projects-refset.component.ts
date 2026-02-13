@@ -23,7 +23,7 @@ import { User } from 'src/app/models/user';
 	standalone: false,
 	selector: 'projects-refset',
 	templateUrl: './projects-refset.component.html',
-	styleUrls: ['./projects-refset.component.scss'],
+	styleUrls: ['./projects-refset.component.css'],
 })
 export class ProjectsRefsetComponent implements OnInit, AfterViewInit, OnDestroy {
 	routerParamsSubscription: Subscription;

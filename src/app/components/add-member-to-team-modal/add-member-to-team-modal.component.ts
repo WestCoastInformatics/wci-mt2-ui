@@ -8,7 +8,7 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 	standalone: false,
 	selector: 'add-member-to-team-modal',
 	templateUrl: './add-member-to-team-modal.component.html',
-	styleUrls: ['add-member-to-team-modal.component.scss'],
+	styleUrls: ['add-member-to-team-modal.component.css'],
 })
 export class AddMemberToTeamModalComponent {
 	emails = [];

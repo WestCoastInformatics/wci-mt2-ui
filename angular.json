@@ -18,7 +18,7 @@
       "prefix": "app",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "css"
         }
       },
       "architect": {
@@ -33,7 +33,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "i18nMissingTranslation": "warning",
-            "inlineStyleLanguage": "scss",
+            "inlineStyleLanguage": "css",
             "extractLicenses": false,
             "assets": [
               "src/assets/favicon/favicon.ico",
@@ -51,14 +51,14 @@
             "styles": [
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "./node_modules/@fortawesome/fontawesome-free/css/all.css",
-              "src/assets/scss/styles.scss",
+              "src/assets/css/styles.css",
               "node_modules/ngx-toastr/toastr.css",
               "./ecl-builder/styles.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "./node_modules",
-                "src/app/styles/scss"
+                "src/app/styles/css"
               ]
             },
             "allowedCommonJsDependencies": [
