@@ -13,7 +13,6 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
-import { formatDate } from '@angular/common';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
@@ -32,7 +31,6 @@ export class MapsetMappingComponent implements OnInit {
 	];
 	selectedView = 'all';
 	refsetGridApi: any;
-	refsetGridColumnApi: any;
 	columnDefs = [];
 	refsetGridColumns = [
 		{ name: 'information', show: true },

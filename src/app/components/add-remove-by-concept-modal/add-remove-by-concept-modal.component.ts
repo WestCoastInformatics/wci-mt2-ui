@@ -281,7 +281,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
 				if (results.items.length == 0) {
 					this.gridApi.showNoRowsOverlay();
-					this.gridApi.setRowData([]);
+					this.gridApi.setGridOption('rowData', []);
 
 					if (pageNumber > 1) {
 						this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);

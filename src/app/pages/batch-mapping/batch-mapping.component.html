@@ -4,7 +4,7 @@
 <div class="top-search-bar content-header">
 	<div class="d-flex justify-content-end">
 		<div class="col-md-12 d-flex">
-			<div class="page-title" *ngIf="loaded" title="Batch Edit ({{ mapsetData.length }})">
+			<div class="page-title" *ngIf="loaded && !loadError" title="Batch Edit ({{ mapsetData.length }})">
 				<div class="rt2-wrap">Batch Edit ({{ mapsetData.length }})</div>
 				<!-- Status Stepper if in edit mode and Reference Set not locked -->
 				<mat-horizontal-stepper class="col-1 details-page-stepper" [linear]="true" labelPosition="bottom" #stepper>
@@ -43,10 +43,10 @@
 		</div>
 	</div>
 </div>
-<div [hidden]="loaded" class="section-loading m-b-20">Loading...</div>
-
+<div [hidden]="loaded || loadError" class="section-loading m-b-20">Loading...</div>
+<div [hidden]="!loadError || !loaded" class="section-loading m-b-20">Error loading, please contact support.</div>
 <div [hidden]="!saving" class="section-saving">Please wait, save in progress...</div>
-<div class="dropdown-group row edit-actions m-b-10 m-t-10" *ngIf="loaded && !saving">
+<div class="dropdown-group row edit-actions m-b-10 m-t-10" *ngIf="loaded && !saving && !loadError">
 	<div class="col-10"></div>
 	<div class="action-column col-2 no-margin-top">
 		<span class="date-column">
@@ -72,7 +72,7 @@
 	</div>
 </div>
 <div class="rt2-container">
-	<div class="metadata-collapsible-container col-md-12 config-scrolling-section">
+	<div class="metadata-collapsible-container col-md-12 config-scrolling-section" *ngIf="loaded && !loadError">
 		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showConfigSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
 				<span>Target Configuration</span>
@@ -83,7 +83,7 @@
 			<img src="assets/caret-up-solid.svg" *ngIf="!showConfigSection" alt="Collapse Button" title="Collapse Target Configuration" aria-label="Collapse Button" class="caret-up-solid" />
 			<img src="assets/caret-down-solid.svg" *ngIf="showConfigSection" alt="Expand Button" title="Expand Target Configuration" aria-label="Expand Button" class="caret-down-solid" />
 		</div>
-		<div class="row d-flex dropdown-group" *ngIf="showConfigSection && loaded && !saving">
+		<div class="row d-flex dropdown-group" *ngIf="showConfigSection && loaded && !saving && !loadError">
 			<div class="col-md-auto rt2-directory-chooser-column m-l-20">
 				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="gridColumnApi" [useDialog]="useDialog" [columnStorage]="mapsetBatchColumnStorage"> </app-column-chooser>
 			</div>
@@ -151,8 +151,8 @@
 			</div>
 		</div>
 		<div class="metadata-section-background" [hidden]="!showConfigSection">
-			<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showConfigSection || !loaded || saving"></div>
-			<div id="config-background" [hidden]="!showConfigSection || !loaded || saving" class="section-background config-section">
+			<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showConfigSection || !loaded || saving || loadError"></div>
+			<div id="config-background" [hidden]="!showConfigSection || !loaded || saving || loadError" class="section-background config-section">
 				<div class="grid-wrapper config-scrolling">
 					<ag-grid-angular
 						[columnDefs]="gridColumnDefs"
@@ -304,7 +304,7 @@
 		</div>
 	</div>
 
-	<div class="metadata-collapsible-container col-md-12 mb-10" #secondWindow>
+	<div class="metadata-collapsible-container col-md-12 mb-10" *ngIf="loaded && !loadError" #secondWindow>
 		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showBrowserSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
 				<span>ICD10 Terminology Browser</span>

@@ -268,7 +268,7 @@ export class RefsetFeedbackListComponent implements OnInit {
 
 				if (results.items.length === 0) {
 					this.gridApi.showNoRowsOverlay();
-					this.gridApi.setRowData([]);
+					this.gridApi.setGridOption('rowData', []);
 
 					if (pageNumber > 1) {
 						this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);
@@ -284,7 +284,7 @@ export class RefsetFeedbackListComponent implements OnInit {
 			},
 			error: (error) => {
 				this.gridApi.showNoRowsOverlay();
-				this.gridApi.setRowData([]);
+				this.gridApi.setGridOption('rowData', []);
 			},
 		});
 	};
@@ -538,7 +538,7 @@ export class RefsetFeedbackListComponent implements OnInit {
 	}
 
 	reloadGridData() {
-		this.gridApi.setRowData(this.threadsData);
+		this.gridApi.setGridOption('rowData', this.threadsData);
 		this.gridApi.redrawRows();
 		// this.onGridReady({api: this.gridApi});
 	}

@@ -16,7 +16,7 @@
 			<div class="metadata-section-background">
 				<div class="row d-flex dropdown-group">
 					<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
-						<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog" [columnStorage]="mapsetLibraryColumnStorage">
+						<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridApi" [useDialog]="useDialog" [columnStorage]="mapsetLibraryColumnStorage">
 						</app-column-chooser>
 					</div>
 					<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
@@ -53,7 +53,13 @@
 				</div>
 				<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showTable && !showLoadingSearch"></div>
 
-				<ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct" [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
+				<ag-grid-angular
+					#directoryTable
+					*ngIf="showTable"
+					class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct"
+					[rowHeight]="51"
+					[columnDefs]="columnDefs"
+					[gridOptions]="refsetGridOptions">
 				</ag-grid-angular>
 
 				<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>

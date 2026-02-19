@@ -159,7 +159,7 @@ export class OrganizationPeopleComponent implements OnInit, OnDestroy {
 		if (params?.api) {
 			this.gridApi = params.api;
 			this.gridApi.showLoadingOverlay();
-			this.gridApi.setRowData(this.data);
+			this.gridApi.setGridOption('rowData', this.data);
 		}
 		this.getOrganizations();
 	};

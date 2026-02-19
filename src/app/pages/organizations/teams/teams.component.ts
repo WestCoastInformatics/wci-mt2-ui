@@ -252,11 +252,11 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 					}
 
 					roles = [...new Set(roles)].sort();
-					this.gridApi.setRowData(this.data);
+					this.gridApi.setGridOption('rowData', this.data);
 				});
 			} else {
 				this.data = [];
-				this.gridApi.setRowData(this.data);
+				this.gridApi.setGridOption('rowData', this.data);
 			}
 		}
 	}

@@ -29,7 +29,6 @@ export class ProjectsTeamsComponent implements OnInit, OnDestroy {
 	selectedOrganization: any;
 	organizationSubscription: Subscription;
 	gridApi: any;
-	gridColumnApi: any;
 	gridColumnDefs = [];
 	gridOptions: any;
 	gridPaging = {
@@ -270,10 +269,8 @@ export class ProjectsTeamsComponent implements OnInit, OnDestroy {
 		if (!this.projectId || this.projectId == '0') {
 			return;
 		}
-
 		this.originalGridParams = gridReadyParams;
 		this.gridApi = gridReadyParams.api;
-		this.gridColumnApi = gridReadyParams.columnApi;
 
 		this.projectsService.getProjectTeams(this.projectId).subscribe(
 			(results) => {
@@ -293,13 +290,13 @@ export class ProjectsTeamsComponent implements OnInit, OnDestroy {
 				}
 
 				this.numberOfTeams = this.teamData.length;
-				this.gridApi.setRowData(this.teamData);
+				this.gridApi.setGridOption('rowData', this.teamData);
 			},
 			(err) => {
 				console.error(err);
 				this.teamData = [];
 				this.numberOfTeams = 0;
-				this.gridApi.setRowData(this.teamData);
+				this.gridApi.setGridOption('rowData', this.teamData);
 			}
 		);
 

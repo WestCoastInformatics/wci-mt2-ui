@@ -26,7 +26,6 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
 		totalRows: null,
 		manualStateRefresh: Boolean(true),
 	};
-	gridColumnApi: any;
 	gridLastFilter = '';
 	gridLastSort = '';
 	showTable = false;
@@ -119,7 +118,6 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
 
 	onGridReady = (gridReadyParams) => {
 		this.gridApi = gridReadyParams.api;
-		this.gridColumnApi = gridReadyParams.columnApi;
 		const sortModel = [{ colId: 'created', sort: 'desc' }];
 		this.gridApi.setSortModel(sortModel);
 		this.onResize(undefined);

@@ -41,7 +41,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit, OnDestroy
 	];
 	selectedView = 'all';
 	refsetGridApi: any;
-	refsetGridColumnApi: any;
 	columnDefs = [];
 	refsetGridColumns = [
 		{ name: 'information', show: true },
@@ -314,7 +313,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit, OnDestroy
 	onGridReady = (gridReadyParams) => {
 		this.originalGridParams = gridReadyParams;
 		this.refsetGridApi = gridReadyParams?.api;
-		this.refsetGridColumnApi = gridReadyParams?.columnApi;
 	};
 
 	getRefsets(): void {

@@ -32,7 +32,6 @@ export class LandingComponent implements OnInit {
 		{ value: 'private', display: 'Private' },
 	];
 	refsetGridApi: any;
-	refsetGridColumnApi: any;
 	columnDefs = [];
 	refsetGridColumns = [
 		{ name: 'information', show: true },
@@ -286,7 +285,6 @@ export class LandingComponent implements OnInit {
 		this.originalGridParams = gridReadyParams;
 		this.refsetGridApi = gridReadyParams.api;
 		this.refsetGridApi.setFilterModel(null);
-		this.refsetGridColumnApi = gridReadyParams.columnApi;
 		this.onResize(undefined);
 
 		this.refsetGridApi.showLoadingOverlay();
@@ -332,7 +330,7 @@ export class LandingComponent implements OnInit {
 				if (results.items.length == 0) {
 					this.refsetGridPaging.totalKnown = true;
 					this.refsetGridApi.showNoRowsOverlay();
-					this.refsetGridApi.setRowData([]);
+					this.refsetGridApi.setGridOption('rowData', []);
 
 					if (pageNumber > 1) {
 						this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
@@ -348,7 +346,7 @@ export class LandingComponent implements OnInit {
 			error: (error) => {
 				this.showLoadingSearch = false;
 				this.refsetGridApi.showNoRowsOverlay();
-				this.refsetGridApi.setRowData([]);
+				this.refsetGridApi.setGridOption('rowData', []);
 			},
 		});
 
