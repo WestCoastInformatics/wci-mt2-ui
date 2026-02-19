@@ -8,6 +8,7 @@ import { CategoryFilterComponent } from 'src/app/components/categoryFilter/categ
 import { OrganizationsComponentService } from 'src/app/pages/organizations/organizations-component.service';
 
 @Component({
+	standalone: false,
 	selector: 'organization-teams',
 	templateUrl: './teams.component.html',
 })
@@ -251,11 +252,11 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 					}
 
 					roles = [...new Set(roles)].sort();
-					this.gridApi.setRowData(this.data);
+					this.gridApi.setGridOption('rowData', this.data);
 				});
 			} else {
 				this.data = [];
-				this.gridApi.setRowData(this.data);
+				this.gridApi.setGridOption('rowData', this.data);
 			}
 		}
 	}

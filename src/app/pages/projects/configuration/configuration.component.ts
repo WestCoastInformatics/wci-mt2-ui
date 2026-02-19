@@ -9,9 +9,10 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { ProjectsComponentService } from 'src/app/pages/projects/projects-component.service';
 
 @Component({
+	standalone: false,
 	selector: 'projects-configuration',
 	templateUrl: './configuration.component.html',
-	styleUrls: ['configuration.component.scss'],
+	styleUrls: ['configuration.component.css'],
 })
 export class ProjectsConfigurationComponent implements OnInit, OnDestroy {
 	routerParamsSubscription: Subscription;

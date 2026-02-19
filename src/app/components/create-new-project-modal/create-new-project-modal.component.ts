@@ -5,9 +5,10 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { ProjectsService } from 'src/app/services/rest/projects.service';
 
 @Component({
+	standalone: false,
 	selector: 'create-new-project-modal',
 	templateUrl: './create-new-project-modal.component.html',
-	styleUrls: ['create-new-project-modal.component.scss'],
+	styleUrls: ['create-new-project-modal.component.css'],
 })
 export class CreateNewProjectModalComponent {
 	// Project artifact Variables for Navigation to resource page after project creation

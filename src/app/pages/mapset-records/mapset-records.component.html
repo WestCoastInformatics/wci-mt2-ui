@@ -75,7 +75,7 @@
 	<div class="metadata-collapsible-container" [ngClass]="{ 'm-t-20': loaded }">
 		<div class="switch-view" *ngIf="showMappingsSection && loaded" [hidden]="numOfMembers === 0">
 			<mat-label class="switch-label">view by</mat-label>
-			<mat-button-toggle-group #group="matButtonToggleGroup" [value]="showMapTable" (change)="changeMappingsView(group.value)">
+			<mat-button-toggle-group #group="matButtonToggleGroup" [value]="showMapTable" (change)="changeMappingsView(group.value)" [hideSingleSelectionIndicator]="true">
 				<mat-button-toggle value="table" title="View by table"> table </mat-button-toggle>
 				<mat-button-toggle value="record" title="View by record"> record </mat-button-toggle>
 			</mat-button-toggle-group>
@@ -92,7 +92,7 @@
 		</div>
 		<div class="d-flex dropdown-group" *ngIf="showMappingsSection && numOfMembers > 0">
 			<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable && showMapTable === 'table'">
-				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog" [columnStorage]="mapsetRecordsColumnStorage"> </app-column-chooser>
+				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridApi" [useDialog]="useDialog" [columnStorage]="mapsetRecordsColumnStorage"> </app-column-chooser>
 			</div>
 
 			<div class="col-md-auto rt2-directory-chooser-column">

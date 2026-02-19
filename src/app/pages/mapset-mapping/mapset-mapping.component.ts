@@ -13,13 +13,13 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
-import { formatDate } from '@angular/common';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
+	standalone: false,
 	selector: 'app-mapset-mapping',
 	templateUrl: './mapset-mapping.component.html',
-	styleUrls: ['./mapset-mapping.component.scss'],
+	styleUrls: ['./mapset-mapping.component.css'],
 })
 export class MapsetMappingComponent implements OnInit {
 	user: User;
@@ -31,7 +31,6 @@ export class MapsetMappingComponent implements OnInit {
 	];
 	selectedView = 'all';
 	refsetGridApi: any;
-	refsetGridColumnApi: any;
 	columnDefs = [];
 	refsetGridColumns = [
 		{ name: 'information', show: true },

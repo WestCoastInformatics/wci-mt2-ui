@@ -12,6 +12,7 @@ import { OrganizationsService } from 'src/app/services/rest/organizations.servic
 import { TeamsComponentService } from 'src/app/pages/teams/teams-component.service';
 
 @Component({
+	standalone: false,
 	selector: 'teams-people',
 	templateUrl: './people.component.html',
 })

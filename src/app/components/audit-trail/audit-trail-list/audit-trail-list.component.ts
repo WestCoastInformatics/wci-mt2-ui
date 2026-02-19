@@ -9,6 +9,7 @@ import { AuditService } from 'src/app/services/rest/audit.service';
 import { DateTextFilterComponent } from '../../dateTextFilter/date-text-filter.component';
 
 @Component({
+	standalone: false,
 	selector: 'audit-trail-list',
 	templateUrl: './audit-trail-list.component.html',
 })
@@ -25,7 +26,6 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
 		totalRows: null,
 		manualStateRefresh: Boolean(true),
 	};
-	gridColumnApi: any;
 	gridLastFilter = '';
 	gridLastSort = '';
 	showTable = false;
@@ -118,7 +118,6 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
 
 	onGridReady = (gridReadyParams) => {
 		this.gridApi = gridReadyParams.api;
-		this.gridColumnApi = gridReadyParams.columnApi;
 		const sortModel = [{ colId: 'created', sort: 'desc' }];
 		this.gridApi.setSortModel(sortModel);
 		this.onResize(undefined);

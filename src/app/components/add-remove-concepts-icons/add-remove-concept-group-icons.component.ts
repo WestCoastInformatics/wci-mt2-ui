@@ -3,6 +3,7 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { Constants } from 'src/app/utilities/constants.utility';
 
 @Component({
+	standalone: false,
 	selector: 'add-remove-concept-group-icons',
 	templateUrl: './add-remove-concepts-icons.component.html',
 })

@@ -1,0 +1,15 @@
+@import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+@import 'src/assets/css/material-theme.css';
+@import 'src/assets/css/variables.css';
+@import '../../../node_modules/ngx-toastr/toastr';
+@import '../../../node_modules/@ali-hm/angular-tree-component/css/angular-tree-component.css';
+@import '../../../node_modules/ag-grid-community/styles/ag-grid.css';
+@import '../../../node_modules/ag-grid-community/styles/ag-theme-alpine.css';
+@import 'src/assets/css/core-styles.css';
+@import 'src/assets/css/mapset_global_styles.css';
+@import 'src/assets/css/button-styles.css';
+@import 'src/assets/css/font-styles.css';
+@import 'src/assets/css/icon-styles.css';
+@import 'src/assets/css/modal-styles.css';
+
+

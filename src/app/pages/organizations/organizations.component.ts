@@ -9,6 +9,7 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { OrganizationsComponentService } from 'src/app/pages/organizations/organizations-component.service';
 
 @Component({
+	standalone: false,
 	selector: 'organizations-page',
 	templateUrl: './organizations.component.html',
 })
@@ -56,7 +57,7 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 			}
 		});
 
-		this.routerEventSubscription = this.router.events.subscribe((event: RouterEvent) => {
+		this.routerEventSubscription = this.router.events.subscribe((event: any) => {
 			if (event instanceof Scroll) {
 				if (this.router.url.includes('organizations')) {
 					this.checkLocationPath(this.router.url);

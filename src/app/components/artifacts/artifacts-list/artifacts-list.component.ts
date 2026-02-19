@@ -8,6 +8,7 @@ import { ArtifactsService } from '../../../services/rest/artifacts.service';
 import { DateTextFilterComponent } from '../../dateTextFilter/date-text-filter.component';
 
 @Component({
+	standalone: false,
 	selector: 'artifacts-list',
 	templateUrl: './artifacts-list.component.html',
 })

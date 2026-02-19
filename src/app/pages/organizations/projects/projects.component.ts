@@ -9,6 +9,7 @@ import { TemplateRendererComponent } from 'src/app/components/cellRenderers/temp
 import { OrganizationsComponentService } from 'src/app/pages/organizations/organizations-component.service';
 
 @Component({
+	standalone: false,
 	selector: 'organization-projects',
 	templateUrl: './projects.component.html',
 })
@@ -30,7 +31,6 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 	editionList: any[] = [];
 	editionSubscription: Subscription;
 	api: any;
-	columnApi: any;
 	gridParams: any;
 	showLoadingSpinner = false;
 	currentURL: string;
@@ -156,7 +156,6 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 		this.gridParams = params;
 		if (params?.api) {
 			this.api = params.api;
-			this.columnApi = params.columnApi;
 			this.api.showLoadingOverlay();
 			// BAC: these are here because column defs are set up before view children are injected?
 			this.columnDefs[1].cellRendererParams = { template: this.descriptionSection };
@@ -191,7 +190,7 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 					extendedTimeOut: 0,
 				});
 				this.showLoadingSpinner = false;
-				this.api.setRowData([]);
+				this.api.setGridOption('rowData', []);
 				this.api.redrawRows();
 				return;
 			}
@@ -215,7 +214,7 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 							});
 						}
 						this.data = loadData;
-						this.api.setRowData(this.data);
+						this.api.setGridOption('rowData', this.data);
 						this.api.redrawRows();
 						this.showLoadingSpinner = false;
 					})

@@ -3,9 +3,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { WorkflowService } from 'src/app/services/workflow/workflow.service';
 
 @Component({
+	standalone: false,
 	selector: 'review-modal',
 	templateUrl: './review-modal.component.html',
-	styleUrls: ['review-modal.component.scss'],
+	styleUrls: ['review-modal.component.css'],
 })
 export class ReviewModalComponent {
 	@Input() refsetInternalId: string;

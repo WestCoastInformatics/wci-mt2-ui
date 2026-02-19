@@ -3,6 +3,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
+	standalone: false,
 	selector: 'audit-trail-modal',
 	templateUrl: './audit-trail-modal.component.html',
 })

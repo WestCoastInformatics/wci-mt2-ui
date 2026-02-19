@@ -1,0 +1,9 @@
+.tag-container {
+mat-chip {
+transform: scale(0.8);
+margin-right: 5px;
+margin-bottom: 5px;
+border-radius: 8px;
+background: white;
+}
+}

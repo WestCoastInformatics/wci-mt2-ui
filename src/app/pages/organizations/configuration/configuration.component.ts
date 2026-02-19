@@ -8,9 +8,10 @@ import { OrganizationsComponentService } from 'src/app/pages/organizations/organ
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
+	standalone: false,
 	selector: 'organization-configuration',
 	templateUrl: './configuration.component.html',
-	styleUrls: ['configuration.component.scss'],
+	styleUrls: ['configuration.component.css'],
 })
 export class OrganizationConfigurationComponent implements OnInit, AfterViewInit, OnDestroy {
 	routerParamsSubscription: Subscription;

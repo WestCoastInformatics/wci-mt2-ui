@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
@@ -28,7 +28,7 @@ import { BackendInterceptor } from 'src/app/interceptors/backend.interceptor';
 import { HeaderInterceptor } from 'src/app/interceptors/header.interceptor';
 import { SafeUrlPipe } from 'src/app/pipes/safe-urls.pipe';
 import { NgbModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
-import { TreeModule } from '@circlon/angular-tree-component';
+import { TreeModule } from '@ali-hm/angular-tree-component';
 import { AgGridModule } from 'ag-grid-angular';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { ToastNoAnimationModule } from 'ngx-toastr';
@@ -325,6 +325,9 @@ const appRoutes: Routes = [
 		WorkflowStatusBadgeComponent,
 		RefsetMetaTableComponent,
 	],
+	bootstrap: [AppComponent],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+	exports: [RouterModule],
 	imports: [
 		RouterModule.forChild(appRoutes),
 		RouterModule.forRoot(
@@ -338,7 +341,6 @@ const appRoutes: Routes = [
 		),
 		BrowserModule,
 		FormsModule,
-		HttpClientModule,
 		BrowserAnimationsModule,
 		NgbTypeaheadModule,
 		MatTableModule,
@@ -377,9 +379,7 @@ const appRoutes: Routes = [
 		PaginationModule,
 		DirectivesModule,
 	],
-	entryComponents: [NotificationComponent],
 	providers: [
-		AuthenticationService,
 		ArtifactsService,
 		AuditService,
 		EnvServiceProvider,
@@ -412,9 +412,7 @@ const appRoutes: Routes = [
 			multi: true,
 		},
 		{ provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
+		provideHttpClient(withInterceptorsFromDi()),
 	],
-	bootstrap: [AppComponent],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-	exports: [RouterModule],
 })
 export class AppModule {}

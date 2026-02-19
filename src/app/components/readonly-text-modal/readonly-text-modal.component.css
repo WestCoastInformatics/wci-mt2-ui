@@ -1,0 +1,10 @@
+.limit-text-30 {
+display: block;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+
+.limit-text-container {
+float: left;
+display: flex;
+}

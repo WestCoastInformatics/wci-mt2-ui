@@ -7,9 +7,10 @@ import { Router } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
 
 @Component({
+	standalone: false,
 	selector: 'remove-dashboard-component-modal',
 	templateUrl: './remove-dashboard-component-modal.component.html',
-	styleUrls: ['remove-dashboard-component-modal.component.scss'],
+	styleUrls: ['remove-dashboard-component-modal.component.css'],
 	providers: [TitleCasePipe],
 })
 export class RemoveDashboardComponentModalComponent {

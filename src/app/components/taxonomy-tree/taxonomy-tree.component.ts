@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { TreeComponent, TreeNode } from '@circlon/angular-tree-component';
+import { TreeComponent, TreeNode } from '@ali-hm/angular-tree-component';
 import { lastValueFrom, Observable } from 'rxjs';
 import { TreeOptionDefaults, TreeOptions } from 'src/app/models/tree-options.model';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -16,6 +16,7 @@ import { RefsetUtility } from 'src/app/utilities/refset.utility';
  * @title Tree with nested nodes
  */
 @Component({
+	standalone: false,
 	selector: 'app-taxonomy-tree',
 	templateUrl: 'taxonomy-tree.component.html',
 })

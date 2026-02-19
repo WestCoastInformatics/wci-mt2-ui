@@ -8,9 +8,10 @@ import { PersonalComponentService } from 'src/app/pages/personal/personal-compon
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
+	standalone: false,
 	selector: 'personal-configuration',
 	templateUrl: './configuration.component.html',
-	styleUrls: ['configuration.component.scss'],
+	styleUrls: ['configuration.component.css'],
 })
 export class PersonalConfigurationComponent implements OnInit, OnDestroy {
 	routerParamsSubscription: Subscription;

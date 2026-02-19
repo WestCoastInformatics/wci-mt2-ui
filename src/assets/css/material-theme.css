@@ -1,0 +1,42 @@
+:root {
+	/* Primary - Based on M2 Blue Palette */
+	--mat-sys-primary: #2196f3;
+	--mat-sys-on-primary: #ffffff;
+	--mat-sys-primary-container: #d1e4ff;
+	--mat-sys-on-primary-container: #001d36;
+
+	/* Accent (Secondary) - Based on M2 Blue A200/A100 */
+	--mat-sys-secondary: #448aff;
+	--mat-sys-on-secondary: #ffffff;
+	--mat-sys-secondary-container: #d1e4ff;
+	--mat-sys-on-secondary-container: #001d36;
+
+	/* Warn (Error) - Based on M2 Blue (Note: usually red, but keeping your logic) */
+	--mat-sys-error: #2196f3;
+	--mat-sys-on-error: #ffffff;
+	--mat-sys-error-container: #d1e4ff;
+	--mat-sys-on-error-container: #001d36;
+
+	/* Surface & Background */
+	--mat-sys-surface: #fefbff;
+	--mat-sys-on-surface: #1b1b1f;
+	--mat-sys-outline: #74777f;
+
+	/**/
+	--mat-menu-container-shape: #ffffff;
+	--mat-sys-corner-extra-small: #ffffff;
+	--mat-menu-container-elevation-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024, 0 3px 14px 2px #0000001f;
+	--mat-sys-surface-container: #ffffff;
+	--mat-menu-container-color: #ffffff;
+	--mat-stepper-line-color: #0000001f;
+	--mat-standard-button-toggle-selected-state-background-color: #e0e0e0;
+	--mat-legacy-button-toggle-selected-state-background-color: #e0e0e0;
+	/* --mat-standard-button-toggle-background-color: #e0e0e0; */
+	--mat-sys-on-surface: rgba(0, 0, 0, 0);
+	--mat-select-enabled-trigger-text-color: #000003;
+	--mat-standard-button-toggle-shape: 4px;
+	--mat-sys-corner-extra-large: 4px;
+	--mat-legacy-button-toggle-shape: 4px;
+	--mat-menu-item-label-text-color: #000003;
+	--mat-menu-item-hover-state-layer-color: rgba(0, 0, 0, 0.04);
+}

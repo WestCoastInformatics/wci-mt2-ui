@@ -11,6 +11,5 @@ import { DialogComponent } from './components/dialog.component';
 	imports: [CommonModule, MatButtonModule, MatDialogModule, MatIconModule],
 	exports: [DialogComponent],
 	declarations: [DialogComponent],
-	entryComponents: [DialogComponent],
 })
 export class DialogModule {}

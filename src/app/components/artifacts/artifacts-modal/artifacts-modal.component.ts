@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
+	standalone: false,
 	selector: 'artifacts-modal',
 	templateUrl: './artifacts-modal.component.html',
 })

@@ -10,6 +10,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
+	standalone: false,
 	selector: 'organization-people',
 	templateUrl: './people.component.html',
 })
@@ -158,7 +159,7 @@ export class OrganizationPeopleComponent implements OnInit, OnDestroy {
 		if (params?.api) {
 			this.gridApi = params.api;
 			this.gridApi.showLoadingOverlay();
-			this.gridApi.setRowData(this.data);
+			this.gridApi.setGridOption('rowData', this.data);
 		}
 		this.getOrganizations();
 	};

@@ -10,9 +10,10 @@ export interface GridHeaderFloatingFilterParams extends IFloatingFilterParams {
 }
 
 @Component({
+	standalone: false,
 	selector: 'app-grid-header-floating-filter',
 	templateUrl: 'grid-header-filter.component.html',
-	styleUrls: ['./grid-header-filter.component.scss'],
+	styleUrls: ['./grid-header-filter.component.css'],
 })
 export class GridHeaderFilterComponent implements IFloatingFilter, AgFrameworkComponent<GridHeaderFloatingFilterParams> {
 	params: GridHeaderFloatingFilterParams;

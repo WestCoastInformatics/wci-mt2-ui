@@ -637,7 +637,6 @@ export class UiUtility {
 
 	static downloadFile(data, headerlist, fileName = 'download' + '_' + CodeUtility.getReverseDate(), merge = false, isFinishedChangeReport = false, isAuditReport = false, isMapsetReport = false) {
 		let csvData;
-		console.log('here s', isMapsetReport);
 		if (!merge && !isMapsetReport) {
 			csvData = this.convertToCsv(data, headerlist);
 		} else if (isFinishedChangeReport) {
@@ -657,7 +656,6 @@ export class UiUtility {
 			csvData = this.convertToCsv(data.auditData, headerlist.auditHeader);
 		} else if (isMapsetReport) {
 			csvData = data;
-			console.log('here s');
 		} else {
 			csvData =
 				this.convertToCsv(data.oldMember, headerlist.oldMemberHeader) +
@@ -829,7 +827,7 @@ export class UiUtility {
 			if (serverPaging) {
 				rowParams.successCallback(results.items, lastRow);
 			} else {
-				gridApi.setRowData(results.items);
+				gridApi.setGridOption('rowData', results.items);
 			}
 		} else {
 			gridApi.showNoRowsOverlay();
