@@ -14,9 +14,10 @@ import { data } from 'jquery';
  * @title Tree with nested nodes
  */
 @Component({
+	standalone: false,
 	selector: 'app-refset-download',
 	templateUrl: 'refset-download.component.html',
-	styleUrls: ['./refset-download.component.scss'],
+	styleUrls: ['./refset-download.component.css'],
 })
 export class RefsetDownloadComponent {
 	formatOptions: any[];

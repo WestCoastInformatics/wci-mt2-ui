@@ -9,6 +9,7 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 @Component({
 	selector: 'app-dialog',
 	templateUrl: './dialog.component.html',
+	standalone: false,
 })
 export class DialogComponent<T> {
 	form: FormGroup;

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 
 @Component({
+	standalone: false,
 	selector: 'app-invite',
 	template: '<div class="invite-main"></div>',
 })

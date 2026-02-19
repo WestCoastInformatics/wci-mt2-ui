@@ -4,7 +4,7 @@
 <div class="top-search-bar content-header">
 	<div class="d-flex justify-content-end">
 		<div class="col-md-8 d-flex">
-			<div class="page-title" *ngIf="loaded" title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}">
+			<div class="page-title" *ngIf="loaded && !loadError" title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}">
 				<div class="rt2-wrap">{{ mapsetData[0].code + ' ' + mapsetData[0].name }}</div>
 				<!-- Status Stepper if in edit mode and Reference Set not locked -->
 				<mat-horizontal-stepper class="col-1 details-page-stepper" [linear]="true" labelPosition="bottom" #stepper>
@@ -42,14 +42,15 @@
 			</div>
 		</div>
 		<div class="col-md-auto d-flex p-r-30 m-t-5">
-			<div class="col-12">
+			<div class="col-12" *ngIf="loaded && !loadError">
 				<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: mapsetData }"></template>
 			</div>
 		</div>
 	</div>
 </div>
-<div [hidden]="loaded" class="section-loading m-b-20">Loading...</div>
-<div class="dropdown-group row edit-actions" *ngIf="loaded">
+<div [hidden]="loaded || loadError" class="section-loading m-b-20">Loading...</div>
+<div [hidden]="!loadError || !loaded" class="section-loading m-b-20">Error loading, please contact support.</div>
+<div class="dropdown-group row edit-actions" *ngIf="loaded && !loadError">
 	<div class="col-10"></div>
 	<div class="action-column col-2 no-margin-top">
 		<span class="date-column">
@@ -80,7 +81,7 @@
 					<span>Source Concept</span>
 				</div>
 
-				<div class="section-background mappings-section" *ngIf="loaded && selectedMapset">
+				<div class="section-background mappings-section" *ngIf="loaded && selectedMapset && !loadError">
 					<div class="col-12">
 						<div class="d-flex col-12 row mt-5">
 							<div class="col-2 align-right mb-10">ID:</div>
@@ -104,7 +105,7 @@
 					<div class="entry-column no-wrap d-flex justify-content-between">
 						<div class="justify-content-start d-flex">
 							Selected Target Concept
-							<div class="sub-header-font no-wrap" [hidden]="!loaded">
+							<div class="sub-header-font no-wrap" [hidden]="!loaded || loadError">
 								<span [hidden]="selectedTarget.id === ''" title="Group {{ selectedTarget.group }},  Entry {{ selectedTarget.priority }}"
 									>( {{ selectedTarget.group }}/{{ selectedTarget.priority }} )
 								</span>
@@ -121,7 +122,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="section-background mappings-section" *ngIf="loaded">
+				<div class="section-background mappings-section" *ngIf="loaded || !loadError">
 					<div class="col-12">
 						<div class="d-flex col-12 row mt-5">
 							<div class="col-3 align-right mb-10 m-t-5">Target Code:</div>
@@ -180,12 +181,12 @@
 		</div>
 	</div>
 </div>
-<div class="rt2-container" (window:resize)="onResize($event)" (scroll)="onResize($event)">
+<div class="rt2-container" (window:resize)="onResize($event)" (scroll)="onResize($event)" *ngIf="loaded && !loadError">
 	<div class="metadata-collapsible-container col-md-12 config-scrolling-section">
 		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showConfigSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
 				<span>Target Configuration</span>
-				<div class="sub-header-font" [hidden]="!loaded">
+				<div class="sub-header-font" [hidden]="!loaded || loadError">
 					<span [hidden]="numOfGroups === 0"
 						>( {{ numOfGroups }} group<span *ngIf="numOfGroups > 1">s</span>, {{ mapsetData[0]?.mapEntries.length }} entr{{ mapsetData[0]?.mapEntries.length === 1 ? 'y' : 'ies' }} )</span
 					>
@@ -195,7 +196,7 @@
 			<img src="assets/caret-down-solid.svg" *ngIf="showConfigSection" alt="Expand Button" title="Expand Target Configuration" aria-label="Expand Button" class="caret-down-solid" />
 		</div>
 
-		<div [hidden]="!showConfigSection || !loaded" class="section-background config-section">
+		<div [hidden]="!showConfigSection || !loaded || loadError" class="section-background config-section">
 			<div *ngFor="let record of mapsetData; index as i" class="section-groups" cdkDropList #groupDrop="cdkDropList" [cdkDropListData]="groupList" (cdkDropListDropped)="drop($event)">
 				<div
 					class="dropdown-group col-gap group-background"
@@ -319,7 +320,7 @@
 			<img src="assets/caret-up-solid.svg" *ngIf="!showBrowserSection" alt="Collapse Button" title="Collapse ICD10 Terminology Browser" aria-label="Collapse Button" class="caret-up-solid" />
 			<img src="assets/caret-down-solid.svg" *ngIf="showBrowserSection" alt="Expand Button" title="Expand ICD10 Terminology Browser" aria-label="Expand Button" class="caret-down-solid" />
 		</div>
-		<div class="row d-flex dropdown-group" *ngIf="showBrowserSection">
+		<div class="row d-flex dropdown-group" *ngIf="showBrowserSection && !loadError">
 			<div class="col-md-auto rt2-directory-chooser-column m-l-20">
 				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="browserColumnApi" [useDialog]="useDialog"> </app-column-chooser>
 			</div>
@@ -355,7 +356,7 @@
 		</div>
 		<div class="metadata-section-background" [hidden]="!showBrowserSection">
 			<div id="browserHeader" class="directory-header ag-theme-alpine" [hidden]="!showBrowserSection"></div>
-			<div id="config-background" [hidden]="!showBrowserSection || !browserLoaded" class="section-background config-section">
+			<div id="config-background" [hidden]="!showBrowserSection || !browserLoaded || !loadError" class="section-background config-section">
 				<as-split direction="horizontal" gutterSize="4" class="browser-split">
 					<as-split-area [lockSize]="true" [resizable]="false" [size]="conceptDetail ? 50 : 100">
 						<div #browserWrapper class="grid-wrapper browser-scrolling" [hidden]="numOfMembers === 0">
@@ -371,7 +372,7 @@
 						</div>
 
 						<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
-						<div class="rt2-pagination-container" [hidden]="!browserLoaded" *ngIf="showBrowserSection">
+						<div class="rt2-pagination-container" [hidden]="!browserLoaded || !loadError" *ngIf="showBrowserSection">
 							<div class="rt2-pagination-top-row" *ngIf="showPaging">
 								<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons no-wrap">
 									<button

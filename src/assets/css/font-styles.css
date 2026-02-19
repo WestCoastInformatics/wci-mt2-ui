@@ -1,0 +1,348 @@
+.fs14 {
+	font-size: 14pt;
+}
+
+.fs-p7rem {
+	font-size: 0.7rem;
+}
+
+.ta-left {
+	text-align: left;
+}
+
+.ta-right {
+	text-align: right;
+}
+
+.typo-h1 {
+	font-size: 3rem;
+}
+
+.typo-h2 {
+	font-size: 2.4rem;
+}
+
+.typo-h3 {
+	font-size: 1.8rem;
+}
+
+.typo-h4 {
+	font-size: 1.6rem;
+}
+
+.typo-h5 {
+	font-size: 1.4rem;
+}
+
+.typo-h6 {
+	font-size: 1.2rem;
+}
+
+.typo-paragraph {
+	font-size: 1.4rem;
+}
+
+.text-left {
+	text-align: left;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.text-justify {
+	text-align: justify;
+}
+
+.text-nowrap {
+	white-space: nowrap;
+}
+
+.fw-100 {
+	font-weight: 100;
+}
+
+.fw-200 {
+	font-weight: 200;
+}
+
+.fw-300 {
+	font-weight: 300;
+}
+
+.fw-400 {
+	font-weight: 400;
+}
+
+.fw-500 {
+	font-weight: 500;
+}
+
+.fw-600 {
+	font-weight: 600;
+}
+
+.fw-700 {
+	font-weight: 500;
+}
+
+.fw-800 {
+	font-weight: 800;
+}
+
+.fw-900 {
+	font-weight: 900;
+}
+
+.fw-bold {
+	font-weight: bold;
+}
+
+.fs-14 {
+	font-size: 14px;
+}
+
+.fs-15 {
+	font-size: 15px;
+}
+
+.fs-16 {
+	font-size: 16px;
+}
+
+.fs-18 {
+	font-size: 18px;
+}
+
+.text-uppercase {
+	text-transform: uppercase;
+}
+
+.text-lowercase {
+	text-transform: lowercase;
+}
+
+.text-capitalize {
+	text-transform: capitalize;
+}
+
+.rt2-directory-column-workflow-status .ag-cell-value {
+	text-transform: capitalize;
+}
+
+.rt2-directory-column-version-status .ag-cell-value {
+	text-transform: capitalize;
+}
+
+.mat-option-text {
+	text-transform: capitalize;
+}
+
+.header-title {
+	font-family: var(--standard_font_family) !important;
+	font-size: var(--standard_font_size_h4) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.title-label {
+	font-family: var(--standard_font_family) !important;
+	font-size: var(--standard_font_size_h1) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.page-title {
+	color: #9b9b9b;
+	font-family: var(--standard_font_family) !important;
+	font-size: var(--standard_font_size_h3) !important;
+}
+
+.default-font-family,
+.mat-select,
+.mat-mdc-dialog-container .mdc-dialog__content {
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+body,
+p,
+.default-font {
+	font-size: var(--standard_font_size_text) !important;
+	font-weight: var(--standard_font_weight) !important;
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.btn-sm,
+.btn-group-sm > .btn {
+	padding: 0.25rem 01.5rem 0.25rem 0.75rem !important;
+	font-size: var(--standard_font_size_h4) !important;
+}
+
+.header-font {
+	font-size: var(--standard_font_size_h4) !important;
+	font-weight: var(--standard_font_weight) !important;
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.header-icon-font,
+.carret-up-down-icon-font,
+.loading-icon-font {
+	font-size: 11px;
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.page-h1-font,
+.secondary-header-font,
+.intro-title-font {
+	font-size: var(--standard_font_size_text) !important;
+	font-weight: var(--standard_font_weight_title) !important;
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.page-h2-font,
+.page-header-font {
+	font-size: var(--standard_font_size_h2) !important;
+	font-weight: var(--standard_font_weight) !important;
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.intro-header-font {
+	font-size: var(--standard_font_size_text) !important;
+	font-weight: var(--standard_font_weight) !important;
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.form-toggle-field,
+.file-size-field,
+.general-icon-font {
+	font-size: 13px;
+	font-weight: var(--standard_font_weight) !important;
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.project-role-font {
+	font-size: 12px;
+	font-weight: var(--standard_font_weight) !important;
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.breadcrumb-font,
+.breadcrumb-link-font,
+.topic-author-time,
+.tabs-font,
+.banner-lock-font,
+.header-cell-font {
+	font-size: var(--standard_font_size_h4);
+	font-weight: var(--standard_font_weight);
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.modal-header-font {
+	font-size: var(--standard_font_size);
+	font-weight: 500;
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.col-header-font {
+	font-size: var(--standard_font_size_h3);
+	font-weight: var(--standard_font_weight_bold);
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.filter-font,
+.form-field-header,
+.form-field-value,
+.row-grid-font {
+	font-size: var(--standard_font_size_text) !important;
+	font-weight: var(--standard_font_weight);
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.mat-form-field,
+.ag-text-field-input,
+.date-filter-select {
+	font-size: var(--standard_font_size_text) !important;
+	font-weight: var(--standard_font_weight);
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.form-title,
+.topic-author-font,
+.section-font {
+	font-size: var(--standard_font_size_h1);
+	font-weight: var(--standard_font_weight);
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.feedback-topic-title-font,
+.refset-details-title,
+.refset-metadata-container {
+	font-size: var(--standard_font_size_h3);
+	font-weight: var(--standard_font_weight);
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.sidebar-links-font,
+.list-font {
+	font-size: var(--standard_font_size_h4);
+	font-weight: var(--standard_font_weight);
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.sidebar-icon-font {
+	font-size: 30px;
+	font-weight: var(--standard_font_weight_bold);
+}
+
+.nav-font {
+	font-size: var(--standard_font_size_h3);
+	font-weight: 700;
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.footer-font {
+	font-size: 12.6px;
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.smaller-font {
+	font-size: smaller;
+	font-weight: var(--standard_font_weight);
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.close-icon-font,
+.cross-icon-font {
+	font-size: 2rem;
+	font-weight: var(--standard_font_weight);
+	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+}
+
+.head-section-title-font {
+	font-size: var(--standard_font_size_h2);
+	font-family: var(--standard_font_family);
+	line-height: 1.5;
+}

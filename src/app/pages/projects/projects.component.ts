@@ -12,6 +12,7 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { ProjectsComponentService } from 'src/app/pages/projects/projects-component.service';
 
 @Component({
+	standalone: false,
 	selector: 'projects-page',
 	templateUrl: './projects.component.html',
 })
@@ -65,7 +66,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 			}
 		});
 
-		this.routerEventSubscription = this.router.events.subscribe((event: RouterEvent) => {
+		this.routerEventSubscription = this.router.events.subscribe((event: any) => {
 			if (event instanceof Scroll) {
 				if (this.router.url.includes('organization') && this.router.url.includes('edition') && this.router.url.includes('projects')) {
 					this.checkLocationPath(this.router.url);

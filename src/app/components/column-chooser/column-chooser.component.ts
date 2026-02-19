@@ -7,9 +7,10 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
  * @title Tree with nested nodes
  */
 @Component({
+	standalone: false,
 	selector: 'app-column-chooser',
 	templateUrl: './column-chooser.component.html',
-	styleUrls: ['./column-chooser.component.scss'],
+	styleUrls: ['./column-chooser.component.css'],
 	encapsulation: ViewEncapsulation.None,
 })
 export class ColumnChooserComponent {
@@ -27,7 +28,7 @@ export class ColumnChooserComponent {
 	constructor(private dialogFactoryService: DialogFactoryService) {}
 
 	ngOnChanges() {
-		if (this.gridColumnApi?.columnModel?.columnDefs) {
+		if (this.gridColumnApi !== undefined) {
 			// make sure not to lose previous column selections
 			const previousColumns = this.columns;
 			this.columns = [];
@@ -38,12 +39,11 @@ export class ColumnChooserComponent {
 
 			const detectChanges = false;
 
-			for (const column of this.gridColumnApi.columnModel.columnDefs) {
+			for (const column of this.gridColumnApi.getColumnDefs()) {
 				// Avoid these coluns (they are icon columns without titles)
 				if (column.headerName == '' || !column.headerName) {
 					continue;
 				}
-
 				const columnData: any = {};
 
 				if (!column.colId) {
@@ -67,7 +67,7 @@ export class ColumnChooserComponent {
 					if (columnData.show) {
 						this.selectedColumns.push(columnData);
 					}
-				} else if (!column.hasOwnProperty('hide') || column.hide == false) {
+				} else if (!column.hasOwnProperty('show') || column.hide === false) {
 					columnData.show = true;
 				} else {
 					columnData.show = false;

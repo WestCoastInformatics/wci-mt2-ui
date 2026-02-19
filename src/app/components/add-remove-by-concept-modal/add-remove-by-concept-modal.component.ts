@@ -17,9 +17,10 @@ import { AddRemoveConceptsComponent } from '../add-remove-concepts/add-remove-co
 import { TemplateRendererComponent } from '../cellRenderers/template.renderer';
 
 @Component({
+	standalone: false,
 	selector: 'add-remove-by-concept-modal',
 	templateUrl: './add-remove-by-concept-modal.component.html',
-	styleUrls: ['add-remove-by-concept-modal.component.scss'],
+	styleUrls: ['add-remove-by-concept-modal.component.css'],
 })
 export class AddRemoveByConceptModalComponent implements OnInit {
 	searchInput: string;
@@ -280,7 +281,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
 				if (results.items.length == 0) {
 					this.gridApi.showNoRowsOverlay();
-					this.gridApi.setRowData([]);
+					this.gridApi.setGridOption('rowData', []);
 
 					if (pageNumber > 1) {
 						this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);

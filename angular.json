@@ -3,7 +3,9 @@
   "cli": {
     "analytics": false,
     "schematicCollections": [
-      "@angular-eslint/schematics"
+      "@cypress/schematic",
+      "@angular-eslint/schematics",
+      "@schematics/angular"
     ]
   },
   "version": 1,
@@ -16,7 +18,7 @@
       "prefix": "app",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "css"
         }
       },
       "architect": {
@@ -31,7 +33,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "i18nMissingTranslation": "warning",
-            "inlineStyleLanguage": "scss",
+            "inlineStyleLanguage": "css",
             "extractLicenses": false,
             "assets": [
               "src/assets/favicon/favicon.ico",
@@ -49,14 +51,14 @@
             "styles": [
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "./node_modules/@fortawesome/fontawesome-free/css/all.css",
-              "src/assets/scss/styles.scss",
+              "src/assets/css/styles.css",
               "node_modules/ngx-toastr/toastr.css",
               "./ecl-builder/styles.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "./node_modules",
-                "src/app/styles/scss"
+                "src/app/styles/css"
               ]
             },
             "allowedCommonJsDependencies": [
@@ -117,15 +119,15 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "angular-template:build",
-            "liveReload": false
+            "liveReload": false,
+            "buildTarget": "angular-template:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "angular-template:build:production"
+              "buildTarget": "angular-template:build:production"
             },
             "development": {
-              "browserTarget": "angular-template:build:development"
+              "buildTarget": "angular-template:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -133,9 +135,9 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular-template:build",
             "format": "xlf",
-            "outputPath": "src/locale"
+            "outputPath": "src/locale",
+            "buildTarget": "angular-template:build"
           }
         },
         "i18n": {
@@ -152,9 +154,39 @@
               "src/**/*.html"
             ]
           }
+        },
+        "cypress-run": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "angular-template:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "angular-template:serve:production"
+            }
+          }
+        },
+        "cypress-open": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "watch": true,
+            "headless": false
+          }
+        },
+        "e2e": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "angular-template:serve",
+            "watch": true,
+            "headless": false
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "angular-template:serve:production"
+            }
+          }
         }
       }
     }
-  },
-  "defaultProject": "angular-template"
+  }
 }

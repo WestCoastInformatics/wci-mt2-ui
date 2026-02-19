@@ -10,6 +10,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { UsersService } from 'src/app/services/rest/users.service';
 
 @Component({
+	standalone: false,
 	selector: 'personal-page',
 	templateUrl: './personal.component.html',
 })
@@ -51,7 +52,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
 			}
 		});
 
-		this.routerEventSubscription = this.router.events.subscribe((event: RouterEvent) => {
+		this.routerEventSubscription = this.router.events.subscribe((event: any) => {
 			if (event instanceof Scroll) {
 				if (this.router.url.includes('personal')) {
 					this.checkLocationPath(this.router.url);

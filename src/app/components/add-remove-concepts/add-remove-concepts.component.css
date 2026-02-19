@@ -1,0 +1,27 @@
+.add-remove-descendants-radio-button {
+.mat-radio-label {
+white-space: normal;
+align-items: normal;
+}
+}
+
+.add-remove-descendants-radio-group {
+display: flex;
+flex-direction: column;
+}
+
+.add-remove-descendants-modal-title {
+position: absolute;
+}
+
+.add-remove-descendants-modal-body {
+background-color: #f5f5f6;
+padding: 28px !important;
+text-align: center;
+text-align: -webkit-center;
+
+.notes-title {
+text-align: left;
+padding-bottom: 20px;
+}
+}

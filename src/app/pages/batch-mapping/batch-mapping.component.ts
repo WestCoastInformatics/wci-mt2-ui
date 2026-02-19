@@ -25,9 +25,10 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
+	standalone: false,
 	selector: 'app-batch-mapping',
 	templateUrl: './batch-mapping.component.html',
-	styleUrls: ['./batch-mapping.component.scss'],
+	styleUrls: ['./batch-mapping.component.css'],
 })
 export class BatchMappingComponent implements OnInit {
 	user: User;
@@ -96,6 +97,7 @@ export class BatchMappingComponent implements OnInit {
 	popover_updateAdviceList = [];
 	popover_addAdviceList = [];
 	loaded = false;
+	loadError = false;
 	showPaging = false;
 	browserLoaded = false;
 	saving = false;
@@ -146,7 +148,6 @@ export class BatchMappingComponent implements OnInit {
 	gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
 	gridParams: any;
 	gridApi: any;
-	gridColumnApi: any;
 	gridColumnDefs = [];
 	useDialog = false;
 	moduleMetadata: any;
@@ -160,7 +161,6 @@ export class BatchMappingComponent implements OnInit {
 	browserPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
 	browserParams: any;
 	browserApi: any;
-	browserColumnApi: any;
 	browserColumnDefs = [];
 	conceptDetail = false;
 	currentConcept: any;
@@ -572,7 +572,6 @@ export class BatchMappingComponent implements OnInit {
 	onGridReady = (params) => {
 		this.gridParams = params;
 		this.gridApi = params.api;
-		this.gridColumnApi = params.columnApi.api;
 
 		const _window = window;
 		_window['checkboxHandleClick'] = () => {
@@ -593,7 +592,6 @@ export class BatchMappingComponent implements OnInit {
 	onBrowserReady = (params) => {
 		this.browserParams = params;
 		this.browserApi = params.api;
-		this.browserColumnApi = params.columnApi.api;
 	};
 
 	onBrowserCellClick = (event) => {
@@ -679,6 +677,10 @@ export class BatchMappingComponent implements OnInit {
 				});
 				//this.getBrowserData();
 				this.loadGridColumns();
+			},
+			error: (err: any) => {
+				this.loadError = true;
+				console.log(' project loading error');
 			},
 		});
 	}
@@ -767,7 +769,7 @@ export class BatchMappingComponent implements OnInit {
 	setPageSize(size: number) {
 		// this.browserApi.paginationGoToFirstPage();
 		this.goToPage(0);
-		this.browserApi.paginationSetPageSize(size);
+		this.browserApi.setGridOption('paginationPageSize', size);
 	}
 
 	goToPage(number: number) {
@@ -1015,9 +1017,11 @@ export class BatchMappingComponent implements OnInit {
 					}
 				}
 				this.mapsetData = batch;
-				const lastIndex = document.getElementsByClassName('ag-header').length - 1;
-				const child = document.getElementsByClassName('ag-header')[0]; //lastIndex];
-				document.getElementById('directoryHeader').appendChild(child);
+				if (!this.loadError) {
+					const lastIndex = document.getElementsByClassName('ag-header').length - 1;
+					const child = document.getElementsByClassName('ag-header')[0]; //lastIndex];
+					document.getElementById('directoryHeader').appendChild(child);
+				}
 
 				this.breadcrumbService.setBreadcrumbs([
 					{ path: '/library', label: 'Library' },
@@ -1127,7 +1131,7 @@ export class BatchMappingComponent implements OnInit {
 		};
 
 		this.mapsetData.splice(selectEntryIndex + 1, 0, newMapEntry);
-		this.gridApi.setRowData(this.mapsetData);
+		this.gridApi.setGridOption('rowData', this.mapsetData);
 		this.userChanged = true;
 	}
 
@@ -1734,7 +1738,7 @@ export class BatchMappingComponent implements OnInit {
 			set.checked = this.gridSelectAll;
 			return set;
 		});
-		this.gridApi.setRowData(this.mapsetData);
+		this.gridApi.setGridOption('rowData', this.mapsetData);
 		this.checkedNum = this.gridSelectAll ? this.mapsetData.length : 0;
 	}
 

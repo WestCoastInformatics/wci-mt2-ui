@@ -1,0 +1,8 @@
+@import 'src/assets/css/variables.css';
+
+.head-title {
+font-size: var(--standard_font_size_h2) !important;
+font-family: var(--standard_font_family);
+line-height: 1.5;
+color: #555555;
+}

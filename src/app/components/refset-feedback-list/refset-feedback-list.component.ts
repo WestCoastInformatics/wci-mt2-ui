@@ -11,9 +11,10 @@ import { User } from 'src/app/models/user';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 
 @Component({
+	standalone: false,
 	selector: 'app-refset-discussion-list',
 	templateUrl: './refset-feedback-list.component.html',
-	styleUrls: ['refset-feedback-list.component.scss'],
+	styleUrls: ['refset-feedback-list.component.css'],
 })
 export class RefsetFeedbackListComponent implements OnInit {
 	user: User;
@@ -267,7 +268,7 @@ export class RefsetFeedbackListComponent implements OnInit {
 
 				if (results.items.length === 0) {
 					this.gridApi.showNoRowsOverlay();
-					this.gridApi.setRowData([]);
+					this.gridApi.setGridOption('rowData', []);
 
 					if (pageNumber > 1) {
 						this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);
@@ -283,7 +284,7 @@ export class RefsetFeedbackListComponent implements OnInit {
 			},
 			error: (error) => {
 				this.gridApi.showNoRowsOverlay();
-				this.gridApi.setRowData([]);
+				this.gridApi.setGridOption('rowData', []);
 			},
 		});
 	};
@@ -537,7 +538,7 @@ export class RefsetFeedbackListComponent implements OnInit {
 	}
 
 	reloadGridData() {
-		this.gridApi.setRowData(this.threadsData);
+		this.gridApi.setGridOption('rowData', this.threadsData);
 		this.gridApi.redrawRows();
 		// this.onGridReady({api: this.gridApi});
 	}

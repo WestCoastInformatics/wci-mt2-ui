@@ -3,6 +3,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 @Component({
 	selector: 'app-renderer',
 	template: '<ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{$implicit: params}"></ng-container>',
+	standalone: false,
 })
 export class TemplateRendererComponent implements OnInit {
 	constructor() {}

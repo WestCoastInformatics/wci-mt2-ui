@@ -9,6 +9,7 @@ import { TeamsComponentService } from 'src/app/pages/teams/teams-component.servi
 import { CodeUtility } from 'src/app/utilities/code.utility';
 
 @Component({
+	standalone: false,
 	selector: 'teams-page',
 	templateUrl: './teams.component.html',
 })
@@ -52,7 +53,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
 			}
 		});
 
-		this.routerEventSubscription = this.router.events.subscribe((event: RouterEvent) => {
+		this.routerEventSubscription = this.router.events.subscribe((event: any) => {
 			if (event instanceof Scroll) {
 				if (this.router.url.includes('organization') && this.router.url.includes('teams')) {
 					this.checkLocationPath(this.router.url);

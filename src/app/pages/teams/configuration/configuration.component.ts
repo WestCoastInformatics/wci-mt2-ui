@@ -8,9 +8,10 @@ import { TeamsService } from 'src/app/services/rest/teams.service';
 import { TeamsComponentService } from 'src/app/pages/teams/teams-component.service';
 
 @Component({
+	standalone: false,
 	selector: 'teams-configuration',
 	templateUrl: './configuration.component.html',
-	styleUrls: ['configuration.component.scss'],
+	styleUrls: ['configuration.component.css'],
 })
 export class TeamsConfigurationComponent implements OnInit, OnDestroy {
 	routerParamsSubscription: Subscription;

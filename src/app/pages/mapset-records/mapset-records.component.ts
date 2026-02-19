@@ -14,7 +14,6 @@ import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
-import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { Constants } from 'src/app/utilities/constants.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
@@ -26,9 +25,10 @@ import { formatDate } from '@angular/common';
 import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
+	standalone: false,
 	selector: 'app-mapset-records',
 	templateUrl: './mapset-records.component.html',
-	styleUrls: ['./mapset-records.component.scss'],
+	styleUrls: ['./mapset-records.component.css'],
 })
 export class MapsetRecordsComponent implements OnInit {
 	user: User;
@@ -40,7 +40,6 @@ export class MapsetRecordsComponent implements OnInit {
 	];
 	selectedVersion: any;
 	refsetGridApi: any;
-	refsetGridColumnApi: any;
 	columnDefs = [];
 	refsetGridColumns = [
 		{ name: 'information', show: true },
@@ -231,7 +230,7 @@ export class MapsetRecordsComponent implements OnInit {
 							'    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>' +
 							'    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>' +
 							'    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>' +
-							'    <label class="checkbox-override"><input type="checkbox" onclick="checkboxHandleClick()" id="checkbox-table-all" >' +
+							'    <label class="checkbox-override checkbox-header"><input type="checkbox" onclick="checkboxHandleClick()" id="checkbox-table-all" >' +
 							'    <span class="checkbox-container"></span></label>' +
 							'    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
 							'  </div>' +
@@ -489,10 +488,9 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	onGridReady = (gridReadyParams) => {
-		this.refsetGridApi = gridReadyParams.api;
-		this.refsetGridApi.setColumnDefs(this.columnDefs);
-		this.refsetGridColumnApi = gridReadyParams.columnApi.api;
-
+		if (gridReadyParams?.api && gridReadyParams.type === 'gridReady') {
+			this.refsetGridApi = gridReadyParams.api;
+		}
 		const _window = window;
 		_window['checkboxHandleClick'] = () => {
 			this.checkboxAllClick();
@@ -905,7 +903,7 @@ export class MapsetRecordsComponent implements OnInit {
 	setPageSize(size: number) {
 		localStorage.setItem(this.mapsetGridCurrentPageSize, JSON.stringify(size));
 		this.refsetGridApi.paginationGoToFirstPage();
-		this.refsetGridApi.paginationSetPageSize(size);
+		this.refsetGridApi.setGridOption('paginationPageSize', size);
 	}
 
 	goToPage(number: number) {
@@ -919,7 +917,7 @@ export class MapsetRecordsComponent implements OnInit {
 	checkStored() {
 		if (this.mapsetGridCurrentPageSize !== undefined && this.mapsetGridCurrentPageNum !== undefined) {
 			if (localStorage.getItem(this.mapsetGridCurrentPageSize) !== null) {
-				this.refsetGridApi.paginationSetPageSize(Number(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageSize))));
+				this.refsetGridApi.setGridOption('paginationPageSize', Number(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageSize))));
 			}
 			setTimeout(() => {
 				if (localStorage.getItem(this.mapsetGridCurrentPageNum) !== null) {
@@ -1000,9 +998,10 @@ export class MapsetRecordsComponent implements OnInit {
 					}
 				}
 				const cols = [];
-				for (let d = 0; d < this.refsetGridApi.columnModel.columnDefs.length; d++) {
-					if (this.refsetGridApi.columnModel.columnDefs[d].headerName !== undefined) {
-						cols.push(this.refsetGridApi.columnModel.columnDefs[d].headerName);
+				const colDefs = this.refsetGridApi.getColumnDefs();
+				for (let d = 0; d < colDefs.length; d++) {
+					if (colDefs[d].headerName !== undefined) {
+						cols.push(colDefs[d].headerName);
 					}
 				}
 				const params = {

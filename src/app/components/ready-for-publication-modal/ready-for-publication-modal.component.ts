@@ -3,6 +3,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { WorkflowService } from 'src/app/services/workflow/workflow.service';
 
 @Component({
+	standalone: false,
 	selector: 'ready-for-publication-modal',
 	templateUrl: './ready-for-publication-modal.component.html',
 })

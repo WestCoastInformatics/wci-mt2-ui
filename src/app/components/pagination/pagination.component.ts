@@ -5,6 +5,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 @Component({
 	selector: 'app-pagination',
 	templateUrl: './pagination.component.html',
+	standalone: false,
 })
 
 // AG Grid page numbers are 0 based, all other page variables here are 1 based
@@ -132,10 +133,10 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
 			if (this.activeGridOptions.api.gridCore?.rowModel) {
 				this.activeGridOptions.api.gridCore.rowModel.cacheParams.blockSize = pageSize;
 				this.activeGridOptions.api.gridOptionsWrapper.setProperty('cacheBlockSize', pageSize);
-				this.activeGridOptions.api.paginationSetPageSize(pageSize);
+				this.activeGridOptions.api.setGridOption('paginationPageSize', pageSize);
 				this.activeGridOptions.api.purgeInfiniteCache();
 			} else {
-				this.activeGridOptions.api.paginationSetPageSize(pageSize);
+				this.activeGridOptions.api.setGridOption('paginationPageSize', pageSize);
 				this.displayedPages = this.activeGridOptions.api.paginationGetTotalPages();
 			}
 		}

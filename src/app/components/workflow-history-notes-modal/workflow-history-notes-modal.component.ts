@@ -6,9 +6,10 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 declare const tinymce: any;
 
 @Component({
+	standalone: false,
 	selector: 'workflow-history-notes-modal',
 	templateUrl: './workflow-history-notes-modal.component.html',
-	styleUrls: ['workflow-history-notes-modal.component.scss'],
+	styleUrls: ['workflow-history-notes-modal.component.css'],
 })
 export class WorkflowHistoryNotesModalComponent implements OnInit {
 	characterCount = 0;

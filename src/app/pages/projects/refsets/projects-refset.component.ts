@@ -20,9 +20,10 @@ import { ProjectsComponentService } from 'src/app/pages/projects/projects-compon
 import { User } from 'src/app/models/user';
 
 @Component({
+	standalone: false,
 	selector: 'projects-refset',
 	templateUrl: './projects-refset.component.html',
-	styleUrls: ['./projects-refset.component.scss'],
+	styleUrls: ['./projects-refset.component.css'],
 })
 export class ProjectsRefsetComponent implements OnInit, AfterViewInit, OnDestroy {
 	routerParamsSubscription: Subscription;
@@ -40,7 +41,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit, OnDestroy
 	];
 	selectedView = 'all';
 	refsetGridApi: any;
-	refsetGridColumnApi: any;
 	columnDefs = [];
 	refsetGridColumns = [
 		{ name: 'information', show: true },
@@ -313,7 +313,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit, OnDestroy
 	onGridReady = (gridReadyParams) => {
 		this.originalGridParams = gridReadyParams;
 		this.refsetGridApi = gridReadyParams?.api;
-		this.refsetGridColumnApi = gridReadyParams?.columnApi;
 	};
 
 	getRefsets(): void {

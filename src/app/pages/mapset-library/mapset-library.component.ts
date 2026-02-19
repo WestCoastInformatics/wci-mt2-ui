@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
@@ -25,9 +25,10 @@ import { PaginationService } from 'src/app/services/pagination.service';
  * @title Tree with nested nodes
  */
 @Component({
+	standalone: false,
 	selector: 'app-mapset-library',
 	templateUrl: './mapset-library.component.html',
-	styleUrls: ['./mapset-library.component.scss'],
+	styleUrls: ['./mapset-library.component.css'],
 })
 export class MapsetLibraryComponent implements OnInit {
 	user: User;
@@ -39,7 +40,6 @@ export class MapsetLibraryComponent implements OnInit {
 	];
 	selectedView = 'all';
 	refsetGridApi: any;
-	refsetGridColumnApi: any;
 	columnDefs = [];
 	refsetGridColumns = [
 		{ name: 'information', show: true },
@@ -189,7 +189,7 @@ export class MapsetLibraryComponent implements OnInit {
 						floatingFilterComponent: DateTextFilterComponent,
 						floatingFilterComponentParams: { suppressFilterButton: true },
 						unSortIcon: true,
-						filter: 'agTextColumnFilter',
+						filter: false,
 					},
 					{
 						field: 'modified',
@@ -240,7 +240,7 @@ export class MapsetLibraryComponent implements OnInit {
 					},
 					defaultColDef: {
 						sortable: true,
-						filter: true,
+						filter: false,
 						sortingOrder: ['asc', 'desc'],
 						floatingFilter: false,
 						floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false },
@@ -283,7 +283,6 @@ export class MapsetLibraryComponent implements OnInit {
 		this.originalGridParams = gridReadyParams;
 		this.refsetGridApi = gridReadyParams.api;
 		this.refsetGridApi.setFilterModel(null);
-		this.refsetGridColumnApi = gridReadyParams.columnApi.api;
 		this.onResize(undefined);
 
 		this.refsetGridApi.showLoadingOverlay();
@@ -328,7 +327,7 @@ export class MapsetLibraryComponent implements OnInit {
 				if (results.length == 0) {
 					this.refsetGridPaging.totalKnown = true;
 					this.refsetGridApi.showNoRowsOverlay();
-					this.refsetGridApi.setRowData([]);
+					this.refsetGridApi.setGridOption('rowData', []);
 
 					if (pageNumber > 1) {
 						this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
@@ -349,7 +348,7 @@ export class MapsetLibraryComponent implements OnInit {
 			},
 			error: (error) => {
 				this.refsetGridApi.showNoRowsOverlay();
-				this.refsetGridApi.setRowData([]);
+				this.refsetGridApi.setGridOption('rowData', []);
 			},
 		});
 

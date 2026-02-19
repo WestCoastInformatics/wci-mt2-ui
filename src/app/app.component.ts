@@ -5,10 +5,19 @@ import { EnvService } from './services/environment/env.service';
 import { NavigationStart, NavigationEnd, NavigationError, Router } from '@angular/router';
 import { AuthenticationService } from './services/authentication/authentication.service';
 import { filter } from 'rxjs/operators';
+import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import { provideGlobalGridOptions } from 'ag-grid-community';
+// Mark all grids as using legacy themes
+provideGlobalGridOptions({
+	theme: 'legacy',
+});
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
+	standalone: false,
 	selector: 'app-root',
 	templateUrl: './app.component.html',
-	styleUrls: ['app.component.scss'],
+	styleUrls: ['app.component.css'],
 })
 export class AppComponent implements OnInit {
 	versions: object;

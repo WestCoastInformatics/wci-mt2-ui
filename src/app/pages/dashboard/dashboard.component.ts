@@ -13,6 +13,7 @@ import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
+	standalone: false,
 	selector: 'app-dashboard',
 	templateUrl: './dashboard.component.html',
 })
@@ -32,11 +33,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	columnDefs = [];
 	data = [];
 	api: any;
-	columnApi: any;
 	searchInput: string;
 	selectedView = 'all';
 	refsetGridApi: any;
-	refsetGridColumnApi: any;
 	refsetGridOptions: any;
 	refsetGridLastFilter = '';
 	refsetGridLastSort = '';
@@ -156,7 +155,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 	onGridReady = (gridReadyParams) => {
 		this.refsetGridApi = gridReadyParams.api;
-		this.refsetGridColumnApi = gridReadyParams.columnApi;
 		const sortModel = [{ colId: 'modified', sort: 'desc' }];
 		this.refsetGridApi.setSortModel(sortModel);
 		const dataSource = {

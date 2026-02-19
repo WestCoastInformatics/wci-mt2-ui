@@ -1,4 +1,4 @@
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { ChangeDetectorRef, ElementRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, HostListener, Renderer2 } from '@angular/core';
 import { PaginationChangedEvent } from 'ag-grid-community';
 import { Subscription, Observable, OperatorFunction, of, map } from 'rxjs';
@@ -22,9 +22,10 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
+	standalone: false,
 	selector: 'app-edit-mapping',
 	templateUrl: './edit-mapping.component.html',
-	styleUrls: ['./edit-mapping.component.scss'],
+	styleUrls: ['./edit-mapping.component.css'],
 })
 export class EditMappingComponent implements OnInit {
 	user: User;
@@ -48,7 +49,6 @@ export class EditMappingComponent implements OnInit {
 	selectedView = 'all';
 	selectedBrowser = '';
 	refsetGridApi: any;
-	refsetGridColumnApi: any;
 	columnDefs = [];
 	refsetGridColumns = [
 		{ name: 'information', show: true },
@@ -101,6 +101,7 @@ export class EditMappingComponent implements OnInit {
 	removeId: any;
 	removeType: string;
 	loaded = false;
+	loadError = false;
 	showPaging = false;
 	browserLoaded = false;
 	selectedFormat = {};
@@ -149,7 +150,6 @@ export class EditMappingComponent implements OnInit {
 	browserPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
 	browserParams: any;
 	browserApi: any;
-	browserColumnApi: any;
 	browserColumnDefs = [];
 	conceptDetail = false;
 	currentConcept: any;
@@ -264,7 +264,7 @@ export class EditMappingComponent implements OnInit {
 		const params: any = {
 			includeMembers: false,
 		};
-		const projectId = '1';
+		const projectId = '1'; //TEST ONLY
 		this.refsetService.getMapProjectById(projectId, params).subscribe({
 			next: (results) => {
 				this.targetTerminology = results.destinationTerminology;
@@ -295,6 +295,10 @@ export class EditMappingComponent implements OnInit {
 					return res.name;
 				});
 				this.loadGridColumns();
+			},
+			error: (err: any) => {
+				this.loadError = true;
+				console.log(' project loading error');
 			},
 		});
 	}
@@ -1296,7 +1300,7 @@ export class EditMappingComponent implements OnInit {
 	setPageSize(size: number) {
 		// this.browserApi.paginationGoToFirstPage();
 		this.goToPage(0);
-		this.browserApi.paginationSetPageSize(size);
+		this.browserApi.setGridOption('paginationPageSize', size);
 	}
 
 	goToPage(number: number) {
@@ -1315,7 +1319,6 @@ export class EditMappingComponent implements OnInit {
 	onBrowserReady = (params) => {
 		this.browserParams = params;
 		this.browserApi = params.api;
-		this.browserColumnApi = params.columnApi.api;
 	};
 
 	onBrowserCellClick = (event) => {

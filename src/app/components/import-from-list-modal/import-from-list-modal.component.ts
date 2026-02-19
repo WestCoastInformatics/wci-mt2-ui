@@ -6,9 +6,10 @@ import { Router } from '@angular/router';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 
 @Component({
+	standalone: false,
 	selector: 'import-from-list-modal',
 	templateUrl: './import-from-list-modal.component.html',
-	styleUrls: ['import-from-list-modal.component.scss'],
+	styleUrls: ['import-from-list-modal.component.css'],
 })
 export class ImportFromListModalComponent {
 	listOfIds: any;
