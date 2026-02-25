@@ -1,300 +1,243 @@
 :root {
---white: #ffffff;
---alto-white: #e0e0e0;
---ghost-grey: #c8cfd6;
---grey: #808080;
---slate-grey: #708090;
---river-bed: #434a55;
---black: #000000;
---bootstrap-black: #343a40;
---wisteria: #a060ae;
---mandy: #eb4c59;
---fruit-salad: #4ea24e;
---anakiwa: #c3e7fe;
---cerulean: #00a9e0;
---blumine: #124f6b;
---mapset-blue: #2269e8;
---sea-buckthorn: #f8a73d;
---candlelight: #fbdb13;
---main-color: #00a4e4;
---standard_font_size: 1.2rem;
---standard_font_size_largest: 3rem;
---standard_font_size_title: 2em;
---standard_font_size_h1: 2.4rem;
---standard_font_size_h2: 1.9rem;
---standard_font_size_h3: 1.6rem;
---standard_font_size_h4: 1.4rem;
---standard_font_size_h5: 1.2rem;
---standard_font_size_h6: 1.1rem;
---standard_font_size_smaller: 1rem;
---standard_font_size_p: 1.4rem;
---standard_font_size_a: 1.4rem;
---standard_font_size_btn: 1.4rem;
---standard_font_size_text: 1.4rem;
---standard_font_size_select: 1.4rem;
---standard_font_size_form_control: 1.4rem;
---standard_font_family: Roboto, Helvetica, Arial, sans-serif;
---standard_font_family: 'ArialMT', 'Arial', sans-serif;
---standard_font_color: black;
---standard_font_weight: 300;
---standard_font_weight_title: 400;
---standard_font_weight_heavy: 500;
---standard_font_weight_bold: 600;
---standard_table_data_color: #666;
---standard_link_color: var(--cerulean);
---standard_primary_button_color: #2169e8;
---standard_default_button_color: #fdfdfd;
---standard_green_button_color: #4ea24e;
---standard_red_button_color: red;
---standard_button_color: var(--white);
---success_color: green;
---error_color: red;
---warning_color: rgba(255, 239, 0, 1);
---change_highlight_color: rgba(255, 239, 0, 1);
---add_color: green;
---delete_color: red;
---action_button_color: #2169e8;
---inactive_text_color: rgb(170, 170, 170);
---inactive_row_color: rgb(241 222 222);
---concept_details_color: #2169e8;
+	--white: #ffffff;
+	--alto-white: #e0e0e0;
+	--ghost-grey: #c8cfd6;
+	--grey: #808080;
+	--slate-grey: #708090;
+	--river-bed: #434a55;
+	--black: #000000;
+	--bootstrap-black: #343a40;
+	--wisteria: #a060ae;
+	--mandy: #eb4c59;
+	--fruit-salad: #4ea24e;
+	--anakiwa: #c3e7fe;
+	--cerulean: #00a9e0;
+	--blumine: #124f6b;
+	--mapset-blue: #2269e8;
+	--mapset-hover: #2196f3;
+	--sea-buckthorn: #f8a73d;
+	--candlelight: #fbdb13;
+	--main-color: #00a4e4;
+	--standard_font_size: 1.2rem;
+	--standard_font_size_largest: 3rem;
+	--standard_font_size_title: 2em;
+	--standard_font_size_h1: 2.4rem;
+	--standard_font_size_h2: 1.9rem;
+	--standard_font_size_h3: 1.6rem;
+	--standard_font_size_h4: 1.4rem;
+	--standard_font_size_h5: 1.2rem;
+	--standard_font_size_h6: 1.1rem;
+	--standard_font_size_smaller: 1rem;
+	--standard_font_size_p: 1.4rem;
+	--standard_font_size_a: 1.4rem;
+	--standard_font_size_btn: 1.4rem;
+	--standard_font_size_text: 1.4rem;
+	--standard_font_size_select: 1.4rem;
+	--standard_font_size_form_control: 1.4rem;
+	--standard_font_family: Roboto, Helvetica, Arial, sans-serif;
+	--standard_font_family: 'ArialMT', 'Arial', sans-serif;
+	--standard_font_color: black;
+	--standard_font_weight: 300;
+	--standard_font_weight_title: 400;
+	--standard_font_weight_heavy: 500;
+	--standard_font_weight_bold: 600;
+	--standard_table_data_color: #666;
+	--standard_link_color: var(--cerulean);
+	--standard_primary_button_color: #2169e8;
+	--standard_default_button_color: #fdfdfd;
+	--standard_green_button_color: #4ea24e;
+	--standard_red_button_color: red;
+	--standard_button_color: var(--white);
+	--success_color: green;
+	--error_color: red;
+	--warning_color: rgba(255, 239, 0, 1);
+	--change_highlight_color: rgba(255, 239, 0, 1);
+	--add_color: green;
+	--delete_color: red;
+	--action_button_color: #2169e8;
+	--inactive_text_color: rgb(170, 170, 170);
+	--inactive_row_color: rgb(241 222 222);
+	--concept_details_color: #2169e8;
 }
 
-
-
-
-
 .text-white {
-color: var(--white);
+	color: var(--white);
 }
 
 .bg-white {
-background-color: var(--white);
+	background-color: var(--white);
 }
 
-
 .text-alto-white {
-color: var(--alto-white);
+	color: var(--alto-white);
 }
 
 .bg-alto-white {
-background-color: var(--alto-white);
+	background-color: var(--alto-white);
 }
 
-
-
-
-
 .text-ghost-grey {
-color: var(--ghost-grey);
+	color: var(--ghost-grey);
 }
 
 .bg-ghost-grey {
-background-color: var(--ghost-grey);
+	background-color: var(--ghost-grey);
 }
 
-
 .text-grey {
-color: var(--grey);
+	color: var(--grey);
 }
 
 .bg-grey {
-background-color: var(--grey);
+	background-color: var(--grey);
 }
 
-
 .text-slate-grey {
-color: var(--slate-grey);
+	color: var(--slate-grey);
 }
 
 .bg-slate-grey {
-background-color: var(--slate-grey);
+	background-color: var(--slate-grey);
 }
 
-
 .text-river-bed {
-color: var(--river-bed);
+	color: var(--river-bed);
 }
 
 .bg-river-bed {
-background-color: var(--river-bed);
+	background-color: var(--river-bed);
 }
 
-
-
-
-
 .text-black {
-color: var(--black);
+	color: var(--black);
 }
 
 .bg-black {
-background-color: var(--black);
+	background-color: var(--black);
 }
 
-
 .text-bootstrap-black {
-color: var(--bootstrap-black);
+	color: var(--bootstrap-black);
 }
 
 .bg-bootstrap-black {
-background-color: var(--bootstrap-black);
+	background-color: var(--bootstrap-black);
 }
 
-
-
-
-
 .text-wisteria {
-color: var(--wisteria);
+	color: var(--wisteria);
 }
 
 .bg-wisteria {
-background-color: var(--wisteria);
+	background-color: var(--wisteria);
 }
 
-
-
-
-
 .text-mandy {
-color: var(--mandy);
+	color: var(--mandy);
 }
 
 .bg-mandy {
-background-color: var(--mandy);
+	background-color: var(--mandy);
 }
 
-
-
-
-
 .text-fruit-salad {
-color: var(--fruit-salad);
+	color: var(--fruit-salad);
 }
 
 .bg-fruit-salad {
-background-color: var(--fruit-salad);
+	background-color: var(--fruit-salad);
 }
 
-
-
-
-
 .text-anakiwa {
-color: var(--anakiwa);
+	color: var(--anakiwa);
 }
 
 .bg-anakiwa {
-background-color: var(--anakiwa);
+	background-color: var(--anakiwa);
 }
 
-
 .text-cerulean {
-color: var(--cerulean);
+	color: var(--cerulean);
 }
 
 .bg-cerulean {
-background-color: var(--cerulean);
+	background-color: var(--cerulean);
 }
 
-
 .text-blumine {
-color: var(--blumine);
+	color: var(--blumine);
 }
 
 .bg-blumine {
-background-color: var(--blumine);
+	background-color: var(--blumine);
 }
 
-
-
-
-
 .text-sea-buckthorn {
-color: var(--sea-buckthorn);
+	color: var(--sea-buckthorn);
 }
 
 .bg-sea-buckthorn {
-background-color: var(--sea-buckthorn);
+	background-color: var(--sea-buckthorn);
 }
 
-
-
-
-
 .text-candlelight {
-color: var(--candlelight);
+	color: var(--candlelight);
 }
 
 .bg-candlelight {
-background-color: var(--candlelight);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@font-face {
-font-family: 'Poppins';
-src: url('../fonts/Poppins-Thin.ttf');
-font-weight: 100;
+	background-color: var(--candlelight);
 }
 
 @font-face {
-font-family: 'Poppins';
-src: url('../fonts/Poppins-ExtraLight.ttf');
-font-weight: 200;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-Thin.ttf');
+	font-weight: 100;
 }
 
 @font-face {
-font-family: 'Poppins';
-src: url('../fonts/Poppins-Light.ttf');
-font-weight: 300;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-ExtraLight.ttf');
+	font-weight: 200;
 }
 
 @font-face {
-font-family: 'Poppins';
-src: url('../fonts/Poppins-Regular.ttf');
-font-weight: 400;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-Light.ttf');
+	font-weight: 300;
 }
 
 @font-face {
-font-family: 'Poppins';
-src: url('../fonts/Poppins-Medium.ttf');
-font-weight: 500;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-Regular.ttf');
+	font-weight: 400;
 }
 
 @font-face {
-font-family: 'Poppins';
-src: url('../fonts/Poppins-SemiBold.ttf');
-font-weight: 600;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-Medium.ttf');
+	font-weight: 500;
 }
 
 @font-face {
-font-family: 'Poppins';
-src: url('../fonts/Poppins-Bold.ttf');
-font-weight: 700;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-SemiBold.ttf');
+	font-weight: 600;
 }
 
 @font-face {
-font-family: 'Poppins';
-src: url('../fonts/Poppins-ExtraBold.ttf');
-font-weight: 800;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-Bold.ttf');
+	font-weight: 700;
 }
 
 @font-face {
-font-family: 'Poppins';
-src: url('../fonts/Poppins-Black.ttf');
-font-weight: 900;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-ExtraBold.ttf');
+	font-weight: 800;
+}
+
+@font-face {
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-Black.ttf');
+	font-weight: 900;
 }

@@ -1,11 +1,11 @@
-@import 'src/assets/scss/variables.scss';
-@import 'src/assets/scss/core-styles.scss';
+@import 'src/assets/css/variables.css';
+@import 'src/assets/css/core-styles.css';
 
 #directorySearchInputField {
 	width: 340px;
 	margin-top: 0.25em;
 
-	// set this to 20px less than the field to leave room for the cancel 'X'
+	/* // set this to 20px less than the field to leave room for the cancel 'X' */
 	.mat-form-field-flex {
 		width: 320px;
 	}
@@ -139,17 +139,17 @@
 	margin-right: 1em;
 	margin-top: 1em;
 	border-radius: 5px;
-	border: 1px solid $mapset-blue;
+	border: 1px solid var(--mapset-blue);
 	background-color: #ffffff;
 	box-sizing: border-box;
-	color: $mapset-blue;
+	color: var(--mapset-blue);
 	box-shadow: none;
 	font-weight: 900;
 	letter-spacing: normal;
 }
 
 .rt2-btn:hover {
-	background-color: $mapset-blue !important;
+	background-color: var(--mapset-blue) !important;
 	color: #ffffff !important;
 	filter: none;
 }
@@ -170,8 +170,8 @@
 .mapset-notes-icon {
 	cursor: pointer;
 	width: 24px;
-	//height: 24px;
-	//color: #2269e8;
+	/* //height: 24px; */
+	/* //color: #2269e8; */
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 
@@ -189,12 +189,12 @@
 	margin-top: -0.2em;
 	width: 24px;
 	height: 24px;
-	//color: #2269e8;
+	/* //color: #2269e8; */
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 
 .mat-mdc-raised-button.mat-primary {
-	background-color: $mapset-blue !important;
+	background-color: var(--mapset-blue) !important;
 	color: #ffffff !important;
 }
 

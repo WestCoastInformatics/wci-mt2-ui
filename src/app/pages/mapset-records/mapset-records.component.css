@@ -503,7 +503,7 @@
 	cursor: pointer;
 	width: 25px;
 	height: 25px;
-	//color: #2269e8;
+	/* //color: #2269e8; */
 	filter: invert(78%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 

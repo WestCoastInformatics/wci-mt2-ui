@@ -23,10 +23,10 @@
 
 .details-page-stepper {
 	transform: scale(0.65);
-	margin-left: auto;
+	margin-left: 350px;
 	margin-right: auto;
 	text-align: center;
-	margin-top: -30px;
+	margin-top: -38px;
 }
 
 .group-popover {
@@ -534,11 +534,6 @@
 	margin: 7px;
 }
 
-.rt2-wrap {
-	min-width: 1300px !important;
-	max-width: 1300px !important;
-}
-
 .top-search-bar {
 	background-color: var(--white);
 	box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.35);
@@ -563,6 +558,11 @@
 		display: inline-flex !important;
 		padding-right: 3rem;
 	}
+}
+
+.rt2-wrap {
+	display: inline-block;
+	max-width: 450px !important;
 }
 
 .rt2-directory-chooser-column {
@@ -729,7 +729,7 @@
 }
 
 .code-link:hover {
-	text-decoration: underline;
+	text-decoration: none;
 }
 
 .action-column {

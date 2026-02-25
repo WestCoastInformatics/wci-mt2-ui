@@ -39,4 +39,14 @@
 	--mat-legacy-button-toggle-shape: 4px;
 	--mat-menu-item-label-text-color: #000003;
 	--mat-menu-item-hover-state-layer-color: rgba(0, 0, 0, 0.04);
+	--mdc-filled-text-field-input-text-color: rgb(102, 102, 102);
+	--mat-badge-container-shape: 15px;
+	--mat-sys-corner-full: 15px;
+	--mat-checkbox-disabled-label-color: rgb(102, 102, 102);
+	--mat-checkbox-label-text-color: rgb(102, 102, 102);
+	--mdc-checkbox-disabled-selected-icon-color: #000003;
+	--mdc-checkbox-unselected-focus-icon-color: #000003;
+	--mdc-checkbox-unselected-hover-icon-color: rgb(102, 102, 102);
+	--mdc-filled-text-field-disabled-container-color: #666;
+	--mat-select-disabled-trigger-text-color: #999;
 }

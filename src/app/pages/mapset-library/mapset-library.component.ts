@@ -16,14 +16,10 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
-import { formatDate } from '@angular/common';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { PaginationService } from 'src/app/services/pagination.service';
 
-/**
- * @title Tree with nested nodes
- */
 @Component({
 	standalone: false,
 	selector: 'app-mapset-library',
@@ -115,7 +111,7 @@ export class MapsetLibraryComponent implements OnInit {
 		private authenticationService: AuthenticationService,
 		private modalService: NgbModal,
 		private pagerService: PaginationService,
-		private notificationService: NotificationService
+		private notificationService: NotificationService,
 	) {
 		document.body.scrollTop = 0;
 		refsetService.getTaxonomyRoot();
@@ -154,7 +150,15 @@ export class MapsetLibraryComponent implements OnInit {
 							return '';
 						},
 					},
-					{ field: 'refSetCode', tooltipField: 'refSetCode', headerName: 'Mapset ID', cellClass: 'rt2-directory-column-id', minWidth: 65, resizable: true, unSortIcon: true },
+					{
+						field: 'refSetCode',
+						tooltipField: 'refSetCode',
+						headerName: 'Mapset ID',
+						cellClass: 'rt2-directory-column-id',
+						minWidth: 65,
+						resizable: true,
+						unSortIcon: true,
+					},
 					{
 						field: 'refSetName',
 						tooltipField: 'refSetName',
@@ -234,9 +238,9 @@ export class MapsetLibraryComponent implements OnInit {
 					onCellDoubleClicked: this.onGridCellClick,
 					onGridReady: this.onGridReady,
 					frameworkComponents: {
-						'templateRenderer': TemplateRendererComponent,
-						'categoryFilterComponent': CategoryFilterComponent,
-						'dateTextFilterComponent': DateTextFilterComponent,
+						templateRenderer: TemplateRendererComponent,
+						categoryFilterComponent: CategoryFilterComponent,
+						dateTextFilterComponent: DateTextFilterComponent,
 					},
 					defaultColDef: {
 						sortable: true,
@@ -249,7 +253,7 @@ export class MapsetLibraryComponent implements OnInit {
 					},
 					enableBrowserTooltips: true,
 					rowClassRules: {
-						'refset_tool_grid_inactive_row': function (params) {
+						refset_tool_grid_inactive_row: function (params) {
 							let inactivatedRow = false;
 
 							if (params.data) {
@@ -341,7 +345,7 @@ export class MapsetLibraryComponent implements OnInit {
 				}
 				if (localStorage.getItem('librarySearchInput')) {
 					this.searchInput = JSON.parse(localStorage.getItem('librarySearchInput'));
-					this.refsetGridApi.setQuickFilter(this.searchInput);
+					this.refsetGridApi.setGridOption('quickFilterText', this.searchInput);
 				}
 
 				UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
@@ -429,7 +433,7 @@ export class MapsetLibraryComponent implements OnInit {
 		this.searchInput = this.searchInput.trim();
 
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-			this.refsetGridApi.setQuickFilter(this.searchInput);
+			this.refsetGridApi.setGridOption('quickFilterText', this.searchInput);
 			localStorage.setItem('librarySearchInput', JSON.stringify(this.searchInput));
 		}
 	}
@@ -462,15 +466,15 @@ export class MapsetLibraryComponent implements OnInit {
 			this.refsetService.getMapsetByCode(this.mapsetInfo.refSetCode).subscribe((results) => {
 				this.mapsetInfo = results;
 				const params = {
-					'branch': this.mapsetInfo.branchPath,
-					'mapSetCode': this.mapsetInfo.refSetCode,
-					'fileFormatType': this.selectedType['value'],
-					'fileExportType': this.selectedFormat['value'],
-					'fileNameDate': CodeUtility.getCurrentDate().split('-').join(''),
-					'languageId': this.mapsetInfo.moduleId,
-					'startEffectiveTime': this.mapsetInfo.version.replaceAll('-', ''),
-					'transientEffectiveTime': this.mapsetInfo.version.replaceAll('-', ''),
-					'exportMetadata': this.selectExportMetadata,
+					branch: this.mapsetInfo.branchPath,
+					mapSetCode: this.mapsetInfo.refSetCode,
+					fileFormatType: this.selectedType['value'],
+					fileExportType: this.selectedFormat['value'],
+					fileNameDate: CodeUtility.getCurrentDate().split('-').join(''),
+					languageId: this.mapsetInfo.moduleId,
+					startEffectiveTime: this.mapsetInfo.version.replaceAll('-', ''),
+					transientEffectiveTime: this.mapsetInfo.version.replaceAll('-', ''),
+					exportMetadata: this.selectExportMetadata,
 				};
 				this.refsetService.exportMapset(params).subscribe(
 					(data) => {
@@ -479,7 +483,7 @@ export class MapsetLibraryComponent implements OnInit {
 					(err) => {
 						this.downloading = false;
 						console.error(err);
-					}
+					},
 				);
 			});
 		} else {
@@ -515,7 +519,7 @@ export class MapsetLibraryComponent implements OnInit {
 			(err) => {
 				this.downloading = false;
 				console.error(err);
-			}
+			},
 		);
 	}
 

@@ -23,9 +23,10 @@ import { PaginationService } from 'src/app/services/pagination.service';
  * @title Tree with nested nodes
  */
 @Component({
+	standalone: false,
 	selector: 'app-mapset-projects',
 	templateUrl: './mapset-projects.component.html',
-	styleUrls: ['./mapset-projects.component.scss'],
+	styleUrls: ['./mapset-projects.component.css'],
 })
 export class MapsetProjectsComponent implements OnInit {
 	user: User;
@@ -37,7 +38,6 @@ export class MapsetProjectsComponent implements OnInit {
 	];
 	selectedView = 'all';
 	refsetGridApi: any;
-	refsetGridColumnApi: any;
 	columnDefs = [];
 	refsetGridColumns = [
 		{ name: 'information', show: true },
@@ -99,7 +99,7 @@ export class MapsetProjectsComponent implements OnInit {
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
 		private modalService: NgbModal,
-		private pagerService: PaginationService
+		private pagerService: PaginationService,
 	) {
 		document.body.scrollTop = 0;
 		refsetService.getTaxonomyRoot();
@@ -138,7 +138,15 @@ export class MapsetProjectsComponent implements OnInit {
 							return '';
 						},
 					},
-					{ field: 'refSetCode', tooltipField: 'refSetCode', headerName: 'Mapset ID', cellClass: 'rt2-directory-column-id', minWidth: 65, resizable: true, unSortIcon: true },
+					{
+						field: 'refSetCode',
+						tooltipField: 'refSetCode',
+						headerName: 'Mapset ID',
+						cellClass: 'rt2-directory-column-id',
+						minWidth: 65,
+						resizable: true,
+						unSortIcon: true,
+					},
 					{
 						field: 'refSetName',
 						tooltipField: 'refSetName',
@@ -218,9 +226,9 @@ export class MapsetProjectsComponent implements OnInit {
 					onCellDoubleClicked: this.onGridCellClick,
 					onGridReady: this.onGridReady,
 					frameworkComponents: {
-						'templateRenderer': TemplateRendererComponent,
-						'categoryFilterComponent': CategoryFilterComponent,
-						'dateTextFilterComponent': DateTextFilterComponent,
+						templateRenderer: TemplateRendererComponent,
+						categoryFilterComponent: CategoryFilterComponent,
+						dateTextFilterComponent: DateTextFilterComponent,
 					},
 					defaultColDef: {
 						sortable: true,
@@ -233,7 +241,7 @@ export class MapsetProjectsComponent implements OnInit {
 					},
 					enableBrowserTooltips: true,
 					rowClassRules: {
-						'refset_tool_grid_inactive_row': function (params) {
+						refset_tool_grid_inactive_row: function (params) {
 							let inactivatedRow = false;
 
 							if (params.data) {
@@ -267,7 +275,6 @@ export class MapsetProjectsComponent implements OnInit {
 		this.originalGridParams = gridReadyParams;
 		this.refsetGridApi = gridReadyParams.api;
 		this.refsetGridApi.setFilterModel(null);
-		this.refsetGridColumnApi = gridReadyParams.columnApi.api;
 		this.onResize(undefined);
 
 		this.refsetGridApi.showLoadingOverlay();
@@ -312,7 +319,7 @@ export class MapsetProjectsComponent implements OnInit {
 				if (results.length == 0) {
 					this.refsetGridPaging.totalKnown = true;
 					this.refsetGridApi.showNoRowsOverlay();
-					this.refsetGridApi.setRowData([]);
+					this.refsetGridApi.setGridOption('rowData', []);
 
 					if (pageNumber > 1) {
 						this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
@@ -329,7 +336,7 @@ export class MapsetProjectsComponent implements OnInit {
 			},
 			error: (error) => {
 				this.refsetGridApi.showNoRowsOverlay();
-				this.refsetGridApi.setRowData([]);
+				this.refsetGridApi.setGridOption('rowData', []);
 			},
 		});
 
@@ -410,7 +417,7 @@ export class MapsetProjectsComponent implements OnInit {
 		this.searchInput = this.searchInput.trim();
 
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-			this.refsetGridApi.setQuickFilter(this.searchInput);
+			this.refsetGridApi.setGridOption('quickFilterText', this.searchInput);
 		}
 	}
 
@@ -457,57 +464,59 @@ export class MapsetProjectsComponent implements OnInit {
 	openInformation(refsetId: string) {
 		const refsetDirectoryData = this.getRefsetRow(refsetId);
 
-		this.refsetService.getRefset(refsetDirectoryData.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refsetDirectoryData)).subscribe((results) => {
-			const refset = results;
-			const dialogId = 'directoryInfoDialog';
-			this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url).replace(
-				'library',
-				'details/' + refset.refsetId + '/' + RefsetUtility.getVersionDateForRefsetApiCall(refset)
-			);
+		this.refsetService
+			.getRefset(refsetDirectoryData.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refsetDirectoryData))
+			.subscribe((results) => {
+				const refset = results;
+				const dialogId = 'directoryInfoDialog';
+				this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url).replace(
+					'library',
+					'details/' + refset.refsetId + '/' + RefsetUtility.getVersionDateForRefsetApiCall(refset),
+				);
 
-			if (CodeUtility.hasValue(refset)) {
-				refset.status = RefsetUtility.getStatus(refset.active);
-				if (CodeUtility.hasValue(refset.narrative)) {
-					refset.narrativeShortText = refset.narrative;
+				if (CodeUtility.hasValue(refset)) {
+					refset.status = RefsetUtility.getStatus(refset.active);
+					if (CodeUtility.hasValue(refset.narrative)) {
+						refset.narrativeShortText = refset.narrative;
+					}
+
+					if (CodeUtility.hasValue(refset.versionNotes)) {
+						refset.versionNotesShortText = refset.versionNotes;
+					}
+
+					refset.versionDate = CodeUtility.formatJsonDate(refset.versionDate);
+					refset.flagIcon = RefsetUtility.getEditionFlagIcon(refset.edition.branch);
 				}
 
-				if (CodeUtility.hasValue(refset.versionNotes)) {
-					refset.versionNotesShortText = refset.versionNotes;
-				}
+				refset.versionList = results.versionList;
 
-				refset.versionDate = CodeUtility.formatJsonDate(refset.versionDate);
-				refset.flagIcon = RefsetUtility.getEditionFlagIcon(refset.edition.branch);
-			}
+				const dialogData = {
+					dialogId: dialogId,
+					showCancel: false,
+					cancelText: 'Close',
+					actionText: 'View Complete Map Set',
+					showConfirm: false,
+					template: this.infoDialog,
+					headerText: 'Map Set Metadata',
+					data: refset,
+					showAction: true,
+					showCloseIcon: true,
+				};
 
-			refset.versionList = results.versionList;
+				const dialogOptions = {
+					id: dialogId,
+					width: '1000px',
+					disableClose: false,
+				};
 
-			const dialogData = {
-				dialogId: dialogId,
-				showCancel: false,
-				cancelText: 'Close',
-				actionText: 'View Complete Map Set',
-				showConfirm: false,
-				template: this.infoDialog,
-				headerText: 'Map Set Metadata',
-				data: refset,
-				showAction: true,
-				showCloseIcon: true,
-			};
+				this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
 
-			const dialogOptions = {
-				id: dialogId,
-				width: '1000px',
-				disableClose: false,
-			};
-
-			this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
-
-			this.dialog.confirmed().subscribe((data) => {
-				if (data) {
-					this.goToDetailsPage(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset));
-				}
+				this.dialog.confirmed().subscribe((data) => {
+					if (data) {
+						this.goToDetailsPage(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset));
+					}
+				});
 			});
-		});
 	}
 
 	formatVersionDate(date): string {

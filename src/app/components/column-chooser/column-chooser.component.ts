@@ -39,7 +39,12 @@ export class ColumnChooserComponent {
 
 			const detectChanges = false;
 
-			for (const column of this.gridColumnApi.getColumnDefs()) {
+			const columnDefs = this.gridColumnApi.getColumnDefs?.();
+			if (!columnDefs) {
+				return;
+			}
+
+			for (const column of columnDefs) {
 				// Avoid these coluns (they are icon columns without titles)
 				if (column.headerName == '' || !column.headerName) {
 					continue;

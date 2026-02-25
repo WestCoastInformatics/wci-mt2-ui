@@ -25,9 +25,10 @@ import { formatDate } from '@angular/common';
 import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
+	standalone: false,
 	selector: 'app-mapset-inactives',
 	templateUrl: './mapset-inactives.component.html',
-	styleUrls: ['./mapset-inactives.component.scss'],
+	styleUrls: ['./mapset-inactives.component.css'],
 })
 export class MapsetInactivesComponent implements OnInit {
 	user: User;
@@ -39,7 +40,6 @@ export class MapsetInactivesComponent implements OnInit {
 	];
 	selectedVersion: any;
 	refsetGridApi: any;
-	refsetGridColumnApi: any;
 	columnDefs = [];
 	refsetGridColumns = [
 		{ name: 'information', show: true },
@@ -110,7 +110,7 @@ export class MapsetInactivesComponent implements OnInit {
 	isNewPageSize = false;
 	internationalId = '449080006';
 	moduleMetadata: any;
-	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
+	rowColors = [{ background: 'white' }, { background: '#f2f2f2' }];
 	currentRowColor = 0;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
@@ -148,7 +148,7 @@ export class MapsetInactivesComponent implements OnInit {
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
 		private modalService: NgbModal,
-		private pagerService: PaginationService
+		private pagerService: PaginationService,
 	) {
 		document.body.scrollTop = 0;
 	}
@@ -209,7 +209,7 @@ export class MapsetInactivesComponent implements OnInit {
 							'    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>' +
 							'    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>' +
 							'    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>' +
-							'    <label class="checkbox-override"><input type="checkbox" onclick="checkboxHandleClick()" id="checkbox-table-all" >' +
+							'    <label class="checkbox-override checkbox-header"><input type="checkbox" onclick="checkboxHandleClick()" id="checkbox-table-all" >' +
 							'    <span class="checkbox-container"></span></label>' +
 							'    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
 							'  </div>' +
@@ -430,9 +430,9 @@ export class MapsetInactivesComponent implements OnInit {
 				onCellDoubleClicked: this.onGridCellClick,
 				onGridReady: this.onGridReady,
 				frameworkComponents: {
-					'templateRenderer': TemplateRendererComponent,
-					'categoryFilterComponent': CategoryFilterComponent,
-					'dateTextFilterComponent': DateTextFilterComponent,
+					templateRenderer: TemplateRendererComponent,
+					categoryFilterComponent: CategoryFilterComponent,
+					dateTextFilterComponent: DateTextFilterComponent,
 				},
 				defaultColDef: {
 					sortable: false,
@@ -446,21 +446,21 @@ export class MapsetInactivesComponent implements OnInit {
 				},
 				enableBrowserTooltips: true,
 				rowClassRules: {
-					'refset_tool_grid_inactive_row': function (params) {
+					refset_tool_grid_inactive_row: function (params) {
 						let inactivatedRow = false;
 						if (params.data) {
 							inactivatedRow = params.data.active === false;
 						}
 						return inactivatedRow;
 					},
-					'refset_tool_grid_processed_row': function (params) {
+					refset_tool_grid_processed_row: function (params) {
 						let processedRow = false;
 						if (params.data) {
 							processedRow = params.data.processed === true;
 						}
 						return processedRow;
 					},
-					'refset_tool_grid_processed_inactive_row': function (params) {
+					refset_tool_grid_processed_inactive_row: function (params) {
 						let processedInactiveRow = false;
 						if (params.data) {
 							processedInactiveRow = params.data.processed === true && params.data.active === false;
@@ -530,8 +530,7 @@ export class MapsetInactivesComponent implements OnInit {
 
 	onGridReady = (gridReadyParams) => {
 		this.refsetGridApi = gridReadyParams.api;
-		this.refsetGridApi.setColumnDefs(this.columnDefs);
-		this.refsetGridColumnApi = gridReadyParams.columnApi.api;
+		// this.refsetGridApi.setColumnDefs(this.columnDefs);
 
 		const _window = window;
 		_window['checkboxHandleClick'] = () => {
@@ -608,29 +607,39 @@ export class MapsetInactivesComponent implements OnInit {
 										adviceArray.push(results[a].mapEntries[b].advices[i]);
 									}
 									data.push({
-										'index': results[a].code !== '' ? a + results[a].code + count : false,
-										'spanned': spanned,
-										'downloadable': results[a].code !== '' ? true : false,
-										'mapEntries': results[a].mapEntries,
-										'descriptions': results[a].descriptions,
-										'entries': results[a].mapEntries.length,
-										'code': results[a].code,
-										'name': results[a].name,
-										'active': results[a].active,
-										'toName': results[a].mapEntries[b].toName.length > 0 && results[a].mapEntries[b].toName !== ' DOES NOT EXIST' ? results[a].mapEntries[b].toName : '---',
-										'toCode':
+										index: results[a].code !== '' ? a + results[a].code + count : false,
+										spanned: spanned,
+										downloadable: results[a].code !== '' ? true : false,
+										mapEntries: results[a].mapEntries,
+										descriptions: results[a].descriptions,
+										entries: results[a].mapEntries.length,
+										code: results[a].code,
+										name: results[a].name,
+										active: results[a].active,
+										toName:
+											results[a].mapEntries[b].toName.length > 0 && results[a].mapEntries[b].toName !== ' DOES NOT EXIST'
+												? results[a].mapEntries[b].toName
+												: '---',
+										toCode:
 											results[a].mapEntries.length > 0
-												? results[a].mapEntries[b].group + '/' + results[a].mapEntries[b].priority + '&' + results[a].mapEntries.length + '#' + results[a].mapEntries[b].toCode
+												? results[a].mapEntries[b].group +
+													'/' +
+													results[a].mapEntries[b].priority +
+													'&' +
+													results[a].mapEntries.length +
+													'#' +
+													results[a].mapEntries[b].toCode
 												: 'No map entries available.',
-										'rule': results[a].mapEntries[b].rule.length > 0 ? results[a].mapEntries[b].rule : '---',
-										'relation': results[a].mapEntries[b].relation.length > 0 ? results[a].mapEntries[b].relation : '---',
-										'modified': results[a].mapEntries[b].modified,
-										'advices': results[a].code !== '' ? { 'number': adviceArray.length, 'list': adviceArray } : { 'number': -1, 'list': [] },
-										'group': results[a].mapEntries[b].group,
-										'priority': results[a].mapEntries[b].priority,
-										'moduleId': results[a].mapEntries[b].moduleId,
-										'modFlag': this.getModuleLanguageIcon(results[a].mapEntries[b].moduleId),
-										'modLang': this.getModuleLanguageName(results[a].mapEntries[b].moduleId),
+										rule: results[a].mapEntries[b].rule.length > 0 ? results[a].mapEntries[b].rule : '---',
+										relation: results[a].mapEntries[b].relation.length > 0 ? results[a].mapEntries[b].relation : '---',
+										modified: results[a].mapEntries[b].modified,
+										advices:
+											results[a].code !== '' ? { number: adviceArray.length, list: adviceArray } : { number: -1, list: [] },
+										group: results[a].mapEntries[b].group,
+										priority: results[a].mapEntries[b].priority,
+										moduleId: results[a].mapEntries[b].moduleId,
+										modFlag: this.getModuleLanguageIcon(results[a].mapEntries[b].moduleId),
+										modLang: this.getModuleLanguageName(results[a].mapEntries[b].moduleId),
 									});
 									count++;
 								}
@@ -654,7 +663,11 @@ export class MapsetInactivesComponent implements OnInit {
 								this.showPaging = true;
 								this.refsetGridApi.hideOverlay();
 								this.paginationPages = Math.ceil(this.numOfMembers / this.refsetGridPaging.pageSize)
-									? this.pagerService.getPager(Math.ceil(this.numOfMembers / this.refsetGridPaging.pageSize), this.refsetGridApi.paginationGetCurrentPage(), true)
+									? this.pagerService.getPager(
+											Math.ceil(this.numOfMembers / this.refsetGridPaging.pageSize),
+											this.refsetGridApi.paginationGetCurrentPage(),
+											true,
+										)
 									: {};
 
 								this.paginationPages.currentPage = this.getCurrentPage();
@@ -718,7 +731,7 @@ export class MapsetInactivesComponent implements OnInit {
 		for (let d = 0; d < this.mapsetData.length; d++) {
 			if (this.mapsetData[d].index === index) {
 				this.mapsetData[d].active = status;
-				this.refsetGridApi.setRowData(this.mapsetData);
+				this.refsetGridApi.setGridOption('rowData', this.mapsetData);
 				this.refsetGridApi.redrawRows();
 			}
 		}
@@ -781,7 +794,8 @@ export class MapsetInactivesComponent implements OnInit {
 			if (popHeight > 100) {
 				offsetRows = 3;
 			}
-			const currentPageIndex = this.paginationComponent.getCurrentPage() * this.refsetGridApi.paginationGetPageSize() - this.refsetGridApi.paginationGetPageSize();
+			const currentPageIndex =
+				this.paginationComponent.getCurrentPage() * this.refsetGridApi.paginationGetPageSize() - this.refsetGridApi.paginationGetPageSize();
 			if (params.node.rowIndex > 0 && params.node.rowIndex - currentPageIndex + offsetRows >= this.refsetGridApi.paginationGetPageSize()) {
 				params.data.advice_bottom = true;
 				params.data.advice_top = false;
@@ -838,7 +852,7 @@ export class MapsetInactivesComponent implements OnInit {
 					for (let c = 0; c < this.mapsetData.length; c++) {
 						if (this.mapsetData[c].checked === true) {
 							this.mapsetData[c].processed = true;
-							this.refsetGridApi.setRowData(this.mapsetData);
+							this.refsetGridApi.setGridOption('rowData', this.mapsetData);
 							this.refsetGridApi.redrawRows();
 						}
 					}
@@ -908,7 +922,7 @@ export class MapsetInactivesComponent implements OnInit {
 			this.closeDownloadModal();
 			this.openToBeDevelopedModal(this.tbdModal);
 			const params = {
-				'fileExportType': this.selectedFormat['value'],
+				fileExportType: this.selectedFormat['value'],
 			};
 			//console.log(' exp para ', params);
 			/*
@@ -989,8 +1003,6 @@ export class MapsetInactivesComponent implements OnInit {
 	onSearchChange() {
 		this.searchInput = this.searchInput.trim();
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-			//this.refsetGridApi.setQuickFilter(this.searchInput);
-			//	this.onGridReady(this.originalGridParams);
 			this.setPageSize(10);
 			this.goToPage(0);
 			this.loaded = false;
@@ -1019,7 +1031,7 @@ export class MapsetInactivesComponent implements OnInit {
 
 	setPageSize(size: number) {
 		this.refsetGridApi.paginationGoToFirstPage();
-		this.refsetGridApi.paginationSetPageSize(size);
+		this.refsetGridApi.setGridOption('paginationPageSize', size);
 	}
 
 	goToPage(number: number) {
@@ -1089,7 +1101,10 @@ export class MapsetInactivesComponent implements OnInit {
 	}
 
 	goToBatchMappingsPage(codes) {
-		this.router.navigate(['/mapset/' + this.mapsetCode + '/mappings/' + codes.join('_') + '/batch'], { replaceUrl: false, skipLocationChange: false });
+		this.router.navigate(['/mapset/' + this.mapsetCode + '/mappings/' + codes.join('_') + '/batch'], {
+			replaceUrl: false,
+			skipLocationChange: false,
+		});
 	}
 
 	getCurrentPage() {
@@ -1132,60 +1147,62 @@ export class MapsetInactivesComponent implements OnInit {
 	openInformation(refsetId: string) {
 		const refsetDirectoryData = this.getRefsetRow(refsetId);
 
-		this.refsetService.getRefset(refsetDirectoryData.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refsetDirectoryData)).subscribe((results) => {
-			const refset = results;
-			const dialogId = 'directoryInfoDialog';
-			this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url).replace(
-				'library',
-				'details/' + refset.refsetId + '/' + RefsetUtility.getVersionDateForRefsetApiCall(refset)
-			);
+		this.refsetService
+			.getRefset(refsetDirectoryData.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refsetDirectoryData))
+			.subscribe((results) => {
+				const refset = results;
+				const dialogId = 'directoryInfoDialog';
+				this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url).replace(
+					'library',
+					'details/' + refset.refsetId + '/' + RefsetUtility.getVersionDateForRefsetApiCall(refset),
+				);
 
-			if (CodeUtility.hasValue(refset)) {
-				refset.status = RefsetUtility.getStatus(refset.active);
-				if (CodeUtility.hasValue(refset.narrative)) {
-					refset.narrativeShortText = refset.narrative;
+				if (CodeUtility.hasValue(refset)) {
+					refset.status = RefsetUtility.getStatus(refset.active);
+					if (CodeUtility.hasValue(refset.narrative)) {
+						refset.narrativeShortText = refset.narrative;
+					}
+
+					if (CodeUtility.hasValue(refset.versionNotes)) {
+						refset.versionNotesShortText = refset.versionNotes;
+					}
+
+					refset.versionDate = CodeUtility.formatJsonDate(refset.versionDate);
+					refset.flagIcon = RefsetUtility.getEditionFlagIcon(refset.edition.branch);
+
+					//change to use: = refset.edition.LibrarySortField;
+					refset.librarySortField = refset.edition.branch;
 				}
 
-				if (CodeUtility.hasValue(refset.versionNotes)) {
-					refset.versionNotesShortText = refset.versionNotes;
-				}
+				refset.versionList = results.versionList;
 
-				refset.versionDate = CodeUtility.formatJsonDate(refset.versionDate);
-				refset.flagIcon = RefsetUtility.getEditionFlagIcon(refset.edition.branch);
+				const dialogData = {
+					dialogId: dialogId,
+					showCancel: false,
+					cancelText: 'Close',
+					actionText: 'View Complete Reference Set',
+					showConfirm: false,
+					template: this.infoDialog,
+					headerText: 'Reference Set Metadata',
+					data: refset,
+					showAction: true,
+					showCloseIcon: true,
+				};
 
-				//change to use: = refset.edition.LibrarySortField;
-				refset.librarySortField = refset.edition.branch;
-			}
+				const dialogOptions = {
+					id: dialogId,
+					width: '1000px',
+					disableClose: false,
+				};
 
-			refset.versionList = results.versionList;
+				this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
 
-			const dialogData = {
-				dialogId: dialogId,
-				showCancel: false,
-				cancelText: 'Close',
-				actionText: 'View Complete Reference Set',
-				showConfirm: false,
-				template: this.infoDialog,
-				headerText: 'Reference Set Metadata',
-				data: refset,
-				showAction: true,
-				showCloseIcon: true,
-			};
-
-			const dialogOptions = {
-				id: dialogId,
-				width: '1000px',
-				disableClose: false,
-			};
-
-			this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
-
-			this.dialog.confirmed().subscribe((data) => {
-				if (data) {
-					this.goToDetailsPage(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset));
-				}
+				this.dialog.confirmed().subscribe((data) => {
+					if (data) {
+						this.goToDetailsPage(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset));
+					}
+				});
 			});
-		});
 	}
 
 	setFullNarrativeText(show: boolean): void {

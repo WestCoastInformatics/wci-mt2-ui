@@ -6,4 +6,5 @@ export const environment = {
 	mockRestData: false,
 	refsetsExportableAsFreeset: '787778008',
 	freesetUrl: 'https://gps.snomed.org',
+	defaultProjectId: 'project-mt2-dev'
 };

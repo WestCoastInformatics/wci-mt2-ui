@@ -29,10 +29,11 @@ import { HeaderInterceptor } from 'src/app/interceptors/header.interceptor';
 import { SafeUrlPipe } from 'src/app/pipes/safe-urls.pipe';
 import { NgbModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { TreeModule } from '@ali-hm/angular-tree-component';
-import { AgGridModule } from 'ag-grid-angular';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { ToastNoAnimationModule } from 'ngx-toastr';
 import { CustomReuseStrategy } from './custom-route-reuse-strategy';
+import { AgGridModule } from 'ag-grid-angular';
+import { AllCommunityModule, ModuleRegistry, provideGlobalGridOptions } from 'ag-grid-community';
 
 // MODULE IMPORTS
 import { DialogModule } from 'src/app/dialog/dialog.module';
@@ -70,7 +71,6 @@ import { MapsetRecordsComponent } from './pages/mapset-records/mapset-records.co
 import { MapsetInactivesComponent } from './pages/mapset-inactives/mapset-inactives.component';
 import { MapsetLibraryComponent } from './pages/mapset-library/mapset-library.component';
 import { MapsetProjectsComponent } from './pages/mapset-projects/mapset-projects.component';
-import { MapsetDetailsComponent } from './pages/mapset-details/mapset-details.component';
 import { MapsetMappingComponent } from './pages/mapset-mapping/mapset-mapping.component';
 import { EditMappingComponent } from './pages/edit-mapping/edit-mapping.component';
 import { BatchMappingComponent } from './pages/batch-mapping/batch-mapping.component';
@@ -133,6 +133,13 @@ import { LandingComponent } from './pages/landing/landing-page.component';
 import { ConflictComponent } from './pages/conflict/conflict.component';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+
+// Mark all grids as using legacy themes
+provideGlobalGridOptions({
+	theme: 'legacy',
+});
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const appRoutes: Routes = [
 	// { path: '', pathMatch: 'full', redirectTo: '' },
@@ -321,7 +328,6 @@ const appRoutes: Routes = [
 		PersonalLandingComponent,
 		PersonalConfigurationComponent,
 		RemoveDashboardComponentModalComponent,
-		RefsetFeedbackListComponent,
 		WorkflowStatusBadgeComponent,
 		RefsetMetaTableComponent,
 	],
@@ -329,14 +335,13 @@ const appRoutes: Routes = [
 	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
 	exports: [RouterModule],
 	imports: [
-		RouterModule.forChild(appRoutes),
 		RouterModule.forRoot(
 			appRoutes,
 			{
 				onSameUrlNavigation: 'reload',
 				scrollPositionRestoration: 'top',
 				canceledNavigationResolution: 'computed',
-			}
+			},
 			//{ enableTracing: true } // <-- debugging purposes only
 		),
 		BrowserModule,

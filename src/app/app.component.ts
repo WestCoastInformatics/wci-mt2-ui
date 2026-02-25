@@ -5,14 +5,7 @@ import { EnvService } from './services/environment/env.service';
 import { NavigationStart, NavigationEnd, NavigationError, Router } from '@angular/router';
 import { AuthenticationService } from './services/authentication/authentication.service';
 import { filter } from 'rxjs/operators';
-import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
-import { provideGlobalGridOptions } from 'ag-grid-community';
-// Mark all grids as using legacy themes
-provideGlobalGridOptions({
-	theme: 'legacy',
-});
 
-ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
 	standalone: false,
 	selector: 'app-root',
@@ -24,7 +17,12 @@ export class AppComponent implements OnInit {
 	environment: string;
 	history: string[] = [];
 
-	constructor(private authenticationService: AuthenticationService, private envService: EnvService, private titleService: Title, private router: Router) {
+	constructor(
+		private authenticationService: AuthenticationService,
+		private envService: EnvService,
+		private titleService: Title,
+		private router: Router,
+	) {
 		router.events.subscribe((event) => {
 			if (event instanceof NavigationEnd) {
 				const currentURL = event.urlAfterRedirects;
@@ -85,13 +83,15 @@ export class AppComponent implements OnInit {
 			.pipe(
 				filter((event) => {
 					return event instanceof NavigationStart && event.navigationTrigger === 'popstate';
-				})
+				}),
 			)
 			.subscribe((event: NavigationStart) => {
 				location.reload();
 			});
 
-		router.events.pipe(filter((event) => event instanceof NavigationError)).subscribe(() => router.navigate(['/dashboard'], { skipLocationChange: true }));
+		router.events
+			.pipe(filter((event) => event instanceof NavigationError))
+			.subscribe(() => router.navigate(['/dashboard'], { skipLocationChange: true }));
 	}
 
 	// ***** Framework Functions *****/

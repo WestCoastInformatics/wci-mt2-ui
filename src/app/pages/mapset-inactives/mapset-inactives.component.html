@@ -10,7 +10,13 @@
 			<div class="col-md-auto p-l-20">
 				<mat-form-field floatLabel="never" class="directoryViewFilterField format-version-drop-down" appearance="fill">
 					<mat-label></mat-label>
-					<mat-select title="Choose Version" placeholder="Choose Version" #directoryViewSelect [(value)]="selectedVersion" (selectionChange)="changedVersionStatus()">
+					<mat-select
+						title="Choose Version"
+						placeholder="Choose Version"
+						#directoryViewSelect
+						[(value)]="selectedVersion"
+						(selectionChange)="changedVersionStatus()"
+					>
 						<mat-option *ngFor="let option of versionStatuses" [value]="option" class="no-checkbox"> {{ option }} </mat-option>
 					</mat-select>
 				</mat-form-field>
@@ -37,24 +43,44 @@
 	<div class="metadata-collapsible-container m-t-20">
 		<div class="switch-view" *ngIf="showMappingsSection && loaded" [hidden]="numOfMembers === 0">
 			<mat-label class="switch-label">view by</mat-label>
-			<mat-button-toggle-group #group="matButtonToggleGroup" [value]="showMapTable" (change)="changeMappingsView(group.value)">
+			<mat-button-toggle-group
+				#group="matButtonToggleGroup"
+				[value]="showMapTable"
+				(change)="changeMappingsView(group.value)"
+				[hideSingleSelectionIndicator]="true"
+			>
 				<mat-button-toggle value="table" title="View All"> all </mat-button-toggle>
 				<mat-button-toggle value="record" title="View Unprocessed" class="only-label"> only unprocessed </mat-button-toggle>
 			</mat-button-toggle-group>
 		</div>
 		<div class="metadata-collapsible-container-group-header pointer" (click)="toggleSectionView('showMappingsSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
-				<span>Inactivated Concepts&nbsp; </span><span [hidden]="!numOfMembers">{{ '(' + numOfMembers + ')' }}</span> <span [hidden]="numOfMembers">{{ '(0)' }}</span>
+				<span>Inactivated Concepts&nbsp; </span><span [hidden]="!numOfMembers">{{ '(' + numOfMembers + ')' }}</span>
+				<span [hidden]="numOfMembers">{{ '(0)' }}</span>
 				<div class="sub-header-font">
 					<span [hidden]="checkedNum === 0">selected {{ checkedNum }}</span>
 				</div>
 			</div>
-			<img src="assets/caret-up-solid.svg" *ngIf="!showMappingsSection" alt="Collapse Button" title="Collapse Mappings" aria-label="Collapse Button" class="caret-up-solid" />
-			<img src="assets/caret-down-solid.svg" *ngIf="showMappingsSection" alt="Expand Button" title="Expand Mappings" aria-label="Expand Button" class="caret-down-solid" />
+			<img
+				src="assets/caret-up-solid.svg"
+				*ngIf="!showMappingsSection"
+				alt="Collapse Button"
+				title="Collapse Mappings"
+				aria-label="Collapse Button"
+				class="caret-up-solid"
+			/>
+			<img
+				src="assets/caret-down-solid.svg"
+				*ngIf="showMappingsSection"
+				alt="Expand Button"
+				title="Expand Mappings"
+				aria-label="Expand Button"
+				class="caret-down-solid"
+			/>
 		</div>
 		<div class="d-flex dropdown-group" *ngIf="showMappingsSection && numOfMembers > 0">
 			<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable && showMapTable === 'table'">
-				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
+				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridApi" [useDialog]="useDialog"> </app-column-chooser>
 			</div>
 
 			<div class="col-md-auto rt2-directory-chooser-column">
@@ -62,13 +88,32 @@
 					<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
 						<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
 							<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
-							<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" (click)="$event.stopPropagation()" />
+							<input
+								matInput
+								#directorySearchInput
+								id="directorySearchInput"
+								[(ngModel)]="searchInput"
+								(input)="onSearchChange()"
+								(click)="$event.stopPropagation()"
+							/>
 						</mat-form-field>
-						<span class="clear-search" *ngIf="searchInput.length > 0" title="Clear Search" (click)="$event.stopPropagation(); clearSearch()">&#10005;</span>
+						<span
+							class="clear-search"
+							*ngIf="searchInput.length > 0"
+							title="Clear Search"
+							(click)="$event.stopPropagation(); clearSearch()"
+							>&#10005;</span
+						>
 					</div></mat-menu
 				>
 				<div class="menu-inline">
-					<button [matMenuTriggerFor]="searchMenu" (menuOpened)="menuOpened()" aria-label="Search" title="Search" class="mapset-download-icon menu-button">
+					<button
+						[matMenuTriggerFor]="searchMenu"
+						(menuOpened)="menuOpened()"
+						aria-label="Search"
+						title="Search"
+						class="mapset-download-icon menu-button"
+					>
 						<mat-icon class="menu-icon">search</mat-icon>
 						<span class="menu-label">search</span>
 					</button>
@@ -124,7 +169,8 @@
 							[suppressRowTransform]="true"
 							[gridOptions]="refsetGridOptions"
 							[rowSelection]="rowSelection"
-							(firstDataRendered)="onResize(500)">
+							(firstDataRendered)="onResize(500)"
+						>
 						</ag-grid-angular>
 					</div>
 				</div>
@@ -141,7 +187,8 @@
 						class="pagination-page-buttons"
 						[ngClass]="{ disabled: getCurrentPage() === 0 }"
 						title="Go To First Page"
-						attr.aria-label="Go To First Page">
+						attr.aria-label="Go To First Page"
+					>
 						<mat-icon aria-hidden="false">first_page</mat-icon>
 					</button>
 
@@ -152,7 +199,8 @@
 						title="Go To Previous Page {{ getCurrentPage() }}"
 						class="pagination-page-buttons"
 						[ngClass]="{ disabled: getCurrentPage() === 0 }"
-						attr.aria-label="Go To Previous Page {{ getCurrentPage() }}">
+						attr.aria-label="Go To Previous Page {{ getCurrentPage() }}"
+					>
 						<mat-icon aria-hidden="false">arrow_left</mat-icon>
 					</button>
 
@@ -164,7 +212,8 @@
 							[color]="getCurrentPage() + 1 === page ? 'primary' : ''"
 							(click)="goToPage(page - 1)"
 							attr.aria-label="{{ getCurrentPage() + 1 === page ? 'Current' : 'Go To' }} Page {{ page }}"
-							title="{{ getCurrentPage() + 1 === page ? 'Current' : 'Go To' }} Page {{ page }}">
+							title="{{ getCurrentPage() + 1 === page ? 'Current' : 'Go To' }} Page {{ page }}"
+						>
 							{{ page }}
 						</button>
 					</span>
@@ -176,7 +225,8 @@
 						class="pagination-page-buttons w-min-32 p-0"
 						title="Go To Page {{ paginationPages.startPage + 5 }}"
 						attr.aria-label="Go To Page {{ paginationPages.startPage + 5 }}"
-						title="Go To Page {{ paginationPages.startPage + 5 }}">
+						title="Go To Page {{ paginationPages.startPage + 5 }}"
+					>
 						...
 					</button>
 
@@ -186,7 +236,8 @@
 						(click)="goToPage(paginationPages.totalPages)"
 						class="pagination-page-buttons"
 						attr.aria-label="Go To Page {{ paginationPages.totalPages }}"
-						title="Go To Page {{ paginationPages.totalPages }}">
+						title="Go To Page {{ paginationPages.totalPages }}"
+					>
 						{{ paginationPages.totalPages }}
 					</button>
 
@@ -197,7 +248,8 @@
 						title="Go To Next Page {{ getCurrentPage() + 2 }}"
 						class="pagination-page-buttons"
 						[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
-						attr.aria-label="Go To Next Page {{ getCurrentPage() + 2 }}">
+						attr.aria-label="Go To Next Page {{ getCurrentPage() + 2 }}"
+					>
 						<mat-icon aria-hidden="false">arrow_right</mat-icon>
 					</button>
 
@@ -208,7 +260,8 @@
 						title="Go To Last Page ({{ paginationPages.totalPages }})"
 						class="pagination-page-buttons"
 						[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
-						attr.aria-label="Go To Last Page {{ paginationPages.totalPages }}">
+						attr.aria-label="Go To Last Page {{ paginationPages.totalPages }}"
+					>
 						<mat-icon aria-hidden="false">last_page</mat-icon>
 					</button>
 				</div>
@@ -221,15 +274,23 @@
 							class="pagination-page-buttons unthemed"
 							(click)="setPageSize(sizeOption)"
 							[hidden]="sizeOption > numOfMembers"
-							title="{{ sizeOption }} Members per Page">
+							title="{{ sizeOption }} Members per Page"
+						>
 							{{ sizeOption }}
 						</button>
 					</span>
 				</div>
 			</div>
 			<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
-				Showing <span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }} </span> to
-				<span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers < (getCurrentPage() + 1) * refsetGridPaging.pageSize ? numOfMembers : (getCurrentPage() + 1) * refsetGridPaging.pageSize }} </span>
+				Showing
+				<span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }} </span> to
+				<span class="fw-bold p-l-5 p-r-5">
+					{{
+						numOfMembers < (getCurrentPage() + 1) * refsetGridPaging.pageSize
+							? numOfMembers
+							: (getCurrentPage() + 1) * refsetGridPaging.pageSize
+					}}
+				</span>
 				of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
 			</div>
 			<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
@@ -240,8 +301,22 @@
 			<div class="metadata-collapsible-container-title page-header-font">
 				<span>ICD10 Terminology Browser</span>
 			</div>
-			<img src="assets/caret-up-solid.svg" *ngIf="!showBrowserSection" alt="Collapse Button" title="Collapse ICD10 Terminology Browser" aria-label="Collapse Button" class="caret-up-solid" />
-			<img src="assets/caret-down-solid.svg" *ngIf="showBrowserSection" alt="Expand Button" title="Expand ICD10 Terminology Browser" aria-label="Expand Button" class="caret-down-solid" />
+			<img
+				src="assets/caret-up-solid.svg"
+				*ngIf="!showBrowserSection"
+				alt="Collapse Button"
+				title="Collapse ICD10 Terminology Browser"
+				aria-label="Collapse Button"
+				class="caret-up-solid"
+			/>
+			<img
+				src="assets/caret-down-solid.svg"
+				*ngIf="showBrowserSection"
+				alt="Expand Button"
+				title="Expand ICD10 Terminology Browser"
+				aria-label="Expand Button"
+				class="caret-down-solid"
+			/>
 		</div>
 		<div [hidden]="!showBrowserSection" class="section-background browser-section">
 			<div class="d-flex dropdown-group">This feature is not yet available. Please check back later.</div>
@@ -259,12 +334,15 @@
 					class="rt2-table-action-icon w-30 h-30"
 					aria-label="View All Reference Set Metadata"
 					title="View Reference Set Metadata"
-					(click)="openInformation(params.data.refsetId)">
+					(click)="openInformation(params.data.refsetId)"
+				>
 					<mat-icon class="scale-85-pct">information</mat-icon>
 				</button>
 			</div>
 			<div class="col-6">
-				<div *ngIf="params.data.memberSearchMatch" title="Search matches reference set member" class="member-search-icon general-icon-font">M</div>
+				<div *ngIf="params.data.memberSearchMatch" title="Search matches reference set member" class="member-search-icon general-icon-font">
+					M
+				</div>
 			</div>
 		</div>
 	</ng-template>
@@ -290,7 +368,8 @@
 	<!-- Check Templates -->
 	<ng-template #directoryCheckSection let-params>
 		<label class="checkbox-override" *ngIf="params?.value"
-			><input type="checkbox" (change)="checkboxRowSelect($event, params?.data?.index)" [checked]="params?.data?.checked" />' + ' <span class="checkbox-container"></span
+			><input type="checkbox" (change)="checkboxRowSelect($event, params?.data?.index)" [checked]="params?.data?.checked" />' + '
+			<span class="checkbox-container"></span
 		></label>
 	</ng-template>
 
@@ -304,7 +383,8 @@
 			title="Include in Scope"
 			aria-label="Add"
 			class="add-symbol-icon pointer"
-			alt="Include in Scope" />
+			alt="Include in Scope"
+		/>
 
 		<img
 			[hidden]="!params?.data?.active"
@@ -315,7 +395,8 @@
 			title="Exclude from Scope"
 			aria-label="Subtract"
 			class="subtract-symbol-icon pointer"
-			alt="Exclude from Scope" />
+			alt="Exclude from Scope"
+		/>
 	</ng-template>
 
 	<!-- From Source Code Templates -->
@@ -344,7 +425,8 @@
 			src="{{ params?.data?.flagIcon }}"
 			class="rt2-edition-flag"
 			title="{{ params?.data?.editionName }} Flag"
-			aria-label="{{ params?.data?.editionName }} Flag" />
+			aria-label="{{ params?.data?.editionName }} Flag"
+		/>
 		{{ params?.data?.edition?.name }}
 	</ng-template>
 
@@ -353,13 +435,23 @@
 		<div class="d-flex" *ngIf="params?.value === true">
 			<div class="col-6">
 				<div class="library-app-refset-notes" (click)="selectAction('note')">
-					<img src="/assets/sticky-note.svg" title="View or Add Authoring Notes" aria-label="View or Add Authoring Notes" class="mapset-notes-icon" />
+					<img
+						src="/assets/sticky-note.svg"
+						title="View or Add Authoring Notes"
+						aria-label="View or Add Authoring Notes"
+						class="mapset-notes-icon"
+					/>
 				</div>
 			</div>
 
 			<div class="col-6">
 				<div class="library-app-refset-discussion-list" (click)="selectAction('feedback')">
-					<img src="/assets/comment-dots-regular.svg" title="View or Add Authoring Communication" aria-label="View or Add Authoring Communication" class="discussion-icon" />
+					<img
+						src="/assets/comment-dots-regular.svg"
+						title="View or Add Authoring Communication"
+						aria-label="View or Add Authoring Communication"
+						class="discussion-icon"
+					/>
 				</div>
 			</div>
 		</div>
@@ -367,7 +459,11 @@
 
 	<!-- Advice Templates -->
 	<ng-template #directoryAdviceSection let-params>
-		<div class="advice-column" [ngStyle]="{ 'line-height': 50 / getValueLength(params) > 10 ? 50 / getValueLength(params) + 'px' : 10 + 'px' }" [hidden]="getValueLength(params) < 1">
+		<div
+			class="advice-column"
+			[ngStyle]="{ 'line-height': 50 / getValueLength(params) > 10 ? 50 / getValueLength(params) + 'px' : 10 + 'px' }"
+			[hidden]="getValueLength(params) < 1"
+		>
 			<div *ngFor="let item of getValueList(params)">
 				<span title="{{ item }}" [hidden]="item.indexOf('ALWAYS') > -1">{{ item }}</span>
 			</div>
@@ -381,7 +477,15 @@
 		</span>
 		<span *ngIf="params?.value !== 'No map entries available.' && params?.value !== undefined">
 			<mat-chip-list *ngIf="params?.value.split('#')[0] !== '1/1&1'">
-				<mat-chip class="mapset-chip" title="{{ 'Group ' + params?.value.split('#')[0].split('&')[0].split('/')[0] + ', Entry ' + params?.value.split('#')[0].split('&')[0].split('/')[1] }}">
+				<mat-chip
+					class="mapset-chip"
+					title="{{
+						'Group ' +
+							params?.value.split('#')[0].split('&')[0].split('/')[0] +
+							', Entry ' +
+							params?.value.split('#')[0].split('&')[0].split('/')[1]
+					}}"
+				>
 					{{ params?.value.split('#')[0].split('&')[0] }}
 				</mat-chip>
 			</mat-chip-list>
@@ -438,7 +542,8 @@
 				<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
 					<mat-select placeholder="Select a type" [ngModel]="types" [(value)]="selectedType" class="rt2-column-chooser-select">
 						<mat-select-trigger class="trigger"
-							><span *ngIf="!selectedType"> Select a type </span><span *ngIf="selectedType">{{ selectedType.display }}</span></mat-select-trigger
+							><span *ngIf="!selectedType"> Select a type </span
+							><span *ngIf="selectedType">{{ selectedType.display }}</span></mat-select-trigger
 						>
 
 						<mat-option *ngFor="let type of types" [value]="type" class="no-checkbox">
@@ -452,7 +557,8 @@
 				<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
 					<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="rt2-column-chooser-select">
 						<mat-select-trigger class="trigger"
-							><span *ngIf="!selectedFormat"> Select a format </span><span *ngIf="selectedFormat">{{ selectedFormat.display }}</span></mat-select-trigger
+							><span *ngIf="!selectedFormat"> Select a format </span
+							><span *ngIf="selectedFormat">{{ selectedFormat.display }}</span></mat-select-trigger
 						>
 
 						<mat-option *ngFor="let format of formats" [value]="format" class="no-checkbox">
@@ -492,8 +598,9 @@
 					auto_focus: 'notesEditor',
 					placeholder: 'Enter your notes',
 					plugins: ['lists', 'advlist', 'wordcount'],
-					toolbar: 'undo redo | bold italic | bullist numlist outdent indent | wordcount'
-				}">
+					toolbar: 'undo redo | bold italic | bullist numlist outdent indent | wordcount',
+				}"
+			>
 			</editor>
 		</div>
 		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
@@ -529,8 +636,9 @@
 					auto_focus: 'feedbackEditor',
 					placeholder: 'Enter your feedback message',
 					plugins: ['lists', 'advlist', 'wordcount'],
-					toolbar: 'undo redo | bold italic | bullist numlist outdent indent | wordcount'
-				}">
+					toolbar: 'undo redo | bold italic | bullist numlist outdent indent | wordcount',
+				}"
+			>
 			</editor>
 			<div class="d-flex align-items-center justify-content-center m-3">
 				<label class="modal-label">Mark Feedback Private: </label>

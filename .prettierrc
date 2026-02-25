@@ -1,13 +1,5 @@
-
 {
-  "printWidth": 200,
-  "tabWidth": 4,
-  "tabs": true,
-  "useTabs": true,
+  "trailingComma": "all",
   "singleQuote": true,
-  "semicolon": true,
-  "singleAttributePerLine": false,
-  "bracketSameLine": true,
-  "quoteProps": "preserve",
-  "bracketSpacing": true
+  "printWidth": 150
 }

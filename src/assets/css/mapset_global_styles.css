@@ -180,12 +180,10 @@ tr.refset_tool_inactive_row {
 	}
 
 	.ag-row.refset_tool_grid_processed_row {
-		background-color: $processed_row_color;
 		border: 1px solid #aaaaaa !important;
 	}
 
 	.ag-row.refset_tool_grid_processed_inactive_row {
-		background-color: $processed_inactive_row_color;
 		border: 1px solid #aaaaaa !important;
 	}
 }

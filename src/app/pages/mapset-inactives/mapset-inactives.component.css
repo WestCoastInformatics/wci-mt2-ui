@@ -1,6 +1,6 @@
-@import 'src/assets/scss/variables.scss';
-@import 'src/assets/scss/button-styles.scss';
-@import 'src/assets/scss/core-styles.scss';
+@import 'src/assets/css/variables.css';
+@import 'src/assets/css/button-styles.css';
+@import 'src/assets/css/core-styles.css';
 
 .advice-popover {
 	position: absolute;
@@ -101,7 +101,7 @@
 	width: 340px;
 	margin-top: 0.25em;
 
-	// set this to 20px less than the field to leave room for the cancel 'X'
+	/* // set this to 20px less than the field to leave room for the cancel 'X' */
 	.mat-form-field-flex {
 		width: 320px;
 	}
@@ -149,7 +149,7 @@
 }
 
 .mapset-chip {
-	background-color: $standard_primary_button_color !important;
+	background-color: var(--standard_primary_button_color) !important;
 	margin-right: 5px;
 }
 
@@ -189,7 +189,7 @@
 }
 
 .top-search-bar {
-	background-color: $white;
+	background-color: var(--white);
 	box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.35);
 	z-index: 1000 !important;
 	min-height: 60px;
@@ -265,23 +265,23 @@
 	margin-right: 1em;
 	margin-top: 1em;
 	border-radius: 5px;
-	border: 1px solid $mapset-blue;
+	border: 1px solid var(--mapset-blue);
 	background-color: #ffffff;
 	box-sizing: border-box;
-	color: $mapset-blue;
+	color: var(--mapset-blue);
 	box-shadow: none;
 	font-weight: 900;
 	letter-spacing: normal;
 }
 
 .rt2-btn:hover {
-	background-color: $mapset-blue !important;
+	background-color: var(--mapset-blue) !important;
 	color: #ffffff !important;
 	filter: none;
 }
 
 .blue-link {
-	color: $mapset-blue;
+	color: var(--mapset-blue);
 }
 
 .blue-pill {
@@ -289,8 +289,8 @@
 	height: 16px;
 	padding: 2px 2px 2px 2px;
 	border-radius: 16px;
-	border: 1px solid $mapset-blue;
-	background-color: $mapset-blue;
+	border: 1px solid var(--mapset-blue);
+	background-color: var(--mapset-blue);
 	box-sizing: border-box;
 	color: #ffffff;
 	text-align: center;
@@ -419,14 +419,14 @@
 
 .mapset-download-icon {
 	cursor: pointer;
-	color: $mapset-blue;
+	color: var(--mapset-blue);
 	font-size: 1.25em;
 	background-color: #fff;
 }
 
 .mapset-intl-icon {
 	cursor: pointer;
-	color: $mapset-blue;
+	color: var(--mapset-blue);
 	font-size: 1.25em;
 	vertical-align: text-top;
 }
@@ -438,7 +438,7 @@
 
 .mapset-notes-icon {
 	cursor: pointer;
-	color: $mapset-blue;
+	color: var(--mapset-blue);
 	width: 18px;
 	height: 18px;
 }
@@ -478,7 +478,7 @@
 	cursor: pointer;
 	width: 22px;
 	height: 22px;
-	//color: #2269e8;
+	/* //color: #2269e8; */
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 
@@ -486,7 +486,7 @@
 	cursor: pointer;
 	width: 25px;
 	height: 25px;
-	//color: #2269e8;
+	/* //color: #2269e8; */
 	filter: invert(78%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 
@@ -495,7 +495,7 @@
 }
 
 .mat-mdc-raised-button.mat-primary {
-	background-color: $mapset-blue !important;
+	background-color: var(--mapset-blue) !important;
 	color: #ffffff !important;
 }
 

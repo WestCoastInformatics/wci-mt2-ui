@@ -107,24 +107,24 @@ export class MapsetRecordsComponent implements OnInit {
 	mapsetGridCurrentPageNum = 'mapsetGridCurrentPageNum';
 	mapsetGridCurrentPageSize = 'mapsetGridCurrentPageSize';
 	moduleMetadata: any;
-	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
+	rowColors = [{ background: 'white' }, { background: '#f2f2f2' }];
 	currentRowColor = 0;
 	downloadTitle = 'Download';
 	downloadType = 'all';
 	stepperInfo: any = {};
 	stepperStartInfo = {
-		'READY_FOR_EDIT_COLOR': 'details-page-stepper-unstarted-step',
-		'READY_FOR_EDIT_STARTED': false,
-		'IN_EDIT_COLOR': 'details-page-stepper-unstarted-step',
-		'IN_EDIT_STARTED': false,
-		'READY_FOR_REVIEW_COLOR': 'details-page-stepper-unstarted-step',
-		'READY_FOR_REVIEW_STARTED': false,
-		'IN_REVIEW_COLOR': 'details-page-stepper-unstarted-step',
-		'IN_REVIEW_STARTED': false,
-		'REVIEW_COMPLETED_COLOR': 'details-page-stepper-unstarted-step',
-		'REVIEW_COMPLETED_STARTED': false,
-		'READY_FOR_PUBLICATION_COLOR': 'details-page-stepper-unstarted-step',
-		'READY_FOR_PUBLICATION_STARTED': false,
+		READY_FOR_EDIT_COLOR: 'details-page-stepper-unstarted-step',
+		READY_FOR_EDIT_STARTED: false,
+		IN_EDIT_COLOR: 'details-page-stepper-unstarted-step',
+		IN_EDIT_STARTED: false,
+		READY_FOR_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
+		READY_FOR_REVIEW_STARTED: false,
+		IN_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
+		IN_REVIEW_STARTED: false,
+		REVIEW_COMPLETED_COLOR: 'details-page-stepper-unstarted-step',
+		REVIEW_COMPLETED_STARTED: false,
+		READY_FOR_PUBLICATION_COLOR: 'details-page-stepper-unstarted-step',
+		READY_FOR_PUBLICATION_STARTED: false,
 	};
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
@@ -159,7 +159,7 @@ export class MapsetRecordsComponent implements OnInit {
 		private authenticationService: AuthenticationService,
 		private modalService: NgbModal,
 		private pagerService: PaginationService,
-		private notificationService: NotificationService
+		private notificationService: NotificationService,
 	) {
 		document.body.scrollTop = 0;
 	}
@@ -401,9 +401,9 @@ export class MapsetRecordsComponent implements OnInit {
 				onCellDoubleClicked: this.onGridCellClick,
 				onGridReady: this.onGridReady,
 				frameworkComponents: {
-					'templateRenderer': TemplateRendererComponent,
-					'categoryFilterComponent': CategoryFilterComponent,
-					'dateTextFilterComponent': DateTextFilterComponent,
+					templateRenderer: TemplateRendererComponent,
+					categoryFilterComponent: CategoryFilterComponent,
+					dateTextFilterComponent: DateTextFilterComponent,
 				},
 				defaultColDef: {
 					sortable: false,
@@ -417,7 +417,7 @@ export class MapsetRecordsComponent implements OnInit {
 				},
 				enableBrowserTooltips: true,
 				rowClassRules: {
-					'refset_tool_grid_inactive_row': function (params) {
+					refset_tool_grid_inactive_row: function (params) {
 						let inactivatedRow = false;
 
 						if (params.data) {
@@ -514,7 +514,7 @@ export class MapsetRecordsComponent implements OnInit {
 
 				if (localStorage.getItem(this.mapsetSearchInput)) {
 					this.searchInput = JSON.parse(localStorage.getItem(this.mapsetSearchInput));
-					// this.refsetGridApi.setQuickFilter(this.searchInput);
+					// this.refsetGridApi.setGridOption('quickFilterText', this.searchInput);
 				}
 
 				if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
@@ -575,28 +575,38 @@ export class MapsetRecordsComponent implements OnInit {
 										adviceArray.push(results[a].mapEntries[b].advices[i]);
 									}
 									data.push({
-										'index': results[a].code !== '' ? a + results[a].code + count : false,
-										'spanned': spanned,
-										'downloadable': results[a].code !== '' ? true : false,
-										'mapEntries': results[a].mapEntries,
-										'descriptions': results[a].descriptions,
-										'entries': results[a].mapEntries.length,
-										'code': results[a].code,
-										'name': results[a].name,
-										'toName': results[a].mapEntries[b].toName.length > 0 && results[a].mapEntries[b].toName !== ' DOES NOT EXIST' ? results[a].mapEntries[b].toName : '---',
-										'toCode':
+										index: results[a].code !== '' ? a + results[a].code + count : false,
+										spanned: spanned,
+										downloadable: results[a].code !== '' ? true : false,
+										mapEntries: results[a].mapEntries,
+										descriptions: results[a].descriptions,
+										entries: results[a].mapEntries.length,
+										code: results[a].code,
+										name: results[a].name,
+										toName:
+											results[a].mapEntries[b].toName.length > 0 && results[a].mapEntries[b].toName !== ' DOES NOT EXIST'
+												? results[a].mapEntries[b].toName
+												: '---',
+										toCode:
 											results[a].mapEntries.length > 0
-												? results[a].mapEntries[b].group + '/' + results[a].mapEntries[b].priority + '&' + results[a].mapEntries.length + '#' + results[a].mapEntries[b].toCode
+												? results[a].mapEntries[b].group +
+													'/' +
+													results[a].mapEntries[b].priority +
+													'&' +
+													results[a].mapEntries.length +
+													'#' +
+													results[a].mapEntries[b].toCode
 												: 'No map entries available.',
-										'rule': results[a].mapEntries[b].rule.length > 0 ? results[a].mapEntries[b].rule : '---',
-										'relation': results[a].mapEntries[b].relation.length > 0 ? results[a].mapEntries[b].relation : '---',
-										'modified': results[a].mapEntries[b].modified,
-										'advices': results[a].code !== '' ? { 'number': adviceArray.length, 'list': adviceArray } : { 'number': -1, 'list': [] },
-										'group': results[a].mapEntries[b].group,
-										'priority': results[a].mapEntries[b].priority,
-										'moduleId': results[a].mapEntries[b].moduleId,
-										'modFlag': this.getModuleLanguageIcon(results[a].mapEntries[b].moduleId),
-										'modLang': this.getModuleLanguageName(results[a].mapEntries[b].moduleId),
+										rule: results[a].mapEntries[b].rule.length > 0 ? results[a].mapEntries[b].rule : '---',
+										relation: results[a].mapEntries[b].relation.length > 0 ? results[a].mapEntries[b].relation : '---',
+										modified: results[a].mapEntries[b].modified,
+										advices:
+											results[a].code !== '' ? { number: adviceArray.length, list: adviceArray } : { number: -1, list: [] },
+										group: results[a].mapEntries[b].group,
+										priority: results[a].mapEntries[b].priority,
+										moduleId: results[a].mapEntries[b].moduleId,
+										modFlag: this.getModuleLanguageIcon(results[a].mapEntries[b].moduleId),
+										modLang: this.getModuleLanguageName(results[a].mapEntries[b].moduleId),
 									});
 									count++;
 								}
@@ -620,7 +630,11 @@ export class MapsetRecordsComponent implements OnInit {
 								this.showPaging = true;
 								this.refsetGridApi.hideOverlay();
 								this.paginationPages = Math.ceil(this.numOfMembers / this.refsetGridPaging.pageSize)
-									? this.pagerService.getPager(Math.ceil(this.numOfMembers / this.refsetGridPaging.pageSize), this.refsetGridApi.paginationGetCurrentPage(), true)
+									? this.pagerService.getPager(
+											Math.ceil(this.numOfMembers / this.refsetGridPaging.pageSize),
+											this.refsetGridApi.paginationGetCurrentPage(),
+											true,
+										)
 									: {};
 
 								this.paginationPages.currentPage = this.getCurrentPage();
@@ -748,7 +762,8 @@ export class MapsetRecordsComponent implements OnInit {
 			if (popHeight > 100) {
 				offsetRows = 3;
 			}
-			const currentPageIndex = this.paginationComponent.getCurrentPage() * this.refsetGridApi.paginationGetPageSize() - this.refsetGridApi.paginationGetPageSize();
+			const currentPageIndex =
+				this.paginationComponent.getCurrentPage() * this.refsetGridApi.paginationGetPageSize() - this.refsetGridApi.paginationGetPageSize();
 			if (params.node.rowIndex > 0 && params.node.rowIndex - currentPageIndex + offsetRows >= this.refsetGridApi.paginationGetPageSize()) {
 				params.data.advice_bottom = true;
 				params.data.advice_top = false;
@@ -974,7 +989,15 @@ export class MapsetRecordsComponent implements OnInit {
 			const selected = [];
 			for (let c = 0; c < this.mapsetData.length; c++) {
 				if (this.mapsetData[c].checked === true) {
-					selected.push(this.mapsetData[c].code + ' ' + this.mapsetData[c].name + ' to ' + this.mapsetData[c].toCode?.split('#')[1] + ' ' + this.mapsetData[c].toName);
+					selected.push(
+						this.mapsetData[c].code +
+							' ' +
+							this.mapsetData[c].name +
+							' to ' +
+							this.mapsetData[c].toCode?.split('#')[1] +
+							' ' +
+							this.mapsetData[c].toName,
+					);
 				}
 			}
 			if (selected.length > 0 && selected.length < 3) {
@@ -1008,8 +1031,8 @@ export class MapsetRecordsComponent implements OnInit {
 					}
 				}
 				const params = {
-					'conceptCodes': selected,
-					'columnNames': cols,
+					conceptCodes: selected,
+					columnNames: cols,
 				};
 
 				this.refsetService.exportMapsetByCode(this.mapsetInfo.refSetCode, params).subscribe(
@@ -1021,7 +1044,7 @@ export class MapsetRecordsComponent implements OnInit {
 					},
 					(err) => {
 						console.error(err);
-					}
+					},
 				);
 			} else {
 				this.downloadError = 'Please select a download format.';
@@ -1030,15 +1053,15 @@ export class MapsetRecordsComponent implements OnInit {
 			if (this.selectedFormat['value'] !== undefined && this.selectedType['value'] !== undefined) {
 				this.downloading = true;
 				const params = {
-					'branch': this.mapsetInfo.branchPath,
-					'mapSetCode': this.mapsetInfo.refSetCode,
-					'fileFormatType': this.selectedType['value'],
-					'fileExportType': this.selectedFormat['value'],
-					'fileNameDate': CodeUtility.getCurrentDate().split('-').join(''),
-					'languageId': this.mapsetInfo.moduleId,
-					'startEffectiveTime': this.mapsetInfo.version.replaceAll('-', ''),
-					'transientEffectiveTime': this.mapsetInfo.version.replaceAll('-', ''),
-					'exportMetadata': this.selectExportMetadata,
+					branch: this.mapsetInfo.branchPath,
+					mapSetCode: this.mapsetInfo.refSetCode,
+					fileFormatType: this.selectedType['value'],
+					fileExportType: this.selectedFormat['value'],
+					fileNameDate: CodeUtility.getCurrentDate().split('-').join(''),
+					languageId: this.mapsetInfo.moduleId,
+					startEffectiveTime: this.mapsetInfo.version.replaceAll('-', ''),
+					transientEffectiveTime: this.mapsetInfo.version.replaceAll('-', ''),
+					exportMetadata: this.selectExportMetadata,
 				};
 
 				this.refsetService.exportMapset(params).subscribe(
@@ -1048,7 +1071,7 @@ export class MapsetRecordsComponent implements OnInit {
 					(err) => {
 						this.downloading = false;
 						console.error(err);
-					}
+					},
 				);
 			} else {
 				this.downloadError = 'Please select a download type and format.';
@@ -1084,7 +1107,7 @@ export class MapsetRecordsComponent implements OnInit {
 			(err) => {
 				this.downloading = false;
 				console.error(err);
-			}
+			},
 		);
 	}
 
@@ -1119,7 +1142,10 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	goToBatchMappingsPage(codes) {
-		this.router.navigate(['/mapset/' + this.mapsetCode + '/mappings/' + codes.join('_') + '/batch'], { replaceUrl: false, skipLocationChange: false });
+		this.router.navigate(['/mapset/' + this.mapsetCode + '/mappings/' + codes.join('_') + '/batch'], {
+			replaceUrl: false,
+			skipLocationChange: false,
+		});
 	}
 
 	getCurrentPage() {
