@@ -34,7 +34,10 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
 	@ViewChild('descriptionSection') descriptionSection: TemplateRef<any>;
 	@ViewChild('actionsSection') actionsSection: TemplateRef<any>;
 
-	constructor(private readonly modalService: NgbModal, private artifactsService: ArtifactsService) {}
+	constructor(
+		private readonly modalService: NgbModal,
+		private artifactsService: ArtifactsService,
+	) {}
 
 	get serviceUrl(): string {
 		return this.artifactsService.contextPath.replace(/\/+$/, '');
@@ -56,8 +59,26 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
 				minWidth: 65,
 				resizable: true,
 			},
-			{ field: 'fileType', tooltipField: 'fileType', headerName: 'Type', unSortIcon: true, sortable: true, minWidth: 65, flex: 1, resizable: true },
-			{ field: 'modifiedBy', tooltipField: 'modifiedBy', headerName: 'Uploaded By', unSortIcon: true, flex: 2, sortable: true, minWidth: 65, resizable: true },
+			{
+				field: 'fileType',
+				tooltipField: 'fileType',
+				headerName: 'Type',
+				unSortIcon: true,
+				sortable: true,
+				minWidth: 65,
+				flex: 1,
+				resizable: true,
+			},
+			{
+				field: 'modifiedBy',
+				tooltipField: 'modifiedBy',
+				headerName: 'Uploaded By',
+				unSortIcon: true,
+				flex: 2,
+				sortable: true,
+				minWidth: 65,
+				resizable: true,
+			},
 			{
 				field: 'created',
 				tooltipValueGetter: UiUtility.gridDateValueGetter,
@@ -110,7 +131,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
 				}
 			},
 			frameworkComponents: {
-				'templateRenderer': TemplateRendererComponent,
+				templateRenderer: TemplateRendererComponent,
 				dateTextFilterComponent: DateTextFilterComponent,
 			},
 			defaultColDef: {
@@ -150,7 +171,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
 		this.gridApi = gridReadyParams.api;
 		this.columnDefs[4].cellRendererParams = { template: this.descriptionSection };
 		this.columnDefs[5].cellRendererParams = { template: this.actionsSection };
-		this.gridApi.setColumnDefs(this.columnDefs);
+		// this.gridApi.setColumnDefs(this.columnDefs);
 
 		this.onResize(undefined);
 		this.datasource = {

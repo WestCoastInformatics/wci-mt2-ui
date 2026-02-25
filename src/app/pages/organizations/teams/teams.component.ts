@@ -40,7 +40,7 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 		private readonly refsetService: RefsetService,
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
-		private readonly organizationsComponentService: OrganizationsComponentService
+		private readonly organizationsComponentService: OrganizationsComponentService,
 	) {
 		document.body.scrollTop = 0;
 	}
@@ -107,24 +107,24 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 					suppressFilterButton: true,
 					names: [
 						{
-							'type': 'role',
-							'name': 'Admin',
-							'value': 'Admin',
+							type: 'role',
+							name: 'Admin',
+							value: 'Admin',
 						},
 						{
-							'type': 'role',
-							'name': 'Author',
-							'value': 'Author',
+							type: 'role',
+							name: 'Author',
+							value: 'Author',
 						},
 						{
-							'type': 'role',
-							'name': 'Reviewer',
-							'value': 'Reviewer',
+							type: 'role',
+							name: 'Reviewer',
+							value: 'Reviewer',
 						},
 						{
-							'type': 'role',
-							'name': 'Viewer',
-							'value': 'Viewer',
+							type: 'role',
+							name: 'Viewer',
+							value: 'Viewer',
 						},
 					],
 				},
@@ -140,7 +140,9 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 				cellRenderer: 'templateRenderer',
 				cellRendererParams: { template: this.peopleSection },
 				tooltipValueGetter: (params) => {
-					return params?.data?.memberList ? 'Team Users:\n' + params.data.memberList.map((member) => member.name).join(', \n') : 'No Team Users';
+					return params?.data?.memberList
+						? 'Team Users:\n' + params.data.memberList.map((member) => member.name).join(', \n')
+						: 'No Team Users';
 				},
 			},
 		];
@@ -156,8 +158,8 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 			onCellClicked: this.onGridCellClick,
 			onGridReady: this.onGridReady,
 			frameworkComponents: {
-				'templateRenderer': TemplateRendererComponent,
-				'categoryFilterComponent': CategoryFilterComponent,
+				templateRenderer: TemplateRendererComponent,
+				categoryFilterComponent: CategoryFilterComponent,
 			},
 			defaultColDef: {
 				sortable: true,
@@ -221,7 +223,7 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 			// BAC: are these here because the view children arn't ready yet in ngOnInit?
 			this.gridColumnDefs[2].cellRendererParams = { template: this.descriptionSection };
 			this.gridColumnDefs[5].cellRendererParams = { template: this.peopleSection };
-			this.gridApi.setColumnDefs(this.gridColumnDefs);
+			// this.gridApi.setColumnDefs(this.gridColumnDefs);
 		}
 	};
 
@@ -269,7 +271,10 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 			selectedId = selectedRow.id;
 		});
 
-		this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/users'], { replaceUrl: false, skipLocationChange: false });
+		this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/users'], {
+			replaceUrl: false,
+			skipLocationChange: false,
+		});
 	};
 
 	getOrganizations(): void {

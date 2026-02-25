@@ -1,5 +1,16 @@
 import { FormControl } from '@angular/forms';
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild, HostListener, Renderer2 } from '@angular/core';
+import {
+	ChangeDetectorRef,
+	Component,
+	EventEmitter,
+	OnInit,
+	Output,
+	ElementRef,
+	TemplateRef,
+	ViewChild,
+	HostListener,
+	Renderer2,
+} from '@angular/core';
 import { PaginationChangedEvent } from 'ag-grid-community';
 import { Subscription, Observable, OperatorFunction, of, map } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -14,6 +25,7 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { environment } from '../../../environments/environment';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
@@ -125,22 +137,22 @@ export class BatchMappingComponent implements OnInit {
 	priorityFC = new FormControl('');
 	codeList: Observable<any[]>;
 	targetToName = '';
-	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
+	rowColors = [{ background: 'white' }, { background: '#f2f2f2' }];
 	currentRowColor = 0;
 	stepperInfo: any = {};
 	stepperStartInfo = {
-		'READY_FOR_EDIT_COLOR': 'details-page-stepper-unstarted-step',
-		'READY_FOR_EDIT_STARTED': false,
-		'IN_EDIT_COLOR': 'details-page-stepper-unstarted-step',
-		'IN_EDIT_STARTED': false,
-		'READY_FOR_REVIEW_COLOR': 'details-page-stepper-unstarted-step',
-		'READY_FOR_REVIEW_STARTED': false,
-		'IN_REVIEW_COLOR': 'details-page-stepper-unstarted-step',
-		'IN_REVIEW_STARTED': false,
-		'REVIEW_COMPLETED_COLOR': 'details-page-stepper-unstarted-step',
-		'REVIEW_COMPLETED_STARTED': false,
-		'READY_FOR_PUBLICATION_COLOR': 'details-page-stepper-unstarted-step',
-		'READY_FOR_PUBLICATION_STARTED': false,
+		READY_FOR_EDIT_COLOR: 'details-page-stepper-unstarted-step',
+		READY_FOR_EDIT_STARTED: false,
+		IN_EDIT_COLOR: 'details-page-stepper-unstarted-step',
+		IN_EDIT_STARTED: false,
+		READY_FOR_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
+		READY_FOR_REVIEW_STARTED: false,
+		IN_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
+		IN_REVIEW_STARTED: false,
+		REVIEW_COMPLETED_COLOR: 'details-page-stepper-unstarted-step',
+		REVIEW_COMPLETED_STARTED: false,
+		READY_FOR_PUBLICATION_COLOR: 'details-page-stepper-unstarted-step',
+		READY_FOR_PUBLICATION_STARTED: false,
 	};
 
 	refsetData: any;
@@ -208,7 +220,7 @@ export class BatchMappingComponent implements OnInit {
 		private notificationService: NotificationService,
 		private mt2Service: MT2Service,
 		private modalService: NgbModal,
-		private pagerService: PaginationService
+		private pagerService: PaginationService,
 	) {
 		document.body.scrollTop = 0;
 		this.targetFC.valueChanges.pipe(debounceTime(600), distinctUntilChanged()).subscribe((res) => {
@@ -239,6 +251,7 @@ export class BatchMappingComponent implements OnInit {
 			this.getMapsetInfo();
 			this.getModuleMetadata();
 			this.getMapProject();
+			this.firstLoadBrowser();
 		});
 
 		this.formats = [
@@ -278,9 +291,9 @@ export class BatchMappingComponent implements OnInit {
 			onCellDoubleClicked: this.onGridCellClick,
 			onCellValueChanged: this.onCellValueChanged,
 			frameworkComponents: {
-				'templateRenderer': TemplateRendererComponent,
-				'categoryFilterComponent': CategoryFilterComponent,
-				'dateTextFilterComponent': DateTextFilterComponent,
+				templateRenderer: TemplateRendererComponent,
+				categoryFilterComponent: CategoryFilterComponent,
+				dateTextFilterComponent: DateTextFilterComponent,
 			},
 			defaultColDef: {
 				sortable: false,
@@ -294,7 +307,7 @@ export class BatchMappingComponent implements OnInit {
 			},
 			enableBrowserTooltips: true,
 			rowClassRules: {
-				'refset_tool_grid_inactive_row': function (params) {
+				refset_tool_grid_inactive_row: function (params) {
 					let inactivatedRow = false;
 
 					if (params.data) {
@@ -310,6 +323,31 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	firstLoadBrowser() {
+		this.browserColumnDefs = [
+			{
+				field: 'code',
+				tooltipField: 'code',
+				headerName: 'Code',
+				headerTooltip: 'Code',
+				flex: 1,
+				width: 125,
+				cellClass: 'blue-link',
+				resizable: false,
+				sortable: false,
+				suppressSorting: true,
+			},
+			{
+				field: 'name',
+				tooltipField: 'name',
+				headerName: 'Name',
+				headerTooltip: 'Name',
+				flex: 2,
+				minWidth: 165,
+				resizable: false,
+				sortable: false,
+				suppressSorting: true,
+			},
+		];
 		this.browserOptions = {
 			context: { componentParent: this },
 			pagination: true,
@@ -338,7 +376,7 @@ export class BatchMappingComponent implements OnInit {
 			onPaginationChanged: (event: any) => this.onPaginationChanged(event),
 			domLayout: 'autoHeight',
 			frameworkComponents: {
-				'templateRenderer': TemplateRendererComponent,
+				templateRenderer: TemplateRendererComponent,
 			},
 			defaultColDef: {
 				sortable: false,
@@ -352,7 +390,7 @@ export class BatchMappingComponent implements OnInit {
 			},
 			enableBrowserTooltips: true,
 			rowClassRules: {
-				'refset_tool_grid_inactive_row': function (params) {
+				refset_tool_grid_inactive_row: function (params) {
 					let inactivatedRow = false;
 
 					if (params.data) {
@@ -387,7 +425,7 @@ export class BatchMappingComponent implements OnInit {
 						'    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>' +
 						'    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>' +
 						'    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>' +
-						'    <label class="checkbox-override"><input type="checkbox" onclick="checkboxHandleClick()" id="checkbox-table-all" >' +
+						'    <label class="checkbox-override checkbox-header"><input type="checkbox" onclick="checkboxHandleClick()" id="checkbox-table-all" >' +
 						'    <span class="checkbox-container"></span></label>' +
 						'    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
 						'  </div>' +
@@ -455,7 +493,6 @@ export class BatchMappingComponent implements OnInit {
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.toNameSection },
 			},
-
 			{
 				field: 'relation',
 				colId: 'relation-select',
@@ -466,7 +503,9 @@ export class BatchMappingComponent implements OnInit {
 				resizable: true,
 				cellEditor: 'agSelectCellEditor',
 				cellEditorParams: (params) =>
-					params.data.mapEntries.toCode === '[Empty Target]' ? { values: this.noTargetRelations, valueListGap: 1 } : { values: this.targetRelations, valueListGap: 1 },
+					params.data.mapEntries.toCode === '[Empty Target]'
+						? { values: this.noTargetRelations, valueListGap: 1 }
+						: { values: this.targetRelations, valueListGap: 1 },
 				unSortIcon: true,
 				sortable: false,
 				suppressSorting: true,
@@ -542,31 +581,6 @@ export class BatchMappingComponent implements OnInit {
 				},
 			},
 		];
-		this.browserColumnDefs = [
-			{
-				field: 'code',
-				tooltipField: 'code',
-				headerName: 'Code',
-				headerTooltip: 'Code',
-				flex: 1,
-				width: 65,
-				cellClass: 'blue-link',
-				resizable: false,
-				sortable: false,
-				suppressSorting: true,
-			},
-			{
-				field: 'name',
-				tooltipField: 'name',
-				headerName: 'Name',
-				headerTooltip: 'Name',
-				flex: 2,
-				minWidth: 165,
-				resizable: false,
-				sortable: false,
-				suppressSorting: true,
-			},
-		];
 	}
 
 	onGridReady = (params) => {
@@ -584,7 +598,12 @@ export class BatchMappingComponent implements OnInit {
 	};
 
 	onGridCellClick = (event) => {
-		if (event.column.colId !== 'checkbox' && event.column.colId !== 'action-btns' && event.column.colId !== 'relation-select' && event.column.colId !== 'rule-select') {
+		if (
+			event.column.colId !== 'checkbox' &&
+			event.column.colId !== 'action-btns' &&
+			event.column.colId !== 'relation-select' &&
+			event.column.colId !== 'rule-select'
+		) {
 			this.goToMappingPage(event.data.code);
 		}
 	};
@@ -595,7 +614,12 @@ export class BatchMappingComponent implements OnInit {
 	};
 
 	onBrowserCellClick = (event) => {
-		if (event.column.colId !== 'checkbox' && event.column.colId !== 'action-btns' && event.column.colId !== 'relation-select' && event.column.colId !== 'rule-select') {
+		if (
+			event.column.colId !== 'checkbox' &&
+			event.column.colId !== 'action-btns' &&
+			event.column.colId !== 'relation-select' &&
+			event.column.colId !== 'rule-select'
+		) {
 			this.loadConceptDetail(event.data.code);
 		}
 	};
@@ -645,42 +669,47 @@ export class BatchMappingComponent implements OnInit {
 		const params: any = {
 			includeMembers: false,
 		};
-		const projectId = '1'; //TEST ONLY
+		const projectId = environment.defaultProjectId; //TEST ONLY
 		this.refsetService.getMapProjectById(projectId, params).subscribe({
 			next: (results) => {
 				this.targetTerminology = results.destinationTerminology;
 				this.targetTerminologyVersion = results.destinationTerminologyVersion;
 				this.ruleBased = results.ruleBased;
 				this.ruleOptions = this.ruleBased ? this.rulesFalse : this.rulesTrue;
-				this.projectRelations = results.mapRelations;
+				this.projectRelations = results.mapRelations || [];
 				const that = this;
-				this.targetRelations = results.mapRelations
-					.filter(function (res) {
-						return res.allowableForNullTarget === false;
-					})
-					.map(function (res) {
-						return that.titleCaseWord(res.name);
-					});
-				this.noTargetRelations = results.mapRelations
-					.filter(function (res) {
-						return res.allowableForNullTarget === true;
-					})
-					.map(function (res) {
-						return that.titleCaseWord(res.name);
-					});
+				if (this.projectRelations.length > 0) {
+					this.targetRelations = this.projectRelations
+						.filter(function (res) {
+							return res.allowableForNullTarget === false;
+						})
+						.map(function (res) {
+							return that.titleCaseWord(res.name);
+						});
+					this.noTargetRelations = this.projectRelations
+						.filter(function (res) {
+							return res.allowableForNullTarget === true;
+						})
+						.map(function (res) {
+							return that.titleCaseWord(res.name);
+						});
 
-				this.mapRelations = results.mapRelations.map((res) => {
-					return this.titleCaseWord(res.name);
-				});
-				this.mapAdvices = results.mapAdvices.map((res) => {
-					return res.name;
-				});
+					this.mapRelations = this.projectRelations.map((res) => {
+						return this.titleCaseWord(res.name);
+					});
+				}
+				this.mapAdvices = results.mapAdvices || [];
+				if (this.mapAdvices.length > 0) {
+					this.mapAdvices = results.mapAdvices.map((res) => {
+						return res.name;
+					});
+				}
 				//this.getBrowserData();
 				this.loadGridColumns();
 			},
 			error: (err: any) => {
 				this.loadError = true;
-				console.log(' project loading error');
+				console.log(' project loading error', err);
 			},
 		});
 	}
@@ -722,7 +751,7 @@ export class BatchMappingComponent implements OnInit {
 		this.searchInput = this.searchInput.trim();
 
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-			this.gridApi.setQuickFilter(this.searchInput);
+			this.gridApi.setGridOption('quickFilterText', this.searchInput);
 			localStorage.setItem(this.batchSearchInput, JSON.stringify(this.searchInput));
 			this.checkedNum = 0;
 			if (this.gridSelectAll) {
@@ -794,11 +823,13 @@ export class BatchMappingComponent implements OnInit {
 		text$.pipe(
 			debounceTime(600),
 			distinctUntilChanged(),
-			switchMap((term) => this.fetchData(term))
+			switchMap((term) => this.fetchData(term)),
 		);
 	fetchData(term: string): Observable<any> {
 		if (term.length >= 2 && !this.searchByKeyboard) {
-			return this.refsetService.searchConceptByQuery(this.targetTerminology, this.targetTerminologyVersion, term, '10').pipe(map((data) => data.items));
+			return this.refsetService
+				.searchConceptByQuery(this.targetTerminology, this.targetTerminologyVersion, term, '10')
+				.pipe(map((data) => data.items));
 		} else {
 			return of([]); // return an empty array if the term length is less than 3
 		}
@@ -889,61 +920,67 @@ export class BatchMappingComponent implements OnInit {
 						restParams.filter = '';
 					}
 
-					this.browserSubscription = this.refsetService.searchBrowserByQuery(this.targetTerminology, this.targetTerminologyVersion, query, restParams.offset, restParams.limit).subscribe({
-						next: (response) => {
-							this.numOfMembers = response.total;
-							this.browserData = response.items;
-							this.browserLoaded = true;
+					this.browserSubscription = this.refsetService
+						.searchBrowserByQuery(this.targetTerminology, this.targetTerminologyVersion, query, restParams.offset, restParams.limit)
+						.subscribe({
+							next: (response) => {
+								this.numOfMembers = response.total;
+								this.browserData = response.items;
+								this.browserLoaded = true;
 
-							this.changeDetectorRef.detectChanges();
+								this.changeDetectorRef.detectChanges();
 
-							const lastIndex = document.getElementsByClassName('ag-header').length - 1;
-							const child = document.getElementsByClassName('ag-header')[lastIndex];
-							document.getElementById('browserHeader').appendChild(child);
-							const lastIndexP = document.getElementsByClassName('ag-paging-panel').length - 1;
-							const childP = document.getElementsByClassName('ag-paging-panel')[lastIndexP];
-							document.getElementById('directoryPaging').appendChild(childP);
+								const lastIndex = document.getElementsByClassName('ag-header').length - 1;
+								const child = document.getElementsByClassName('ag-header')[lastIndex];
+								document.getElementById('browserHeader').appendChild(child);
+								const lastIndexP = document.getElementsByClassName('ag-paging-panel').length - 1;
+								const childP = document.getElementsByClassName('ag-paging-panel')[lastIndexP];
+								document.getElementById('directoryPaging').appendChild(childP);
 
-							this.showPaging = true;
-
-							if (this.browserData?.length > 0) {
 								this.showPaging = true;
-								this.browserApi.hideOverlay();
-								this.paginationPages = Math.ceil(this.numOfMembers / this.browserPaging.pageSize)
-									? this.pagerService.getPager(Math.ceil(this.numOfMembers / this.browserPaging.pageSize), this.browserApi.paginationGetCurrentPage(), true)
-									: {};
 
-								this.paginationPages.currentPage = this.getCurrentPage();
+								if (this.browserData?.length > 0) {
+									this.showPaging = true;
+									this.browserApi.hideOverlay();
+									this.paginationPages = Math.ceil(this.numOfMembers / this.browserPaging.pageSize)
+										? this.pagerService.getPager(
+												Math.ceil(this.numOfMembers / this.browserPaging.pageSize),
+												this.browserApi.paginationGetCurrentPage(),
+												true,
+											)
+										: {};
 
-								const lastRow = this.numOfMembers;
-								rowParams.successCallback(this.browserData, lastRow);
-							}
-							if (this.numOfMembers === 0) {
+									this.paginationPages.currentPage = this.getCurrentPage();
+
+									const lastRow = this.numOfMembers;
+									rowParams.successCallback(this.browserData, lastRow);
+								}
+								if (this.numOfMembers === 0) {
+									this.showPaging = false;
+									this.browserApi.showNoRowsOverlay();
+									rowParams.successCallback([], 0);
+								}
+
+								this.browserPaging.manualStateRefresh = Boolean(true);
+								// set placeholders on the grid floating filter fields
+								Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
+									if (obj.attributes['disabled']) {
+										// skip columns with disabled filter
+										return;
+									}
+
+									const label = obj.getAttribute('aria-label');
+									const value = label.substring(0, label.indexOf('Filter Input')) + '...';
+									obj.setAttribute('placeholder', value);
+								});
+								this.browserSubscription.unsubscribe();
+							},
+							error: (error) => {
 								this.showPaging = false;
 								this.browserApi.showNoRowsOverlay();
 								rowParams.successCallback([], 0);
-							}
-
-							this.browserPaging.manualStateRefresh = Boolean(true);
-							// set placeholders on the grid floating filter fields
-							Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
-								if (obj.attributes['disabled']) {
-									// skip columns with disabled filter
-									return;
-								}
-
-								const label = obj.getAttribute('aria-label');
-								const value = label.substring(0, label.indexOf('Filter Input')) + '...';
-								obj.setAttribute('placeholder', value);
-							});
-							this.browserSubscription.unsubscribe();
-						},
-						error: (error) => {
-							this.showPaging = false;
-							this.browserApi.showNoRowsOverlay();
-							rowParams.successCallback([], 0);
-						},
-					});
+							},
+						});
 				}
 			},
 		};
@@ -987,41 +1024,44 @@ export class BatchMappingComponent implements OnInit {
 						results.mapEntries[b].mapAdvices = mapAdvices;
 						results.mapEntries[b].adviceAlways = adviceAlways;
 						data = {
-							'uuid': results.code + results.mapEntries[b].modified + b,
-							'index': results.code + count,
-							'active': results.active,
-							'feedback': true,
-							'mapEntries': results.mapEntries[b],
-							'descriptions': results.descriptions[b],
-							'entries': results.mapEntries.length,
-							'code': results.code,
-							'name': results.name,
-							'toName': results.mapEntries[b].toName.length > 0 && results.mapEntries[b].toName !== ' DOES NOT EXIST' ? results.mapEntries[b].toName : '---',
-							'toCode':
+							uuid: results.code + results.mapEntries[b].modified + b,
+							index: results.code + count,
+							active: results.active,
+							feedback: true,
+							mapEntries: results.mapEntries[b],
+							descriptions: results.descriptions[b],
+							entries: results.mapEntries.length,
+							code: results.code,
+							name: results.name,
+							toName:
+								results.mapEntries[b].toName.length > 0 && results.mapEntries[b].toName !== ' DOES NOT EXIST'
+									? results.mapEntries[b].toName
+									: '---',
+							toCode:
 								results.mapEntries[b].toCode.length > 0
 									? results.mapEntries[b].group + '/' + results.mapEntries[b].priority + '#' + results.mapEntries[b].toCode
 									: results.mapEntries[b].group + '/' + results.mapEntries[b].priority + '#[Empty Target]',
-							'rule': results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
-							'relation': results.mapEntries[b].relation.length > 0 ? this.titleCaseWord(results.mapEntries[b].relation) : '---',
-							'modified': results.mapEntries[b].modified,
-							'advices': results.mapEntries[b].advices,
-							'advices_open': false,
-							'group': results.mapEntries[b].group,
-							'priority': results.mapEntries[b].priority,
-							'moduleId': results.mapEntries[b].moduleId,
-							'modFlag': this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
-							'modLang': this.getModuleLanguageName(results.mapEntries[b].moduleId),
+							rule: results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
+							relation: results.mapEntries[b].relation.length > 0 ? this.titleCaseWord(results.mapEntries[b].relation) : '---',
+							modified: results.mapEntries[b].modified,
+							advices: results.mapEntries[b].advices,
+							advices_open: false,
+							group: results.mapEntries[b].group,
+							priority: results.mapEntries[b].priority,
+							moduleId: results.mapEntries[b].moduleId,
+							modFlag: this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
+							modLang: this.getModuleLanguageName(results.mapEntries[b].moduleId),
 						};
 						count++;
 						batch.push(data);
 					}
 				}
 				this.mapsetData = batch;
-				if (!this.loadError) {
+				setTimeout(() => {
 					const lastIndex = document.getElementsByClassName('ag-header').length - 1;
 					const child = document.getElementsByClassName('ag-header')[0]; //lastIndex];
 					document.getElementById('directoryHeader').appendChild(child);
-				}
+				}, 400);
 
 				this.breadcrumbService.setBreadcrumbs([
 					{ path: '/library', label: 'Library' },
@@ -1030,7 +1070,7 @@ export class BatchMappingComponent implements OnInit {
 				]);
 				if (localStorage.getItem(this.batchSearchInput)) {
 					this.searchInput = JSON.parse(localStorage.getItem(this.batchSearchInput));
-					this.gridApi.setQuickFilter(this.searchInput);
+					this.gridApi.setGridOption('quickFilterText', this.searchInput);
 				}
 			},
 			error: (error) => {
@@ -1056,10 +1096,10 @@ export class BatchMappingComponent implements OnInit {
 	addEmptyTargetToGroup(id: string, groupNum: number) {
 		let nextPriorityNum = 1;
 		let selectEntryIndex = 0;
-		let orginalFrom = { 'code': '', 'name': '' };
+		let orginalFrom = { code: '', name: '' };
 		for (let p = 0; p < this.mapsetData.length; p++) {
 			if (this.mapsetData[p].uuid == id) {
-				orginalFrom = { 'code': this.mapsetData[p].code, 'name': this.mapsetData[p].name };
+				orginalFrom = { code: this.mapsetData[p].code, name: this.mapsetData[p].name };
 				if (this.mapsetData[p].group === groupNum) {
 					if (this.mapsetData[p].priority >= nextPriorityNum) {
 						selectEntryIndex = p;
@@ -1096,37 +1136,37 @@ export class BatchMappingComponent implements OnInit {
 		}
 
 		const newMapEntry = {
-			'feedback': true,
-			'index': orginalFrom.code + this.mapsetData.length,
-			'name': orginalFrom.name,
-			'code': orginalFrom.code,
-			'group': groupNum,
-			'priority': nextPriorityNum,
-			'relation': defaultRelationship,
-			'rule': defaultRule,
-			'toCode': groupNum + '/' + nextPriorityNum + '#' + '[Empty Target]',
-			'toName': '---',
-			'uuid': groupNum + nextPriorityNum + Date.now(),
-			'mapEntries': {
-				'id': null,
-				'modified': null,
-				'modifiedBy': null,
-				'moduleId': this.tempModuleIdChangeBeforeRelease,
-				'modFlag': '',
-				'modLang': '',
-				'active': true,
-				'descriptions': [],
-				'additionalMapEntryInfos': [],
-				'block': 0,
-				'created': null,
-				'toCode': '[Empty Target]',
-				'toName': '---',
-				'advices': [],
-				'mapAdvices': [],
-				'adviceAlways': [],
-				'group': groupNum,
-				'priority': nextPriorityNum,
-				'uuid': groupNum + nextPriorityNum + Date.now(),
+			feedback: true,
+			index: orginalFrom.code + this.mapsetData.length,
+			name: orginalFrom.name,
+			code: orginalFrom.code,
+			group: groupNum,
+			priority: nextPriorityNum,
+			relation: defaultRelationship,
+			rule: defaultRule,
+			toCode: groupNum + '/' + nextPriorityNum + '#' + '[Empty Target]',
+			toName: '---',
+			uuid: groupNum + nextPriorityNum + Date.now(),
+			mapEntries: {
+				id: null,
+				modified: null,
+				modifiedBy: null,
+				moduleId: this.tempModuleIdChangeBeforeRelease,
+				modFlag: '',
+				modLang: '',
+				active: true,
+				descriptions: [],
+				additionalMapEntryInfos: [],
+				block: 0,
+				created: null,
+				toCode: '[Empty Target]',
+				toName: '---',
+				advices: [],
+				mapAdvices: [],
+				adviceAlways: [],
+				group: groupNum,
+				priority: nextPriorityNum,
+				uuid: groupNum + nextPriorityNum + Date.now(),
 			},
 		};
 
@@ -1185,27 +1225,27 @@ export class BatchMappingComponent implements OnInit {
 				}
 			}
 			const newMapEntry = {
-				'active': true,
-				'additionalMapEntryInfos': [],
-				'mapAdvices': [],
-				'adviceAlways': [],
-				'advices': [],
-				'descriptions': [],
-				'block': 0,
-				'created': null,
-				'group': this.numOfGroups,
-				'id': null,
-				'modified': null,
-				'modifiedBy': null,
-				'moduleId': this.tempModuleIdChangeBeforeRelease,
-				'modFlag': '',
-				'modLang': '',
-				'priority': nextPriorityNum,
-				'relation': defaultRelationship,
-				'rule': defaultRule,
-				'toCode': this.targetCodeInput,
-				'toName': this.targetNameInput,
-				'uuid': this.numOfGroups + nextPriorityNum + Date.now(),
+				active: true,
+				additionalMapEntryInfos: [],
+				mapAdvices: [],
+				adviceAlways: [],
+				advices: [],
+				descriptions: [],
+				block: 0,
+				created: null,
+				group: this.numOfGroups,
+				id: null,
+				modified: null,
+				modifiedBy: null,
+				moduleId: this.tempModuleIdChangeBeforeRelease,
+				modFlag: '',
+				modLang: '',
+				priority: nextPriorityNum,
+				relation: defaultRelationship,
+				rule: defaultRule,
+				toCode: this.targetCodeInput,
+				toName: this.targetNameInput,
+				uuid: this.numOfGroups + nextPriorityNum + Date.now(),
 			};
 			this.mapsetData[0].mapEntries.push(newMapEntry);
 		} else {
@@ -1254,22 +1294,22 @@ export class BatchMappingComponent implements OnInit {
 					const uiData = this.mapsetData[p];
 					const uiEntry = this.mapsetData[p].mapEntries;
 					const mapEntry = {
-						'advices': uiEntry.advices,
-						'toCode': uiEntry.toCode === '[Empty Target]' ? '' : uiEntry.toCode,
-						'toName': uiEntry.toName === '---' ? '[NO TARGET]' : uiEntry.toName,
-						'rule': uiData.rule,
-						'priority': uiData.priority,
-						'relation': uiData.relation.toUpperCase(),
-						'group': uiData.group,
-						'block': uiEntry.block,
-						'moduleId': uiEntry.moduleId,
-						'active': uiEntry.active,
-						'additionalMapEntryInfos': uiEntry.additionalMapEntryInfos,
-						'descriptions': uiEntry.descriptions,
-						'id': uiEntry.id,
-						'modified': uiEntry.modified,
-						'created': uiEntry.created,
-						'modifiedBy': uiEntry.modifiedBy,
+						advices: uiEntry.advices,
+						toCode: uiEntry.toCode === '[Empty Target]' ? '' : uiEntry.toCode,
+						toName: uiEntry.toName === '---' ? '[NO TARGET]' : uiEntry.toName,
+						rule: uiData.rule,
+						priority: uiData.priority,
+						relation: uiData.relation.toUpperCase(),
+						group: uiData.group,
+						block: uiEntry.block,
+						moduleId: uiEntry.moduleId,
+						active: uiEntry.active,
+						additionalMapEntryInfos: uiEntry.additionalMapEntryInfos,
+						descriptions: uiEntry.descriptions,
+						id: uiEntry.id,
+						modified: uiEntry.modified,
+						created: uiEntry.created,
+						modifiedBy: uiEntry.modifiedBy,
 					};
 					this.mapsetResponse[f].mapEntries.push(mapEntry);
 				}
@@ -1284,7 +1324,7 @@ export class BatchMappingComponent implements OnInit {
 			},
 			(error) => {
 				//
-			}
+			},
 		);
 	}
 
@@ -1370,7 +1410,7 @@ export class BatchMappingComponent implements OnInit {
 		this.selectedTarget = params.data.uuid;
 		if (params.data.mapEntries.toCode !== '[Empty Target]') {
 			this.targetFC.setValue(params.data.mapEntries.toCode);
-			this.query = { 'code': params.data.mapEntries.toCode };
+			this.query = { code: params.data.mapEntries.toCode };
 			this.targetToName = params.data.mapEntries.toName;
 		}
 		this.showTargetPopover = true;
@@ -1815,8 +1855,7 @@ export class BatchMappingComponent implements OnInit {
 
 	toggleSectionView(section: string) {
 		if (section === 'showBrowserSection' && !this.loadedBrowser) {
-			this.loadedBrowser;
-			this.firstLoadBrowser();
+			this.loadedBrowser = true;
 		}
 		if (this[section]) {
 			this[section] = false;

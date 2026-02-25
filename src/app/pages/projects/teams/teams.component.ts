@@ -55,7 +55,7 @@ export class ProjectsTeamsComponent implements OnInit, OnDestroy {
 		protected readonly authService: AuthenticationService,
 		protected readonly projectsComponentService: ProjectsComponentService,
 		protected readonly route: ActivatedRoute,
-		protected readonly projectsService: ProjectsService
+		protected readonly projectsService: ProjectsService,
 	) {
 		document.body.scrollTop = 0;
 		refsetService.getTaxonomyRoot();
@@ -73,7 +73,12 @@ export class ProjectsTeamsComponent implements OnInit, OnDestroy {
 		});
 
 		this.routerEventSubscription = this.router.events.subscribe((event) => {
-			if (this.router.url.includes('organization') && this.router.url.includes('edition') && this.router.url.includes('projects') && this.router.url.includes('teams')) {
+			if (
+				this.router.url.includes('organization') &&
+				this.router.url.includes('edition') &&
+				this.router.url.includes('projects') &&
+				this.router.url.includes('teams')
+			) {
 				this.checkLocationPath(this.router.url);
 			} else {
 				this.ngOnDestroy();
@@ -127,24 +132,24 @@ export class ProjectsTeamsComponent implements OnInit, OnDestroy {
 					suppressFilterButton: true,
 					names: [
 						{
-							'type': 'role',
-							'name': 'Admin',
-							'value': 'Admin',
+							type: 'role',
+							name: 'Admin',
+							value: 'Admin',
 						},
 						{
-							'type': 'role',
-							'name': 'Author',
-							'value': 'Author',
+							type: 'role',
+							name: 'Author',
+							value: 'Author',
 						},
 						{
-							'type': 'role',
-							'name': 'Reviewer',
-							'value': 'Reviewer',
+							type: 'role',
+							name: 'Reviewer',
+							value: 'Reviewer',
 						},
 						{
-							'type': 'role',
-							'name': 'Viewer',
-							'value': 'Viewer',
+							type: 'role',
+							name: 'Viewer',
+							value: 'Viewer',
 						},
 					],
 				},
@@ -160,7 +165,9 @@ export class ProjectsTeamsComponent implements OnInit, OnDestroy {
 				cellRenderer: 'templateRenderer',
 				cellRendererParams: { template: this.peopleSection },
 				tooltipValueGetter: (params) => {
-					return params?.data?.memberList ? 'Team Users:\n' + params.data.memberList.map((member) => member.name).join(', \n') : 'No Team Users';
+					return params?.data?.memberList
+						? 'Team Users:\n' + params.data.memberList.map((member) => member.name).join(', \n')
+						: 'No Team Users';
 				},
 			},
 		];
@@ -176,8 +183,8 @@ export class ProjectsTeamsComponent implements OnInit, OnDestroy {
 			onGridReady: this.onGridReady,
 			onCellClicked: this.onGridCellClick,
 			frameworkComponents: {
-				'templateRenderer': TemplateRendererComponent,
-				'categoryFilterComponent': CategoryFilterComponent,
+				templateRenderer: TemplateRendererComponent,
+				categoryFilterComponent: CategoryFilterComponent,
 			},
 			defaultColDef: {
 				sortable: true,
@@ -241,7 +248,10 @@ export class ProjectsTeamsComponent implements OnInit, OnDestroy {
 			selectedId = selectedRow.id;
 		});
 
-		this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/users'], { replaceUrl: false, skipLocationChange: false });
+		this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/users'], {
+			replaceUrl: false,
+			skipLocationChange: false,
+		});
 	};
 
 	getOrganizations(): void {
@@ -297,12 +307,12 @@ export class ProjectsTeamsComponent implements OnInit, OnDestroy {
 				this.teamData = [];
 				this.numberOfTeams = 0;
 				this.gridApi.setGridOption('rowData', this.teamData);
-			}
+			},
 		);
 
 		this.gridColumnDefs[2].cellRendererParams = { template: this.descriptionSection };
 		this.gridColumnDefs[5].cellRendererParams = { template: this.peopleSection };
-		this.gridApi.setColumnDefs(this.gridColumnDefs);
+		// this.gridApi.setColumnDefs(this.gridColumnDefs);
 	};
 
 	ngOnDestroy() {

@@ -624,7 +624,7 @@
 }
 
 .code-link:hover {
-	text-decoration: underline;
+	text-decoration: none;
 }
 
 .action-column {

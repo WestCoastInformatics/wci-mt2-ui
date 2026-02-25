@@ -43,7 +43,7 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 		private readonly route: ActivatedRoute,
 		private readonly projectsService: ProjectsService,
 		private readonly notificationService: NotificationService,
-		private readonly organizationsComponentService: OrganizationsComponentService
+		private readonly organizationsComponentService: OrganizationsComponentService,
 	) {
 		document.body.scrollTop = 0;
 	}
@@ -106,7 +106,7 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 			onCellClicked: this.onGridCellClick,
 			onGridReady: this.onGridReady,
 			frameworkComponents: {
-				'templateRenderer': TemplateRendererComponent,
+				templateRenderer: TemplateRendererComponent,
 			},
 			defaultColDef: {
 				filter: true,
@@ -160,16 +160,22 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 			// BAC: these are here because column defs are set up before view children are injected?
 			this.columnDefs[1].cellRendererParams = { template: this.descriptionSection };
 			this.columnDefs[2].cellRendererParams = { template: this.teamSection };
-			this.api.setColumnDefs(this.columnDefs);
+			// this.api.setColumnDefs(this.columnDefs);
 		}
 	};
 
 	onGridCellClick = (event) => {
 		// If clicking on teams, go to teams page
 		if (event.column.colId === 'teams') {
-			this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'teams'], { replaceUrl: false, skipLocationChange: false });
+			this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'teams'], {
+				replaceUrl: false,
+				skipLocationChange: false,
+			});
 		} else {
-			this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'refsets'], { replaceUrl: false, skipLocationChange: false });
+			this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'refsets'], {
+				replaceUrl: false,
+				skipLocationChange: false,
+			});
 		}
 	};
 
@@ -217,7 +223,7 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 						this.api.setGridOption('rowData', this.data);
 						this.api.redrawRows();
 						this.showLoadingSpinner = false;
-					})
+					}),
 				)
 				.subscribe((error) => {
 					this.showLoadingSpinner = false;

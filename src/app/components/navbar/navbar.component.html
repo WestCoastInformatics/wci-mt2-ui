@@ -7,14 +7,22 @@
 
 		<div
 			class="rt2-breadcrumb-bar text-ghost-grey"
-			[class]="breadcrumbs.length > 1 && projectRole.length > 8 ? 'extended-breadcrumb-and-roles' : breadcrumbs.length > 2 ? 'extended-breadcrumb' : 'display: flex'">
+			[class]="
+				breadcrumbs.length > 1 && projectRole.length > 8
+					? 'extended-breadcrumb-and-roles'
+					: breadcrumbs.length > 2
+						? 'extended-breadcrumb'
+						: 'display: flex'
+			"
+		>
 			<div
 				*ngFor="let breadcrumb of breadcrumbs"
 				title="{{ breadcrumb.label }}"
 				aria-label="{{ breadcrumb.label }}"
 				[class]="breadcrumb.class"
 				[ngClass]="{ 'multi-crumbs': breadcrumbs.length > 2 }"
-				(click)="navigate(breadcrumb.id)">
+				(click)="navigate(breadcrumb.id)"
+			>
 				<div class="ellipsed-label">
 					{{ breadcrumb.label }}
 				</div>
@@ -37,34 +45,61 @@
 			<span class="project-assignee" *ngIf="assignedUser() !== 'Unassigned'">Assignee: {{ assignedUser() }}</span>
 		</div>
 
-		<div class="navbar-div navbar-divider" (click)="navigateToRoute('/library')">
+		<div class="navbar-div navbar-divider" (click)="navigateToRoute('/library')" [ngClass]="{ 'active-page': router.url.includes('library') }">
 			<div class="navbar-icon"><img src="/assets/directory-icon.svg" /></div>
 			<div class="navbar-icon-label header-icon-font">Library</div>
 		</div>
 
-		<div *ngIf="isUserLoggedIn" class="navbar-div navbar-divider" (click)="navigateToRoute('/library')">
+		<div
+			*ngIf="isUserLoggedIn"
+			class="navbar-div navbar-divider"
+			(click)="navigateToRoute('/library')"
+			[ngClass]="{ 'active-page': router.url.includes('projects') }"
+		>
 			<div class="navbar-icon"><img src="/assets/projects-icon.svg" /></div>
 			<div class="navbar-icon-label header-icon-font">Projects</div>
 		</div>
 
-		<div *ngIf="isUserLoggedIn" class="navbar-div navbar-divider hide" (click)="navigateToRoute('/browsers')">
+		<div
+			*ngIf="isUserLoggedIn"
+			class="navbar-div navbar-divider hide"
+			(click)="navigateToRoute('/library')"
+			[ngClass]="{ 'active-page': router.url.includes('browsers') }"
+		>
 			<div class="navbar-icon"><i class="fa fa-earth-europe fa-lg navbar-icon-label navbar-fa-icon"></i></div>
 			<div class="navbar-icon-label header-icon-font">Browsers</div>
 		</div>
 
-		<div *ngIf="isUserLoggedIn" class="navbar-div navbar-divider" (click)="navigateToRoute('/library')">
+		<div
+			*ngIf="isUserLoggedIn"
+			class="navbar-div navbar-divider"
+			(click)="navigateToRoute('/library')"
+			[ngClass]="{ 'active-page': router.url.includes('inbox') }"
+		>
 			<div class="navbar-icon"><i class="fa fa-inbox fa-lg navbar-icon-label navbar-fa-icon"></i></div>
 			<div class="navbar-icon-label header-icon-font">Inbox</div>
 		</div>
 
-		<div *ngIf="isUserLoggedIn" class="navbar-div navbar-divider" (click)="navigateToRoute('/library')">
+		<div
+			*ngIf="isUserLoggedIn"
+			class="navbar-div navbar-divider"
+			(click)="navigateToRoute('/library')"
+			[ngClass]="{ 'active-page': router.url.includes('dashboard') }"
+		>
 			<div class="navbar-icon"><img src="/assets/dashboard-icon.svg" /></div>
 			<div class="navbar-icon-label header-icon-font">Dashboard</div>
 		</div>
 
 		<div *ngIf="isUserLoggedIn" class="navbar-divider float-right mr-2">
 			<div class="dropdown navbar-icon-menu" id="userDropdownMenu">
-				<label class="dropdown-toggle pointer text-ghost-grey btn-sm mb-0" id="userDropdown" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<label
+					class="dropdown-toggle pointer text-ghost-grey btn-sm mb-0"
+					id="userDropdown"
+					data-toggle="dropdown"
+					data-bs-toggle="dropdown"
+					aria-haspopup="true"
+					aria-expanded="false"
+				>
 					<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="medium-icon-image mr-2" />
 				</label>
 

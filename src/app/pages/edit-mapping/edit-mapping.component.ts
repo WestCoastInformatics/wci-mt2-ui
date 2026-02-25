@@ -1,5 +1,16 @@
 import { FormControl } from '@angular/forms';
-import { ChangeDetectorRef, ElementRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild, HostListener, Renderer2 } from '@angular/core';
+import {
+	ChangeDetectorRef,
+	ElementRef,
+	Component,
+	EventEmitter,
+	OnInit,
+	Output,
+	TemplateRef,
+	ViewChild,
+	HostListener,
+	Renderer2,
+} from '@angular/core';
 import { PaginationChangedEvent } from 'ag-grid-community';
 import { Subscription, Observable, OperatorFunction, of, map } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -14,6 +25,7 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { environment } from '../../../environments/environment';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
@@ -109,7 +121,7 @@ export class EditMappingComponent implements OnInit {
 	numOfGroups = 0;
 	groupList = [];
 	foundConceptCode = false;
-	selectedTarget = { 'id': '', 'group': 0, 'priority': 0 };
+	selectedTarget = { id: '', group: 0, priority: 0 };
 	userChanged = false;
 	internationalId = '449080006';
 	tempModuleIdChangeBeforeRelease = '449080006';
@@ -122,22 +134,22 @@ export class EditMappingComponent implements OnInit {
 	formatter = (x: { name: string; code: string }) => x.code;
 	searchByKeyboard = false;
 	searchByTypeahead = false;
-	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
+	rowColors = [{ background: 'white' }, { background: '#f2f2f2' }];
 	currentRowColor = 0;
 	stepperInfo: any = {};
 	stepperStartInfo = {
-		'READY_FOR_EDIT_COLOR': 'details-page-stepper-unstarted-step',
-		'READY_FOR_EDIT_STARTED': false,
-		'IN_EDIT_COLOR': 'details-page-stepper-unstarted-step',
-		'IN_EDIT_STARTED': false,
-		'READY_FOR_REVIEW_COLOR': 'details-page-stepper-unstarted-step',
-		'READY_FOR_REVIEW_STARTED': false,
-		'IN_REVIEW_COLOR': 'details-page-stepper-unstarted-step',
-		'IN_REVIEW_STARTED': false,
-		'REVIEW_COMPLETED_COLOR': 'details-page-stepper-unstarted-step',
-		'REVIEW_COMPLETED_STARTED': false,
-		'READY_FOR_PUBLICATION_COLOR': 'details-page-stepper-unstarted-step',
-		'READY_FOR_PUBLICATION_STARTED': false,
+		READY_FOR_EDIT_COLOR: 'details-page-stepper-unstarted-step',
+		READY_FOR_EDIT_STARTED: false,
+		IN_EDIT_COLOR: 'details-page-stepper-unstarted-step',
+		IN_EDIT_STARTED: false,
+		READY_FOR_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
+		READY_FOR_REVIEW_STARTED: false,
+		IN_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
+		IN_REVIEW_STARTED: false,
+		REVIEW_COMPLETED_COLOR: 'details-page-stepper-unstarted-step',
+		REVIEW_COMPLETED_STARTED: false,
+		READY_FOR_PUBLICATION_COLOR: 'details-page-stepper-unstarted-step',
+		READY_FOR_PUBLICATION_STARTED: false,
 	};
 
 	moduleMetadata: any;
@@ -161,6 +173,7 @@ export class EditMappingComponent implements OnInit {
 	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
 	@ViewChild('confirmationModal') confirmationModal: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
+	@ViewChild('browserSearchInput') private browserSearchInput: ElementRef;
 	@ViewChild('actions') private actions: MatSelect;
 	@ViewChild('selectRelationship') private selectRelationship: MatSelect;
 	@ViewChild('selectRule') private selectRule: MatSelect;
@@ -182,7 +195,7 @@ export class EditMappingComponent implements OnInit {
 		private authenticationService: AuthenticationService,
 		private notificationService: NotificationService,
 		private modalService: NgbModal,
-		private pagerService: PaginationService
+		private pagerService: PaginationService,
 	) {
 		document.body.scrollTop = 0;
 		this.targetFC.valueChanges.pipe(debounceTime(600), distinctUntilChanged()).subscribe((res) => {
@@ -209,6 +222,7 @@ export class EditMappingComponent implements OnInit {
 			this.getMapsetInfo();
 			this.getModuleMetadata();
 			this.getMapProject();
+			this.firstLoadBrowser();
 		});
 		this.formats = [
 			{ value: 'rf2', display: 'RF2' },
@@ -226,7 +240,7 @@ export class EditMappingComponent implements OnInit {
 		this.disableChannel.postMessage(false);
 		const stepperClass = 'details-page-stepper-started-step';
 		this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
-		//his.refsetStatus?.includes('IN_EDIT')) {
+		//this.refsetStatus?.includes('IN_EDIT')) {
 		this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
 		this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
 		this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
@@ -264,41 +278,45 @@ export class EditMappingComponent implements OnInit {
 		const params: any = {
 			includeMembers: false,
 		};
-		const projectId = '1'; //TEST ONLY
+		const projectId = environment.defaultProjectId; //TEST ONLY
 		this.refsetService.getMapProjectById(projectId, params).subscribe({
 			next: (results) => {
 				this.targetTerminology = results.destinationTerminology;
 				this.targetTerminologyVersion = results.destinationTerminologyVersion;
 				this.ruleBased = results.ruleBased;
-				this.projectRelations = results.mapRelations;
+				this.projectRelations = results.mapRelations || [];
 				const that = this;
-				this.targetRelations = results.mapRelations
-					.filter(function (res) {
-						return res.allowableForNullTarget === false;
-					})
-					.map(function (res) {
-						return that.titleCaseWord(res.name);
-					});
+				if (this.projectRelations.length > 0) {
+					this.targetRelations = this.projectRelations
+						.filter(function (res) {
+							return res.allowableForNullTarget === false;
+						})
+						.map(function (res) {
+							return that.titleCaseWord(res.name);
+						});
 
-				this.noTargetRelations = results.mapRelations
-					.filter(function (res) {
-						return res.allowableForNullTarget === true;
-					})
-					.map(function (res) {
-						return that.titleCaseWord(res.name);
-					});
+					this.noTargetRelations = this.projectRelations
+						.filter(function (res) {
+							return res.allowableForNullTarget === true;
+						})
+						.map(function (res) {
+							return that.titleCaseWord(res.name);
+						});
 
-				this.mapRelations = results.mapRelations.map((res) => {
-					return this.titleCaseWord(res.name);
-				});
-				this.mapAdvices = results.mapAdvices.map((res) => {
-					return res.name;
-				});
-				this.loadGridColumns();
+					this.mapRelations = this.projectRelations.map((res) => {
+						return this.titleCaseWord(res.name);
+					});
+				}
+				this.mapAdvices = results.mapAdvices || [];
+				if (this.mapAdvices.length > 0) {
+					this.mapAdvices = this.mapAdvices.map((res) => {
+						return res.name;
+					});
+				}
 			},
 			error: (err: any) => {
 				this.loadError = true;
-				console.log(' project loading error');
+				console.log(' project loading error', err);
 			},
 		});
 	}
@@ -422,11 +440,13 @@ export class EditMappingComponent implements OnInit {
 		text$.pipe(
 			debounceTime(600),
 			distinctUntilChanged(),
-			switchMap((term) => this.fetchData(term))
+			switchMap((term) => this.fetchData(term)),
 		);
 	fetchData(term: string): Observable<any> {
 		if (term.length >= 2 && !this.searchByKeyboard) {
-			return this.refsetService.searchConceptByQuery(this.targetTerminology, this.targetTerminologyVersion, term, '10').pipe(map((data) => data.items));
+			return this.refsetService
+				.searchConceptByQuery(this.targetTerminology, this.targetTerminologyVersion, term, '10')
+				.pipe(map((data) => data.items));
 		} else {
 			return of([]); // return an empty array if the term length is less than 3
 		}
@@ -525,30 +545,33 @@ export class EditMappingComponent implements OnInit {
 					results.mapEntries[b].modLang = this.getModuleLanguageName(results.mapEntries[b].moduleId);
 					if (!spanned) {
 						data.push({
-							'index': results.code + count,
-							'active': results.active,
-							'spanned': spanned,
-							'downloadable': true,
-							'mapEntries': results.mapEntries,
-							'descriptions': results.descriptions,
-							'entries': results.mapEntries.length,
-							'code': results.code,
-							'name': results.name,
-							'toName': results.mapEntries[b].toName.length > 0 && results.mapEntries[b].toName !== ' DOES NOT EXIST' ? results.mapEntries[b].toName : '---',
-							'toCode':
+							index: results.code + count,
+							active: results.active,
+							spanned: spanned,
+							downloadable: true,
+							mapEntries: results.mapEntries,
+							descriptions: results.descriptions,
+							entries: results.mapEntries.length,
+							code: results.code,
+							name: results.name,
+							toName:
+								results.mapEntries[b].toName.length > 0 && results.mapEntries[b].toName !== ' DOES NOT EXIST'
+									? results.mapEntries[b].toName
+									: '---',
+							toCode:
 								results.mapEntries[b].toCode.length > 0
 									? results.mapEntries[b].group + '/' + results.mapEntries[b].priority + '#' + results.mapEntries[b].toCode
 									: 'No map entries available.',
-							'rule': results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
-							'relation': results.mapEntries[b].relation.length > 0 ? results.mapEntries[b].relation.toUpperCase() : '---',
-							'modified': results.mapEntries[b].modified,
-							'advices': results.mapEntries[b].advices,
-							'group': results.mapEntries[b].group,
-							'groupTotal': results.mapEntries[b].group,
-							'priority': results.mapEntries[b].priority,
-							'moduleId': results.mapEntries[b].moduleId,
-							'modFlag': this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
-							'modLang': this.getModuleLanguageName(results.mapEntries[b].moduleId),
+							rule: results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
+							relation: results.mapEntries[b].relation.length > 0 ? results.mapEntries[b].relation.toUpperCase() : '---',
+							modified: results.mapEntries[b].modified,
+							advices: results.mapEntries[b].advices,
+							group: results.mapEntries[b].group,
+							groupTotal: results.mapEntries[b].group,
+							priority: results.mapEntries[b].priority,
+							moduleId: results.mapEntries[b].moduleId,
+							modFlag: this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
+							modLang: this.getModuleLanguageName(results.mapEntries[b].moduleId),
 						});
 						count++;
 					}
@@ -616,11 +639,13 @@ export class EditMappingComponent implements OnInit {
 			this.toggleSectionView('showBrowserSection');
 			this.secondWindow.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
 		}
-		const openInterval = setInterval(() => {
-			this.searchBrowserInput = this.targetFC.value['code'];
-			this.onBrowserSearchChange();
-			clearInterval(openInterval);
-		}, 100);
+		if (this.selectedTarget.id !== '') {
+			const openInterval = setInterval(() => {
+				this.searchBrowserInput = this.targetFC.value['code'];
+				this.onBrowserSearchChange();
+				clearInterval(openInterval);
+			}, 100);
+		}
 	}
 
 	setEmptyTarget() {
@@ -669,34 +694,36 @@ export class EditMappingComponent implements OnInit {
 			defaultRule = 'TRUE';
 		}
 		let defaultRelationship = '';
-		for (let r = 0; r < this.projectRelations.length; r++) {
-			if (this.projectRelations[r].allowableForNullTarget === true) {
-				defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
-				break;
+		if (this.projectRelations.length > 0) {
+			for (let r = 0; r < this.projectRelations.length; r++) {
+				if (this.projectRelations[r].allowableForNullTarget === true) {
+					defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
+					break;
+				}
 			}
 		}
 		const newMapEntry = {
-			'active': true,
-			'additionalMapEntryInfos': [],
-			'mapAdvices': [],
-			'adviceAlways': [],
-			'advices': [],
-			'descriptions': [],
-			'block': 0,
-			'created': null,
-			'group': groupNum,
-			'id': null,
-			'modified': null,
-			'modifiedBy': null,
-			'moduleId': this.tempModuleIdChangeBeforeRelease,
-			'modFlag': '',
-			'modLang': '',
-			'priority': nextPriorityNum,
-			'relation': defaultRelationship,
-			'rule': defaultRule,
-			'toCode': '',
-			'toName': '[NO TARGET]',
-			'uuid': String(groupNum + nextPriorityNum + Date.now()),
+			active: true,
+			additionalMapEntryInfos: [],
+			mapAdvices: [],
+			adviceAlways: [],
+			advices: [],
+			descriptions: [],
+			block: 0,
+			created: null,
+			group: groupNum,
+			id: null,
+			modified: null,
+			modifiedBy: null,
+			moduleId: this.tempModuleIdChangeBeforeRelease,
+			modFlag: '',
+			modLang: '',
+			priority: nextPriorityNum,
+			relation: defaultRelationship,
+			rule: defaultRule,
+			toCode: '',
+			toName: '[NO TARGET]',
+			uuid: String(groupNum + nextPriorityNum + Date.now()),
 		};
 
 		this.targetCodeInput = '';
@@ -736,7 +763,7 @@ export class EditMappingComponent implements OnInit {
 		this.targetNameInput = name === '[NO TARGET]' ? '' : name;
 		this.targetFC.reset();
 		this.targetFC.setValue(this.targetCodeInput);
-		this.query = { 'code': this.targetCodeInput };
+		this.query = { code: this.targetCodeInput };
 		this.targetInput.nativeElement.focus();
 	}
 
@@ -763,27 +790,27 @@ export class EditMappingComponent implements OnInit {
 			}
 
 			const newMapEntry = {
-				'active': true,
-				'additionalMapEntryInfos': [],
-				'mapAdvices': [],
-				'adviceAlways': [],
-				'advices': [],
-				'descriptions': [],
-				'block': 0,
-				'created': null,
-				'group': this.numOfGroups,
-				'id': null,
-				'modified': null,
-				'modifiedBy': null,
-				'moduleId': this.tempModuleIdChangeBeforeRelease,
-				'modFlag': '',
-				'modLang': '',
-				'priority': nextPriorityNum,
-				'relation': defaultRelationship,
-				'rule': defaultRule,
-				'toCode': this.targetCodeInput,
-				'toName': this.targetNameInput,
-				'uuid': this.numOfGroups + nextPriorityNum + Date.now(),
+				active: true,
+				additionalMapEntryInfos: [],
+				mapAdvices: [],
+				adviceAlways: [],
+				advices: [],
+				descriptions: [],
+				block: 0,
+				created: null,
+				group: this.numOfGroups,
+				id: null,
+				modified: null,
+				modifiedBy: null,
+				moduleId: this.tempModuleIdChangeBeforeRelease,
+				modFlag: '',
+				modLang: '',
+				priority: nextPriorityNum,
+				relation: defaultRelationship,
+				rule: defaultRule,
+				toCode: this.targetCodeInput,
+				toName: this.targetNameInput,
+				uuid: this.numOfGroups + nextPriorityNum + Date.now(),
 			};
 			this.mapsetData[0].mapEntries.push(newMapEntry);
 		} else {
@@ -834,32 +861,32 @@ export class EditMappingComponent implements OnInit {
 
 	saveMapping() {
 		const saveMapset = {
-			'code': this.mapsetData[0].code,
-			'name': this.mapsetData[0].name,
-			'active': this.mapsetData[0].active,
-			'mapEntries': [],
+			code: this.mapsetData[0].code,
+			name: this.mapsetData[0].name,
+			active: this.mapsetData[0].active,
+			mapEntries: [],
 		};
 
 		for (let m = 0; m < this.mapsetData[0].mapEntries.length; m++) {
 			const uiEntry = this.mapsetData[0].mapEntries[m];
 
 			const mapEntry = {
-				'advices': uiEntry.advices,
-				'toCode': uiEntry.toCode,
-				'toName': uiEntry.toName,
-				'rule': uiEntry.rule,
-				'priority': uiEntry.priority,
-				'relation': uiEntry.relation.toUpperCase(),
-				'group': uiEntry.group,
-				'block': uiEntry.block,
-				'moduleId': uiEntry.moduleId,
-				'active': uiEntry.active,
-				'additionalMapEntryInfos': uiEntry.additionalMapEntryInfos,
-				'descriptions': uiEntry.descriptions,
-				'id': uiEntry.id,
-				'modified': uiEntry.modified,
-				'created': uiEntry.created,
-				'modifiedBy': uiEntry.modifiedBy,
+				advices: uiEntry.advices,
+				toCode: uiEntry.toCode,
+				toName: uiEntry.toName,
+				rule: uiEntry.rule,
+				priority: uiEntry.priority,
+				relation: uiEntry.relation.toUpperCase(),
+				group: uiEntry.group,
+				block: uiEntry.block,
+				moduleId: uiEntry.moduleId,
+				active: uiEntry.active,
+				additionalMapEntryInfos: uiEntry.additionalMapEntryInfos,
+				descriptions: uiEntry.descriptions,
+				id: uiEntry.id,
+				modified: uiEntry.modified,
+				created: uiEntry.created,
+				modifiedBy: uiEntry.modifiedBy,
 			};
 			saveMapset.mapEntries.push(mapEntry);
 		}
@@ -876,7 +903,7 @@ export class EditMappingComponent implements OnInit {
 			},
 			(error) => {
 				//
-			}
+			},
 		);
 	}
 
@@ -905,6 +932,10 @@ export class EditMappingComponent implements OnInit {
 			this.groupInput.nativeElement.focus();
 			clearInterval(showInterval);
 		}, 5);
+	}
+
+	menuBrowserOpened() {
+		this.browserSearchInput.nativeElement.focus();
 	}
 
 	clearGroupInput() {
@@ -965,22 +996,24 @@ export class EditMappingComponent implements OnInit {
 				}
 				if (entry.uuid === uuid) {
 					entry.addAdviceList = [];
-					entry.updateAdviceList = JSON.parse(JSON.stringify(entry.mapAdvices));
-					this.mapAdvices.forEach((map) => {
-						let found = false;
-						entry.updateAdviceList.forEach((advice) => {
-							if (map === advice) {
-								found = true;
+					if (this.mapAdvices.length > 0) {
+						entry.updateAdviceList = JSON.parse(JSON.stringify(entry.mapAdvices));
+						this.mapAdvices.forEach((map) => {
+							let found = false;
+							entry.updateAdviceList.forEach((advice) => {
+								if (map === advice) {
+									found = true;
+								}
+							});
+							if (!found) {
+								entry.addAdviceList.push(map);
 							}
 						});
-						if (!found) {
-							entry.addAdviceList.push(map);
-						}
-					});
 
-					entry.addAdviceList.sort((a, b) => (a > b ? 1 : -1));
-					entry.updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
-					entry.advices_open = true;
+						entry.addAdviceList.sort((a, b) => (a > b ? 1 : -1));
+						entry.updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
+						entry.advices_open = true;
+					}
 					entry.adviceToAdd = '';
 				}
 			});
@@ -1119,67 +1152,97 @@ export class EditMappingComponent implements OnInit {
 						restParams.filter = '';
 					}
 
-					this.browserSubscription = this.refsetService.searchBrowserByQuery(this.targetTerminology, this.targetTerminologyVersion, query, restParams.offset, restParams.limit).subscribe({
-						next: (response) => {
-							this.numOfMembers = response.total;
-							this.browserData = response.items;
-							this.browserLoaded = true;
+					this.browserSubscription = this.refsetService
+						.searchBrowserByQuery(this.targetTerminology, this.targetTerminologyVersion, query, restParams.offset, restParams.limit)
+						.subscribe({
+							next: (response) => {
+								this.numOfMembers = response.total;
+								this.browserData = response.items;
+								this.browserLoaded = true;
+								this.changeDetectorRef.detectChanges();
 
-							this.changeDetectorRef.detectChanges();
+								const lastIndex = document.getElementsByClassName('ag-header').length - 1;
+								const child = document.getElementsByClassName('ag-header')[lastIndex];
+								document.getElementById('browserHeader').appendChild(child);
+								const lastIndexP = document.getElementsByClassName('ag-paging-panel').length - 1;
+								const childP = document.getElementsByClassName('ag-paging-panel')[lastIndexP];
+								document.getElementById('directoryPaging').appendChild(childP);
 
-							const lastIndex = document.getElementsByClassName('ag-header').length - 1;
-							const child = document.getElementsByClassName('ag-header')[lastIndex];
-							document.getElementById('browserHeader').appendChild(child);
-							const lastIndexP = document.getElementsByClassName('ag-paging-panel').length - 1;
-							const childP = document.getElementsByClassName('ag-paging-panel')[lastIndexP];
-							document.getElementById('directoryPaging').appendChild(childP);
-
-							this.showPaging = true;
-
-							if (this.browserData?.length > 0) {
 								this.showPaging = true;
-								this.browserApi.hideOverlay();
-								this.paginationPages = Math.ceil(this.numOfMembers / this.browserPaging.pageSize)
-									? this.pagerService.getPager(Math.ceil(this.numOfMembers / this.browserPaging.pageSize), this.browserApi.paginationGetCurrentPage(), true)
-									: {};
 
-								this.paginationPages.currentPage = this.getCurrentPage();
+								if (this.browserData?.length > 0) {
+									this.showPaging = true;
+									this.browserApi.hideOverlay();
+									this.paginationPages = Math.ceil(this.numOfMembers / this.browserPaging.pageSize)
+										? this.pagerService.getPager(
+												Math.ceil(this.numOfMembers / this.browserPaging.pageSize),
+												this.browserApi.paginationGetCurrentPage(),
+												true,
+											)
+										: {};
 
-								const lastRow = this.numOfMembers;
-								rowParams.successCallback(this.browserData, lastRow);
-							}
-							if (this.numOfMembers === 0) {
+									this.paginationPages.currentPage = this.getCurrentPage();
+
+									const lastRow = this.numOfMembers;
+									rowParams.successCallback(this.browserData, lastRow);
+								}
+								if (this.numOfMembers === 0) {
+									this.showPaging = false;
+									this.browserApi.showNoRowsOverlay();
+									rowParams.successCallback([], 0);
+								}
+
+								this.browserPaging.manualStateRefresh = Boolean(true);
+								// set placeholders on the grid floating filter fields
+								Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
+									if (obj.attributes['disabled']) {
+										// skip columns with disabled filter
+										return;
+									}
+
+									const label = obj.getAttribute('aria-label');
+									const value = label.substring(0, label.indexOf('Filter Input')) + '...';
+									obj.setAttribute('placeholder', value);
+								});
+								this.browserSubscription.unsubscribe();
+							},
+							error: (error) => {
 								this.showPaging = false;
 								this.browserApi.showNoRowsOverlay();
 								rowParams.successCallback([], 0);
-							}
-
-							this.browserPaging.manualStateRefresh = Boolean(true);
-							// set placeholders on the grid floating filter fields
-							Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
-								if (obj.attributes['disabled']) {
-									// skip columns with disabled filter
-									return;
-								}
-
-								const label = obj.getAttribute('aria-label');
-								const value = label.substring(0, label.indexOf('Filter Input')) + '...';
-								obj.setAttribute('placeholder', value);
-							});
-							this.browserSubscription.unsubscribe();
-						},
-						error: (error) => {
-							this.showPaging = false;
-							this.browserApi.showNoRowsOverlay();
-							rowParams.successCallback([], 0);
-						},
-					});
+							},
+						});
 				}
 			},
 		};
 	}
 
 	firstLoadBrowser() {
+		this.browserColumnDefs = [
+			{
+				field: 'code',
+				tooltipField: 'code',
+				headerName: 'Code',
+				headerTooltip: 'Code',
+				flex: 1,
+				width: 125,
+				cellClass: 'blue-link',
+				resizable: false,
+				sortable: false,
+				suppressSorting: true,
+			},
+			{
+				field: 'name',
+				tooltipField: 'name',
+				headerName: 'Name',
+				headerTooltip: 'Name',
+				flex: 2,
+				minWidth: 165,
+				resizable: false,
+				sortable: false,
+				suppressSorting: true,
+			},
+		];
 		this.browserOptions = {
 			context: { componentParent: this },
 			pagination: true,
@@ -1208,7 +1271,7 @@ export class EditMappingComponent implements OnInit {
 			onPaginationChanged: (event: any) => this.onPaginationChanged(event),
 			domLayout: 'autoHeight',
 			frameworkComponents: {
-				'templateRenderer': TemplateRendererComponent,
+				templateRenderer: TemplateRendererComponent,
 			},
 			defaultColDef: {
 				sortable: false,
@@ -1222,7 +1285,7 @@ export class EditMappingComponent implements OnInit {
 			},
 			enableBrowserTooltips: true,
 			rowClassRules: {
-				'refset_tool_grid_inactive_row': function (params) {
+				refset_tool_grid_inactive_row: function (params) {
 					let inactivatedRow = false;
 
 					if (params.data) {
@@ -1234,34 +1297,6 @@ export class EditMappingComponent implements OnInit {
 			},
 		};
 		this.showTable = true;
-	}
-
-	loadGridColumns(): void {
-		this.browserColumnDefs = [
-			{
-				field: 'code',
-				tooltipField: 'code',
-				headerName: 'Code',
-				headerTooltip: 'Code',
-				flex: 1,
-				width: 65,
-				cellClass: 'blue-link',
-				resizable: false,
-				sortable: false,
-				suppressSorting: true,
-			},
-			{
-				field: 'name',
-				tooltipField: 'name',
-				headerName: 'Name',
-				headerTooltip: 'Name',
-				flex: 2,
-				minWidth: 165,
-				resizable: false,
-				sortable: false,
-				suppressSorting: true,
-			},
-		];
 	}
 
 	clearBrowserSearch() {
@@ -1322,7 +1357,12 @@ export class EditMappingComponent implements OnInit {
 	};
 
 	onBrowserCellClick = (event) => {
-		if (event.column.colId !== 'checkbox' && event.column.colId !== 'action-btns' && event.column.colId !== 'relation-select' && event.column.colId !== 'rule-select') {
+		if (
+			event.column.colId !== 'checkbox' &&
+			event.column.colId !== 'action-btns' &&
+			event.column.colId !== 'relation-select' &&
+			event.column.colId !== 'rule-select'
+		) {
 			this.loadConceptDetail(event.data.code);
 		}
 	};
@@ -1383,14 +1423,16 @@ export class EditMappingComponent implements OnInit {
 				});
 				break;
 			default:
-				this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode], { replaceUrl: false, skipLocationChange: false });
+				this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode], {
+					replaceUrl: false,
+					skipLocationChange: false,
+				});
 		}
 	}
 
 	toggleSectionView(section: string) {
 		if (section === 'showBrowserSection' && !this.loadedBrowser) {
-			this.loadedBrowser;
-			this.firstLoadBrowser();
+			this.loadedBrowser = true;
 		}
 		if (this[section]) {
 			this[section] = false;

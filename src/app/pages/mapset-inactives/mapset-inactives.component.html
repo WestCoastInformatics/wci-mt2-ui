@@ -3,54 +3,11 @@
 <!-- Search Bar -->
 <div class="top-search-bar content-header">
 	<div class="d-flex justify-content-end">
-		<div class="row d-flex">
-			<div class="col-md-9 page-title" title="{{ mapsetInfo.refSetName }}">
-				<div class="rt2-wrap">{{ mapsetInfo.refSetName }}</div>
-				<!-- Status Stepper if in edit mode and Reference Set not locked -->
-				<mat-stepper class="col-1 details-page-stepper" orientation="horizontal" [linear]="true" labelPosition="bottom" #stepper>
-					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_EDIT_STARTED']">
-						<ng-template matStepperIcon="number">
-							<mat-icon>done</mat-icon>
-						</ng-template>
-						<ng-template matStepLabel
-							><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_EDIT_COLOR']">Ready for Edit</span></ng-template
-						>
-					</mat-step>
-
-					<mat-step [editable]="false" [completed]="stepperInfo['IN_EDIT_STARTED']">
-						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_EDIT_COLOR']">In Edit</span></ng-template>
-					</mat-step>
-
-					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_REVIEW_STARTED']">
-						<ng-template matStepLabel
-							><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_REVIEW_COLOR']">Ready for Review</span>
-						</ng-template>
-					</mat-step>
-
-					<mat-step [editable]="false" [completed]="stepperInfo['IN_REVIEW_STARTED']">
-						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_REVIEW_COLOR']">In Review</span></ng-template>
-					</mat-step>
-
-					<mat-step [editable]="false" [completed]="stepperInfo['REVIEW_COMPLETED_STARTED']">
-						<ng-template matStepLabel
-							><span class="fs-15 fw-bold" [class]="stepperInfo['REVIEW_COMPLETED_COLOR']">Review Completed</span>
-						</ng-template>
-					</mat-step>
-
-					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_PUBLICATION_STARTED']">
-						<ng-template matStepLabel
-							><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_PUBLICATION_COLOR']"
-								>Ready for Publication</span
-							></ng-template
-						>
-					</mat-step>
-
-					<ng-template matStepperIcon="done">
-						<mat-icon>done</mat-icon>
-					</ng-template>
-				</mat-stepper>
+		<div class="col-md-auto d-flex">
+			<div class="page-title rt2-wrap" title="Manage Inactivated Concepts for {{ mapsetName }}">
+				<span>Manage Inactivated Concepts for {{ mapsetName }}</span>
 			</div>
-			<div class="col-md-2 d-flex header-menu">
+			<div class="col-md-auto p-l-20">
 				<mat-form-field floatLabel="never" class="directoryViewFilterField format-version-drop-down" appearance="fill">
 					<mat-label></mat-label>
 					<mat-select
@@ -66,33 +23,24 @@
 			</div>
 		</div>
 		<div class="col-md-auto d-flex p-r-40 mr-10">
-			<div class="col-4">
-				<button
-					class="library-app-refset-download"
-					(click)="openDownloadModal(downloadModal)"
-					[disabled]="!selectedVersion || numOfMembers === 0"
-				>
+			<div class="col-6">
+				<button class="library-app-refset-download" (click)="downloadReports()" [disabled]="!selectedVersion || numOfMembers === 0">
 					<div class="mat-button-wrapper mapset-download-icon">
-						<i class="fa fa-download fa-lg" title="Download Map Set" aria-label="Download Map Set"></i>
+						<i class="fa fa-download fa-lg" title="Download Report" aria-label="Download Report"></i>
 					</div>
 				</button>
 			</div>
-			<div class="col-4 p-l-5">
-				<div (click)="goToMapsInactivesPage(mapsetCode)">
-					<img src="/assets/no-preview-icon.svg" title="Manage Inactives" aria-label="Manage Inactives" class="no-preview-icon" />
-				</div>
-			</div>
-			<div class="col-4 p-l-10">
-				<div (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-					<img src="/assets/comment-dots-regular.svg" title="Add Feedback" aria-label="Add Feedback" class="discussion-icon" />
+			<div class="col-6 p-l-5">
+				<div (click)="goToMappingsPage(mapsetCode)">
+					<img src="/assets/preview-icon.svg" title="View Mappings" aria-label="View Mappings" class="no-preview-icon" />
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<div [hidden]="loaded" class="section-loading">Loading...</div>
+
 <div class="rt2-container" (window:resize)="onResize($event)">
-	<div class="metadata-collapsible-container" [ngClass]="{ 'm-t-20': loaded }">
+	<div class="metadata-collapsible-container m-t-20">
 		<div class="switch-view" *ngIf="showMappingsSection && loaded" [hidden]="numOfMembers === 0">
 			<mat-label class="switch-label">view by</mat-label>
 			<mat-button-toggle-group
@@ -101,13 +49,13 @@
 				(change)="changeMappingsView(group.value)"
 				[hideSingleSelectionIndicator]="true"
 			>
-				<mat-button-toggle value="table" title="View by table"> table </mat-button-toggle>
-				<mat-button-toggle value="record" title="View by record"> record </mat-button-toggle>
+				<mat-button-toggle value="table" title="View All"> all </mat-button-toggle>
+				<mat-button-toggle value="record" title="View Unprocessed" class="only-label"> only unprocessed </mat-button-toggle>
 			</mat-button-toggle-group>
 		</div>
 		<div class="metadata-collapsible-container-group-header pointer" (click)="toggleSectionView('showMappingsSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
-				<span>Mappings&nbsp; </span><span [hidden]="!numOfMembers">{{ '(' + numOfMembers + ')' }}</span>
+				<span>Inactivated Concepts&nbsp; </span><span [hidden]="!numOfMembers">{{ '(' + numOfMembers + ')' }}</span>
 				<span [hidden]="numOfMembers">{{ '(0)' }}</span>
 				<div class="sub-header-font">
 					<span [hidden]="checkedNum === 0">selected {{ checkedNum }}</span>
@@ -132,13 +80,7 @@
 		</div>
 		<div class="d-flex dropdown-group" *ngIf="showMappingsSection && numOfMembers > 0">
 			<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable && showMapTable === 'table'">
-				<app-column-chooser
-					title="Select Columns to Display"
-					[gridColumnApi]="refsetGridApi"
-					[useDialog]="useDialog"
-					[columnStorage]="mapsetRecordsColumnStorage"
-				>
-				</app-column-chooser>
+				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridApi" [useDialog]="useDialog"> </app-column-chooser>
 			</div>
 
 			<div class="col-md-auto rt2-directory-chooser-column">
@@ -161,12 +103,6 @@
 							title="Clear Search"
 							(click)="$event.stopPropagation(); clearSearch()"
 							>&#10005;</span
-						><br />
-						<span *ngIf="searchInput.length > 0" class="mappings-section"
-							>{{ refsetGridApi.getDisplayedRowCount() > 0 ? refsetGridApi.getDisplayedRowCount() : 'No ' }} result{{
-								refsetGridApi.getDisplayedRowCount() > 1 ? 's' : ''
-							}}
-							found</span
 						>
 					</div></mat-menu
 				>
@@ -174,15 +110,12 @@
 					<button
 						[matMenuTriggerFor]="searchMenu"
 						(menuOpened)="menuOpened()"
-						[matBadgeHidden]="searchInput === ''"
-						matBadgeSize="small"
-						[matBadge]="'.'"
 						aria-label="Search"
 						title="Search"
 						class="mapset-download-icon menu-button"
 					>
 						<mat-icon class="menu-icon">search</mat-icon>
-						<span class="menu-label">Search</span>
+						<span class="menu-label">search</span>
 					</button>
 				</div>
 			</div>
@@ -194,42 +127,42 @@
 					</button>
 				</div>
 				<mat-menu #actionMenu="matMenu">
-					<button mat-menu-item (click)="selectAction('select')" *ngIf="showMapTable === 'record'">
-						<span>Check/Uncheck All</span>
+					<button mat-menu-item (click)="selectAction('include')" [disabled]="checkedNum < 1">
+						<span>Include selected in Scope</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('view')" [disabled]="checkedNum !== 1">
-						<span>View Selected Mapping</span>
+					<button mat-menu-item (click)="selectAction('exclude')" [disabled]="checkedNum < 1">
+						<span>Exclude selected from Scope</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('edit')" [disabled]="checkedNum !== 1">
-						<span>Edit Selected Mapping</span>
+					<button mat-menu-item (click)="selectAction('processed')" [disabled]="checkedNum < 1">
+						<span>Mark as Processed</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('batch')" [disabled]="checkedNum < 2">
-						<span>Batch Edit Selected Mappings</span>
+					<button mat-menu-item (click)="selectAction('review')" [disabled]="checkedNum < 1">
+						<span>Request Review</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('selected')" [disabled]="checkedNum < 1">
-						<span>Download Selected Mappings</span>
+					<button mat-menu-item (click)="selectAction('note')" [disabled]="checkedNum < 1">
+						<span>View or Add Authoring Note</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('all')">
-						<span>Download Entire Map Set</span>
+					<button mat-menu-item (click)="selectAction('feedback')" [disabled]="checkedNum < 1">
+						<span>View or Add Authoring Communication</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('download')">
+						<span>Download Report</span>
 					</button>
 				</mat-menu>
 			</div>
 		</div>
 		<div class="metadata-section-background" *ngIf="showMappingsSection">
-			<div
-				id="directoryHeader"
-				class="directory-header ag-theme-alpine"
-				[hidden]="!showMappingsSection || !loaded || numOfMembers === 0 || showMapTable !== 'table'"
-			></div>
-			<div [hidden]="!showMappingsSection" class="section-background mappings-section" [ngClass]="{ overflow: showMapTable !== 'table' }">
+			<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showMappingsSection || !loaded || numOfMembers === 0"></div>
+			<div [hidden]="!showMappingsSection" class="section-background mappings-section">
+				<div *ngIf="showMapTable === 'table'" [hidden]="loaded" class="section-loading">Loading...</div>
 				<div [hidden]="!loaded" *ngIf="numOfMembers === 0" class="status-no-results">No Results to Show</div>
-				<div class="content-wrapper" [hidden]="showMapTable !== 'table' || !loaded">
-					<div #gridWrapper class="grid-wrapper">
+				<div class="content-wrapper" [hidden]="!loaded">
+					<div class="grid-wrapper">
 						<ag-grid-angular
 							*ngIf="showTable"
 							id="directoryTable"
 							#directoryTable
-							[hidden]="!loaded || numOfMembers === 0 || showMapTable !== 'table'"
+							[hidden]="!loaded || numOfMembers === 0"
 							class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter"
 							style="width: 100%; height: 100%"
 							[columnDefs]="columnDefs"
@@ -241,74 +174,12 @@
 						</ag-grid-angular>
 					</div>
 				</div>
-
-				<div [hidden]="!loaded" *ngIf="showMapTable !== 'table'" class="content-wrapper">
-					<div *ngFor="let record of mapsetData; index as i">
-						<div class="record-row" [ngClass]="{ 'odd-row': 0 === i % 2 }" *ngIf="!record.spanned">
-							<div class="col-12 row">
-								<div class="d-flex col-10 row">
-									<div class="checkbox-column">
-										<label class="checkbox-override" title="Check/Uncheck All"
-											><input
-												type="checkbox"
-												(change)="checkboxRowSelect($event, record.index)"
-												[checked]="record.checked" /><span class="checkbox-container"></span
-										></label>
-									</div>
-									<div class="col-11 code-name">
-										{{ record.name }}, <span class="code-link" (click)="goToMappingPage(record.code)">{{ record.code }}</span>
-									</div>
-
-									<div *ngFor="let entry of record.mapEntries; index as x" class="row col-12 second-row">
-										<div class="col-4 row mb-3">
-											<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
-											<div class="record-code col-2">{{ entry.toCode }}</div>
-											<div class="record-name col-8">
-												{{ entry.toName }}
-												<span *ngIf="getModuleLanguageIcon(entry.moduleId) !== ''">
-													<img
-														class="mapset-mod-icon"
-														*ngIf="entry.moduleId !== internationalId"
-														src="{{ 'assets/flags/' + getModuleLanguageIcon(entry.moduleId) + '.png' }}"
-														title="{{ getModuleLanguageName(entry.moduleId) }}"
-														aria-label="{{ getModuleLanguageName(entry.moduleId) }}"
-												/></span>
-											</div>
-										</div>
-										<div class="col-8 row mb-3">
-											<div class="info-box">
-												<i class="fa-regular fa-handshake relation-icon"></i
-												><span class="info-message">{{ entry.relation }}</span>
-											</div>
-											<div
-												*ngFor="let advice of entry.advices; index as i"
-												class="info-box"
-												[hidden]="advice.indexOf('ALWAYS') > -1"
-											>
-												<i class="fa-solid fa-star-of-life advice-icon"></i><span class="info-message">{{ advice }}</span>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="action-column col-2">
-									<div class="action-btns">
-										<ng-container
-											[ngTemplateOutlet]="directoryActionSection"
-											[ngTemplateOutletContext]="{ $implicit: record }"
-										></ng-container>
-									</div>
-									<span class="date-column second-row">Last Updated: {{ dateFormatter(record.modified) }}</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
 			</div>
 		</div>
 		<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
 		<div class="rt2-pagination-container" [hidden]="!loaded || numOfMembers === 0" *ngIf="showMappingsSection">
 			<div class="rt2-pagination-top-row">
-				<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons no-wrap">
+				<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons">
 					<button
 						#paginationFirstPage
 						mat-raised-button
@@ -324,7 +195,7 @@
 					<button
 						#paginationPreviousPage
 						mat-raised-button
-						(click)="goToPage(getCurrentPage() - 1)"
+						(click)="refsetGridApi.paginationGoToPreviousPage()"
 						title="Go To Previous Page {{ getCurrentPage() }}"
 						class="pagination-page-buttons"
 						[ngClass]="{ disabled: getCurrentPage() === 0 }"
@@ -354,6 +225,7 @@
 						class="pagination-page-buttons w-min-32 p-0"
 						title="Go To Page {{ paginationPages.startPage + 5 }}"
 						attr.aria-label="Go To Page {{ paginationPages.startPage + 5 }}"
+						title="Go To Page {{ paginationPages.startPage + 5 }}"
 					>
 						...
 					</button>
@@ -372,7 +244,7 @@
 					<button
 						#paginationNextPage
 						mat-raised-button
-						(click)="goToPage(getCurrentPage() + 1)"
+						(click)="refsetGridApi.paginationGoToNextPage()"
 						title="Go To Next Page {{ getCurrentPage() + 2 }}"
 						class="pagination-page-buttons"
 						[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
@@ -424,59 +296,56 @@
 			<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
 		</div>
 	</div>
-	<div class="metadata-collapsible-container">
-		<div class="metadata-collapsible-container-group-header pointer" (click)="toggleSectionView('showMetadataSection')">
+	<div class="metadata-collapsible-container col-md-12 mb-10">
+		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showBrowserSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
-				<span>Map Set Metadata</span>
+				<span>ICD10 Terminology Browser</span>
 			</div>
 			<img
 				src="assets/caret-up-solid.svg"
-				*ngIf="!showMetadataSection"
+				*ngIf="!showBrowserSection"
 				alt="Collapse Button"
-				title="Collapse Workflow History"
+				title="Collapse ICD10 Terminology Browser"
 				aria-label="Collapse Button"
 				class="caret-up-solid"
 			/>
 			<img
 				src="assets/caret-down-solid.svg"
-				*ngIf="showMetadataSection"
+				*ngIf="showBrowserSection"
 				alt="Expand Button"
-				title="Expand Workflow History"
+				title="Expand ICD10 Terminology Browser"
 				aria-label="Expand Button"
 				class="caret-down-solid"
 			/>
 		</div>
-		<div [hidden]="!showMetadataSection" class="section-background metadata-section overflow">
+		<div [hidden]="!showBrowserSection" class="section-background browser-section">
 			<div class="d-flex dropdown-group">This feature is not yet available. Please check back later.</div>
 		</div>
 	</div>
 
-	<div class="metadata-collapsible-container">
-		<div class="metadata-collapsible-container-group-header pointer" (click)="toggleSectionView('showHistorySection')">
-			<div class="metadata-collapsible-container-title page-header-font">
-				<span>Workflow History</span>
+	<!-- Information Templates -->
+	<ng-template #directoryInfoSection let-params>
+		<div class="d-flex rt2-wrap">
+			<div class="col-6">
+				<button
+					mat-icon-button
+					aria-hidden="false"
+					#directoryInfoIcon
+					class="rt2-table-action-icon w-30 h-30"
+					aria-label="View All Reference Set Metadata"
+					title="View Reference Set Metadata"
+					(click)="openInformation(params.data.refsetId)"
+				>
+					<mat-icon class="scale-85-pct">information</mat-icon>
+				</button>
 			</div>
-			<img
-				src="assets/caret-up-solid.svg"
-				*ngIf="!showHistorySection"
-				alt="Collapse Button"
-				title="Collapse Workflow History"
-				aria-label="Collapse Button"
-				class="caret-up-solid"
-			/>
-			<img
-				src="assets/caret-down-solid.svg"
-				*ngIf="showHistorySection"
-				alt="Expand Button"
-				title="Expand Workflow History"
-				aria-label="Expand Button"
-				class="caret-down-solid"
-			/>
+			<div class="col-6">
+				<div *ngIf="params.data.memberSearchMatch" title="Search matches reference set member" class="member-search-icon general-icon-font">
+					M
+				</div>
+			</div>
 		</div>
-		<div [hidden]="!showHistorySection" class="section-background history-section overflow">
-			<div class="d-flex dropdown-group">This feature is not yet available. Please check back later.</div>
-		</div>
-	</div>
+	</ng-template>
 
 	<ng-template #directoryInfoDialog let-data>
 		<div class="container-fluid w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
@@ -499,15 +368,45 @@
 	<!-- Check Templates -->
 	<ng-template #directoryCheckSection let-params>
 		<label class="checkbox-override" *ngIf="params?.value"
-			><input type="checkbox" (change)="checkboxRowSelect($event, params?.data?.index)" [checked]="params?.data?.checked" /><span
-				class="checkbox-container"
-			></span
+			><input type="checkbox" (change)="checkboxRowSelect($event, params?.data?.index)" [checked]="params?.data?.checked" />' + '
+			<span class="checkbox-container"></span
 		></label>
+	</ng-template>
+
+	<ng-template #directoryPlusMinusSection let-params>
+		<img
+			[hidden]="params?.data?.active"
+			src="assets/plus-icon.svg"
+			(click)="onStatusChange(true, params?.data?.index)"
+			width="18px"
+			height="18px"
+			title="Include in Scope"
+			aria-label="Add"
+			class="add-symbol-icon pointer"
+			alt="Include in Scope"
+		/>
+
+		<img
+			[hidden]="!params?.data?.active"
+			src="assets/minus-icon.svg"
+			(click)="onStatusChange(false, params?.data?.index)"
+			width="18px"
+			height="18px"
+			title="Exclude from Scope"
+			aria-label="Subtract"
+			class="subtract-symbol-icon pointer"
+			alt="Exclude from Scope"
+		/>
+	</ng-template>
+
+	<!-- From Source Code Templates -->
+	<ng-template #directorySourceCodeSection let-params>
+		<span class="blue-link" [ngClass]="{ 'inactive-text': !params?.data?.active }">{{ params?.value }}</span>
 	</ng-template>
 
 	<!-- Name Templates -->
 	<ng-template #directoryNameSection let-params>
-		<span class="blue-link">{{ params?.value }}</span>
+		<span class="blue-link" [ngClass]="{ 'inactive-text': !params?.data?.active }">{{ params?.value }}</span>
 		<span *ngIf="params?.data?.modFlag !== ''">
 			<img
 				class="mapset-mod-icon"
@@ -535,14 +434,24 @@
 	<ng-template #directoryActionSection let-params>
 		<div class="d-flex" *ngIf="params?.value === true">
 			<div class="col-6">
-				<div class="library-app-refset-notes" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-					<img src="/assets/sticky-note.svg" title="View Notes" aria-label="View Notes" class="mapset-notes-icon" />
+				<div class="library-app-refset-notes" (click)="selectAction('note')">
+					<img
+						src="/assets/sticky-note.svg"
+						title="View or Add Authoring Notes"
+						aria-label="View or Add Authoring Notes"
+						class="mapset-notes-icon"
+					/>
 				</div>
 			</div>
 
 			<div class="col-6">
-				<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-					<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
+				<div class="library-app-refset-discussion-list" (click)="selectAction('feedback')">
+					<img
+						src="/assets/comment-dots-regular.svg"
+						title="View or Add Authoring Communication"
+						aria-label="View or Add Authoring Communication"
+						class="discussion-icon"
+					/>
 				</div>
 			</div>
 		</div>
@@ -618,17 +527,17 @@
 
 	<ng-template #downloadModal let-modal>
 		<div class="modal-header rt2-modal-header">
-			<div class="modal-title">Download Map Set</div>
+			<div class="modal-title">Download Report</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeDownloadModal()">
 				<span aria-hidden="true">&times;</span>
 			</button>
 		</div>
-		<div class="modal-body" *ngIf="!downloading">
+		<div class="modal-body">
 			<p>{{ downloadTitle }}</p>
 			<div class="modal-error-message" *ngIf="downloadError">
 				<div>{{ downloadError }}</div>
 			</div>
-			<div class="modal-select" *ngIf="downloadType === 'all'">
+			<div class="modal-select">
 				<label class="modal-label">File Type: <span class="mandatory-field">*</span></label>
 				<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
 					<mat-select placeholder="Select a type" [ngModel]="types" [(value)]="selectedType" class="rt2-column-chooser-select">
@@ -658,17 +567,87 @@
 					</mat-select>
 				</mat-form-field>
 			</div>
-			<div class="d-flex align-items-center justify-content-center m-3" *ngIf="downloadType === 'all'">
-				<label class="modal-label">Export Metadata:</label>
-				<mat-checkbox class="menu-checkbox" [(ngModel)]="selectExportMetadata"></mat-checkbox>
-			</div>
 		</div>
-		<div class="modal-body" *ngIf="downloading">
-			<p>Please wait, downloading...</p>
-		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group" *ngIf="!downloading">
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
 			<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
 			<button type="button" title="Download" class="rt2-btn rt2-action-btn" (click)="startDownload()">Download</button>
+		</div>
+	</ng-template>
+
+	<ng-template #notesModal let-modal>
+		<div class="modal-header rt2-modal-header">
+			<div class="modal-title">Authoring Notes</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeNotesModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p>{{ notesTitle }}</p>
+			<div class="modal-error-message" *ngIf="notesError">
+				<div>{{ notesError }}</div>
+			</div>
+			<editor
+				class="fill-height"
+				id="notesEditor"
+				[(ngModel)]="notesEditor"
+				[init]="{
+					base_url: '/tinymce',
+					suffix: '.min',
+					height: 200,
+					menubar: false,
+					auto_focus: 'notesEditor',
+					placeholder: 'Enter your notes',
+					plugins: ['lists', 'advlist', 'wordcount'],
+					toolbar: 'undo redo | bold italic | bullist numlist outdent indent | wordcount',
+				}"
+			>
+			</editor>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeNotesModal()">Cancel</button>
+			<button type="button" title="Save" class="rt2-btn rt2-action-btn" (click)="saveNotes()">Save</button>
+		</div>
+	</ng-template>
+
+	<ng-template #feedbackModal let-modal>
+		<div class="modal-header rt2-modal-header">
+			<div class="modal-title">Authoring Communication</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeFeedbackModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<div class="modal-error-message" *ngIf="feedbackError">
+				<div>{{ feedbackError }}</div>
+			</div>
+			<mat-form-field floatLabel="never" appearance="fill" class="d-flex">
+				<label class="modal-label">Feedback Topic: <span class="mandatory-field">*</span></label>
+				<input matInput type="text" [(ngModel)]="feedbackSubject" placeholder="Add a descriptive title for your feedback topic" />
+			</mat-form-field>
+			<editor
+				class="fill-height"
+				id="feedbackEditor"
+				[(ngModel)]="feedbackEditor"
+				[init]="{
+					base_url: '/tinymce',
+					suffix: '.min',
+					height: 200,
+					menubar: false,
+					auto_focus: 'feedbackEditor',
+					placeholder: 'Enter your feedback message',
+					plugins: ['lists', 'advlist', 'wordcount'],
+					toolbar: 'undo redo | bold italic | bullist numlist outdent indent | wordcount',
+				}"
+			>
+			</editor>
+			<div class="d-flex align-items-center justify-content-center m-3">
+				<label class="modal-label">Mark Feedback Private: </label>
+				<mat-checkbox class="menu-checkbox" [(ngModel)]="selectFeedbackPrivate"></mat-checkbox>
+			</div>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeFeedbackModal()">Cancel</button>
+			<button type="button" title="Save" class="rt2-btn rt2-action-btn" (click)="saveFeedback()">Save</button>
 		</div>
 	</ng-template>
 
