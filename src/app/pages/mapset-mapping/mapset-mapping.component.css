@@ -301,7 +301,7 @@
 .section-loading {
 	background: rgba(232, 240, 255, 1) !important;
 	border: 0.2px groove #999 !important;
-	border-radius: 0 !important;
+	border-radius: 3px !important;
 	margin-left: 45% !important;
 	margin-top: 1% !important;
 	padding: 0.25em;

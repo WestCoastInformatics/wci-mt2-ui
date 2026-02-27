@@ -112,36 +112,36 @@ export class MapsetRecordsComponent implements OnInit {
 	currentRowColor = 0;
 	downloadTitle = 'Download';
 	downloadType = 'all';
-	workFlowStatus: any;
+	workFlowStatus = { label: '', value: '', message: '', notes: '' };
 	showEdit = true;
 	editStatus = true;
 	editWF = [
-		{ label: 'Edit', value: 'EDIT', message: 'Are you sure you want to edit this Map Set?' },
-		{ label: 'Cancel Edit', value: 'CANCEL_EDIT', message: 'Are you sure you want to cancel editing this Map Set?' },
-		{ label: 'Finish Edit', value: 'FINISH_EDIT', message: 'Are you sure you want to finish editing this Map Set?' },
+		{ label: 'Edit', value: 'EDIT', message: 'Are you sure you want to edit this Map Set?', notes: '' },
+		{ label: 'Cancel Edit', value: 'CANCEL_EDIT', message: 'Are you sure you want to cancel editing this Map Set?', notes: '' },
+		{ label: 'Finish Edit', value: 'FINISH_EDIT', message: 'Are you sure you want to finish editing this Map Set?', notes: '' },
 	];
 	showUpgrade = true;
 	upgradeStatus = true;
 	upgradeWF = [
-		{ label: 'Upgrade', value: 'UPGRADE', message: 'Are you sure you want to upgrade this Map Set?' },
-		{ label: 'Cancel Upgrade', value: 'CANCEL_UPGRADE', message: 'Are you sure you want to cancel upgrading this Map Set?' },
-		{ label: 'Finish Upgrade', value: 'FINISH_UPGRADE', message: 'Are you sure you want to finish upgrading this Map Set?' },
+		{ label: 'Upgrade', value: 'UPGRADE', message: 'Are you sure you want to upgrade this Map Set?', notes: '' },
+		{ label: 'Cancel Upgrade', value: 'CANCEL_UPGRADE', message: 'Are you sure you want to cancel upgrading this Map Set?', notes: '' },
+		{ label: 'Finish Upgrade', value: 'FINISH_UPGRADE', message: 'Are you sure you want to finish upgrading this Map Set?', notes: '' },
 	];
 	showReview = true;
 	reviewStatus = true;
 	reviewWF = [
-		{ label: 'Request Review', value: 'REQUEST_REVIEW', message: 'Are you sure you want to request review of this Map Set?' },
-		{ label: 'Withdraw Review', value: 'WITHDRAW', message: 'Are you sure you want to withdraw review of this Map Set?' },
-		{ label: 'Add Review', value: 'REVIEW', message: 'Are you sure you want to add a review for this Map Set?' },
-		{ label: 'Reject Review', value: 'REJECT_REVIEW', message: 'Are you sure you want to reject review for this Map Set?' },
-		{ label: 'Accept Review', value: 'ACCEPT_REVIEW', message: 'Are you sure you want to accept review for this Map Set?' },
+		{ label: 'Request Review', value: 'REQUEST_REVIEW', message: 'Are you sure you want to request review of this Map Set?', notes: '' },
+		{ label: 'Withdraw Review', value: 'WITHDRAW', message: 'Are you sure you want to withdraw review of this Map Set?', notes: '' },
+		{ label: 'Add Review', value: 'REVIEW', message: 'Are you sure you want to add a review for this Map Set?', notes: '' },
+		{ label: 'Reject Review', value: 'REJECT_REVIEW', message: 'Are you sure you want to reject review for this Map Set?', notes: '' },
+		{ label: 'Accept Review', value: 'ACCEPT_REVIEW', message: 'Are you sure you want to accept review for this Map Set?', notes: '' },
 	];
 	showPublish = true;
 	publishStatus = true;
 	publishWF = [
-		{ label: 'Request Publish', value: 'REQUEST_PUBLICATION', message: 'Are you sure you want to request to publish this Map Set?' },
-		{ label: 'Start Publish', value: 'START_PUBLISH', message: 'Are you sure you want to start publishing of this Map Set?' },
-		{ label: 'Finish Publish', value: 'PUBLISH_REFSET', message: 'Are you sure you want to finish publishing this Map Set?' },
+		{ label: 'Request Publish', value: 'REQUEST_PUBLICATION', message: 'Are you sure you want to request to publish this Map Set?', notes: '' },
+		{ label: 'Start Publish', value: 'START_PUBLISH', message: 'Are you sure you want to start publishing of this Map Set?', notes: '' },
+		{ label: 'Finish Publish', value: 'PUBLISH_REFSET', message: 'Are you sure you want to finish publishing this Map Set?', notes: '' },
 	];
 	stepperInfo: any = {};
 	stepperStartInfo = {
@@ -165,6 +165,7 @@ export class MapsetRecordsComponent implements OnInit {
 	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
 	@ViewChild('workFlowModal') workflowModal: TemplateRef<any>;
+	@ViewChild('workFlowModalNotes') private workflowModalNotes: ElementRef;
 	@ViewChild('directoryCheckSection') checkSection: TemplateRef<any>;
 	@ViewChild('directoryCodeSection') codeSection: TemplateRef<any>;
 	@ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
@@ -1071,16 +1072,27 @@ export class MapsetRecordsComponent implements OnInit {
 	openWorkFlowModal(content) {
 		this.workFlowModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
+		setTimeout(() => {
+			this.workflowModalNotes.nativeElement.focus();
+		}, 50);
 	}
 
 	closeWorkFlowModal() {
 		this.workFlowModalRef.close();
 		this.isModalOpen = false;
-		this.workFlowStatus = {};
+		this.workFlowStatus = { label: '', value: '', message: '', notes: '' };
 	}
 
-	changeWorkFlowStatus(status) {
-		switch (status) {
+	changeWorkFlowStatus() {
+		this.refsetService.setMapsetWorkflowStatus(this.mapsetInfo.id, this.workFlowStatus.value, this.workFlowStatus.notes).subscribe((response) => {
+			if (response) {
+				this.setWorkflowStatus();
+			}
+		});
+	}
+
+	setWorkflowStatus() {
+		switch (this.workFlowStatus.value) {
 			case 'EDIT':
 				this.editStatus = false;
 				this.showReview = false;

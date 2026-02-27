@@ -690,17 +690,20 @@
 				<span aria-hidden="true">&times;</span>
 			</button>
 		</div>
-		<div class="modal-body">
-			<p>{{ workFlowStatus.message }}</p>
+		<p class="p-l-30 p-t-10 p-b-0">{{ workFlowStatus.message }}</p>
+		<div class="modal-body m-t-5">
+			<textarea
+				#workFlowModalNotes
+				class="form-field-value notes-text"
+				type="text"
+				name="notes"
+				placeholder="enter status change notes..."
+				[ngModel]="workFlowStatus.notes"
+			></textarea>
 		</div>
 		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
 			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeWorkFlowModal()">Cancel</button>
-			<button
-				type="button"
-				title="Confirm {{ workFlowStatus.label }}"
-				class="rt2-btn rt2-action-btn"
-				(click)="changeWorkFlowStatus(workFlowStatus.value)"
-			>
+			<button type="button" title="Confirm {{ workFlowStatus.label }}" class="rt2-btn rt2-action-btn" (click)="changeWorkFlowStatus()">
 				Confirm
 			</button>
 		</div>

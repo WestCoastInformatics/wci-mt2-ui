@@ -62,12 +62,23 @@ export class RefsetService extends RestService {
 		});
 	}
 
-	modifyMembersForUpgrade(refsetInternalId: string, inactiveConceptId: string, changeMethod: string, replacementConceptId?: string, body?: string): Observable<any> {
+	modifyMembersForUpgrade(
+		refsetInternalId: string,
+		inactiveConceptId: string,
+		changeMethod: string,
+		replacementConceptId?: string,
+		body?: string,
+	): Observable<any> {
 		let replacementCode = '';
 		if (replacementConceptId) {
 			replacementCode = '&replacementConceptId=' + replacementConceptId;
 		}
-		return this.post(this.contextPath + `refset/${refsetInternalId}/modifyUpgradeConcept?inactiveConceptId=${inactiveConceptId}&changed=${changeMethod}${replacementCode}`, body, true);
+		return this.post(
+			this.contextPath +
+				`refset/${refsetInternalId}/modifyUpgradeConcept?inactiveConceptId=${inactiveConceptId}&changed=${changeMethod}${replacementCode}`,
+			body,
+			true,
+		);
 	}
 
 	addRefsetMembers(refsetInternalId: string, fileType: string, conceptIds = '', ecl = ''): Observable<any> {
@@ -79,11 +90,25 @@ export class RefsetService extends RestService {
 	}
 
 	addRemoveAllInactiveRefsetMembers(refsetInternalId: string, isAdd: boolean): Observable<any> {
-		return this.post(this.contextPath + `refset/${refsetInternalId}/${isAdd ? 'addAllUpgradeReplacementConcepts' : 'removeAllUpgradeInactiveConcepts'}`, {});
+		return this.post(
+			this.contextPath + `refset/${refsetInternalId}/${isAdd ? 'addAllUpgradeReplacementConcepts' : 'removeAllUpgradeInactiveConcepts'}`,
+			{},
+		);
 	}
 
-	addRefsetDefinitionExceptions(refsetInternalId: string, fileType: string, definitionExceptionType: string, conceptIds = '', ecl = ''): Observable<any> {
-		return this.post(this.contextPath + `refset/${refsetInternalId}/definitionExceptions?fileType=${fileType}&definitionExceptionType=${definitionExceptionType}&ecl=${ecl}`, conceptIds, true);
+	addRefsetDefinitionExceptions(
+		refsetInternalId: string,
+		fileType: string,
+		definitionExceptionType: string,
+		conceptIds = '',
+		ecl = '',
+	): Observable<any> {
+		return this.post(
+			this.contextPath +
+				`refset/${refsetInternalId}/definitionExceptions?fileType=${fileType}&definitionExceptionType=${definitionExceptionType}&ecl=${ecl}`,
+			conceptIds,
+			true,
+		);
 	}
 
 	removeRefsetDefinitionException(refsetInternalId: string, definitionExceptionID: string): Observable<any> {
@@ -132,7 +157,7 @@ export class RefsetService extends RestService {
 		narrative: string,
 		tags: any,
 		parentConceptId: string,
-		newRefsetConceptId: string
+		newRefsetConceptId: string,
 	): Observable<any> {
 		return this.get(
 			this.contextPath +
@@ -155,7 +180,7 @@ export class RefsetService extends RestService {
 				'&parentConceptId=' +
 				parentConceptId +
 				'&newRefsetConceptId=' +
-				newRefsetConceptId
+				newRefsetConceptId,
 		);
 	}
 
@@ -321,7 +346,15 @@ export class RefsetService extends RestService {
 	}
 
 	getMappingsByMapset(mapset: string, params): Observable<any> {
-		return this.get(this.contextPath + `mapset/${mapset}/mappings?limit=` + params.limit + `&offset=` + params.offset + `&filter=` + params.filter, '', false);
+		return this.get(
+			this.contextPath + `mapset/${mapset}/mappings?limit=` + params.limit + `&offset=` + params.offset + `&filter=` + params.filter,
+			'',
+			false,
+		);
+	}
+
+	setMapsetWorkflowStatus(mapsetId: string, action: string, notes: string): Observable<any> {
+		return this.post(this.contextPath + `mapset/${mapsetId}/workflowStatus?action=${action}&notes=${notes}`, '');
 	}
 
 	//not used
@@ -394,7 +427,12 @@ export class RefsetService extends RestService {
 	}
 
 	launchComparison(activeRefsetInternalId: string, comparisonRefsetInternalId: string): Observable<any> {
-		return this.get(this.contextPath + `refset/${activeRefsetInternalId}/compileComparisonData?comparisonRefsetInternalId=${comparisonRefsetInternalId}`, '', false, true);
+		return this.get(
+			this.contextPath + `refset/${activeRefsetInternalId}/compileComparisonData?comparisonRefsetInternalId=${comparisonRefsetInternalId}`,
+			'',
+			false,
+			true,
+		);
 	}
 
 	getComparisonData(activeRefsetInternalId: string): Observable<any> {
