@@ -91,8 +91,75 @@
 	</div>
 </div>
 <div [hidden]="loaded" class="section-loading">Loading...</div>
+<div class="row edit-actions" *ngIf="loaded">
+	<div class="col"></div>
+	<div class="col-md-auto no-margin-top">
+		<span class="date-column">
+			<ng-container>
+				<span *ngFor="let edit of editWF"
+					><button
+						*ngIf="(editStatus && edit.label === editWF[0].label) || (!editStatus && edit.label !== editWF[0].label)"
+						type="button"
+						[title]="edit.label"
+						class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+						(click)="editWorkflow(edit.value)"
+						[disabled]="!showEdit"
+						(ngClass)="({ disabled: !showEdit })"
+					>
+						{{ edit.label }}
+					</button></span
+				>
+			</ng-container>
+			<ng-container>
+				<span *ngFor="let upgrade of upgradeWF"
+					><button
+						*ngIf="(upgradeStatus && upgrade.label === upgradeWF[0].label) || (!upgradeStatus && upgrade.label !== upgradeWF[0].label)"
+						type="button"
+						[title]="upgrade.label"
+						class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+						(click)="upgradeWorkflow(upgrade.value)"
+						[disabled]="!showUpgrade"
+						(ngClass)="({ disabled: !showUpgrade })"
+					>
+						{{ upgrade.label }}
+					</button></span
+				>
+			</ng-container>
+			<ng-container>
+				<span *ngFor="let review of reviewWF"
+					><button
+						*ngIf="(reviewStatus && review.label === reviewWF[0].label) || (!reviewStatus && review.label !== reviewWF[0].label)"
+						type="button"
+						[title]="review.label"
+						class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+						(click)="reviewWorkflow(review.value)"
+						[disabled]="!showReview"
+						(ngClass)="({ disabled: !showReview })"
+					>
+						{{ review.label }}
+					</button></span
+				>
+			</ng-container>
+			<ng-container>
+				<span *ngFor="let publish of publishWF"
+					><button
+						*ngIf="(publishStatus && publish.label === publishWF[0].label) || (!publishStatus && publish.label !== publishWF[0].label)"
+						type="button"
+						[title]="publish.label"
+						class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+						(click)="publishWorkflow(publish.value)"
+						[disabled]="!showPublish"
+						(ngClass)="({ disabled: !showPublish })"
+					>
+						{{ publish.label }}
+					</button></span
+				>
+			</ng-container>
+		</span>
+	</div>
+</div>
 <div class="rt2-container" (window:resize)="onResize($event)">
-	<div class="metadata-collapsible-container" [ngClass]="{ 'm-t-20': loaded }">
+	<div class="metadata-collapsible-container">
 		<div class="switch-view" *ngIf="showMappingsSection && loaded" [hidden]="numOfMembers === 0">
 			<mat-label class="switch-label">view by</mat-label>
 			<mat-button-toggle-group
@@ -613,6 +680,29 @@
 		</div>
 		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
 			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		</div>
+	</ng-template>
+
+	<ng-template #workFlowModal let-modal>
+		<div class="modal-header rt2-modal-header">
+			<div class="modal-title">{{ workFlowStatus.label }}</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeWorkFlowModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p>{{ workFlowStatus.message }}</p>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeWorkFlowModal()">Cancel</button>
+			<button
+				type="button"
+				title="Confirm {{ workFlowStatus.label }}"
+				class="rt2-btn rt2-action-btn"
+				(click)="changeWorkFlowStatus(workFlowStatus.value)"
+			>
+				Confirm
+			</button>
 		</div>
 	</ng-template>
 
