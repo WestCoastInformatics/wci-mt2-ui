@@ -65,10 +65,10 @@
 				</mat-form-field>
 			</div>
 		</div>
-		<div class="col-md-auto d-flex p-r-40 mr-10">
+		<div class="col-md-auto d-flex">
 			<div class="col-4">
 				<button
-					class="library-app-refset-download"
+					class="library-app-refset-download mr-15"
 					(click)="openDownloadModal(downloadModal)"
 					[disabled]="!selectedVersion || numOfMembers === 0"
 				>
@@ -77,15 +77,15 @@
 					</div>
 				</button>
 			</div>
-			<div class="col-4 p-l-5">
-				<div (click)="goToMapsInactivesPage(mapsetCode)">
+			<div class="col-4">
+				<button (click)="goToMapsInactivesPage(mapsetCode)" class="library-app-refset-notes mr-20 no-padding">
 					<img src="/assets/no-preview-icon.svg" title="Manage Inactives" aria-label="Manage Inactives" class="no-preview-icon" />
-				</div>
+				</button>
 			</div>
-			<div class="col-4 p-l-10">
-				<div (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+			<div class="col-4">
+				<button (click)="openToBeDevelopedModal(toBeDevelopedModal)" class="library-app-refset-notes mr-20 no-padding">
 					<img src="/assets/comment-dots-regular.svg" title="Add Feedback" aria-label="Add Feedback" class="discussion-icon" />
-				</div>
+				</button>
 			</div>
 		</div>
 	</div>
@@ -267,10 +267,10 @@
 					<button mat-menu-item (click)="selectAction('view')" [disabled]="checkedNum !== 1">
 						<span>View Selected Mapping</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('edit')" [disabled]="checkedNum !== 1">
+					<button mat-menu-item (click)="selectAction('edit')" [disabled]="checkedNum !== 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
 						<span>Edit Selected Mapping</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('batch')" [disabled]="checkedNum < 2">
+					<button mat-menu-item (click)="selectAction('batch')" [disabled]="checkedNum < 2 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
 						<span>Batch Edit Selected Mappings</span>
 					</button>
 					<button mat-menu-item (click)="selectAction('selected')" [disabled]="checkedNum < 1">
@@ -698,7 +698,7 @@
 				type="text"
 				name="notes"
 				placeholder="enter status change notes..."
-				[ngModel]="workFlowStatus.notes"
+				[formControl]="workFlowNotesFC"
 			></textarea>
 		</div>
 		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">

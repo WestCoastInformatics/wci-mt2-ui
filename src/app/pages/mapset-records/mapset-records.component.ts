@@ -23,6 +23,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { NotificationService } from 'src/app/services/notification.service';
 import { formatDate } from '@angular/common';
 import { PaginationService } from 'src/app/services/pagination.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
 	standalone: false,
@@ -113,6 +114,7 @@ export class MapsetRecordsComponent implements OnInit {
 	downloadTitle = 'Download';
 	downloadType = 'all';
 	workFlowStatus = { label: '', value: '', message: '', notes: '' };
+	workFlowNotesFC = new FormControl('');
 	showEdit = true;
 	editStatus = true;
 	editWF = [
@@ -226,13 +228,13 @@ export class MapsetRecordsComponent implements OnInit {
 			this.changeMappingsView(JSON.parse(localStorage.getItem('showMapTable')));
 		}
 
-		const stepperClass = 'details-page-stepper-started-step';
-		this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
+		// const stepperClass = 'details-page-stepper-started-step';
+		// this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
 		//his.refsetStatus?.includes('IN_EDIT')) {
-		this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-		this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-		this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
-		this.stepperInfo['IN_EDIT_STARTED'] = true;
+		// this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+		// this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+		// this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
+		// this.stepperInfo['IN_EDIT_STARTED'] = true;
 	}
 
 	getMapsetInfo() {
@@ -242,6 +244,36 @@ export class MapsetRecordsComponent implements OnInit {
 			this.versionStatuses.push(formatDate(this.mapsetInfo.modified, 'MM-dd-yyyy', 'en-US') + ' (' + this.mapsetInfo.versionStatus + ') ');
 			if (this.versionStatuses.length == 1) {
 				this.selectedVersion = this.versionStatuses;
+			}
+			const stepperClass = 'details-page-stepper-started-step';
+			this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
+			switch (this.mapsetInfo.workflowStatus) {
+				case 'READY_FOR_EDIT':
+					this.editStatus = true;
+					this.showReview = true;
+					this.showUpgrade = true;
+					this.showPublish = true;
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					break;
+				case 'IN_EDIT':
+					this.editStatus = false;
+					this.showReview = false;
+					this.showUpgrade = false;
+					this.showPublish = false;
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['IN_EDIT_STARTED'] = true;
+					break;
+				default: //null
+					this.editStatus = true;
+					this.showReview = true;
+					this.showUpgrade = true;
+					this.showPublish = true;
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					break;
 			}
 
 			this.columnDefs = [
@@ -1081,35 +1113,52 @@ export class MapsetRecordsComponent implements OnInit {
 		this.workFlowModalRef.close();
 		this.isModalOpen = false;
 		this.workFlowStatus = { label: '', value: '', message: '', notes: '' };
+		this.workFlowNotesFC.reset();
 	}
 
 	changeWorkFlowStatus() {
-		this.refsetService.setMapsetWorkflowStatus(this.mapsetInfo.id, this.workFlowStatus.value, this.workFlowStatus.notes).subscribe((response) => {
-			if (response) {
-				this.setWorkflowStatus();
-			}
-		});
+		if (this.workFlowNotesFC.dirty) {
+			this.workFlowStatus.notes = this.workFlowNotesFC.value;
+		}
+		this.refsetService
+			.setMapsetWorkflowStatus(this.mapsetInfo.refSetCode, this.workFlowStatus.value, this.workFlowStatus.notes)
+			.subscribe((response) => {
+				if (response) {
+					this.mapsetInfo = response;
+					this.setWorkflowStatus();
+				}
+			});
 	}
 
 	setWorkflowStatus() {
+		const stepperClass = 'details-page-stepper-started-step';
+		this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
 		switch (this.workFlowStatus.value) {
 			case 'EDIT':
 				this.editStatus = false;
 				this.showReview = false;
 				this.showUpgrade = false;
 				this.showPublish = false;
+				this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+				this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
+				this.stepperInfo['IN_EDIT_STARTED'] = true;
 				break;
 			case 'CANCEL_EDIT':
 				this.editStatus = true;
 				this.showReview = true;
 				this.showUpgrade = true;
 				this.showPublish = true;
+				this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
 				break;
 			case 'FINISH_EDIT':
 				this.editStatus = true;
 				this.showReview = true;
 				this.showUpgrade = true;
 				this.showPublish = true;
+				this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
 				break;
 			case 'UPGRADE':
 				this.upgradeStatus = false;

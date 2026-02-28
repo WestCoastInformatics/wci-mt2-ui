@@ -104,6 +104,7 @@ export class EditMappingComponent implements OnInit {
 	showConfigSection = true;
 	showBrowserSection = false;
 	mapsetCode: string;
+	mapsetInfo: any = {};
 	conceptCode: string;
 	mapping: string;
 	routeParamsSubscription$: Subscription;
@@ -250,6 +251,28 @@ export class EditMappingComponent implements OnInit {
 	}
 
 	getMapsetInfo() {
+		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
+			this.mapsetInfo = results;
+
+			const stepperClass = 'details-page-stepper-started-step';
+			this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
+			switch (this.mapsetInfo.workflowStatus) {
+				case 'READY_FOR_EDIT':
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					break;
+				case 'IN_EDIT':
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['IN_EDIT_STARTED'] = true;
+					break;
+				default: //null
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					break;
+			}
+		});
 		this.refsetService.getMapsets().subscribe({
 			next: (results) => {
 				const thisResult = results.filter((res) => {
@@ -755,16 +778,18 @@ export class EditMappingComponent implements OnInit {
 	}
 
 	setSelectedTarget(uuid: string, code: string, name: string, group: number, priority: number) {
-		this.targetFC.enable();
-		this.selectedTarget.id = uuid;
-		this.selectedTarget.group = group;
-		this.selectedTarget.priority = priority;
-		this.targetCodeInput = code;
-		this.targetNameInput = name === '[NO TARGET]' ? '' : name;
-		this.targetFC.reset();
-		this.targetFC.setValue(this.targetCodeInput);
-		this.query = { code: this.targetCodeInput };
-		this.targetInput.nativeElement.focus();
+		if (this.mapsetInfo.workflowStatus === 'IN_EDIT') {
+			this.targetFC.enable();
+			this.selectedTarget.id = uuid;
+			this.selectedTarget.group = group;
+			this.selectedTarget.priority = priority;
+			this.targetCodeInput = code;
+			this.targetNameInput = name === '[NO TARGET]' ? '' : name;
+			this.targetFC.reset();
+			this.targetFC.setValue(this.targetCodeInput);
+			this.query = { code: this.targetCodeInput };
+			this.targetInput.nativeElement.focus();
+		}
 	}
 
 	setTargetCode() {
@@ -912,26 +937,28 @@ export class EditMappingComponent implements OnInit {
 	}
 
 	openGroupPopover(event: any, uuid: string) {
-		this.closePopover();
-		this.groupFC.reset();
-		this.mapsetData.forEach((data) => {
-			data.mapEntries.forEach((entry) => {
-				if (entry.group_open) {
-					entry.group_open = false;
-				}
-				if (entry.uuid === uuid) {
-					entry.group_open = true;
-					entry.adviceToAdd = '';
-				}
+		if (this.mapsetInfo.workflowStatus === 'IN_EDIT') {
+			this.closePopover();
+			this.groupFC.reset();
+			this.mapsetData.forEach((data) => {
+				data.mapEntries.forEach((entry) => {
+					if (entry.group_open) {
+						entry.group_open = false;
+					}
+					if (entry.uuid === uuid) {
+						entry.group_open = true;
+						entry.adviceToAdd = '';
+					}
+				});
 			});
-		});
-		const popHeight = 0;
+			const popHeight = 0;
 
-		const showInterval = setInterval(() => {
-			this.advicePopoverLocation = event.layerY + event.offsetY + 5;
-			this.groupInput.nativeElement.focus();
-			clearInterval(showInterval);
-		}, 5);
+			const showInterval = setInterval(() => {
+				this.advicePopoverLocation = event.layerY + event.offsetY + 5;
+				this.groupInput.nativeElement.focus();
+				clearInterval(showInterval);
+			}, 5);
+		}
 	}
 
 	menuBrowserOpened() {

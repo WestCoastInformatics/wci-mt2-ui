@@ -97,6 +97,7 @@ export class BatchMappingComponent implements OnInit {
 	showConfigSection = true;
 	showBrowserSection = false;
 	mapsetCode: string;
+	mapsetInfo: any = {};
 	conceptCodes: [];
 	mapping: string;
 	routeParamsSubscription$: Subscription;
@@ -641,6 +642,28 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	getMapsetInfo() {
+		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
+			this.mapsetInfo = results;
+
+			const stepperClass = 'details-page-stepper-started-step';
+			this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
+			switch (this.mapsetInfo.workflowStatus) {
+				case 'READY_FOR_EDIT':
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					break;
+				case 'IN_EDIT':
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['IN_EDIT_STARTED'] = true;
+					break;
+				default: //null
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					break;
+			}
+		});
 		this.refsetService.getMapsets().subscribe({
 			next: (results) => {
 				const thisResult = results.filter((res) => {
@@ -1341,21 +1364,23 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	editGroup(event: any, params: any): void {
-		this.groupFC.reset();
-		this.priorityFC.reset();
-		this.selectedTarget = params.data.uuid;
-		this.groupFC.setValue(params.data.mapEntries.group);
-		this.priorityFC.setValue(params.data.mapEntries.priority);
-		this.showGroupPopover = true;
-		this.showAdvicePopover = false;
-		this.showTargetPopover = false;
+		if (this.mapsetInfo.workflowStatus !== 'IN_EDIT') {
+			this.groupFC.reset();
+			this.priorityFC.reset();
+			this.selectedTarget = params.data.uuid;
+			this.groupFC.setValue(params.data.mapEntries.group);
+			this.priorityFC.setValue(params.data.mapEntries.priority);
+			this.showGroupPopover = true;
+			this.showAdvicePopover = false;
+			this.showTargetPopover = false;
 
-		const showInterval = setInterval(() => {
-			this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
-			this.popoverLocationX = event.x - 190;
-			this.groupInput.nativeElement.focus();
-			clearInterval(showInterval);
-		}, 5);
+			const showInterval = setInterval(() => {
+				this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+				this.popoverLocationX = event.x - 190;
+				this.groupInput.nativeElement.focus();
+				clearInterval(showInterval);
+			}, 5);
+		}
 	}
 
 	clearHeaderGroupInput() {
@@ -1404,24 +1429,26 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	editTarget(event: any, params: any): void {
-		this.targetFC.reset();
-		this.foundConceptCode = false;
-		this.targetToName = '';
-		this.selectedTarget = params.data.uuid;
-		if (params.data.mapEntries.toCode !== '[Empty Target]') {
-			this.targetFC.setValue(params.data.mapEntries.toCode);
-			this.query = { code: params.data.mapEntries.toCode };
-			this.targetToName = params.data.mapEntries.toName;
+		if (this.mapsetInfo.workflowStatus !== 'IN_EDIT') {
+			this.targetFC.reset();
+			this.foundConceptCode = false;
+			this.targetToName = '';
+			this.selectedTarget = params.data.uuid;
+			if (params.data.mapEntries.toCode !== '[Empty Target]') {
+				this.targetFC.setValue(params.data.mapEntries.toCode);
+				this.query = { code: params.data.mapEntries.toCode };
+				this.targetToName = params.data.mapEntries.toName;
+			}
+			this.showTargetPopover = true;
+			this.showAdvicePopover = false;
+			this.showGroupPopover = false;
+			const showInterval = setInterval(() => {
+				this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+				this.popoverLocationX = event.x - 210;
+				this.targetInput.nativeElement.focus();
+				clearInterval(showInterval);
+			}, 5);
 		}
-		this.showTargetPopover = true;
-		this.showAdvicePopover = false;
-		this.showGroupPopover = false;
-		const showInterval = setInterval(() => {
-			this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
-			this.popoverLocationX = event.x - 210;
-			this.targetInput.nativeElement.focus();
-			clearInterval(showInterval);
-		}, 5);
 	}
 
 	closeTarget() {

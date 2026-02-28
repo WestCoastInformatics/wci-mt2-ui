@@ -71,8 +71,8 @@
 				title="Undo Changes"
 				class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
 				(click)="reloadMapping()"
-				[disabled]="!userChanged"
-				(ngClass)="({ disabled: !userChanged })"
+				[disabled]="!userChanged || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+				(ngClass)="({ disabled: !userChanged || mapsetInfo.workflowStatus !== 'IN_EDIT' })"
 			>
 				Undo Changes
 			</button>
@@ -81,8 +81,8 @@
 				title="Save Mapping"
 				class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
 				(click)="saveMapping()"
-				[disabled]="!userChanged"
-				(ngClass)="({ disabled: !userChanged })"
+				[disabled]="!userChanged || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+				(ngClass)="({ disabled: !userChanged || mapsetInfo.workflowStatus !== 'IN_EDIT' })"
 			>
 				Save Mapping
 			</button>
@@ -122,7 +122,7 @@
 							Selected Target Concept
 							<div class="sub-header-font no-wrap" [hidden]="!loaded || loadError">
 								<span
-									[hidden]="selectedTarget.id === ''"
+									[hidden]="selectedTarget.id === '' || mapsetInfo.workFlowStatus !== 'IN_EDIT'"
 									title="Group {{ selectedTarget.group }},  Entry {{ selectedTarget.priority }}"
 									>( {{ selectedTarget.group }}/{{ selectedTarget.priority }} )
 								</span>
@@ -176,8 +176,10 @@
 										title="Set as Target"
 										class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
 										(click)="setTargetCode()"
-										[disabled]="!foundConceptCode || selectedTarget.id === ''"
-										(ngClass)="({ disabled: !foundConceptCode || selectedTarget.id === '' })"
+										[disabled]="!foundConceptCode || selectedTarget.id === '' || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+										(ngClass)="
+											({ disabled: !foundConceptCode || selectedTarget.id === '' || mapsetInfo.workflowStatus !== 'IN_EDIT' })
+										"
 									>
 										Set as Target
 									</button>
@@ -185,8 +187,8 @@
 										type="button"
 										title="Set Empty Target"
 										class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
-										[disabled]="selectedTarget.id === ''"
-										(ngClass)="({ disabled: selectedTarget.id === '' })"
+										[disabled]="selectedTarget.id === '' || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+										(ngClass)="({ disabled: selectedTarget.id === '' || mapsetInfo.workflowStatus !== 'IN_EDIT' })"
 										(click)="setEmptyTarget()"
 									>
 										Set Empty Target
@@ -250,7 +252,7 @@
 					*ngFor="let group of groupList; index as g"
 					[cdkDragData]="group"
 					[cdkDropListConnectedTo]="[groupDrop]"
-					[cdkDragDisabled]="numOfGroups === 1"
+					[cdkDragDisabled]="numOfGroups === 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
 					cdkDragBoundary=".section-groups"
 					cdkDragLockAxis="y"
 					cdkDrag
@@ -261,7 +263,7 @@
 								<i
 									title="Move Group"
 									class="fa-solid fa-up-down-left-right link-icon mr-5 group-move-btn"
-									[ngClass]="{ disabled: numOfGroups === 1 }"
+									[ngClass]="{ disabled: numOfGroups === 1 || mapsetInfo.workflowStatus !== 'IN_EDIT' }"
 									cdkDragHandle
 								></i>
 							</div>
@@ -288,7 +290,7 @@
 							[ngClass]="{ 'target-selected-background': selectedTarget.id === entry.uuid }"
 							*ngFor="let entry of getGroupEntriesById(g + 1); index as x"
 							[cdkDragData]="entry"
-							[cdkDragDisabled]="getGroupTotal(g + 1) === 1"
+							[cdkDragDisabled]="getGroupTotal(g + 1) === 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
 							cdkDragBoundary=".map-target"
 							cdkDragLockAxis="y"
 							cdkDrag
@@ -299,7 +301,7 @@
 										<i
 											title="Move Target"
 											class="fa-solid fa-up-down-left-right link-icon mr-5 target-move-btn"
-											[ngClass]="{ disabled: getGroupTotal(g + 1) === 1 }"
+											[ngClass]="{ disabled: getGroupTotal(g + 1) === 1 || mapsetInfo.workflowStatus !== 'IN_EDIT' }"
 											cdkDragHandle
 										></i>
 									</div>
@@ -308,12 +310,20 @@
 										><template [ngTemplateOutlet]="targetGroupSection" [ngTemplateOutletContext]="{ $implicit: entry }"></template
 									></span>
 									<span
-										class="code-link p-l-5 p-r-5"
+										class="p-l-5 p-r-5"
+										[ngClass]="{
+											'code-icon': mapsetInfo.workflowStatus === 'IN_EDIT',
+											'unlink-icon': mapsetInfo.workflowStatus !== 'IN_EDIT',
+										}"
 										(click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName, entry.group, entry.priority)"
 										>{{ entry.toCode }}</span
 									><span
 										title="{{ entry.toName === '' ? '[NO TARGET]' : entry.toName }}"
-										class="code-link p-l-5 p-r-5"
+										class="p-l-5 p-r-5"
+										[ngClass]="{
+											'code-icon': mapsetInfo.workflowStatus === 'IN_EDIT',
+											'unlink-icon': mapsetInfo.workflowStatus !== 'IN_EDIT',
+										}"
 										(click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName, entry.group, entry.priority)"
 										>{{ entry.toName === '' ? '[NO TARGET]' : entry.toName }}
 										<span *ngIf="entry.modFlag !== ''">
@@ -337,7 +347,7 @@
 										placeholder="Select a Relationship"
 										[(value)]="entry.relation"
 										(selectionChange)="userChangeSelection('norelation')"
-										[disabled]="noTargetRelations.length === 0"
+										[disabled]="noTargetRelations.length === 0 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
 									>
 										<mat-option *ngFor="let map of noTargetRelations" value="{{ map }}" class="no-checkbox">{{ map }}</mat-option>
 									</mat-select>
@@ -354,7 +364,7 @@
 										placeholder="Select a Relationship"
 										[(value)]="entry.relation"
 										(selectionChange)="userChangeSelection('relation')"
-										[disabled]="targetRelations.length === 0"
+										[disabled]="targetRelations.length === 0 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
 									>
 										<mat-option *ngFor="let map of targetRelations" value="{{ map }}" class="no-checkbox">{{ map }}</mat-option>
 									</mat-select>
@@ -368,6 +378,7 @@
 										placeholder="Select a Rule"
 										[(value)]="record.rule"
 										(selectionChange)="userChangeSelection('rule')"
+										[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
 									>
 										<mat-option value="TRUE" class="no-checkbox">TRUE</mat-option>
 										<mat-option value="Gender - Female" class="no-checkbox" [hidden]="!ruleBased">Gender - Female</mat-option>
@@ -380,31 +391,49 @@
 								<template [ngTemplateOutlet]="targetAdviceSection" [ngTemplateOutletContext]="{ $implicit: entry }"></template>
 							</span>
 							<div class="move-container">
-								<span
+								<button
 									title="Remove Target"
-									class="clear-search target-remove-btn"
+									class="clear-search target-remove-btn no-padding"
 									(click)="openConfirmationModal(entry.uuid, 'target')"
-									>&#10005;</span
+									[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
 								>
+									&#10005;
+								</button>
 							</div>
 						</div>
 					</div>
-					<div
+					<button
 						class="metadata-collapsible-container-group-header target-btn dotted-target-border target-hover-background mt-10"
 						(click)="addEmptyTargetToGroup(g + 1)"
 						title="Add Target"
+						[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
 					>
-						<div><i class="fa-solid fa-circle-plus link-icon mr-5"></i> <span class="link-icon">Add a New Target</span></div>
-					</div>
+						<div
+							[ngClass]="{
+								'link-icon': mapsetInfo.workflowStatus === 'IN_EDIT',
+								'unlink-icon': mapsetInfo.workflowStatus !== 'IN_EDIT',
+							}"
+						>
+							<i class="fa-solid fa-circle-plus mr-5"></i> <span>Add a New Target</span>
+						</div>
+					</button>
 				</div>
 			</div>
-			<div
+			<button
 				class="metadata-collapsible-container-group-header target-btn dotted-target-border target-hover-background mt-10 ml-10 mr-10"
 				(click)="addMapGroup()"
 				title="Add Group"
+				[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
 			>
-				<div><i class="fa-solid fa-circle-plus link-icon mr-5"></i> <span class="link-icon">Add a New Map Group</span></div>
-			</div>
+				<div
+					[ngClass]="{
+						'link-icon': mapsetInfo.workflowStatus === 'IN_EDIT',
+						'unlink-icon': mapsetInfo.workflowStatus !== 'IN_EDIT',
+					}"
+				>
+					<i class="fa-solid fa-circle-plus mr-5"></i> <span>Add a New Map Group</span>
+				</div>
+			</button>
 		</div>
 	</div>
 
@@ -716,8 +745,10 @@
 														title="Set as Target"
 														class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
 														(click)="setTarget(currentConcept)"
-														[disabled]="selectedTarget.id === ''"
-														(ngClass)="({ disabled: selectedTarget.id === '' })"
+														[disabled]="selectedTarget.id === '' || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+														(ngClass)="
+															({ disabled: selectedTarget.id === '' || mapsetInfo.workflowStatus !== 'IN_EDIT' })
+														"
 													>
 														Set as Target
 													</button>
@@ -798,38 +829,38 @@
 <!-- Action Templates -->
 <ng-template #directoryActionSection let-params>
 	<div class="d-flex">
-		<div class="col p-r-20">
-			<div class="library-app-refset-notes" (click)="selectActionMenu('view')">
+		<div class="col">
+			<button class="library-app-refset-notes mr-15 no-padding" (click)="selectActionMenu('view')">
 				<img src="/assets/preview-icon.svg" title="View Maps" aria-label="View Maps" class="mapset-notes-icon mapset-view-icon" />
-			</div>
+			</button>
 		</div>
 
-		<div class="col p-r-20">
-			<div class="library-app-refset-notes" (click)="selectActionMenu('note')">
+		<div class="col">
+			<button class="library-app-refset-notes mr-20 no-padding" (click)="selectActionMenu('note')">
 				<img
 					src="/assets/sticky-note.svg"
 					title="View or Add Authoring Notes"
 					aria-label="View or Add Authoring Notes"
 					class="mapset-notes-icon"
 				/>
-			</div>
+			</button>
 		</div>
 
-		<div class="col p-r-15">
-			<div class="library-app-refset-discussion-list" (click)="selectActionMenu('comm')">
+		<div class="col">
+			<button class="library-app-refset-discussion-list mr-15 no-padding" (click)="selectActionMenu('comm')">
 				<img
 					src="/assets/comment-dots-regular.svg"
 					title="View or Add Authoring Communication"
 					aria-label="View or Add Authoring Communication"
 					class="discussion-icon"
 				/>
-			</div>
+			</button>
 		</div>
 
 		<div class="col">
-			<div class="library-app-refset-discussion-list" (click)="selectActionMenu('review')">
+			<button class="library-app-refset-discussion-list mr-20 no-padding" (click)="selectActionMenu('review')">
 				<img src="/assets/rate-review.svg" title="Request Review" aria-label="Request Review" class="rate-review-icon" />
-			</div>
+			</button>
 		</div>
 	</div>
 </ng-template>
@@ -879,13 +910,19 @@
 				title="Save"
 				class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
 				(click)="setGroup(entry.uuid)"
-				[disabled]="!groupFC.value || groupFC.value === '0'"
+				[disabled]="!groupFC.value || groupFC.value === '0' || mapsetInfo.workflowStatus !== 'IN_EDIT'"
 			>
 				Save
 			</button>
 		</div>
 	</div>
-	<span class="code-link p-l-5 p-r-5" (click)="openGroupPopover($event, entry.uuid)"
+	<span
+		class="p-l-5 p-r-5"
+		(click)="openGroupPopover($event, entry.uuid)"
+		[ngClass]="{
+			'code-icon': mapsetInfo.workflowStatus === 'IN_EDIT',
+			'unlink-icon': mapsetInfo.workflowStatus !== 'IN_EDIT',
+		}"
 		>{{ entry.group || '1' }}/{{ entry.priority }}</span
 	></ng-template
 >
@@ -942,7 +979,7 @@
 			<li *ngFor="let advice of entry.mapAdvices; index as i">
 				<span class="advice-name-wrap" title="{{ advice }}">{{ advice }}</span>
 			</li>
-			<li [hidden]="mapAdvices.length === 0">
+			<li [hidden]="mapAdvices.length === 0 || mapsetInfo.workFlowStatus !== 'IN_EDIT'">
 				<span class="code-link" (click)="openPopover($event, entry.uuid)" title="Add/Edit Advice">Add/Edit Advice</span>
 			</li>
 		</ul>
@@ -950,7 +987,7 @@
 			class="code-link p-l-10"
 			(click)="openPopover($event, entry.uuid)"
 			title="Add an Advice"
-			[hidden]="entry.mapAdvices.length !== 0 || mapAdvices.length === 0"
+			[hidden]="entry.mapAdvices.length !== 0 || mapAdvices.length === 0 || mapsetInfo.workFlowStatus !== 'IN_EDIT'"
 			>+ Add Advice</span
 		>
 	</div>

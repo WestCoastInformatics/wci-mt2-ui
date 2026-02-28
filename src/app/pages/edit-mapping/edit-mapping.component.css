@@ -133,6 +133,7 @@
 }
 
 .target-btn {
+	width: 100%;
 	cursor: pointer;
 	height: 44px;
 }
@@ -726,6 +727,11 @@
 .link-icon {
 	color: #2169e8;
 	cursor: pointer;
+}
+
+.unlink-icon {
+	cursor: default;
+	color: #666;
 }
 
 .code-link:hover {

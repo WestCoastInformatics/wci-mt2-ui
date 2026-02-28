@@ -70,7 +70,7 @@
 							</button>
 						</div>
 						<mat-menu #actionMenu="matMenu">
-							<button mat-menu-item (click)="selectAction('edit')">
+							<button mat-menu-item (click)="selectAction('edit')" [disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'">
 								<span>Edit Maps</span>
 							</button>
 							<button mat-menu-item (click)="selectAction('review')">
@@ -80,7 +80,9 @@
 					</div>
 				</div>
 				<div class="action-column col-2">
-					<span class="date-column second-row" [hidden]="!mapsetData[0].modified">Last Updated: {{ dateFormatter(mapsetData[0].modified) }}</span>
+					<span class="date-column second-row" [hidden]="!mapsetData[0].modified"
+						>Last Updated: {{ dateFormatter(mapsetData[0].modified) }}</span
+					>
 				</div>
 			</div>
 			<div class="dropdown-group section-background mappings-section" *ngIf="loaded">
@@ -111,11 +113,17 @@
 										</div>
 										<div class="col-8 row mb-3">
 											<div class="info-box">
-												<i class="fa-regular fa-handshake relation-icon"></i><span class="info-message">{{ entry.relation }}</span>
+												<i class="fa-regular fa-handshake relation-icon"></i
+												><span class="info-message">{{ entry.relation }}</span>
 											</div>
-											<div *ngFor="let advice of entry.advices; index as i" class="info-box" [hidden]="advice.indexOf('ALWAYS') > -1">
+											<div
+												*ngFor="let advice of entry.advices; index as i"
+												class="info-box"
+												[hidden]="advice.indexOf('ALWAYS') > -1"
+											>
 												<span *ngIf="advice.length > 0"
-													><i class="fa-solid fa-star-of-life advice-icon"></i><span class="info-message">{{ advice }}</span></span
+													><i class="fa-solid fa-star-of-life advice-icon"></i
+													><span class="info-message">{{ advice }}</span></span
 												>
 											</div>
 										</div>
@@ -138,27 +146,31 @@
 		<ng-template #directoryActionSection let-params>
 			<div class="d-flex">
 				<div class="col">
-					<div class="library-app-refset-notes p-r-10" (click)="selectAction('edit')">
+					<button
+						class="library-app-refset-notes m-r-15 no-padding"
+						(click)="selectAction('edit')"
+						[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
+					>
 						<img src="/assets/edit-icon.svg" title="Edit Maps" aria-label="Edit Maps" class="mapset-notes-icon mapset-edit-icon" />
-					</div>
+					</button>
 				</div>
 				<div class="col">
-					<button class="library-app-refset-download p-r-20" (click)="downloadMapsets()">
+					<button class="library-app-refset-download m-r-20 no-padding" (click)="downloadMapsets()">
 						<div class="mat-button-wrapper mapset-download-icon">
 							<i class="fa fa-download fa-lg" title="Download Maps" aria-label="Download Maps"></i>
 						</div>
 					</button>
 				</div>
 				<div class="col">
-					<div class="library-app-refset-notes p-r-20" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+					<button class="library-app-refset-notes m-r-20 no-padding" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
 						<img src="/assets/sticky-note.svg" title="View Notes" aria-label="View Notes" class="mapset-notes-icon" />
-					</div>
+					</button>
 				</div>
 
 				<div class="col">
-					<div class="library-app-refset-discussion-list p-r-20" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+					<button class="library-app-refset-discussion-list m-r-20 no-padding" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
 						<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
-					</div>
+					</button>
 				</div>
 			</div>
 		</ng-template>
@@ -166,7 +178,13 @@
 		<ng-template #toBeDevelopedModal let-modal>
 			<div class="modal-header rt2-modal-header">
 				<div class="modal-title">Coming Soon</div>
-				<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
+				<button
+					type="button"
+					class="close dialog-close-x close-icon-font"
+					title="Close"
+					aria-label="Close"
+					(click)="closeToBeDevelopedModal()"
+				>
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -195,7 +213,8 @@
 					<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
 						<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="rt2-column-chooser-select">
 							<mat-select-trigger class="trigger"
-								><span *ngIf="!selectedFormat"> Select a format </span><span *ngIf="selectedFormat">{{ selectedFormat.display }}</span></mat-select-trigger
+								><span *ngIf="!selectedFormat"> Select a format </span
+								><span *ngIf="selectedFormat">{{ selectedFormat.display }}</span></mat-select-trigger
 							>
 
 							<mat-option *ngFor="let format of formats" [value]="format" class="no-checkbox">
