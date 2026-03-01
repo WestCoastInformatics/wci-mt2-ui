@@ -117,9 +117,9 @@ export class MapsetRecordsComponent implements OnInit {
 	workFlowNotesFC = new FormControl('');
 	showEdit = true;
 	editStatus = true;
+	// { label: 'Cancel Edit', value: 'CANCEL_EDIT', message: 'Are you sure you want to cancel editing this Map Set?', notes: '' },
 	editWF = [
 		{ label: 'Edit', value: 'EDIT', message: 'Are you sure you want to edit this Map Set?', notes: '' },
-		{ label: 'Cancel Edit', value: 'CANCEL_EDIT', message: 'Are you sure you want to cancel editing this Map Set?', notes: '' },
 		{ label: 'Finish Edit', value: 'FINISH_EDIT', message: 'Are you sure you want to finish editing this Map Set?', notes: '' },
 	];
 	showUpgrade = true;
@@ -1031,12 +1031,12 @@ export class MapsetRecordsComponent implements OnInit {
 				this.workFlowStatus = this.editWF[0];
 				this.openWorkFlowModal(this.workflowModal);
 				break;
-			case this.editWF[1].value: //CANCEL_EDIT
+			// case this.editWF[1].value: //CANCEL_EDIT
+			// 	this.workFlowStatus = this.editWF[1];
+			// 	this.openWorkFlowModal(this.workflowModal);
+			// 	break;
+			case this.editWF[1].value: //FINISH_EDIT
 				this.workFlowStatus = this.editWF[1];
-				this.openWorkFlowModal(this.workflowModal);
-				break;
-			case this.editWF[2].value: //FINISH_EDIT
-				this.workFlowStatus = this.editWF[2];
 				this.openWorkFlowModal(this.workflowModal);
 				break;
 		}
@@ -1113,6 +1113,7 @@ export class MapsetRecordsComponent implements OnInit {
 		this.workFlowModalRef.close();
 		this.isModalOpen = false;
 		this.workFlowStatus = { label: '', value: '', message: '', notes: '' };
+		this.workFlowNotesFC.setValue('');
 		this.workFlowNotesFC.reset();
 	}
 
@@ -1144,14 +1145,14 @@ export class MapsetRecordsComponent implements OnInit {
 				this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
 				this.stepperInfo['IN_EDIT_STARTED'] = true;
 				break;
-			case 'CANCEL_EDIT':
-				this.editStatus = true;
-				this.showReview = true;
-				this.showUpgrade = true;
-				this.showPublish = true;
-				this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-				this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-				break;
+			// case 'CANCEL_EDIT':
+			// 	this.editStatus = true;
+			// 	this.showReview = true;
+			// 	this.showUpgrade = true;
+			// 	this.showPublish = true;
+			// 	this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+			// 	this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+			// 	break;
 			case 'FINISH_EDIT':
 				this.editStatus = true;
 				this.showReview = true;
