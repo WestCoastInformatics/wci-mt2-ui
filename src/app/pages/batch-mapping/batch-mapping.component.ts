@@ -1364,7 +1364,7 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	editGroup(event: any, params: any): void {
-		if (this.mapsetInfo.workflowStatus !== 'IN_EDIT') {
+		if (this.mapsetInfo.workflowStatus === 'IN_EDIT') {
 			this.groupFC.reset();
 			this.priorityFC.reset();
 			this.selectedTarget = params.data.uuid;
@@ -1429,7 +1429,7 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	editTarget(event: any, params: any): void {
-		if (this.mapsetInfo.workflowStatus !== 'IN_EDIT') {
+		if (this.mapsetInfo.workflowStatus === 'IN_EDIT') {
 			this.targetFC.reset();
 			this.foundConceptCode = false;
 			this.targetToName = '';
