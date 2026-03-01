@@ -4,12 +4,22 @@
 <div class="top-search-bar content-header">
 	<div class="d-flex justify-content-end">
 		<div class="row d-flex">
-			<div class="col-md-9 page-title" *ngIf="loaded && !loadError">
-				<div class="rt2-wrap" title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}">
+			<div class="col-md-10 page-title" *ngIf="loaded && !loadError">
+				<div
+					[ngClass]="{ 'rt2-wrap': mapsetInfo.workflowStatus !== 'IN_UPGRADE', 'rt2-upgrade': mapsetInfo.workflowStatus === 'IN_UPGRADE' }"
+					title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}"
+				>
 					{{ mapsetData[0].code + ' ' + mapsetData[0].name }}
 				</div>
 				<!-- Status Stepper if in edit mode and Reference Set not locked -->
-				<mat-horizontal-stepper class="col-1 details-page-stepper" [linear]="true" labelPosition="bottom" #stepper>
+				<mat-stepper
+					*ngIf="mapsetInfo.workflowStatus !== 'IN_UPGRADE'"
+					class="col-1 details-page-stepper"
+					orientation="horizontal"
+					[linear]="true"
+					labelPosition="bottom"
+					#stepper
+				>
 					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_EDIT_STARTED']">
 						<ng-template matStepperIcon="number">
 							<mat-icon>done</mat-icon>
@@ -50,10 +60,33 @@
 					<ng-template matStepperIcon="done">
 						<mat-icon>done</mat-icon>
 					</ng-template>
-				</mat-horizontal-stepper>
+				</mat-stepper>
+				<mat-stepper
+					*ngIf="mapsetInfo.workflowStatus === 'IN_UPGRADE'"
+					class="col-md-auto upgrade-page-stepper"
+					orientation="horizontal"
+					[linear]="true"
+					labelPosition="bottom"
+					#stepper
+				>
+					<mat-step [editable]="false" [completed]="stepperInfo['IN_UPGRADE']">
+						<ng-template matStepperIcon="number">
+							<mat-icon>done</mat-icon>
+						</ng-template>
+						<ng-template matStepLabel
+							><span class="fs-15 fw-bold" [class]="stepperInfo['IN_UPGRADE_COLOR']">In Upgrade</span></ng-template
+						>
+					</mat-step>
+				</mat-stepper>
 			</div>
 		</div>
-		<div class="col-md-2 d-flex header-menu">
+		<div
+			class="col-md-2 d-flex"
+			[ngClass]="{
+				'header-menu': mapsetInfo.workflowStatus !== 'IN_UPGRADE',
+				'header-menu-upgrade': mapsetInfo.workflowStatus === 'IN_UPGRADE',
+			}"
+		>
 			<div *ngIf="loaded && !loadError">
 				<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: mapsetData }"></template>
 			</div>

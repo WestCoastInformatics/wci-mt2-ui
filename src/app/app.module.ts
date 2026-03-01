@@ -44,7 +44,6 @@ import { AngularSplitModule } from 'angular-split';
 import { SidebarComponent } from 'src/app/components/sidebar/sidebar.component';
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 import { FooterComponent } from 'src/app/components/footer/footer.component';
-import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
 import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { RefsetDownloadComponent } from 'src/app/components/refsetDownload/refset-download.component';
 import { ColumnChooserComponent } from 'src/app/components/column-chooser/column-chooser.component';
@@ -162,7 +161,6 @@ const appRoutes: Routes = [
 		AppComponent,
 		NavbarComponent,
 		FooterComponent,
-		TaxonomyTreeComponent,
 		TemplateRendererComponent,
 		RefsetDownloadComponent,
 		ColumnChooserComponent,

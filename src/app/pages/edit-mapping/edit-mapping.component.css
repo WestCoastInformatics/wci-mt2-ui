@@ -566,6 +566,10 @@
 	max-width: 450px !important;
 }
 
+.rt2-upgrade {
+	display: inline-block;
+}
+
 .rt2-directory-chooser-column {
 	padding-right: 20px;
 	margin-top: -0.8em;
@@ -729,6 +733,14 @@
 	cursor: pointer;
 }
 
+.upgrade-page-stepper {
+	transform: scale(0.65);
+	margin-left: 475px;
+	margin-right: auto;
+	text-align: center;
+	margin-top: -28px;
+}
+
 .unlink-icon {
 	cursor: default;
 	color: #666;
@@ -888,6 +900,15 @@
 	height: 100%;
 	padding: 20px;
 	background-color: #fff;
+}
+
+.header-menu {
+	height: 40px;
+}
+
+.header-menu-upgrade {
+	height: 40px;
+	margin-left: 160px;
 }
 
 .col-header-font,

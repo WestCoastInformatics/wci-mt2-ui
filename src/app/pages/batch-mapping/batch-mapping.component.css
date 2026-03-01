@@ -623,6 +623,14 @@
 	cursor: pointer;
 }
 
+.upgrade-page-stepper {
+	transform: scale(0.65);
+	margin-left: 418px;
+	margin-right: auto;
+	text-align: center;
+	margin-top: -28px;
+}
+
 .code-link:hover {
 	text-decoration: none;
 }

@@ -151,6 +151,8 @@ export class EditMappingComponent implements OnInit {
 		REVIEW_COMPLETED_STARTED: false,
 		READY_FOR_PUBLICATION_COLOR: 'details-page-stepper-unstarted-step',
 		READY_FOR_PUBLICATION_STARTED: false,
+		IN_UPGRADE_COLOR: 'details-page-stepper-unstarted-step',
+		IN_UPGRADE_STARTED: false,
 	};
 
 	moduleMetadata: any;
@@ -239,13 +241,13 @@ export class EditMappingComponent implements OnInit {
 		}
 
 		this.disableChannel.postMessage(false);
-		const stepperClass = 'details-page-stepper-started-step';
-		this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
-		//this.refsetStatus?.includes('IN_EDIT')) {
-		this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-		this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-		this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
-		this.stepperInfo['IN_EDIT_STARTED'] = true;
+		// const stepperClass = 'details-page-stepper-started-step';
+		// this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
+		// //this.refsetStatus?.includes('IN_EDIT')) {
+		// this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+		// this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+		// this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
+		// this.stepperInfo['IN_EDIT_STARTED'] = true;
 
 		this.targetFC.disable();
 	}
@@ -266,6 +268,10 @@ export class EditMappingComponent implements OnInit {
 					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
 					this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
 					this.stepperInfo['IN_EDIT_STARTED'] = true;
+					break;
+				case 'IN_UPGRADE':
+					this.stepperInfo['IN_UPGRADE_COLOR'] = stepperClass;
+					this.stepperInfo['IN_UPGRADE_STARTED'] = true;
 					break;
 				default: //null
 					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;

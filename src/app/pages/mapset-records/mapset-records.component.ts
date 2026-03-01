@@ -159,6 +159,8 @@ export class MapsetRecordsComponent implements OnInit {
 		REVIEW_COMPLETED_STARTED: false,
 		READY_FOR_PUBLICATION_COLOR: 'details-page-stepper-unstarted-step',
 		READY_FOR_PUBLICATION_STARTED: false,
+		IN_UPGRADE_COLOR: 'details-page-stepper-unstarted-step',
+		IN_UPGRADE_STARTED: false,
 	};
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
@@ -265,6 +267,14 @@ export class MapsetRecordsComponent implements OnInit {
 					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
 					this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
 					this.stepperInfo['IN_EDIT_STARTED'] = true;
+					break;
+				case 'IN_UPGRADE':
+					this.upgradeStatus = false;
+					this.showReview = false;
+					this.showEdit = false;
+					this.showPublish = false;
+					this.stepperInfo['IN_UPGRADE_COLOR'] = stepperClass;
+					this.stepperInfo['IN_UPGRADE_STARTED'] = true;
 					break;
 				default: //null
 					this.editStatus = true;
