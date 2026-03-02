@@ -130,11 +130,12 @@ export class MapsetRecordsComponent implements OnInit {
 		{ label: 'Finish Upgrade', value: 'FINISH_UPGRADE', message: 'Are you sure you want to finish upgrading this Map Set?', notes: '' },
 	];
 	showReview = true;
-	reviewStatus = true;
+	requestStatus = true;
+	reviewStatus = false;
 	reviewWF = [
 		{ label: 'Request Review', value: 'REQUEST_REVIEW', message: 'Are you sure you want to request review of this Map Set?', notes: '' },
 		{ label: 'Withdraw Review', value: 'WITHDRAW', message: 'Are you sure you want to withdraw review of this Map Set?', notes: '' },
-		{ label: 'Add Review', value: 'REVIEW', message: 'Are you sure you want to add a review for this Map Set?', notes: '' },
+		{ label: 'Review', value: 'REVIEW', message: 'Are you sure you want to review this Map Set?', notes: '' },
 		{ label: 'Reject Review', value: 'REJECT_REVIEW', message: 'Are you sure you want to reject review for this Map Set?', notes: '' },
 		{ label: 'Accept Review', value: 'ACCEPT_REVIEW', message: 'Are you sure you want to accept review for this Map Set?', notes: '' },
 	];
@@ -149,16 +150,20 @@ export class MapsetRecordsComponent implements OnInit {
 	stepperStartInfo = {
 		READY_FOR_EDIT_COLOR: 'details-page-stepper-unstarted-step',
 		READY_FOR_EDIT_STARTED: false,
-		IN_EDIT_COLOR: 'details-page-stepper-unstarted-step',
-		IN_EDIT_STARTED: false,
 		READY_FOR_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
 		READY_FOR_REVIEW_STARTED: false,
-		IN_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
-		IN_REVIEW_STARTED: false,
 		REVIEW_COMPLETED_COLOR: 'details-page-stepper-unstarted-step',
 		REVIEW_COMPLETED_STARTED: false,
 		READY_FOR_PUBLICATION_COLOR: 'details-page-stepper-unstarted-step',
 		READY_FOR_PUBLICATION_STARTED: false,
+		PUBLISHED_COLOR: 'details-page-stepper-unstarted-step',
+		PUBLISHED_STARTED: false,
+		IN_EDIT_COLOR: 'details-page-stepper-unstarted-step',
+		IN_EDIT_STARTED: false,
+		IN_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
+		IN_REVIEW_STARTED: false,
+		IN_PUBLICATION_COLOR: 'details-page-stepper-unstarted-step',
+		IN_PUBLICATION_STARTED: false,
 		IN_UPGRADE_COLOR: 'details-page-stepper-unstarted-step',
 		IN_UPGRADE_STARTED: false,
 	};
@@ -229,14 +234,6 @@ export class MapsetRecordsComponent implements OnInit {
 		if (localStorage.getItem('showMapTable')) {
 			this.changeMappingsView(JSON.parse(localStorage.getItem('showMapTable')));
 		}
-
-		// const stepperClass = 'details-page-stepper-started-step';
-		// this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
-		//his.refsetStatus?.includes('IN_EDIT')) {
-		// this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-		// this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-		// this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
-		// this.stepperInfo['IN_EDIT_STARTED'] = true;
 	}
 
 	getMapsetInfo() {
@@ -263,8 +260,6 @@ export class MapsetRecordsComponent implements OnInit {
 					this.showReview = false;
 					this.showUpgrade = false;
 					this.showPublish = false;
-					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
 					this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
 					this.stepperInfo['IN_EDIT_STARTED'] = true;
 					break;
@@ -275,6 +270,76 @@ export class MapsetRecordsComponent implements OnInit {
 					this.showPublish = false;
 					this.stepperInfo['IN_UPGRADE_COLOR'] = stepperClass;
 					this.stepperInfo['IN_UPGRADE_STARTED'] = true;
+					break;
+				case 'READY_FOR_REVIEW':
+					this.requestStatus = false;
+					this.reviewStatus = false;
+					this.showEdit = false;
+					this.showUpgrade = false;
+					this.showPublish = false;
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
+					break;
+				case 'IN_REVIEW':
+					this.requestStatus = false;
+					this.reviewStatus = true;
+					this.showEdit = false;
+					this.showUpgrade = false;
+					this.showPublish = false;
+					this.stepperInfo['IN_REVIEW_COLOR'] = stepperClass;
+					this.stepperInfo['IN_REVIEW_STARTED'] = true;
+					break;
+				case 'REVIEW_COMPLETED':
+					this.editStatus = true;
+					this.showReview = true;
+					this.showUpgrade = false;
+					this.showPublish = true;
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
+					this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
+					this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
+					break;
+				case 'READY_FOR_PUBLICATION':
+					this.publishStatus = false;
+					this.showReview = false;
+					this.showEdit = false;
+					this.showUpgrade = false;
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
+					this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
+					this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
+					this.stepperInfo['READY_FOR_PUBLICATION_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_PUBLICATION_STARTED'] = true;
+					break;
+				case 'IN_PUBLICATION':
+					this.publishStatus = false;
+					this.showReview = false;
+					this.showEdit = false;
+					this.showUpgrade = false;
+					this.stepperInfo['IN_PUBLICATION_COLOR'] = stepperClass;
+					this.stepperInfo['IN_PUBLICATION_STARTED'] = true;
+					break;
+				case 'PUBLISHED':
+					this.showEdit = false;
+					this.showReview = false;
+					this.showUpgrade = false;
+					this.showPublish = false;
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
+					this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
+					this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
+					this.stepperInfo['READY_FOR_PUBLICATION_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_PUBLICATION_STARTED'] = true;
+					this.stepperInfo['PUBLISHED_COLOR'] = stepperClass;
+					this.stepperInfo['PUBLISHED_STARTED'] = true;
 					break;
 				default: //null
 					this.editStatus = true;
@@ -1082,6 +1147,7 @@ export class MapsetRecordsComponent implements OnInit {
 			case this.reviewWF[2].value: //REVIEW
 				this.workFlowStatus = this.reviewWF[2];
 				this.openWorkFlowModal(this.workflowModal);
+				// this.openToBeDevelopedModal(this.tbdModal);
 				break;
 			case this.reviewWF[3].value: //REJECT_REVIEW
 				this.workFlowStatus = this.reviewWF[3];
@@ -1150,8 +1216,6 @@ export class MapsetRecordsComponent implements OnInit {
 				this.showReview = false;
 				this.showUpgrade = false;
 				this.showPublish = false;
-				this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-				this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
 				this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
 				this.stepperInfo['IN_EDIT_STARTED'] = true;
 				break;
@@ -1176,68 +1240,122 @@ export class MapsetRecordsComponent implements OnInit {
 				this.showReview = false;
 				this.showEdit = false;
 				this.showPublish = false;
+				this.stepperInfo['IN_UPGRADE_COLOR'] = stepperClass;
+				this.stepperInfo['IN_UPGRADE_STARTED'] = true;
 				break;
 			case 'CANCEL_UPGRADE':
 				this.upgradeStatus = true;
 				this.showReview = true;
 				this.showEdit = true;
 				this.showPublish = true;
+				this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
 				break;
 			case 'FINISH_UPGRADE':
 				this.upgradeStatus = true;
 				this.showReview = true;
 				this.showEdit = true;
 				this.showPublish = true;
+				this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
 				break;
 			case 'REQUEST_REVIEW':
 				this.reviewStatus = false;
+				this.requestStatus = false;
 				this.showEdit = false;
 				this.showUpgrade = false;
 				this.showPublish = false;
+				this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+				this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
 				break;
 			case 'WITHDRAW':
-				this.reviewStatus = true;
-				this.showEdit = true;
-				this.showUpgrade = true;
-				this.showPublish = true;
-				break;
-			case 'REVIEW':
-				//this stays here to add review?
+				this.requestStatus = true;
 				this.reviewStatus = false;
 				this.showEdit = false;
 				this.showUpgrade = false;
 				this.showPublish = false;
+				this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+				break;
+			case 'REVIEW':
+				this.reviewStatus = true;
+				this.requestStatus = false;
+				this.showEdit = false;
+				this.showUpgrade = false;
+				this.showPublish = false;
+				this.stepperInfo['IN_REVIEW_COLOR'] = stepperClass;
+				this.stepperInfo['IN_REVIEW_STARTED'] = true;
 				break;
 			case 'REJECT_REVIEW':
-				this.reviewStatus = true;
+				this.requestStatus = true;
+				this.reviewStatus = false;
 				this.showEdit = true;
 				this.showUpgrade = true;
 				this.showPublish = true;
+				this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
 				break;
 			case 'ACCEPT_REVIEW':
-				this.reviewStatus = true;
+				this.requestStatus = true;
+				this.reviewStatus = false;
 				this.showEdit = true;
-				this.showUpgrade = true;
+				this.showUpgrade = false;
 				this.showPublish = true;
+				this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+				this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
+				this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
+				this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
 				break;
 			case 'REQUEST_PUBLICATION':
 				this.publishStatus = false;
 				this.showReview = false;
 				this.showUpgrade = false;
 				this.showEdit = false;
+				this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+				this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
+				this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
+				this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
+				this.stepperInfo['READY_FOR_PUBLICATION_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_PUBLICATION_STARTED'] = true;
 				break;
 			case 'START_PUBLISH':
-				//??this may need to hide start publish and where's cancel publish?
 				this.publishStatus = false;
 				this.showReview = false;
 				this.showUpgrade = false;
 				this.showEdit = false;
+				this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+				this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
+				this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
+				this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
+				this.stepperInfo['READY_FOR_PUBLICATION_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_PUBLICATION_STARTED'] = true;
+				this.stepperInfo['PUBLISHED_COLOR'] = stepperClass;
+				this.stepperInfo['PUBLISHED_STARTED'] = true;
 				break;
 			case 'PUBLISH_REFSET':
 				this.publishStatus = true;
-				this.showReview = true;
-				this.showUpgrade = true;
-				this.showEdit = true;
+				this.showEdit = false;
+				this.showReview = false;
+				this.showUpgrade = false;
+				this.showPublish = false;
+				this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+				this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
+				this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
+				this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
+				this.stepperInfo['READY_FOR_PUBLICATION_COLOR'] = stepperClass;
+				this.stepperInfo['READY_FOR_PUBLICATION_STARTED'] = true;
+				this.stepperInfo['PUBLISHED_COLOR'] = stepperClass;
+				this.stepperInfo['PUBLISHED_STARTED'] = true;
 				break;
 		}
 		this.closeWorkFlowModal();

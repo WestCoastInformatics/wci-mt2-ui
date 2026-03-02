@@ -8,7 +8,12 @@
 				<div class="rt2-wrap">{{ mapsetInfo.refSetName }}</div>
 				<!-- Status Stepper if in edit mode and Reference Set not locked -->
 				<mat-stepper
-					*ngIf="mapsetInfo.workflowStatus !== 'IN_UPGRADE'"
+					*ngIf="
+						mapsetInfo.workflowStatus !== 'IN_UPGRADE' &&
+						mapsetInfo.workflowStatus !== 'IN_REVIEW' &&
+						mapsetInfo.workflowStatus !== 'IN_EDIT' &&
+						mapsetInfo.workflowStatus !== 'IN_PUBLICATION'
+					"
 					class="col-1 details-page-stepper"
 					orientation="horizontal"
 					[linear]="true"
@@ -24,18 +29,10 @@
 						>
 					</mat-step>
 
-					<mat-step [editable]="false" [completed]="stepperInfo['IN_EDIT_STARTED']">
-						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_EDIT_COLOR']">In Edit</span></ng-template>
-					</mat-step>
-
 					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_REVIEW_STARTED']">
 						<ng-template matStepLabel
 							><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_REVIEW_COLOR']">Ready for Review</span>
 						</ng-template>
-					</mat-step>
-
-					<mat-step [editable]="false" [completed]="stepperInfo['IN_REVIEW_STARTED']">
-						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_REVIEW_COLOR']">In Review</span></ng-template>
 					</mat-step>
 
 					<mat-step [editable]="false" [completed]="stepperInfo['REVIEW_COMPLETED_STARTED']">
@@ -51,10 +48,28 @@
 							></ng-template
 						>
 					</mat-step>
+					<mat-step [editable]="false" [completed]="stepperInfo['PUBLISHED_STARTED']">
+						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['PUBLISHED_COLOR']">Published</span></ng-template>
+					</mat-step>
 
 					<ng-template matStepperIcon="done">
 						<mat-icon>done</mat-icon>
 					</ng-template>
+				</mat-stepper>
+				<mat-stepper
+					*ngIf="mapsetInfo.workflowStatus === 'IN_EDIT'"
+					class="col-md-auto upgrade-page-stepper"
+					orientation="horizontal"
+					[linear]="true"
+					labelPosition="bottom"
+					#stepper
+				>
+					<mat-step [editable]="false" [completed]="stepperInfo['IN_EDIT_STARTED']">
+						<ng-template matStepperIcon="number">
+							<mat-icon>done</mat-icon>
+						</ng-template>
+						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_EDIT_COLOR']">In Edit</span></ng-template>
+					</mat-step>
 				</mat-stepper>
 				<mat-stepper
 					*ngIf="mapsetInfo.workflowStatus === 'IN_UPGRADE'"
@@ -70,6 +85,38 @@
 						</ng-template>
 						<ng-template matStepLabel
 							><span class="fs-15 fw-bold" [class]="stepperInfo['IN_UPGRADE_COLOR']">In Upgrade</span></ng-template
+						>
+					</mat-step>
+				</mat-stepper>
+				<mat-stepper
+					*ngIf="mapsetInfo.workflowStatus === 'IN_REVIEW'"
+					class="col-md-auto upgrade-page-stepper"
+					orientation="horizontal"
+					[linear]="true"
+					labelPosition="bottom"
+					#stepper
+				>
+					<mat-step [editable]="false" [completed]="stepperInfo['IN_REVIEW_STARTED']">
+						<ng-template matStepperIcon="number">
+							<mat-icon>done</mat-icon>
+						</ng-template>
+						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_REVIEW_COLOR']">In Review</span></ng-template>
+					</mat-step>
+				</mat-stepper>
+				<mat-stepper
+					*ngIf="mapsetInfo.workflowStatus === 'IN_PUBLICATION'"
+					class="col-md-auto upgrade-page-stepper"
+					orientation="horizontal"
+					[linear]="true"
+					labelPosition="bottom"
+					#stepper
+				>
+					<mat-step [editable]="false" [completed]="stepperInfo['IN_PUBLICATION_STARTED']">
+						<ng-template matStepperIcon="number">
+							<mat-icon>done</mat-icon>
+						</ng-template>
+						<ng-template matStepLabel
+							><span class="fs-15 fw-bold" [class]="stepperInfo['IN_PUBLICATION_COLOR']">In Publication</span></ng-template
 						>
 					</mat-step>
 				</mat-stepper>
@@ -152,7 +199,15 @@
 			<ng-container>
 				<span *ngFor="let review of reviewWF"
 					><button
-						*ngIf="(reviewStatus && review.label === reviewWF[0].label) || (!reviewStatus && review.label !== reviewWF[0].label)"
+						*ngIf="
+							(requestStatus && review.label === reviewWF[0].label) ||
+							(!requestStatus &&
+								review.label !== reviewWF[0].label &&
+								review.label !== reviewWF[3].label &&
+								review.label !== reviewWF[4].label &&
+								!reviewStatus) ||
+							(!requestStatus && (review.label === reviewWF[3].label || review.label === reviewWF[4].label) && reviewStatus)
+						"
 						type="button"
 						[title]="review.label"
 						class="rt2-btn rt2-action-btn col-md-6 no-margin-top"

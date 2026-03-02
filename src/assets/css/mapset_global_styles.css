@@ -2052,9 +2052,9 @@ img.rt2-edition-flag {
 }
 
 .mat-stepper-horizontal {
-	margin-left: -80px;
-	margin-right: -80px;
-	min-width: 600px !important;
+	margin-left: -40px;
+	margin-right: -40px;
+	min-width: 650px !important;
 }
 
 .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-end,
