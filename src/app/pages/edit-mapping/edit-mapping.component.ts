@@ -966,14 +966,20 @@ export class EditMappingComponent implements OnInit {
 		};
 
 		this.userChanged = false;
-		this.refsetService.updateMapsetMapping(this.mapsetCode, saveMapset).subscribe(
-			(status) => {
-				this.notificationService.show('The mapping has been saved.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
-			},
-			(error) => {
-				//
-			},
-		);
+		this.refsetService.getMapsetWorkflowStatus(this.mapsetCode).subscribe((status) => {
+			if (status.workflowStatus === 'IN_EDIT') {
+				this.refsetService.updateMapsetMapping(this.mapsetCode, saveMapset).subscribe(
+					(status) => {
+						this.notificationService.show('The mapping has been saved.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+					},
+					(error) => {
+						//
+					},
+				);
+			} else {
+				this.notificationService.show('Mapset workflow status is not in Edit mode.');
+			}
+		});
 	}
 
 	showDropdown(): void {

@@ -509,7 +509,7 @@ export class BatchMappingComponent implements OnInit {
 				sortable: false,
 				suppressSorting: true,
 				minWidth: 165,
-				editable: true,
+				editable: this.mapsetInfo.workflowStatus === 'IN_EDIT',
 				width: 165,
 			},
 			{
@@ -528,7 +528,7 @@ export class BatchMappingComponent implements OnInit {
 				cellEditorParams: {
 					values: this.ruleOptions,
 				},
-				editable: true,
+				editable: this.mapsetInfo.workflowStatus === 'IN_EDIT',
 				unSortIcon: true,
 				sortable: false,
 				suppressSorting: true,
@@ -1384,15 +1384,21 @@ export class BatchMappingComponent implements OnInit {
 		}
 
 		this.userChanged = false;
-		this.refsetService.updateMapsetMappingBulk(this.mapsetCode, this.mapsetResponse).subscribe(
-			(status) => {
-				this.saving = false;
-				this.notificationService.show('The mappings have been saved.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
-			},
-			(error) => {
-				//
-			},
-		);
+		this.refsetService.getMapsetWorkflowStatus(this.mapsetCode).subscribe((status) => {
+			if (status.workflowStatus === 'IN_EDIT') {
+				this.refsetService.updateMapsetMappingBulk(this.mapsetCode, this.mapsetResponse).subscribe(
+					(status) => {
+						this.saving = false;
+						this.notificationService.show('The mappings have been saved.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+					},
+					(error) => {
+						//
+					},
+				);
+			} else {
+				this.notificationService.show('Mapset workflow status is not in Edit mode.');
+			}
+		});
 	}
 
 	showDropdown(): void {

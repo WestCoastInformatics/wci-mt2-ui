@@ -2437,7 +2437,7 @@ app-grid-header-floating-filter {
 }
 
 .mdc-evolution-chip__action--presentational {
-	cursor: pointer !important;
+	/* cursor: pointer !important; */
 }
 
 ngb-typeahead-window.dropdown-menu button {

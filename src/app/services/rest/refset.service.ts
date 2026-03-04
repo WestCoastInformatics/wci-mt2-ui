@@ -353,6 +353,10 @@ export class RefsetService extends RestService {
 		);
 	}
 
+	getMapsetWorkflowStatus(mapsetId: string): Observable<any> {
+		return this.get(this.contextPath + `mapset/${mapsetId}/workflowStatus/`, '', false);
+	}
+
 	setMapsetWorkflowStatus(mapsetId: string, action: string, notes: string): Observable<any> {
 		return this.post(this.contextPath + `mapset/${mapsetId}/workflowStatus?action=${action}&notes=${notes}`, '');
 	}

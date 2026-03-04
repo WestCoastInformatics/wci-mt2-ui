@@ -1000,7 +1000,7 @@
 				[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
 			>
 				<mat-chip
-					class="mapset-chip pointer"
+					class="mapset-chip"
 					title="{{
 						'Group ' +
 							params?.value.split('#')[0].split('&')[0].split('/')[0] +
@@ -1015,7 +1015,7 @@
 				title="{{ params?.value.split('#')[1] }}"
 				class="no-padding"
 				(click)="editTarget($event, params)"
-				[ngClass]="{ 'blue-link': mapsetInfo.workflowStatus === 'IN_EDIT' }"
+				[ngClass]="{ 'blue-link': mapsetInfo.workflowStatus === 'IN_EDIT', 'disabled-link': mapsetInfo.workflowStatus !== 'IN_EDIT' }"
 				[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
 			>
 				{{ params?.value.split('#')[1] }}
