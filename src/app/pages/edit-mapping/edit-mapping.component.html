@@ -5,10 +5,7 @@
 	<div class="d-flex justify-content-end">
 		<div class="row d-flex">
 			<div class="col-md-10 page-title" *ngIf="loaded && !loadError">
-				<div
-					[ngClass]="{ 'rt2-wrap': mapsetInfo.workflowStatus !== 'IN_UPGRADE', 'rt2-upgrade': mapsetInfo.workflowStatus === 'IN_UPGRADE' }"
-					title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}"
-				>
+				<div class="rt2-wrap" title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}">
 					{{ mapsetData[0].code + ' ' + mapsetData[0].name }}
 				</div>
 				<!-- Status Stepper if in edit mode and Reference Set not locked -->
@@ -127,13 +124,7 @@
 				</mat-stepper>
 			</div>
 		</div>
-		<div
-			class="col-md-2 d-flex"
-			[ngClass]="{
-				'header-menu': mapsetInfo.workflowStatus !== 'IN_UPGRADE',
-				'header-menu-upgrade': mapsetInfo.workflowStatus === 'IN_UPGRADE',
-			}"
-		>
+		<div class="col-md-2 d-flex header-menu">
 			<div *ngIf="loaded && !loadError">
 				<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: mapsetData }"></template>
 			</div>
