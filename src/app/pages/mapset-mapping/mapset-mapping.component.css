@@ -174,8 +174,8 @@
 }
 
 .rt2-wrap {
-	min-width: 1300px !important;
-	max-width: 1300px !important;
+	display: inline-block;
+	max-width: 450px !important;
 }
 
 .top-search-bar {
@@ -296,6 +296,25 @@
 
 .end-btn {
 	margin-right: 2em;
+}
+
+.details-page-stepper {
+	transform: scale(0.65);
+	margin-left: 350px;
+	text-align: center;
+	margin-top: -38px;
+}
+
+.upgrade-page-stepper {
+	transform: scale(0.65);
+	margin-left: 475px;
+	margin-right: auto;
+	text-align: center;
+	margin-top: -36px;
+}
+
+.header-menu {
+	height: 40px;
 }
 
 .section-loading {

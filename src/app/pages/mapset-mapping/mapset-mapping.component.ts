@@ -83,10 +83,31 @@ export class MapsetMappingComponent implements OnInit {
 	formats = [];
 	downloadTitle = 'Download';
 	mapsetInfo: any = {};
-	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
+	rowColors = [{ background: 'white' }, { background: '#f2f2f2' }];
 	currentRowColor = 0;
 	moduleMetadata: any;
 	refsetData: any;
+	stepperInfo: any = {};
+	stepperStartInfo = {
+		READY_FOR_EDIT_COLOR: 'details-page-stepper-unstarted-step',
+		READY_FOR_EDIT_STARTED: false,
+		READY_FOR_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
+		READY_FOR_REVIEW_STARTED: false,
+		REVIEW_COMPLETED_COLOR: 'details-page-stepper-unstarted-step',
+		REVIEW_COMPLETED_STARTED: false,
+		READY_FOR_PUBLICATION_COLOR: 'details-page-stepper-unstarted-step',
+		READY_FOR_PUBLICATION_STARTED: false,
+		PUBLISHED_COLOR: 'details-page-stepper-unstarted-step',
+		PUBLISHED_STARTED: false,
+		IN_EDIT_COLOR: 'details-page-stepper-unstarted-step',
+		IN_EDIT_STARTED: false,
+		IN_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
+		IN_REVIEW_STARTED: false,
+		IN_PUBLICATION_COLOR: 'details-page-stepper-unstarted-step',
+		IN_PUBLICATION_STARTED: false,
+		IN_UPGRADE_COLOR: 'details-page-stepper-unstarted-step',
+		IN_UPGRADE_STARTED: false,
+	};
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -106,7 +127,7 @@ export class MapsetMappingComponent implements OnInit {
 		private mt2Service: MT2Service,
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
-		private modalService: NgbModal
+		private modalService: NgbModal,
 	) {
 		document.body.scrollTop = 0;
 	}
@@ -146,6 +167,71 @@ export class MapsetMappingComponent implements OnInit {
 
 		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
 			this.mapsetInfo = results;
+
+			const stepperClass = 'details-page-stepper-started-step';
+			this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
+			switch (this.mapsetInfo.workflowStatus) {
+				case 'READY_FOR_EDIT':
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					break;
+				case 'IN_EDIT':
+					this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['IN_EDIT_STARTED'] = true;
+					break;
+				case 'IN_UPGRADE':
+					this.stepperInfo['IN_UPGRADE_COLOR'] = stepperClass;
+					this.stepperInfo['IN_UPGRADE_STARTED'] = true;
+					break;
+				case 'READY_FOR_REVIEW':
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
+					break;
+				case 'IN_REVIEW':
+					this.stepperInfo['IN_REVIEW_COLOR'] = stepperClass;
+					this.stepperInfo['IN_REVIEW_STARTED'] = true;
+					break;
+				case 'REVIEW_COMPLETED':
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
+					this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
+					this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
+					break;
+				case 'READY_FOR_PUBLICATION':
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
+					this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
+					this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
+					this.stepperInfo['READY_FOR_PUBLICATION_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_PUBLICATION_STARTED'] = true;
+					break;
+				case 'IN_PUBLICATION':
+					this.stepperInfo['IN_PUBLICATION_COLOR'] = stepperClass;
+					this.stepperInfo['IN_PUBLICATION_STARTED'] = true;
+					break;
+				case 'PUBLISHED':
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
+					this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
+					this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
+					this.stepperInfo['READY_FOR_PUBLICATION_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_PUBLICATION_STARTED'] = true;
+					this.stepperInfo['PUBLISHED_COLOR'] = stepperClass;
+					this.stepperInfo['PUBLISHED_STARTED'] = true;
+					break;
+				default: //null
+					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+					break;
+			}
 		});
 	}
 
@@ -186,28 +272,31 @@ export class MapsetMappingComponent implements OnInit {
 						}
 					}
 					data.push({
-						'index': results.code + count,
-						'spanned': spanned,
-						'downloadable': true,
-						'mapEntries': results.mapEntries,
-						'descriptions': results.descriptions,
-						'entries': results.mapEntries.length,
-						'code': results.code,
-						'name': results.name,
-						'toName': results.mapEntries[b].toName.length > 0 && results.mapEntries[b].toName !== ' DOES NOT EXIST' ? results.mapEntries[b].toName : '---',
-						'toCode':
+						index: results.code + count,
+						spanned: spanned,
+						downloadable: true,
+						mapEntries: results.mapEntries,
+						descriptions: results.descriptions,
+						entries: results.mapEntries.length,
+						code: results.code,
+						name: results.name,
+						toName:
+							results.mapEntries[b].toName.length > 0 && results.mapEntries[b].toName !== ' DOES NOT EXIST'
+								? results.mapEntries[b].toName
+								: '---',
+						toCode:
 							results.mapEntries[b].toCode.length > 0
 								? results.mapEntries[b].group + '/' + results.mapEntries[b].priority + '#' + results.mapEntries[b].toCode
 								: 'No map entries available.',
-						'rule': results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
-						'relation': results.mapEntries[b].relation.length > 0 ? results.mapEntries[b].relation : '---',
-						'modified': results.mapEntries[b].modified,
-						'advices': { 'number': adviceArray.length, 'list': adviceArray },
-						'group': results.mapEntries[b].group,
-						'priority': results.mapEntries[b].priority,
-						'moduleId': results.mapEntries[b].moduleId,
-						'modFlag': this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
-						'modLang': this.getModuleLanguageName(results.mapEntries[b].moduleId),
+						rule: results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
+						relation: results.mapEntries[b].relation.length > 0 ? results.mapEntries[b].relation : '---',
+						modified: results.mapEntries[b].modified,
+						advices: { number: adviceArray.length, list: adviceArray },
+						group: results.mapEntries[b].group,
+						priority: results.mapEntries[b].priority,
+						moduleId: results.mapEntries[b].moduleId,
+						modFlag: this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
+						modLang: this.getModuleLanguageName(results.mapEntries[b].moduleId),
 					});
 					count++;
 				}
@@ -283,7 +372,10 @@ export class MapsetMappingComponent implements OnInit {
 	}
 
 	goToEditMappingPage() {
-		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode + '/edit'], { replaceUrl: false, skipLocationChange: false });
+		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode + '/edit'], {
+			replaceUrl: false,
+			skipLocationChange: false,
+		});
 	}
 
 	showDropdown(): void {
@@ -302,8 +394,8 @@ export class MapsetMappingComponent implements OnInit {
 			this.downloading = true;
 			const cols = ['Source', 'Source PT', 'Target', 'Target PT', 'Relationship', 'Rule', 'Advices', 'Last Modified'];
 			const params = {
-				'conceptCodes': [this.mapsetData[0].code],
-				'columnNames': cols,
+				conceptCodes: [this.mapsetData[0].code],
+				columnNames: cols,
 			};
 			this.refsetService.exportMapsetByCode(this.mapsetInfo.refSetCode, params).subscribe(
 				(data) => {
@@ -313,7 +405,7 @@ export class MapsetMappingComponent implements OnInit {
 				},
 				(err) => {
 					console.error(err);
-				}
+				},
 			);
 		} else {
 			this.downloadError = 'Please select a download format.';
