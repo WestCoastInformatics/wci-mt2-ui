@@ -141,6 +141,7 @@ export class MapsetRecordsComponent implements OnInit {
 	];
 	showPublish = true;
 	publishStatus = true;
+	startPublish = false;
 	publishWF = [
 		{ label: 'Request Publish', value: 'REQUEST_PUBLICATION', message: 'Are you sure you want to request to publish this Map Set?', notes: '' },
 		{ label: 'Start Publish', value: 'START_PUBLISH', message: 'Are you sure you want to start publishing of this Map Set?', notes: '' },
@@ -305,6 +306,7 @@ export class MapsetRecordsComponent implements OnInit {
 					break;
 				case 'READY_FOR_PUBLICATION':
 					this.publishStatus = false;
+					this.startPublish = true;
 					this.showReview = false;
 					this.showEdit = false;
 					this.showUpgrade = false;
@@ -319,6 +321,7 @@ export class MapsetRecordsComponent implements OnInit {
 					break;
 				case 'IN_PUBLICATION':
 					this.publishStatus = false;
+					this.startPublish = false;
 					this.showReview = false;
 					this.showEdit = false;
 					this.showUpgrade = false;
@@ -1312,6 +1315,7 @@ export class MapsetRecordsComponent implements OnInit {
 				break;
 			case 'REQUEST_PUBLICATION':
 				this.publishStatus = false;
+				this.startPublish = true;
 				this.showReview = false;
 				this.showUpgrade = false;
 				this.showEdit = false;
@@ -1326,6 +1330,7 @@ export class MapsetRecordsComponent implements OnInit {
 				break;
 			case 'START_PUBLISH':
 				this.publishStatus = false;
+				this.startPublish = false;
 				this.showReview = false;
 				this.showUpgrade = false;
 				this.showEdit = false;
@@ -1342,6 +1347,7 @@ export class MapsetRecordsComponent implements OnInit {
 				break;
 			case 'PUBLISH_REFSET':
 				this.publishStatus = true;
+				this.startPublish = false;
 				this.showEdit = false;
 				this.showReview = false;
 				this.showUpgrade = false;

@@ -137,7 +137,7 @@
 			</div>
 		</div>
 		<div class="col-md-auto d-flex">
-			<div class="col-4">
+			<div class="col">
 				<button
 					class="library-app-refset-download mr-15"
 					(click)="openDownloadModal(downloadModal)"
@@ -148,12 +148,12 @@
 					</div>
 				</button>
 			</div>
-			<div class="col-4">
+			<div class="col" *ngIf="mapsetInfo.workflowStatus === 'IN_UPGRADE'">
 				<button (click)="goToMapsInactivesPage(mapsetCode)" class="library-app-refset-notes mr-20 no-padding">
 					<img src="/assets/no-preview-icon.svg" title="Manage Inactives" aria-label="Manage Inactives" class="no-preview-icon" />
 				</button>
 			</div>
-			<div class="col-4">
+			<div class="col">
 				<button (click)="openToBeDevelopedModal(toBeDevelopedModal)" class="library-app-refset-notes mr-20 no-padding">
 					<img src="/assets/comment-dots-regular.svg" title="Add Feedback" aria-label="Add Feedback" class="discussion-icon" />
 				</button>
@@ -222,7 +222,11 @@
 			<ng-container>
 				<span *ngFor="let publish of publishWF"
 					><button
-						*ngIf="(publishStatus && publish.label === publishWF[0].label) || (!publishStatus && publish.label !== publishWF[0].label)"
+						*ngIf="
+							(publishStatus && publish.label === publishWF[0].label) ||
+							(!publishStatus && startPublish && publish.label !== publishWF[0].label) ||
+							(!publishStatus && !startPublish && publish.label === publishWF[2].label)
+						"
 						type="button"
 						[title]="publish.label"
 						class="rt2-btn rt2-action-btn col-md-6 no-margin-top"

@@ -214,6 +214,30 @@
 	}
 }
 
+.details-page-stepper {
+	transform: scale(0.65);
+	margin-left: 350px;
+	text-align: center;
+	margin-top: -38px;
+}
+
+.upgrade-page-stepper {
+	transform: scale(0.65);
+	margin-left: 475px;
+	margin-right: auto;
+	text-align: center;
+	margin-top: -36px;
+}
+
+.header-menu {
+	height: 40px;
+}
+
+.rt2-wrap {
+	display: inline-block;
+	max-width: 450px !important;
+}
+
 .rt2-directory-chooser-column {
 	padding-right: 20px;
 	margin-top: -0.5em;
