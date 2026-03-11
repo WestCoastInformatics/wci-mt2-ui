@@ -6,49 +6,7 @@
 		<div class="col-md-12 d-flex">
 			<div class="page-title" *ngIf="loaded && !loadError" title="Batch Edit ({{ mapsetData.length }})">
 				<div class="rt2-wrap">Batch Edit ({{ mapsetData.length }})</div>
-				<!-- Status Stepper if in edit mode and Reference Set not locked -->
-				<mat-horizontal-stepper class="col-1 details-page-stepper" [linear]="true" labelPosition="bottom" #stepper>
-					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_EDIT_STARTED']">
-						<ng-template matStepperIcon="number">
-							<mat-icon>done</mat-icon>
-						</ng-template>
-						<ng-template matStepLabel
-							><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_EDIT_COLOR']">Ready for Edit</span></ng-template
-						>
-					</mat-step>
-
-					<mat-step [editable]="false" [completed]="stepperInfo['IN_EDIT_STARTED']">
-						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_EDIT_COLOR']">In Edit</span></ng-template>
-					</mat-step>
-
-					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_REVIEW_STARTED']">
-						<ng-template matStepLabel
-							><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_REVIEW_COLOR']">Ready for Review</span>
-						</ng-template>
-					</mat-step>
-
-					<mat-step [editable]="false" [completed]="stepperInfo['IN_REVIEW_STARTED']">
-						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_REVIEW_COLOR']">In Review</span></ng-template>
-					</mat-step>
-
-					<mat-step [editable]="false" [completed]="stepperInfo['REVIEW_COMPLETED_STARTED']">
-						<ng-template matStepLabel
-							><span class="fs-15 fw-bold" [class]="stepperInfo['REVIEW_COMPLETED_COLOR']">Review Completed</span>
-						</ng-template>
-					</mat-step>
-
-					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_PUBLICATION_STARTED']">
-						<ng-template matStepLabel
-							><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_PUBLICATION_COLOR']"
-								>Ready for Publication</span
-							></ng-template
-						>
-					</mat-step>
-
-					<ng-template matStepperIcon="done">
-						<mat-icon>done</mat-icon>
-					</ng-template>
-				</mat-horizontal-stepper>
+				<app-workflow-status [workflowStatus]="mapsetInfo.workflowStatus" class="col-1"> </app-workflow-status>
 			</div>
 		</div>
 	</div>
@@ -65,8 +23,8 @@
 				title="Undo Changes"
 				class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
 				(click)="reloadMapping()"
-				[disabled]="!userChanged"
-				(ngClass)="({ disabled: !userChanged })"
+				[disabled]="!userChanged || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+				(ngClass)="({ disabled: !userChanged || mapsetInfo.workflowStatus !== 'IN_EDIT' })"
 			>
 				Undo Changes
 			</button>
@@ -75,8 +33,8 @@
 				title="Save Mapping"
 				class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
 				(click)="saveMappings()"
-				[disabled]="!userChanged"
-				(ngClass)="({ disabled: !userChanged })"
+				[disabled]="!userChanged || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+				(ngClass)="({ disabled: !userChanged || mapsetInfo.workflowStatus !== 'IN_EDIT' })"
 			>
 				Save Mappings
 			</button>
@@ -172,19 +130,23 @@
 					</button>
 				</div>
 				<mat-menu #actionMenu="matMenu">
-					<button mat-menu-item (click)="selectAction('set')" [disabled]="checkedNum < 1">
+					<button mat-menu-item (click)="selectAction('set')" [disabled]="checkedNum < 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
 						<span>Set Empty Target to Mappings</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('add')" [disabled]="checkedNum < 1">
+					<button mat-menu-item (click)="selectAction('add')" [disabled]="checkedNum < 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
 						<span>Add Entry to Mappings</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('group')" [disabled]="checkedNum < 1">
+					<button mat-menu-item (click)="selectAction('group')" [disabled]="checkedNum < 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
 						<span>Change Group of Mappings</span>
 					</button>
 					<!-- <button mat-menu-item (click)="selectAction('advice')" [disabled]="checkedNum < 1">
 						<span>Add Advice to Mappings</span>
 					</button> -->
-					<button mat-menu-item (click)="openConfirmationModal()" [disabled]="checkedNum < 1 || mapsetData.length < 2">
+					<button
+						mat-menu-item
+						(click)="openConfirmationModal()"
+						[disabled]="checkedNum < 1 || mapsetData.length < 2 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+					>
 						<span>Remove selected Mappings</span>
 					</button>
 					<!-- <button mat-menu-item (click)="selectAction('note')" [disabled]="checkedNum < 1">
@@ -339,8 +301,8 @@
 								title="Set as Target"
 								class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
 								(click)="setTarget(targetFC.value, targetToName)"
-								[disabled]="!foundConceptCode || !selectedTarget"
-								(ngClass)="({ disabled: !foundConceptCode || !selectedTarget })"
+								[disabled]="!foundConceptCode || !selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+								(ngClass)="({ disabled: !foundConceptCode || !selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT' })"
 							>
 								Set as Target
 							</button>
@@ -348,8 +310,8 @@
 								type="button"
 								title="Set Empty Target"
 								class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
-								[disabled]="!selectedTarget"
-								(ngClass)="({ disabled: !selectedTarget })"
+								[disabled]="!selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+								(ngClass)="({ disabled: !selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT' })"
 								(click)="setEmptyTarget()"
 							>
 								Set Empty Target
@@ -721,8 +683,8 @@
 														title="Set as Target"
 														class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
 														(click)="setTarget(currentConcept, currentConcept.name)"
-														[disabled]="!selectedTarget"
-														(ngClass)="({ disabled: !selectedTarget })"
+														[disabled]="!selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+														[ngClass]="{ disabled: !selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT' }"
 													>
 														Set as Target
 													</button>
@@ -841,8 +803,19 @@
 	<!-- Action Templates -->
 	<ng-template #directoryActionSection let-params>
 		<div class="d-flex" *ngIf="params?.value === true">
-			<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+			<!-- <div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
 				<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
+			</div> -->
+			<div class="col">
+				<div class="library-app-refset-notes p-r-20" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+					<img src="/assets/sticky-note.svg" title="View Notes" aria-label="View Notes" class="mapset-notes-icon" />
+				</div>
+			</div>
+
+			<div class="col">
+				<div class="library-app-refset-discussion-list p-r-20" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+					<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
+				</div>
 			</div>
 		</div>
 	</ng-template>
@@ -871,6 +844,7 @@
 					placeholder="Select a Rule"
 					[(value)]="params.value"
 					(selectionChange)="userChangeSelection('rule')"
+					[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
 				>
 					<mat-option value="TRUE" class="no-checkbox">TRUE</mat-option>
 					<mat-option value="Gender - Female" class="no-checkbox" [hidden]="!ruleBased">Gender - Female</mat-option>
@@ -888,7 +862,7 @@
 					<span class="advice-name-wrap" title="{{ advice }}">{{ advice }}</span>
 				</li>
 
-				<li class="advice-line" [hidden]="params.value.mapAdvices.length === 0">
+				<li class="advice-line" [hidden]="params.value.mapAdvices.length === 0 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
 					<span class="code-link" (click)="openPopover($event, params)" title="Add/Edit Advice"
 						>Add/Edit Advice ({{ params.value.mapAdvices.length }})</span
 					>
@@ -898,17 +872,22 @@
 				class="code-link p-l-10 advice-line"
 				(click)="openPopover($event, params)"
 				title="Add an Advice"
-				[hidden]="params.value.mapAdvices.length !== 0 || mapAdvices.length === 0"
+				[hidden]="params.value.mapAdvices.length !== 0 || mapAdvices.length === 0 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
 				>+ Add Advice</span
 			>
 		</div>
 	</ng-template>
 
 	<ng-template #directoryCodeSection let-params>
-		<span *ngIf="params?.value !== undefined" class="pointer">
-			<mat-chip-list *ngIf="params?.value.split('#')[0] !== '1/1&1'" (click)="editGroup($event, params)" class="pointer">
+		<span *ngIf="params?.value !== undefined" [ngClass]="{ pointer: mapsetInfo.workflowStatus === 'IN_EDIT' }">
+			<mat-chip-list
+				*ngIf="params?.value.split('#')[0] !== '1/1&1'"
+				(click)="editGroup($event, params)"
+				[ngClass]="{ pointer: mapsetInfo.workflowStatus === 'IN_EDIT' }"
+				[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
+			>
 				<mat-chip
-					class="mapset-chip pointer"
+					class="mapset-chip"
 					title="{{
 						'Group ' +
 							params?.value.split('#')[0].split('&')[0].split('/')[0] +
@@ -919,9 +898,15 @@
 					{{ params?.value.split('#')[0].split('&')[0] }}
 				</mat-chip>
 			</mat-chip-list>
-			<span class="blue-link" title="{{ params?.value.split('#')[1] }}" (click)="editTarget($event, params)">{{
-				params?.value.split('#')[1]
-			}}</span></span
+			<button
+				title="{{ params?.value.split('#')[1] }}"
+				class="no-padding"
+				(click)="editTarget($event, params)"
+				[ngClass]="{ 'blue-link': mapsetInfo.workflowStatus === 'IN_EDIT', 'disabled-link': mapsetInfo.workflowStatus !== 'IN_EDIT' }"
+				[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
+			>
+				{{ params?.value.split('#')[1] }}
+			</button></span
 		>
 	</ng-template>
 

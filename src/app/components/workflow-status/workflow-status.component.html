@@ -1,0 +1,39 @@
+<div class="details-page-stepper">
+	<mat-stepper class="col-1 details-page-stepper" orientation="horizontal" [linear]="true" labelPosition="bottom" #stepper>
+		<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_EDIT_STARTED']">
+			<ng-template matStepperIcon="number">
+				<mat-icon>done</mat-icon>
+			</ng-template>
+			<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_EDIT_COLOR']">Ready for Edit</span></ng-template>
+		</mat-step>
+
+		<mat-step [editable]="false" [completed]="stepperInfo['IN_EDIT_STARTED']">
+			<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_EDIT_COLOR']">In Edit</span></ng-template>
+		</mat-step>
+
+		<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_REVIEW_STARTED']">
+			<ng-template matStepLabel
+				><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_REVIEW_COLOR']">Ready for Review</span>
+			</ng-template>
+		</mat-step>
+
+		<mat-step [editable]="false" [completed]="stepperInfo['IN_REVIEW_STARTED']">
+			<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_REVIEW_COLOR']">In Review</span></ng-template>
+		</mat-step>
+
+		<mat-step [editable]="false" [completed]="stepperInfo['REVIEW_COMPLETED_STARTED']">
+			<ng-template matStepLabel
+				><span class="fs-15 fw-bold" [class]="stepperInfo['REVIEW_COMPLETED_COLOR']">Review Completed</span>
+			</ng-template>
+		</mat-step>
+
+		<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_PUBLICATION_STARTED']">
+			<ng-template matStepLabel
+				><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_PUBLICATION_COLOR']">Ready for Publication</span></ng-template
+			>
+		</mat-step>
+		<ng-template matStepperIcon="done">
+			<mat-icon>done</mat-icon>
+		</ng-template>
+	</mat-stepper>
+</div>

@@ -81,6 +81,7 @@ export class MapsetInactivesComponent implements OnInit {
 	isModalOpen = false;
 	mapsetName = 'Mapset Name';
 	mapsetCode: string;
+	mapsetInfo: any = {};
 	routeParamsSubscription$: Subscription;
 	gridSelectAll = false;
 	advicePopoverLocation = '45px';
@@ -156,7 +157,7 @@ export class MapsetInactivesComponent implements OnInit {
 	//***** Framework Functions *****/
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
-		this.titleService.setTitle('Mapping Tool - Mappings');
+		this.titleService.setTitle('Mapping Tool - Manage Inactives');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.getMapsetInfo();
@@ -181,10 +182,10 @@ export class MapsetInactivesComponent implements OnInit {
 
 	getMapsetInfo() {
 		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
-			const thisResult = results;
-			this.mapsetName = thisResult.refSetName;
+			this.mapsetInfo = results;
+			this.mapsetName = this.mapsetInfo.refSetName;
 			this.breadcrumbService.setBreadcrumbs([{ path: '/library', label: 'Library' }, { label: this.mapsetName }]);
-			this.versionStatuses.push(formatDate(thisResult.modified, 'MM-dd-yyyy', 'en-US') + ' (' + thisResult.versionStatus + ') ');
+			this.versionStatuses.push(formatDate(this.mapsetInfo.modified, 'MM-dd-yyyy', 'en-US') + ' (' + this.mapsetInfo.versionStatus + ') ');
 			if (this.versionStatuses.length == 1) {
 				this.selectedVersion = this.versionStatuses;
 			}

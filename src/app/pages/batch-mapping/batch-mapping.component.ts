@@ -97,6 +97,7 @@ export class BatchMappingComponent implements OnInit {
 	showConfigSection = true;
 	showBrowserSection = false;
 	mapsetCode: string;
+	mapsetInfo: any = {};
 	conceptCodes: [];
 	mapping: string;
 	routeParamsSubscription$: Subscription;
@@ -139,22 +140,6 @@ export class BatchMappingComponent implements OnInit {
 	targetToName = '';
 	rowColors = [{ background: 'white' }, { background: '#f2f2f2' }];
 	currentRowColor = 0;
-	stepperInfo: any = {};
-	stepperStartInfo = {
-		READY_FOR_EDIT_COLOR: 'details-page-stepper-unstarted-step',
-		READY_FOR_EDIT_STARTED: false,
-		IN_EDIT_COLOR: 'details-page-stepper-unstarted-step',
-		IN_EDIT_STARTED: false,
-		READY_FOR_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
-		READY_FOR_REVIEW_STARTED: false,
-		IN_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
-		IN_REVIEW_STARTED: false,
-		REVIEW_COMPLETED_COLOR: 'details-page-stepper-unstarted-step',
-		REVIEW_COMPLETED_STARTED: false,
-		READY_FOR_PUBLICATION_COLOR: 'details-page-stepper-unstarted-step',
-		READY_FOR_PUBLICATION_STARTED: false,
-	};
-
 	refsetData: any;
 	gridOptions: any;
 	gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
@@ -268,14 +253,6 @@ export class BatchMappingComponent implements OnInit {
 		}
 
 		this.disableChannel.postMessage(false);
-
-		const stepperClass = 'details-page-stepper-started-step';
-		this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
-		//his.refsetStatus?.includes('IN_EDIT')) {
-		this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-		this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-		this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
-		this.stepperInfo['IN_EDIT_STARTED'] = true;
 
 		this.gridOptions = {
 			context: { componentParent: this },
@@ -510,7 +487,7 @@ export class BatchMappingComponent implements OnInit {
 				sortable: false,
 				suppressSorting: true,
 				minWidth: 165,
-				editable: true,
+				editable: this.mapsetInfo.workflowStatus === 'IN_EDIT',
 				width: 165,
 			},
 			{
@@ -529,7 +506,7 @@ export class BatchMappingComponent implements OnInit {
 				cellEditorParams: {
 					values: this.ruleOptions,
 				},
-				editable: true,
+				editable: this.mapsetInfo.workflowStatus === 'IN_EDIT',
 				unSortIcon: true,
 				sortable: false,
 				suppressSorting: true,
@@ -539,8 +516,8 @@ export class BatchMappingComponent implements OnInit {
 				headerName: 'Advices',
 				headerTooltip: 'Advices',
 				cellClass: 'rt2-directory-column-version-date',
-				minWidth: 165,
-				width: 165,
+				minWidth: 85,
+				width: 135,
 				resizable: true,
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.adviceSection },
@@ -568,7 +545,7 @@ export class BatchMappingComponent implements OnInit {
 				field: 'feedback',
 				colId: 'action-btns',
 				headerName: '',
-				width: 55,
+				width: 90,
 				cellClass: 'rt2-directory-column-actions',
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.actionSection },
@@ -641,6 +618,9 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	getMapsetInfo() {
+		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
+			this.mapsetInfo = results;
+		});
 		this.refsetService.getMapsets().subscribe({
 			next: (results) => {
 				const thisResult = results.filter((res) => {
@@ -1317,15 +1297,21 @@ export class BatchMappingComponent implements OnInit {
 		}
 
 		this.userChanged = false;
-		this.refsetService.updateMapsetMappingBulk(this.mapsetCode, this.mapsetResponse).subscribe(
-			(status) => {
-				this.saving = false;
-				this.notificationService.show('The mappings have been saved.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
-			},
-			(error) => {
-				//
-			},
-		);
+		this.refsetService.getMapsetWorkflowStatus(this.mapsetCode).subscribe((status) => {
+			if (status.workflowStatus === 'IN_EDIT') {
+				this.refsetService.updateMapsetMappingBulk(this.mapsetCode, this.mapsetResponse).subscribe(
+					(status) => {
+						this.saving = false;
+						this.notificationService.show('The mappings have been saved.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+					},
+					(error) => {
+						//
+					},
+				);
+			} else {
+				this.notificationService.show('Mapset workflow status is not in Edit mode.');
+			}
+		});
 	}
 
 	showDropdown(): void {
@@ -1341,21 +1327,23 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	editGroup(event: any, params: any): void {
-		this.groupFC.reset();
-		this.priorityFC.reset();
-		this.selectedTarget = params.data.uuid;
-		this.groupFC.setValue(params.data.mapEntries.group);
-		this.priorityFC.setValue(params.data.mapEntries.priority);
-		this.showGroupPopover = true;
-		this.showAdvicePopover = false;
-		this.showTargetPopover = false;
+		if (this.mapsetInfo.workflowStatus === 'IN_EDIT') {
+			this.groupFC.reset();
+			this.priorityFC.reset();
+			this.selectedTarget = params.data.uuid;
+			this.groupFC.setValue(params.data.mapEntries.group);
+			this.priorityFC.setValue(params.data.mapEntries.priority);
+			this.showGroupPopover = true;
+			this.showAdvicePopover = false;
+			this.showTargetPopover = false;
 
-		const showInterval = setInterval(() => {
-			this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
-			this.popoverLocationX = event.x - 190;
-			this.groupInput.nativeElement.focus();
-			clearInterval(showInterval);
-		}, 5);
+			const showInterval = setInterval(() => {
+				this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+				this.popoverLocationX = event.x - 190;
+				this.groupInput.nativeElement.focus();
+				clearInterval(showInterval);
+			}, 5);
+		}
 	}
 
 	clearHeaderGroupInput() {
@@ -1404,24 +1392,26 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	editTarget(event: any, params: any): void {
-		this.targetFC.reset();
-		this.foundConceptCode = false;
-		this.targetToName = '';
-		this.selectedTarget = params.data.uuid;
-		if (params.data.mapEntries.toCode !== '[Empty Target]') {
-			this.targetFC.setValue(params.data.mapEntries.toCode);
-			this.query = { code: params.data.mapEntries.toCode };
-			this.targetToName = params.data.mapEntries.toName;
+		if (this.mapsetInfo.workflowStatus === 'IN_EDIT') {
+			this.targetFC.reset();
+			this.foundConceptCode = false;
+			this.targetToName = '';
+			this.selectedTarget = params.data.uuid;
+			if (params.data.mapEntries.toCode !== '[Empty Target]') {
+				this.targetFC.setValue(params.data.mapEntries.toCode);
+				this.query = { code: params.data.mapEntries.toCode };
+				this.targetToName = params.data.mapEntries.toName;
+			}
+			this.showTargetPopover = true;
+			this.showAdvicePopover = false;
+			this.showGroupPopover = false;
+			const showInterval = setInterval(() => {
+				this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+				this.popoverLocationX = event.x - 210;
+				this.targetInput.nativeElement.focus();
+				clearInterval(showInterval);
+			}, 5);
 		}
-		this.showTargetPopover = true;
-		this.showAdvicePopover = false;
-		this.showGroupPopover = false;
-		const showInterval = setInterval(() => {
-			this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
-			this.popoverLocationX = event.x - 210;
-			this.targetInput.nativeElement.focus();
-			clearInterval(showInterval);
-		}, 5);
 	}
 
 	closeTarget() {

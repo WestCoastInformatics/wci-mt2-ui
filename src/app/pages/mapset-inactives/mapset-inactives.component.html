@@ -3,11 +3,14 @@
 <!-- Search Bar -->
 <div class="top-search-bar content-header">
 	<div class="d-flex justify-content-end">
-		<div class="col-md-auto d-flex">
-			<div class="page-title rt2-wrap" title="Manage Inactivated Concepts for {{ mapsetName }}">
-				<span>Manage Inactivated Concepts for {{ mapsetName }}</span>
+		<div class="row d-flex">
+			<div class="col-md-10 page-title">
+				<div class="rt2-wrap" *ngIf="loaded" title="Manage Inactivated Concepts for {{ mapsetName }}">
+					<span>Manage Inactivated Concepts for {{ mapsetName }}</span>
+				</div>
+				<app-workflow-status [workflowStatus]="mapsetInfo.workflowStatus" class="col-1"> </app-workflow-status>
 			</div>
-			<div class="col-md-auto p-l-20">
+			<div class="col-md-2 d-flex header-menu">
 				<mat-form-field floatLabel="never" class="directoryViewFilterField format-version-drop-down" appearance="fill">
 					<mat-label></mat-label>
 					<mat-select
@@ -22,18 +25,18 @@
 				</mat-form-field>
 			</div>
 		</div>
-		<div class="col-md-auto d-flex p-r-40 mr-10">
-			<div class="col-6">
-				<button class="library-app-refset-download" (click)="downloadReports()" [disabled]="!selectedVersion || numOfMembers === 0">
+		<div class="col-md-auto d-flex ml-15">
+			<div class="col">
+				<button class="library-app-refset-download mr-15" (click)="downloadReports()" [disabled]="!selectedVersion || numOfMembers === 0">
 					<div class="mat-button-wrapper mapset-download-icon">
 						<i class="fa fa-download fa-lg" title="Download Report" aria-label="Download Report"></i>
 					</div>
 				</button>
 			</div>
-			<div class="col-6 p-l-5">
-				<div (click)="goToMappingsPage(mapsetCode)">
+			<div class="col">
+				<button class="library-app-refset-download mr-20" (click)="goToMappingsPage(mapsetCode)">
 					<img src="/assets/preview-icon.svg" title="View Mappings" aria-label="View Mappings" class="no-preview-icon" />
-				</div>
+				</button>
 			</div>
 		</div>
 	</div>

@@ -4,52 +4,12 @@
 <div class="top-search-bar content-header">
 	<div class="d-flex justify-content-end">
 		<div class="row d-flex">
-			<div class="col-md-9 page-title" title="{{ mapsetInfo.refSetName }}">
+			<div class="col-md-10 page-title" title="{{ mapsetInfo.refSetName }}">
 				<div class="rt2-wrap">{{ mapsetInfo.refSetName }}</div>
-				<!-- Status Stepper if in edit mode and Reference Set not locked -->
-				<mat-stepper class="col-1 details-page-stepper" orientation="horizontal" [linear]="true" labelPosition="bottom" #stepper>
-					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_EDIT_STARTED']">
-						<ng-template matStepperIcon="number">
-							<mat-icon>done</mat-icon>
-						</ng-template>
-						<ng-template matStepLabel
-							><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_EDIT_COLOR']">Ready for Edit</span></ng-template
-						>
-					</mat-step>
-
-					<mat-step [editable]="false" [completed]="stepperInfo['IN_EDIT_STARTED']">
-						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_EDIT_COLOR']">In Edit</span></ng-template>
-					</mat-step>
-
-					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_REVIEW_STARTED']">
-						<ng-template matStepLabel
-							><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_REVIEW_COLOR']">Ready for Review</span>
-						</ng-template>
-					</mat-step>
-
-					<mat-step [editable]="false" [completed]="stepperInfo['IN_REVIEW_STARTED']">
-						<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_REVIEW_COLOR']">In Review</span></ng-template>
-					</mat-step>
-
-					<mat-step [editable]="false" [completed]="stepperInfo['REVIEW_COMPLETED_STARTED']">
-						<ng-template matStepLabel
-							><span class="fs-15 fw-bold" [class]="stepperInfo['REVIEW_COMPLETED_COLOR']">Review Completed</span>
-						</ng-template>
-					</mat-step>
-
-					<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_PUBLICATION_STARTED']">
-						<ng-template matStepLabel
-							><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_PUBLICATION_COLOR']"
-								>Ready for Publication</span
-							></ng-template
-						>
-					</mat-step>
-
-					<ng-template matStepperIcon="done">
-						<mat-icon>done</mat-icon>
-					</ng-template>
-				</mat-stepper>
+				<app-workflow-status [workflowStatus]="mapsetInfo.workflowStatus" class="col-1"> </app-workflow-status>
 			</div>
+
+			<!-- <div class="col-md-2 page-title">{{ mapsetInfo.workflowStatus }}</div> -->
 			<div class="col-md-2 d-flex header-menu">
 				<mat-form-field floatLabel="never" class="directoryViewFilterField format-version-drop-down" appearance="fill">
 					<mat-label></mat-label>
@@ -65,10 +25,10 @@
 				</mat-form-field>
 			</div>
 		</div>
-		<div class="col-md-auto d-flex p-r-40 mr-10">
-			<div class="col-4">
+		<div class="col-md-auto d-flex">
+			<div class="col">
 				<button
-					class="library-app-refset-download"
+					class="library-app-refset-download mr-15"
 					(click)="openDownloadModal(downloadModal)"
 					[disabled]="!selectedVersion || numOfMembers === 0"
 				>
@@ -77,22 +37,102 @@
 					</div>
 				</button>
 			</div>
-			<div class="col-4 p-l-5">
-				<div (click)="goToMapsInactivesPage(mapsetCode)">
+			<div class="col" *ngIf="mapsetInfo.workflowStatus === 'IN_UPGRADE'">
+				<button (click)="goToMapsInactivesPage(mapsetCode)" class="library-app-refset-notes mr-20 no-padding">
 					<img src="/assets/no-preview-icon.svg" title="Manage Inactives" aria-label="Manage Inactives" class="no-preview-icon" />
-				</div>
+				</button>
 			</div>
-			<div class="col-4 p-l-10">
-				<div (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+			<div class="col">
+				<button (click)="openToBeDevelopedModal(toBeDevelopedModal)" class="library-app-refset-notes mr-20 no-padding">
 					<img src="/assets/comment-dots-regular.svg" title="Add Feedback" aria-label="Add Feedback" class="discussion-icon" />
-				</div>
+				</button>
 			</div>
 		</div>
 	</div>
 </div>
 <div [hidden]="loaded" class="section-loading">Loading...</div>
+<div class="row edit-actions" *ngIf="loaded">
+	<div class="col"></div>
+	<div class="col-md-auto no-margin-top">
+		<span class="date-column">
+			<ng-container>
+				<span *ngFor="let edit of editWF"
+					><button
+						*ngIf="(editStatus && edit.label === editWF[0].label) || (!editStatus && edit.label !== editWF[0].label)"
+						type="button"
+						[title]="edit.label"
+						class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+						(click)="editWorkflow(edit.value)"
+						[disabled]="!showEdit"
+						(ngClass)="({ disabled: !showEdit })"
+					>
+						{{ edit.label }}
+					</button></span
+				>
+			</ng-container>
+			<ng-container>
+				<span *ngFor="let upgrade of upgradeWF"
+					><button
+						*ngIf="(upgradeStatus && upgrade.label === upgradeWF[0].label) || (!upgradeStatus && upgrade.label !== upgradeWF[0].label)"
+						type="button"
+						[title]="upgrade.label"
+						class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+						(click)="upgradeWorkflow(upgrade.value)"
+						[disabled]="!showUpgrade"
+						(ngClass)="({ disabled: !showUpgrade })"
+					>
+						{{ upgrade.label }}
+					</button></span
+				>
+			</ng-container>
+			<ng-container>
+				<span *ngFor="let review of reviewWF"
+					><button
+						*ngIf="
+							(requestStatus && review.label === reviewWF[0].label) ||
+							(!requestStatus &&
+								review.label !== reviewWF[0].label &&
+								review.label !== reviewWF[3].label &&
+								review.label !== reviewWF[4].label &&
+								!reviewStatus) ||
+							(!requestStatus && (review.label === reviewWF[3].label || review.label === reviewWF[4].label) && reviewStatus)
+						"
+						type="button"
+						[title]="review.label"
+						class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+						(click)="reviewWorkflow(review.value)"
+						[disabled]="!showReview"
+						(ngClass)="({ disabled: !showReview })"
+					>
+						{{ review.label }}
+					</button></span
+				>
+			</ng-container>
+			<ng-container>
+				<span *ngFor="let publish of publishWF"
+					><button
+						*ngIf="
+							(publishStatus && publish.label === publishWF[0].label) ||
+							(!publishStatus && startPublish && !finishPublish && publish.label === publishWF[1].label) ||
+							(!publishStatus && startPublish && !finishPublish && publish.label === publishWF[2].label) ||
+							(!publishStatus && !startPublish && finishPublish && publish.label === publishWF[3].label)
+						"
+						type="button"
+						[title]="publish.label"
+						class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+						(click)="publishWorkflow(publish.value)"
+						[disabled]="!showPublish"
+						(ngClass)="({ disabled: !showPublish })"
+					>
+						{{ publish.label }}
+					</button></span
+				>
+			</ng-container>
+		</span>
+	</div>
+</div>
 <div class="rt2-container" (window:resize)="onResize($event)">
-	<div class="metadata-collapsible-container" [ngClass]="{ 'm-t-20': loaded }">
+	<div class="metadata-collapsible-container">
 		<div class="switch-view" *ngIf="showMappingsSection && loaded" [hidden]="numOfMembers === 0">
 			<mat-label class="switch-label">view by</mat-label>
 			<mat-button-toggle-group
@@ -200,10 +240,10 @@
 					<button mat-menu-item (click)="selectAction('view')" [disabled]="checkedNum !== 1">
 						<span>View Selected Mapping</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('edit')" [disabled]="checkedNum !== 1">
+					<button mat-menu-item (click)="selectAction('edit')" [disabled]="checkedNum !== 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
 						<span>Edit Selected Mapping</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('batch')" [disabled]="checkedNum < 2">
+					<button mat-menu-item (click)="selectAction('batch')" [disabled]="checkedNum < 2 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
 						<span>Batch Edit Selected Mappings</span>
 					</button>
 					<button mat-menu-item (click)="selectAction('selected')" [disabled]="checkedNum < 1">
@@ -613,6 +653,32 @@
 		</div>
 		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
 			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		</div>
+	</ng-template>
+
+	<ng-template #workFlowModal let-modal>
+		<div class="modal-header rt2-modal-header">
+			<div class="modal-title">{{ workFlowStatus.label }}</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeWorkFlowModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<p class="p-l-30 p-t-10 p-b-0">{{ workFlowStatus.message }}</p>
+		<div class="modal-body m-t-5">
+			<textarea
+				#workFlowModalNotes
+				class="form-field-value notes-text"
+				type="text"
+				name="notes"
+				placeholder="enter status change notes..."
+				[formControl]="workFlowNotesFC"
+			></textarea>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeWorkFlowModal()">Cancel</button>
+			<button type="button" title="Confirm {{ workFlowStatus.label }}" class="rt2-btn rt2-action-btn" (click)="changeWorkFlowStatus()">
+				Confirm
+			</button>
 		</div>
 	</ng-template>
 

@@ -49,4 +49,6 @@
 	--mdc-checkbox-unselected-hover-icon-color: rgb(102, 102, 102);
 	--mdc-filled-text-field-disabled-container-color: #666;
 	--mat-select-disabled-trigger-text-color: #999;
+	--mdc-protected-button-label-text-color: #fefbff;
+	--mdc-protected-button-container-color: #448aff;
 }

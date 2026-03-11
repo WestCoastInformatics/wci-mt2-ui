@@ -23,6 +23,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { NotificationService } from 'src/app/services/notification.service';
 import { formatDate } from '@angular/common';
 import { PaginationService } from 'src/app/services/pagination.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
 	standalone: false,
@@ -75,6 +76,7 @@ export class MapsetRecordsComponent implements OnInit {
 	originalGridParams: any;
 	uiUtility = UiUtility;
 	toBeDevelopedModalRef: NgbModalRef;
+	workFlowModalRef: NgbModalRef;
 	downloadModalRef: NgbModalRef;
 	isModalOpen = false;
 	mapsetInfo: any = {};
@@ -111,27 +113,55 @@ export class MapsetRecordsComponent implements OnInit {
 	currentRowColor = 0;
 	downloadTitle = 'Download';
 	downloadType = 'all';
-	stepperInfo: any = {};
-	stepperStartInfo = {
-		READY_FOR_EDIT_COLOR: 'details-page-stepper-unstarted-step',
-		READY_FOR_EDIT_STARTED: false,
-		IN_EDIT_COLOR: 'details-page-stepper-unstarted-step',
-		IN_EDIT_STARTED: false,
-		READY_FOR_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
-		READY_FOR_REVIEW_STARTED: false,
-		IN_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
-		IN_REVIEW_STARTED: false,
-		REVIEW_COMPLETED_COLOR: 'details-page-stepper-unstarted-step',
-		REVIEW_COMPLETED_STARTED: false,
-		READY_FOR_PUBLICATION_COLOR: 'details-page-stepper-unstarted-step',
-		READY_FOR_PUBLICATION_STARTED: false,
-	};
+	workFlowStatus = { label: '', value: '', message: '', notes: '' };
+	workFlowNotesFC = new FormControl('');
+	showEdit = true;
+	editStatus = true;
+	// { label: 'Cancel Edit', value: 'CANCEL_EDIT', message: 'Are you sure you want to cancel editing this Map Set?', notes: '' },
+	editWF = [
+		{ label: 'Edit', value: 'EDIT', message: 'Are you sure you want to edit this Map Set?', notes: '' },
+		{ label: 'Finish Edit', value: 'FINISH_EDIT', message: 'Are you sure you want to finish editing this Map Set?', notes: '' },
+	];
+	showUpgrade = true;
+	upgradeStatus = true;
+	upgradeWF = [
+		{ label: 'Upgrade', value: 'UPGRADE', message: 'Are you sure you want to upgrade this Map Set?', notes: '' },
+		{ label: 'Cancel Upgrade', value: 'CANCEL_UPGRADE', message: 'Are you sure you want to cancel upgrading this Map Set?', notes: '' },
+		{ label: 'Finish Upgrade', value: 'FINISH_UPGRADE', message: 'Are you sure you want to finish upgrading this Map Set?', notes: '' },
+	];
+	showReview = true;
+	requestStatus = true;
+	reviewStatus = false;
+	reviewWF = [
+		{ label: 'Request Review', value: 'REQUEST_REVIEW', message: 'Are you sure you want to request review of this Map Set?', notes: '' },
+		{ label: 'Withdraw Review', value: 'WITHDRAW', message: 'Are you sure you want to withdraw review of this Map Set?', notes: '' },
+		{ label: 'Review', value: 'REVIEW', message: 'Are you sure you want to review this Map Set?', notes: '' },
+		{ label: 'Reject Review', value: 'REJECT_REVIEW', message: 'Are you sure you want to reject review for this Map Set?', notes: '' },
+		{ label: 'Accept Review', value: 'ACCEPT_REVIEW', message: 'Are you sure you want to accept review for this Map Set?', notes: '' },
+	];
+	showPublish = true;
+	publishStatus = true;
+	startPublish = false;
+	finishPublish = false;
+	publishWF = [
+		{ label: 'Request Publish', value: 'REQUEST_PUBLICATION', message: 'Are you sure you want to request to publish this Map Set?', notes: '' },
+		{
+			label: 'Withdraw Request',
+			value: 'FAILS_RVF',
+			message: 'Are you sure you want to withdraw request to publish this Map Set?',
+			notes: '',
+		},
+		{ label: 'Start Publish', value: 'START_PUBLISH', message: 'Are you sure you want to start publishing of this Map Set?', notes: '' },
+		{ label: 'Finish Publish', value: 'PUBLISH_REFSET', message: 'Are you sure you want to finish publishing this Map Set?', notes: '' },
+	];
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
 	@ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
 	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
+	@ViewChild('workFlowModal') workflowModal: TemplateRef<any>;
+	@ViewChild('workFlowModalNotes') private workflowModalNotes: ElementRef;
 	@ViewChild('directoryCheckSection') checkSection: TemplateRef<any>;
 	@ViewChild('directoryCodeSection') codeSection: TemplateRef<any>;
 	@ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
@@ -191,14 +221,6 @@ export class MapsetRecordsComponent implements OnInit {
 		if (localStorage.getItem('showMapTable')) {
 			this.changeMappingsView(JSON.parse(localStorage.getItem('showMapTable')));
 		}
-
-		const stepperClass = 'details-page-stepper-started-step';
-		this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
-		//his.refsetStatus?.includes('IN_EDIT')) {
-		this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-		this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-		this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
-		this.stepperInfo['IN_EDIT_STARTED'] = true;
 	}
 
 	getMapsetInfo() {
@@ -206,8 +228,87 @@ export class MapsetRecordsComponent implements OnInit {
 			this.mapsetInfo = results;
 			this.breadcrumbService.setBreadcrumbs([{ path: '/library', label: 'Library' }, { label: this.mapsetInfo.refSetName }]);
 			this.versionStatuses.push(formatDate(this.mapsetInfo.modified, 'MM-dd-yyyy', 'en-US') + ' (' + this.mapsetInfo.versionStatus + ') ');
-			if (this.versionStatuses.length == 1) {
-				this.selectedVersion = this.versionStatuses;
+			if (this.versionStatuses.length === 1) {
+				this.selectedVersion = this.versionStatuses[0];
+			}
+
+			switch (this.mapsetInfo.workflowStatus) {
+				case 'READY_FOR_EDIT':
+					this.editStatus = true;
+					this.showReview = true;
+					this.showUpgrade = true;
+					this.showPublish = true;
+					break;
+				case 'IN_EDIT':
+					this.editStatus = false;
+					this.showReview = false;
+					this.showUpgrade = false;
+					this.showPublish = false;
+
+					// if (this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('AUTHOR')) {
+					// 	this.adminOverride = true;
+					// 	this.adminOverrideText = 'Admin ';
+					// }
+					break;
+				case 'READY_FOR_REVIEW':
+					this.requestStatus = false;
+					this.reviewStatus = false;
+					this.showEdit = false;
+					this.showUpgrade = false;
+					this.showPublish = false;
+					break;
+				case 'IN_REVIEW':
+					this.requestStatus = false;
+					this.reviewStatus = true;
+					this.showEdit = false;
+					this.showUpgrade = false;
+					this.showPublish = false;
+
+					// if (this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('REVIEWER')) {
+					// 	this.adminOverride = true;
+					// 	this.adminOverrideText = 'Admin ';
+					// }
+					break;
+				case 'REVIEW_COMPLETED':
+					this.editStatus = true;
+					this.showReview = true;
+					this.showUpgrade = false;
+					this.showPublish = true;
+					break;
+				case 'READY_FOR_PUBLICATION':
+					this.publishStatus = false;
+					this.startPublish = true;
+					this.finishPublish = false;
+					this.showReview = false;
+					this.showEdit = false;
+					this.showUpgrade = false;
+					break;
+				case 'IN_UPGRADE':
+					this.upgradeStatus = false;
+					this.showReview = false;
+					this.showEdit = false;
+					this.showPublish = false;
+					break;
+				case 'IN_PUBLICATION':
+					this.publishStatus = false;
+					this.startPublish = false;
+					this.finishPublish = true;
+					this.showReview = false;
+					this.showEdit = false;
+					this.showUpgrade = false;
+					break;
+				case 'PUBLISHED':
+					this.showEdit = false;
+					this.showReview = false;
+					this.showUpgrade = false;
+					this.showPublish = false;
+					break;
+				default: //null
+					this.editStatus = true;
+					this.showReview = true;
+					this.showUpgrade = true;
+					this.showPublish = true;
+					break;
 			}
 
 			this.columnDefs = [
@@ -617,12 +718,14 @@ export class MapsetRecordsComponent implements OnInit {
 							this.numOfMembers = mapsetResults.total;
 							this.numOfResults = mapsetResults.total;
 
-							const lastIndexH = document.getElementsByClassName('ag-header').length - 1;
-							const childH = document.getElementsByClassName('ag-header')[lastIndexH];
-							document.getElementById('directoryHeader').appendChild(childH);
-							const lastIndexP = document.getElementsByClassName('ag-paging-panel').length - 1;
-							const childP = document.getElementsByClassName('ag-paging-panel')[lastIndexP];
-							document.getElementById('directoryPaging').appendChild(childP);
+							setTimeout(() => {
+								const lastIndexH = document.getElementsByClassName('ag-header').length - 1;
+								const childH = document.getElementsByClassName('ag-header')[lastIndexH];
+								document.getElementById('directoryHeader').appendChild(childH);
+								const lastIndexP = document.getElementsByClassName('ag-paging-panel').length - 1;
+								const childP = document.getElementsByClassName('ag-paging-panel')[lastIndexP];
+								document.getElementById('directoryPaging').appendChild(childP);
+							}, 400);
 
 							this.showPaging = true;
 
@@ -954,6 +1057,231 @@ export class MapsetRecordsComponent implements OnInit {
 				}
 			}
 		}
+	}
+
+	//*** workflow functions ***/
+	editWorkflow(status) {
+		switch (status) {
+			case this.editWF[0].value: //EDIT
+				this.workFlowStatus = this.editWF[0];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+			// case this.editWF[1].value: //CANCEL_EDIT
+			// 	this.workFlowStatus = this.editWF[1];
+			// 	this.openWorkFlowModal(this.workflowModal);
+			// 	break;
+			case this.editWF[1].value: //FINISH_EDIT
+				this.workFlowStatus = this.editWF[1];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+		}
+	}
+
+	upgradeWorkflow(status) {
+		switch (status) {
+			case this.upgradeWF[0].value: //UPGRADE
+				this.workFlowStatus = this.upgradeWF[0];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+			case this.upgradeWF[1].value: //CANCEL_UPGRADE
+				this.workFlowStatus = this.upgradeWF[1];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+			case this.upgradeWF[2].value: //FINISH_UPGRADE
+				this.workFlowStatus = this.upgradeWF[2];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+		}
+	}
+
+	reviewWorkflow(status) {
+		switch (status) {
+			case this.reviewWF[0].value: //REQUEST_REVIEW
+				this.workFlowStatus = this.reviewWF[0];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+			case this.reviewWF[1].value: //WITHDRAW
+				this.workFlowStatus = this.reviewWF[1];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+			case this.reviewWF[2].value: //REVIEW
+				this.workFlowStatus = this.reviewWF[2];
+				this.openWorkFlowModal(this.workflowModal);
+				// this.openToBeDevelopedModal(this.tbdModal);
+				break;
+			case this.reviewWF[3].value: //REJECT_REVIEW
+				this.workFlowStatus = this.reviewWF[3];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+			case this.reviewWF[4].value: //ACCEPT_REVIEW
+				this.workFlowStatus = this.reviewWF[4];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+		}
+	}
+
+	publishWorkflow(status) {
+		switch (status) {
+			case this.publishWF[0].value: //REQUEST_PUBLICATION
+				this.workFlowStatus = this.publishWF[0];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+			case this.publishWF[1].value: //FAILS_RVF
+				this.workFlowStatus = this.publishWF[1];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+			case this.publishWF[2].value: //START_PUBLISH
+				this.workFlowStatus = this.publishWF[2];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+			case this.publishWF[3].value: //PUBLISH_REFSET
+				this.workFlowStatus = this.publishWF[3];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+		}
+	}
+
+	openWorkFlowModal(content) {
+		this.workFlowModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+		setTimeout(() => {
+			this.workflowModalNotes.nativeElement.focus();
+		}, 50);
+	}
+
+	closeWorkFlowModal() {
+		this.workFlowModalRef.close();
+		this.isModalOpen = false;
+		this.workFlowStatus = { label: '', value: '', message: '', notes: '' };
+		this.workFlowNotesFC.setValue('');
+		this.workFlowNotesFC.reset();
+	}
+
+	changeWorkFlowStatus() {
+		if (this.workFlowNotesFC.dirty) {
+			this.workFlowStatus.notes = this.workFlowNotesFC.value;
+		}
+		this.refsetService
+			.setMapsetWorkflowStatus(this.mapsetInfo.refSetCode, this.workFlowStatus.value, this.workFlowStatus.notes)
+			.subscribe((response) => {
+				if (response) {
+					this.mapsetInfo = response;
+					this.versionStatuses.push(
+						formatDate(this.mapsetInfo.modified, 'MM-dd-yyyy', 'en-US') + ' (' + this.mapsetInfo.versionStatus + ') ',
+					);
+					//reset selection?
+					// if (this.versionStatuses.length === 1) {
+					// 	this.selectedVersion = this.versionStatuses[0];
+					// }
+
+					this.setWorkflowStatus();
+				}
+			});
+	}
+
+	setWorkflowStatus() {
+		switch (this.workFlowStatus.value) {
+			case 'EDIT':
+				this.editStatus = false;
+				this.showReview = false;
+				this.showUpgrade = false;
+				this.showPublish = false;
+				break;
+			case 'FINISH_EDIT':
+				this.editStatus = true;
+				this.showReview = true;
+				this.showUpgrade = true;
+				this.showPublish = true;
+				break;
+			case 'UPGRADE':
+				this.upgradeStatus = false;
+				this.showReview = false;
+				this.showEdit = false;
+				this.showPublish = false;
+				break;
+			case 'CANCEL_UPGRADE':
+				this.upgradeStatus = true;
+				this.showReview = true;
+				this.showEdit = true;
+				this.showPublish = true;
+				break;
+			case 'FINISH_UPGRADE':
+				this.upgradeStatus = true;
+				this.showReview = true;
+				this.showEdit = true;
+				this.showPublish = true;
+				break;
+			case 'REQUEST_REVIEW':
+				this.reviewStatus = false;
+				this.requestStatus = false;
+				this.showEdit = false;
+				this.showUpgrade = false;
+				this.showPublish = false;
+				break;
+			case 'WITHDRAW':
+				this.requestStatus = true;
+				this.reviewStatus = false;
+				this.showEdit = true;
+				this.showUpgrade = true;
+				this.showPublish = true;
+				break;
+			case 'REVIEW':
+				this.reviewStatus = true;
+				this.requestStatus = false;
+				this.showEdit = false;
+				this.showUpgrade = false;
+				this.showPublish = false;
+				break;
+			case 'REJECT_REVIEW':
+				this.requestStatus = true;
+				this.reviewStatus = false;
+				this.showEdit = true;
+				this.showUpgrade = true;
+				this.showPublish = true;
+				break;
+			case 'ACCEPT_REVIEW':
+				this.requestStatus = true;
+				this.reviewStatus = false;
+				this.showEdit = true;
+				this.showUpgrade = false;
+				this.showPublish = true;
+				break;
+			case 'REQUEST_PUBLICATION':
+				this.publishStatus = false;
+				this.startPublish = true;
+				this.finishPublish = false;
+				this.showReview = false;
+				this.showUpgrade = false;
+				this.showEdit = false;
+				break;
+			case 'FAILS_RVF':
+				this.publishStatus = true;
+				this.startPublish = false;
+				this.finishPublish = false;
+				this.showEdit = true;
+				this.showReview = true;
+				this.showUpgrade = true;
+				this.showPublish = true;
+				break;
+			case 'START_PUBLISH':
+				this.publishStatus = false;
+				this.startPublish = false;
+				this.finishPublish = true;
+				this.showReview = false;
+				this.showUpgrade = false;
+				this.showEdit = false;
+				break;
+			case 'PUBLISH_REFSET':
+				this.publishStatus = true;
+				this.startPublish = false;
+				this.finishPublish = false;
+				this.showEdit = false;
+				this.showReview = false;
+				this.showUpgrade = false;
+				this.showPublish = false;
+				break;
+		}
+		this.closeWorkFlowModal();
 	}
 
 	//***** General Functions *****/

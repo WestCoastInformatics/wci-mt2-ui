@@ -4,11 +4,11 @@
         "outDir": "../out-tsc/spec",
         "types": [
             "jest",
-            "node"
+            "node",
+            "jquery"
         ]
     },
     "files": [
-        "test.ts",
         "polyfills.ts"
     ],
     "include": [

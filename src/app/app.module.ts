@@ -44,7 +44,6 @@ import { AngularSplitModule } from 'angular-split';
 import { SidebarComponent } from 'src/app/components/sidebar/sidebar.component';
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 import { FooterComponent } from 'src/app/components/footer/footer.component';
-import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
 import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { RefsetDownloadComponent } from 'src/app/components/refsetDownload/refset-download.component';
 import { ColumnChooserComponent } from 'src/app/components/column-chooser/column-chooser.component';
@@ -57,14 +56,10 @@ import { ImportFromListModalComponent } from 'src/app/components/import-from-lis
 import { BulkUpgradeModalComponent } from 'src/app/components/bulk-upgrade-modal/bulk-upgrade-modal.component';
 import { HeadingWithCountComponent } from 'src/app/components/heading-with-count/heading-with-count.component';
 import { PageContainerComponent } from 'src/app/components/page-container/page-container.component';
-import { AddMemberToOrganizationModalComponent } from 'src/app/components/add-member-to-organization-modal/add-member-to-organization-modal.component';
-import { AddMemberToTeamModalComponent } from 'src/app/components/add-member-to-team-modal/add-member-to-team-modal.component';
-import { CreateNewProjectModalComponent } from 'src/app/components/create-new-project-modal/create-new-project-modal.component';
-import { AddRemoveConceptsIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concepts-icons.component';
-import { AddRemoveConceptGroupIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concept-group-icons.component';
 import { WorkflowStatusBadgeComponent } from './components/workflow-status-badge/workflow-status-badge.component';
 import { ArtifactsModule } from './components/artifacts/artifacts.module';
 import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
+import { WorkflowStatusComponent } from './components/workflow-status/workflow-status.component';
 
 // PAGE IMPORTS
 import { MapsetRecordsComponent } from './pages/mapset-records/mapset-records.component';
@@ -75,19 +70,6 @@ import { MapsetMappingComponent } from './pages/mapset-mapping/mapset-mapping.co
 import { EditMappingComponent } from './pages/edit-mapping/edit-mapping.component';
 import { BatchMappingComponent } from './pages/batch-mapping/batch-mapping.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { ProjectsRefsetComponent } from './pages/projects/refsets/projects-refset.component';
-import { OrganizationsComponent } from './pages/organizations/organizations.component';
-import { OrganizationProjectsComponent } from './pages/organizations/projects/projects.component';
-import { OrganizationTeamsComponent } from './pages/organizations/teams/teams.component';
-import { OrganizationPeopleComponent } from './pages/organizations/people/people.component';
-import { OrganizationConfigurationComponent } from './pages/organizations/configuration/configuration.component';
-import { ProjectsComponent } from './pages/projects/projects.component';
-import { ProjectsPeopleComponent } from './pages/projects/people/people.component';
-import { ProjectsTeamsComponent } from './pages/projects/teams/teams.component';
-import { ProjectsConfigurationComponent } from './pages/projects/configuration/configuration.component';
-import { TeamsComponent } from './pages/teams/teams.component';
-import { TeamsPeopleComponent } from './pages/teams/people/people.component';
-import { TeamsConfigurationComponent } from './pages/teams/configuration/configuration.component';
 import { PersonalComponent } from './pages/personal/personal.component';
 import { PersonalLandingComponent } from './pages/personal/landing/landing.component';
 import { PersonalConfigurationComponent } from './pages/personal/configuration/configuration.component';
@@ -103,19 +85,14 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { RouterExtentionService } from 'src/app/services/routerExtention.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { ErrorHandlingService } from 'src/app/services/error-handling.service';
-import { OrganizationsComponentService } from './pages/organizations/organizations-component.service';
-import { ProjectsComponentService } from './pages/projects/projects-component.service';
-import { TeamsComponentService } from './pages/teams/teams-component.service';
 import { PersonalComponentService } from './pages/personal/personal-component.service';
 
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
-import { AddRemoveByConceptModalComponent } from 'src/app/components/add-remove-by-concept-modal/add-remove-by-concept-modal.component';
 import { ScrollTopComponent } from 'src/app/components/scroll-top/scroll-top.component';
 import { ReadonlyTextModalComponent } from 'src/app/components/readonly-text-modal/readonly-text-modal.component';
 import { ReadyForPublicationModalComponent } from 'src/app/components/ready-for-publication-modal/ready-for-publication-modal.component';
 import { WorkflowHistoryNotesModalComponent } from 'src/app/components/workflow-history-notes-modal/workflow-history-notes-modal.component';
-import { AddRemoveConceptsComponent } from 'src/app/components/add-remove-concepts/add-remove-concepts.component';
 import { AuthGuardGuard } from 'src/app/services/authentication/auth-guard.guard';
 import { LoginComponent } from 'src/app/auth/login/login.component';
 import { InviteComponent } from 'src/app/auth/invite/invite.component';
@@ -157,84 +134,6 @@ const appRoutes: Routes = [
 	{ path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
 	//mapset/{mapSetCode}/mapping/{conceptCode}
 	{
-		path: 'organizations',
-		component: OrganizationsComponent,
-		children: [
-			{
-				path: ':organizationId/edition/:editionId/projects',
-				component: OrganizationProjectsComponent,
-				data: { breadcrumbLabel: 'Projects' },
-				canActivate: [AuthGuardGuard],
-			},
-			{
-				path: ':organizationId/teams',
-				component: OrganizationTeamsComponent,
-				data: { breadcrumbLabel: 'Teams' },
-				canActivate: [AuthGuardGuard],
-			},
-			{
-				path: ':organizationId/users',
-				component: OrganizationPeopleComponent,
-				data: { breadcrumbLabel: 'Users' },
-				canActivate: [AuthGuardGuard],
-			},
-			{
-				path: ':organizationId/configuration',
-				component: OrganizationConfigurationComponent,
-				data: { breadcrumbLabel: 'Configuration' },
-				canActivate: [AuthGuardGuard],
-			},
-		],
-	},
-	{
-		path: 'organization',
-		component: ProjectsComponent,
-		children: [
-			{
-				path: ':organizationId/edition/:editionId/projects/:projectId/refsets',
-				component: ProjectsRefsetComponent,
-				data: { breadcrumbLabel: 'Reference Sets' },
-				canActivate: [AuthGuardGuard],
-			},
-			{
-				path: ':organizationId/edition/:editionId/projects/:projectId/users',
-				component: ProjectsPeopleComponent,
-				data: { breadcrumbLabel: 'Users' },
-				canActivate: [AuthGuardGuard],
-			},
-			{
-				path: ':organizationId/edition/:editionId/projects/:projectId/teams',
-				component: ProjectsTeamsComponent,
-				data: { breadcrumbLabel: 'Teams' },
-				canActivate: [AuthGuardGuard],
-			},
-			{
-				path: ':organizationId/edition/:editionId/projects/:projectId/configuration',
-				component: ProjectsConfigurationComponent,
-				data: { breadcrumbLabel: 'Configuration' },
-				canActivate: [AuthGuardGuard],
-			},
-		],
-	},
-	{
-		path: 'organization',
-		component: TeamsComponent,
-		children: [
-			{
-				path: ':organizationId/teams/:teamId/users',
-				component: TeamsPeopleComponent,
-				data: { breadcrumbLabel: 'Users' },
-				canActivate: [AuthGuardGuard],
-			},
-			{
-				path: ':organizationId/teams/:teamId/configuration',
-				component: TeamsConfigurationComponent,
-				data: { breadcrumbLabel: 'Configuration' },
-				canActivate: [AuthGuardGuard],
-			},
-		],
-	},
-	{
 		path: 'personal',
 		component: PersonalComponent,
 		children: [
@@ -252,15 +151,6 @@ const appRoutes: Routes = [
 			},
 		],
 	},
-	// Redirect blanks to the landing page
-	{
-		path: 'organization/0/edition/0/projects',
-		component: LandingComponent,
-	},
-	{
-		path: 'organization/0/edition/0/projects/0/refsets',
-		component: LandingComponent,
-	},
 	{
 		path: '**',
 		component: LandingComponent,
@@ -272,7 +162,6 @@ const appRoutes: Routes = [
 		AppComponent,
 		NavbarComponent,
 		FooterComponent,
-		TaxonomyTreeComponent,
 		TemplateRendererComponent,
 		RefsetDownloadComponent,
 		ColumnChooserComponent,
@@ -281,21 +170,13 @@ const appRoutes: Routes = [
 		CategoryFilterComponent,
 		DateTextFilterComponent,
 		GridHeaderFilterComponent,
-		ProjectsRefsetComponent,
 		ImportFromFileModalComponent,
 		ImportFromListModalComponent,
-		AddMemberToOrganizationModalComponent,
-		AddMemberToTeamModalComponent,
-		CreateNewProjectModalComponent,
-		AddRemoveByConceptModalComponent,
 		ScrollTopComponent,
 		ReadonlyTextModalComponent,
 		ReadyForPublicationModalComponent,
 		ReviewModalComponent,
 		WorkflowHistoryNotesModalComponent,
-		AddRemoveConceptsComponent,
-		AddRemoveConceptsIconsComponent,
-		AddRemoveConceptGroupIconsComponent,
 		LoginComponent,
 		InviteComponent,
 		LandingComponent,
@@ -308,19 +189,7 @@ const appRoutes: Routes = [
 		MapsetMappingComponent,
 		EditMappingComponent,
 		BatchMappingComponent,
-		OrganizationsComponent,
-		OrganizationProjectsComponent,
-		OrganizationTeamsComponent,
-		OrganizationPeopleComponent,
-		OrganizationConfigurationComponent,
-		ProjectsComponent,
-		ProjectsPeopleComponent,
-		ProjectsTeamsComponent,
-		ProjectsConfigurationComponent,
 		RefsetFeedbackListComponent,
-		TeamsComponent,
-		TeamsConfigurationComponent,
-		TeamsPeopleComponent,
 		BulkUpgradeModalComponent,
 		HeadingWithCountComponent,
 		PageContainerComponent,
@@ -330,6 +199,7 @@ const appRoutes: Routes = [
 		RemoveDashboardComponentModalComponent,
 		WorkflowStatusBadgeComponent,
 		RefsetMetaTableComponent,
+		WorkflowStatusComponent,
 	],
 	bootstrap: [AppComponent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
@@ -395,14 +265,9 @@ const appRoutes: Routes = [
 		PaginationService,
 		BreadcrumbService,
 		RouterExtentionService,
-		ProjectsRefsetComponent,
-		AddRemoveConceptsComponent,
 		UsersService,
 		NotificationService,
 		ErrorHandlingService,
-		OrganizationsComponentService,
-		ProjectsComponentService,
-		TeamsComponentService,
 		PersonalComponentService,
 		DomService,
 		{ provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },

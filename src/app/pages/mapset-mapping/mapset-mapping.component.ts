@@ -83,7 +83,7 @@ export class MapsetMappingComponent implements OnInit {
 	formats = [];
 	downloadTitle = 'Download';
 	mapsetInfo: any = {};
-	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
+	rowColors = [{ background: 'white' }, { background: '#f2f2f2' }];
 	currentRowColor = 0;
 	moduleMetadata: any;
 	refsetData: any;
@@ -106,7 +106,7 @@ export class MapsetMappingComponent implements OnInit {
 		private mt2Service: MT2Service,
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
-		private modalService: NgbModal
+		private modalService: NgbModal,
 	) {
 		document.body.scrollTop = 0;
 	}
@@ -186,28 +186,31 @@ export class MapsetMappingComponent implements OnInit {
 						}
 					}
 					data.push({
-						'index': results.code + count,
-						'spanned': spanned,
-						'downloadable': true,
-						'mapEntries': results.mapEntries,
-						'descriptions': results.descriptions,
-						'entries': results.mapEntries.length,
-						'code': results.code,
-						'name': results.name,
-						'toName': results.mapEntries[b].toName.length > 0 && results.mapEntries[b].toName !== ' DOES NOT EXIST' ? results.mapEntries[b].toName : '---',
-						'toCode':
+						index: results.code + count,
+						spanned: spanned,
+						downloadable: true,
+						mapEntries: results.mapEntries,
+						descriptions: results.descriptions,
+						entries: results.mapEntries.length,
+						code: results.code,
+						name: results.name,
+						toName:
+							results.mapEntries[b].toName.length > 0 && results.mapEntries[b].toName !== ' DOES NOT EXIST'
+								? results.mapEntries[b].toName
+								: '---',
+						toCode:
 							results.mapEntries[b].toCode.length > 0
 								? results.mapEntries[b].group + '/' + results.mapEntries[b].priority + '#' + results.mapEntries[b].toCode
 								: 'No map entries available.',
-						'rule': results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
-						'relation': results.mapEntries[b].relation.length > 0 ? results.mapEntries[b].relation : '---',
-						'modified': results.mapEntries[b].modified,
-						'advices': { 'number': adviceArray.length, 'list': adviceArray },
-						'group': results.mapEntries[b].group,
-						'priority': results.mapEntries[b].priority,
-						'moduleId': results.mapEntries[b].moduleId,
-						'modFlag': this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
-						'modLang': this.getModuleLanguageName(results.mapEntries[b].moduleId),
+						rule: results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
+						relation: results.mapEntries[b].relation.length > 0 ? results.mapEntries[b].relation : '---',
+						modified: results.mapEntries[b].modified,
+						advices: { number: adviceArray.length, list: adviceArray },
+						group: results.mapEntries[b].group,
+						priority: results.mapEntries[b].priority,
+						moduleId: results.mapEntries[b].moduleId,
+						modFlag: this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
+						modLang: this.getModuleLanguageName(results.mapEntries[b].moduleId),
 					});
 					count++;
 				}
@@ -283,7 +286,10 @@ export class MapsetMappingComponent implements OnInit {
 	}
 
 	goToEditMappingPage() {
-		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode + '/edit'], { replaceUrl: false, skipLocationChange: false });
+		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode + '/edit'], {
+			replaceUrl: false,
+			skipLocationChange: false,
+		});
 	}
 
 	showDropdown(): void {
@@ -302,8 +308,8 @@ export class MapsetMappingComponent implements OnInit {
 			this.downloading = true;
 			const cols = ['Source', 'Source PT', 'Target', 'Target PT', 'Relationship', 'Rule', 'Advices', 'Last Modified'];
 			const params = {
-				'conceptCodes': [this.mapsetData[0].code],
-				'columnNames': cols,
+				conceptCodes: [this.mapsetData[0].code],
+				columnNames: cols,
 			};
 			this.refsetService.exportMapsetByCode(this.mapsetInfo.refSetCode, params).subscribe(
 				(data) => {
@@ -313,7 +319,7 @@ export class MapsetMappingComponent implements OnInit {
 				},
 				(err) => {
 					console.error(err);
-				}
+				},
 			);
 		} else {
 			this.downloadError = 'Please select a download format.';

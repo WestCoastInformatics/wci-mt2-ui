@@ -133,6 +133,7 @@
 }
 
 .target-btn {
+	width: 100%;
 	cursor: pointer;
 	height: 44px;
 }
@@ -565,6 +566,10 @@
 	max-width: 450px !important;
 }
 
+.rt2-upgrade {
+	display: inline-block;
+}
+
 .rt2-directory-chooser-column {
 	padding-right: 20px;
 	margin-top: -0.8em;
@@ -663,7 +668,7 @@
 .section-loading {
 	background: rgba(232, 240, 255, 1) !important;
 	border: 0.2px groove #999 !important;
-	border-radius: 0 !important;
+	border-radius: 3px !important;
 	margin-left: 45% !important;
 	margin-top: 1% !important;
 	padding: 0.25em;
@@ -726,6 +731,19 @@
 .link-icon {
 	color: #2169e8;
 	cursor: pointer;
+}
+
+.upgrade-page-stepper {
+	transform: scale(0.65);
+	margin-left: 475px;
+	margin-right: auto;
+	text-align: center;
+	margin-top: -36px;
+}
+
+.unlink-icon {
+	cursor: default;
+	color: #666;
 }
 
 .code-link:hover {
@@ -882,6 +900,10 @@
 	height: 100%;
 	padding: 20px;
 	background-color: #fff;
+}
+
+.header-menu {
+	height: 40px;
 }
 
 .col-header-font,

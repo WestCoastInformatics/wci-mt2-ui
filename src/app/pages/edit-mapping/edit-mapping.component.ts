@@ -104,6 +104,7 @@ export class EditMappingComponent implements OnInit {
 	showConfigSection = true;
 	showBrowserSection = false;
 	mapsetCode: string;
+	mapsetInfo: any = {};
 	conceptCode: string;
 	mapping: string;
 	routeParamsSubscription$: Subscription;
@@ -136,22 +137,6 @@ export class EditMappingComponent implements OnInit {
 	searchByTypeahead = false;
 	rowColors = [{ background: 'white' }, { background: '#f2f2f2' }];
 	currentRowColor = 0;
-	stepperInfo: any = {};
-	stepperStartInfo = {
-		READY_FOR_EDIT_COLOR: 'details-page-stepper-unstarted-step',
-		READY_FOR_EDIT_STARTED: false,
-		IN_EDIT_COLOR: 'details-page-stepper-unstarted-step',
-		IN_EDIT_STARTED: false,
-		READY_FOR_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
-		READY_FOR_REVIEW_STARTED: false,
-		IN_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
-		IN_REVIEW_STARTED: false,
-		REVIEW_COMPLETED_COLOR: 'details-page-stepper-unstarted-step',
-		REVIEW_COMPLETED_STARTED: false,
-		READY_FOR_PUBLICATION_COLOR: 'details-page-stepper-unstarted-step',
-		READY_FOR_PUBLICATION_STARTED: false,
-	};
-
 	moduleMetadata: any;
 	refsetData: any;
 	loadedBrowser = false;
@@ -238,18 +223,13 @@ export class EditMappingComponent implements OnInit {
 		}
 
 		this.disableChannel.postMessage(false);
-		const stepperClass = 'details-page-stepper-started-step';
-		this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
-		//this.refsetStatus?.includes('IN_EDIT')) {
-		this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-		this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-		this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
-		this.stepperInfo['IN_EDIT_STARTED'] = true;
-
 		this.targetFC.disable();
 	}
 
 	getMapsetInfo() {
+		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
+			this.mapsetInfo = results;
+		});
 		this.refsetService.getMapsets().subscribe({
 			next: (results) => {
 				const thisResult = results.filter((res) => {
@@ -755,16 +735,18 @@ export class EditMappingComponent implements OnInit {
 	}
 
 	setSelectedTarget(uuid: string, code: string, name: string, group: number, priority: number) {
-		this.targetFC.enable();
-		this.selectedTarget.id = uuid;
-		this.selectedTarget.group = group;
-		this.selectedTarget.priority = priority;
-		this.targetCodeInput = code;
-		this.targetNameInput = name === '[NO TARGET]' ? '' : name;
-		this.targetFC.reset();
-		this.targetFC.setValue(this.targetCodeInput);
-		this.query = { code: this.targetCodeInput };
-		this.targetInput.nativeElement.focus();
+		if (this.mapsetInfo.workflowStatus === 'IN_EDIT') {
+			this.targetFC.enable();
+			this.selectedTarget.id = uuid;
+			this.selectedTarget.group = group;
+			this.selectedTarget.priority = priority;
+			this.targetCodeInput = code;
+			this.targetNameInput = name === '[NO TARGET]' ? '' : name;
+			this.targetFC.reset();
+			this.targetFC.setValue(this.targetCodeInput);
+			this.query = { code: this.targetCodeInput };
+			this.targetInput.nativeElement.focus();
+		}
 	}
 
 	setTargetCode() {
@@ -897,14 +879,20 @@ export class EditMappingComponent implements OnInit {
 		};
 
 		this.userChanged = false;
-		this.refsetService.updateMapsetMapping(this.mapsetCode, saveMapset).subscribe(
-			(status) => {
-				this.notificationService.show('The mapping has been saved.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
-			},
-			(error) => {
-				//
-			},
-		);
+		this.refsetService.getMapsetWorkflowStatus(this.mapsetCode).subscribe((status) => {
+			if (status.workflowStatus === 'IN_EDIT') {
+				this.refsetService.updateMapsetMapping(this.mapsetCode, saveMapset).subscribe(
+					(status) => {
+						this.notificationService.show('The mapping has been saved.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+					},
+					(error) => {
+						//
+					},
+				);
+			} else {
+				this.notificationService.show('Mapset workflow status is not in Edit mode.');
+			}
+		});
 	}
 
 	showDropdown(): void {
@@ -912,26 +900,28 @@ export class EditMappingComponent implements OnInit {
 	}
 
 	openGroupPopover(event: any, uuid: string) {
-		this.closePopover();
-		this.groupFC.reset();
-		this.mapsetData.forEach((data) => {
-			data.mapEntries.forEach((entry) => {
-				if (entry.group_open) {
-					entry.group_open = false;
-				}
-				if (entry.uuid === uuid) {
-					entry.group_open = true;
-					entry.adviceToAdd = '';
-				}
+		if (this.mapsetInfo.workflowStatus === 'IN_EDIT') {
+			this.closePopover();
+			this.groupFC.reset();
+			this.mapsetData.forEach((data) => {
+				data.mapEntries.forEach((entry) => {
+					if (entry.group_open) {
+						entry.group_open = false;
+					}
+					if (entry.uuid === uuid) {
+						entry.group_open = true;
+						entry.adviceToAdd = '';
+					}
+				});
 			});
-		});
-		const popHeight = 0;
+			const popHeight = 0;
 
-		const showInterval = setInterval(() => {
-			this.advicePopoverLocation = event.layerY + event.offsetY + 5;
-			this.groupInput.nativeElement.focus();
-			clearInterval(showInterval);
-		}, 5);
+			const showInterval = setInterval(() => {
+				this.advicePopoverLocation = event.layerY + event.offsetY + 5;
+				this.groupInput.nativeElement.focus();
+				clearInterval(showInterval);
+			}, 5);
+		}
 	}
 
 	menuBrowserOpened() {
