@@ -43,6 +43,7 @@ testem.log
 Thumbs.db
 /.gradle/
 /build/
+/target/
 
 # profiling files
 chrome-profiler-events.json

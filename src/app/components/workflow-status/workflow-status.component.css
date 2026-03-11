@@ -1,0 +1,10 @@
+@import 'src/assets/css/variables.css';
+@import 'src/assets/css/button-styles.css';
+@import 'src/assets/css/core-styles.css';
+
+.details-page-stepper {
+	transform: scale(0.8);
+	margin-left: 180px;
+	text-align: center;
+	margin-top: -38px;
+}

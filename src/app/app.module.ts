@@ -59,6 +59,7 @@ import { PageContainerComponent } from 'src/app/components/page-container/page-c
 import { WorkflowStatusBadgeComponent } from './components/workflow-status-badge/workflow-status-badge.component';
 import { ArtifactsModule } from './components/artifacts/artifacts.module';
 import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
+import { WorkflowStatusComponent } from './components/workflow-status/workflow-status.component';
 
 // PAGE IMPORTS
 import { MapsetRecordsComponent } from './pages/mapset-records/mapset-records.component';
@@ -198,6 +199,7 @@ const appRoutes: Routes = [
 		RemoveDashboardComponentModalComponent,
 		WorkflowStatusBadgeComponent,
 		RefsetMetaTableComponent,
+		WorkflowStatusComponent,
 	],
 	bootstrap: [AppComponent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],

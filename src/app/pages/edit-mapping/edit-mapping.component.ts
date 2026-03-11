@@ -137,28 +137,6 @@ export class EditMappingComponent implements OnInit {
 	searchByTypeahead = false;
 	rowColors = [{ background: 'white' }, { background: '#f2f2f2' }];
 	currentRowColor = 0;
-	stepperInfo: any = {};
-	stepperStartInfo = {
-		READY_FOR_EDIT_COLOR: 'details-page-stepper-unstarted-step',
-		READY_FOR_EDIT_STARTED: false,
-		READY_FOR_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
-		READY_FOR_REVIEW_STARTED: false,
-		REVIEW_COMPLETED_COLOR: 'details-page-stepper-unstarted-step',
-		REVIEW_COMPLETED_STARTED: false,
-		READY_FOR_PUBLICATION_COLOR: 'details-page-stepper-unstarted-step',
-		READY_FOR_PUBLICATION_STARTED: false,
-		PUBLISHED_COLOR: 'details-page-stepper-unstarted-step',
-		PUBLISHED_STARTED: false,
-		IN_EDIT_COLOR: 'details-page-stepper-unstarted-step',
-		IN_EDIT_STARTED: false,
-		IN_REVIEW_COLOR: 'details-page-stepper-unstarted-step',
-		IN_REVIEW_STARTED: false,
-		IN_PUBLICATION_COLOR: 'details-page-stepper-unstarted-step',
-		IN_PUBLICATION_STARTED: false,
-		IN_UPGRADE_COLOR: 'details-page-stepper-unstarted-step',
-		IN_UPGRADE_STARTED: false,
-	};
-
 	moduleMetadata: any;
 	refsetData: any;
 	loadedBrowser = false;
@@ -251,71 +229,6 @@ export class EditMappingComponent implements OnInit {
 	getMapsetInfo() {
 		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
 			this.mapsetInfo = results;
-
-			const stepperClass = 'details-page-stepper-started-step';
-			this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
-			switch (this.mapsetInfo.workflowStatus) {
-				case 'READY_FOR_EDIT':
-					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-					break;
-				case 'IN_EDIT':
-					this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
-					this.stepperInfo['IN_EDIT_STARTED'] = true;
-					break;
-				case 'IN_UPGRADE':
-					this.stepperInfo['IN_UPGRADE_COLOR'] = stepperClass;
-					this.stepperInfo['IN_UPGRADE_STARTED'] = true;
-					break;
-				case 'READY_FOR_REVIEW':
-					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-					this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
-					this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
-					break;
-				case 'IN_REVIEW':
-					this.stepperInfo['IN_REVIEW_COLOR'] = stepperClass;
-					this.stepperInfo['IN_REVIEW_STARTED'] = true;
-					break;
-				case 'REVIEW_COMPLETED':
-					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-					this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
-					this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
-					this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
-					this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
-					break;
-				case 'READY_FOR_PUBLICATION':
-					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-					this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
-					this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
-					this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
-					this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
-					this.stepperInfo['READY_FOR_PUBLICATION_COLOR'] = stepperClass;
-					this.stepperInfo['READY_FOR_PUBLICATION_STARTED'] = true;
-					break;
-				case 'IN_PUBLICATION':
-					this.stepperInfo['IN_PUBLICATION_COLOR'] = stepperClass;
-					this.stepperInfo['IN_PUBLICATION_STARTED'] = true;
-					break;
-				case 'PUBLISHED':
-					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-					this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
-					this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
-					this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
-					this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
-					this.stepperInfo['READY_FOR_PUBLICATION_COLOR'] = stepperClass;
-					this.stepperInfo['READY_FOR_PUBLICATION_STARTED'] = true;
-					this.stepperInfo['PUBLISHED_COLOR'] = stepperClass;
-					this.stepperInfo['PUBLISHED_STARTED'] = true;
-					break;
-				default: //null
-					this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-					this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-					break;
-			}
 		});
 		this.refsetService.getMapsets().subscribe({
 			next: (results) => {

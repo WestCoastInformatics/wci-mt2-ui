@@ -52,21 +52,6 @@
 	height: 100%;
 }
 
-.details-page-stepper {
-	transform: scale(0.65);
-	margin-left: 350px;
-	text-align: center;
-	margin-top: -38px;
-}
-
-.upgrade-page-stepper {
-	transform: scale(0.65);
-	margin-left: 475px;
-	margin-right: auto;
-	text-align: center;
-	margin-top: -36px;
-}
-
 .grid-wrapper {
 	flex: 1 1 0px;
 	width: 100%;
@@ -281,9 +266,10 @@
 
 .rt2-action-btn {
 	height: 37px;
-	width: 115px;
-	padding-left: 0;
-	padding-right: 0;
+	min-width: 135px;
+	max-width: 145px;
+	padding-left: 10px;
+	padding-right: 10px;
 	padding-top: 0;
 	padding-bottom: 0;
 	margin-right: 1em;
@@ -293,7 +279,9 @@
 	box-sizing: border-box;
 	color: var(--mapset-blue);
 	box-shadow: none;
-	font-weight: 900;
+	font-weight: 600;
+	font-family: 'Tahoma', sans-serif;
+	font-size: 1.3rem !important;
 	letter-spacing: normal;
 }
 
@@ -304,7 +292,7 @@
 .edit-actions {
 	height: 50px;
 	border: none !important;
-	margin-right: 10px;
+	margin-right: 50px;
 	margin-top: 19px;
 }
 
@@ -549,4 +537,9 @@
 .mat-mdc-raised-button.mat-unthemed {
 	background-color: #ffffff !important;
 	color: #7f7f7f !important;
+}
+
+.mat-mdc-raised-button.mat-unthemed:hover,
+.mat-mdc-raised-button.mat-secondary:hover {
+	color: #ffffff !important;
 }
