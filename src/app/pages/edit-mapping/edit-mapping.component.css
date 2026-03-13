@@ -21,14 +21,6 @@
 	}
 }
 
-.details-page-stepper {
-	transform: scale(0.65);
-	margin-left: 350px;
-	margin-right: auto;
-	text-align: center;
-	margin-top: -38px;
-}
-
 .group-popover {
 	position: absolute;
 	z-index: 15;
@@ -646,6 +638,7 @@
 
 .blue-link {
 	color: var(--mapset-blue);
+	background: none;
 }
 
 .blue-pill {

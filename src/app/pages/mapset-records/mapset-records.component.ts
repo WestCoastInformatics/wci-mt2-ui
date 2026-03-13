@@ -78,6 +78,7 @@ export class MapsetRecordsComponent implements OnInit {
 	toBeDevelopedModalRef: NgbModalRef;
 	workFlowModalRef: NgbModalRef;
 	downloadModalRef: NgbModalRef;
+	batchListModalRef: NgbModalRef;
 	isModalOpen = false;
 	mapsetInfo: any = {};
 	mapsetCode: string;
@@ -115,6 +116,7 @@ export class MapsetRecordsComponent implements OnInit {
 	downloadType = 'all';
 	workFlowStatus = { label: '', value: '', message: '', notes: '' };
 	workFlowNotesFC = new FormControl('');
+	batchListFC = new FormControl('');
 	showEdit = true;
 	editStatus = true;
 	// { label: 'Cancel Edit', value: 'CANCEL_EDIT', message: 'Are you sure you want to cancel editing this Map Set?', notes: '' },
@@ -161,7 +163,9 @@ export class MapsetRecordsComponent implements OnInit {
 	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
 	@ViewChild('workFlowModal') workflowModal: TemplateRef<any>;
+	@ViewChild('batchListModal') batchListModal: TemplateRef<any>;
 	@ViewChild('workFlowModalNotes') private workflowModalNotes: ElementRef;
+	@ViewChild('batchModalList') private batchModalList: ElementRef;
 	@ViewChild('directoryCheckSection') checkSection: TemplateRef<any>;
 	@ViewChild('directoryCodeSection') codeSection: TemplateRef<any>;
 	@ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
@@ -933,6 +937,9 @@ export class MapsetRecordsComponent implements OnInit {
 					}
 				}
 				break;
+			case 'list':
+				this.openBatchListModal(this.batchListModal);
+				break;
 			case 'select':
 				window['checkbox-table-all'].click();
 				break;
@@ -969,6 +976,42 @@ export class MapsetRecordsComponent implements OnInit {
 				this.downloadMapsets();
 				break;
 		}
+	}
+
+	openBatchListModal(content) {
+		this.batchListFC.setValue('');
+		this.batchListFC.reset();
+		this.batchListModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+		setTimeout(() => {
+			this.batchModalList.nativeElement.focus();
+		}, 50);
+	}
+
+	submitBatchList() {
+		let listOfIds = undefined;
+		if (this.batchListFC.dirty) {
+			listOfIds = this.batchListFC.value;
+		}
+		if (!listOfIds?.length) {
+			return;
+		}
+		const commaRegex = /,+/gi;
+		/* eslint-disable no-useless-escape */
+		const allIdsString = listOfIds
+			?.replaceAll(' ', ',')
+			.replaceAll('\n', ',')
+			.replaceAll(commaRegex, ',')
+			.replaceAll(/[^,\-\_a-zA-Z0-9]/g, '')
+			.trim();
+
+		this.goToBatchMappingsPage(allIdsString.split(','));
+		this.closeBatchListModal();
+	}
+
+	closeBatchListModal() {
+		this.batchListModalRef.close();
+		this.isModalOpen = false;
 	}
 
 	clearSearch() {

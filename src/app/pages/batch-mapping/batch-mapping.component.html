@@ -6,7 +6,9 @@
 		<div class="col-md-12 d-flex">
 			<div class="page-title" *ngIf="loaded && !loadError" title="Batch Edit ({{ mapsetData.length }})">
 				<div class="rt2-wrap">Batch Edit ({{ mapsetData.length }})</div>
-				<app-workflow-status [workflowStatus]="mapsetInfo.workflowStatus" class="col-1"> </app-workflow-status>
+				<div class="workflow-margin">
+					<app-workflow-status [workflowStatus]="mapsetInfo.workflowStatus" class="col-1 m-t-1"> </app-workflow-status>
+				</div>
 			</div>
 		</div>
 	</div>

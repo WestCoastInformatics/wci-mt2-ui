@@ -308,6 +308,7 @@
 
 .blue-link {
 	color: var(--mapset-blue);
+	background: none;
 }
 
 .blue-pill {

@@ -214,13 +214,6 @@
 	}
 }
 
-.details-page-stepper {
-	transform: scale(0.65);
-	margin-left: 350px;
-	text-align: center;
-	margin-top: -38px;
-}
-
 .upgrade-page-stepper {
 	transform: scale(0.65);
 	margin-left: 475px;
@@ -306,6 +299,7 @@
 
 .blue-link {
 	color: var(--mapset-blue);
+	background: none;
 }
 
 .blue-pill {

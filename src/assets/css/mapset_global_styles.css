@@ -1667,6 +1667,7 @@ input[type='checkbox'] {
 .blue-link {
 	cursor: pointer;
 	color: var(--mapset-blue);
+	background: none;
 }
 
 .rt2-refset-details-title-name > .set-of-buttons-non-edit-mode {

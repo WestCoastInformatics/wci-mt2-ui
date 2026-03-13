@@ -246,6 +246,9 @@
 					<button mat-menu-item (click)="selectAction('batch')" [disabled]="checkedNum < 2 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
 						<span>Batch Edit Selected Mappings</span>
 					</button>
+					<button mat-menu-item (click)="selectAction('list')" [disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'">
+						<span>Batch Edit Maps By List</span>
+					</button>
 					<button mat-menu-item (click)="selectAction('selected')" [disabled]="checkedNum < 1">
 						<span>Download Selected Mappings</span>
 					</button>
@@ -653,6 +656,29 @@
 		</div>
 		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
 			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		</div>
+	</ng-template>
+
+	<ng-template #batchListModal let-modal>
+		<div class="modal-header rt2-modal-header">
+			<div class="modal-title">Batch Edit Maps By List</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeBatchListModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body m-t-10">
+			<textarea
+				#batchModalList
+				class="form-field-value notes-text"
+				type="text"
+				name="notes"
+				placeholder="Enter a list of IDs. Use a comma or whitespace delimited Map Set Ids."
+				[formControl]="batchListFC"
+			></textarea>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeBatchListModal()">Cancel</button>
+			<button type="button" title="Edit" class="rt2-btn rt2-action-btn" (click)="submitBatchList()">Edit</button>
 		</div>
 	</ng-template>
 
