@@ -1055,6 +1055,11 @@ export class BatchMappingComponent implements OnInit {
 			},
 			error: (error) => {
 				//
+				this.notificationService.show('Error loading map sets by id, please try again.');
+				setTimeout(() => {
+					this.goToMappingsPage();
+				}, 1500);
+				console.log(' error', error);
 			},
 		});
 	}
@@ -1841,6 +1846,10 @@ export class BatchMappingComponent implements OnInit {
 
 	goToMappingPage(code) {
 		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + code], { replaceUrl: false, skipLocationChange: false });
+	}
+
+	goToMappingsPage() {
+		this.router.navigate(['/mapset/' + this.mapsetCode + '/mappings'], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	toggleSectionView(section: string) {
