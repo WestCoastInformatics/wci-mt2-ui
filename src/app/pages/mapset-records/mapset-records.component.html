@@ -109,13 +109,13 @@
 				>
 			</ng-container>
 			<ng-container>
+				<!-- || (!publishStatus && startPublish && !finishPublish && publish.label === publishWF[2].label) ||
+							(!publishStatus && !startPublish && finishPublish && publish.label === publishWF[3].label) -->
 				<span *ngFor="let publish of publishWF"
 					><button
 						*ngIf="
 							(publishStatus && publish.label === publishWF[0].label) ||
-							(!publishStatus && startPublish && !finishPublish && publish.label === publishWF[1].label) ||
-							(!publishStatus && startPublish && !finishPublish && publish.label === publishWF[2].label) ||
-							(!publishStatus && !startPublish && finishPublish && publish.label === publishWF[3].label)
+							(!publishStatus && startPublish && !finishPublish && publish.label === publishWF[1].label)
 						"
 						type="button"
 						[title]="publish.label"

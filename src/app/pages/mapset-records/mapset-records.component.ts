@@ -153,8 +153,8 @@ export class MapsetRecordsComponent implements OnInit {
 			message: 'Are you sure you want to withdraw request to publish this Map Set?',
 			notes: '',
 		},
-		{ label: 'Start Publish', value: 'START_PUBLISH', message: 'Are you sure you want to start publishing of this Map Set?', notes: '' },
-		{ label: 'Finish Publish', value: 'PUBLISH_REFSET', message: 'Are you sure you want to finish publishing this Map Set?', notes: '' },
+		// { label: 'Start Publish', value: 'START_PUBLISH', message: 'Are you sure you want to start publishing of this Map Set?', notes: '' },
+		// { label: 'Finish Publish', value: 'PUBLISH_REFSET', message: 'Are you sure you want to finish publishing this Map Set?', notes: '' },
 	];
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
@@ -1020,17 +1020,6 @@ export class MapsetRecordsComponent implements OnInit {
 			this.searchInput = '';
 			this.onSearchChange();
 		}
-	}
-
-	/*	@Debounce()
-	changedViewFilter() {
-		this.loaded = false;
-		this.onGridReady(this.originalGridParams);
-	}*/
-	@Debounce()
-	changedViewFilter() {
-		//this.loaded = false;
-		//this.refsetGridApi.purgeInfiniteCache();
 	}
 
 	@Debounce(600)
