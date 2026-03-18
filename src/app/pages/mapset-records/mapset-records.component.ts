@@ -81,6 +81,7 @@ export class MapsetRecordsComponent implements OnInit {
 	batchListModalRef: NgbModalRef;
 	isModalOpen = false;
 	mapsetInfo: any = {};
+	mapsetVersions: any[] = [];
 	mapsetCode: string;
 	routeParamsSubscription$: Subscription;
 	gridSelectAll = false;
@@ -229,12 +230,12 @@ export class MapsetRecordsComponent implements OnInit {
 
 	getMapsetInfo() {
 		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
-			this.mapsetInfo = results;
+			// results is now an array of MapSet versions (PUBLISHED + IN_DEVELOPMENT)
+			this.mapsetVersions = Array.isArray(results) ? results : [results];
+
+			this.updateVersionDropdown();
+
 			this.breadcrumbService.setBreadcrumbs([{ path: '/library', label: 'Library' }, { label: this.mapsetInfo.refSetName }]);
-			this.versionStatuses.push(formatDate(this.mapsetInfo.modified, 'MM-dd-yyyy', 'en-US') + ' (' + this.mapsetInfo.versionStatus + ') ');
-			if (this.versionStatuses.length === 1) {
-				this.selectedVersion = this.versionStatuses[0];
-			}
 
 			switch (this.mapsetInfo.workflowStatus) {
 				case 'READY_FOR_EDIT':
@@ -535,6 +536,46 @@ export class MapsetRecordsComponent implements OnInit {
 			};
 			this.showTable = true;
 		});
+	}
+
+	private updateVersionDropdown(): void {
+		if (!this.mapsetVersions || this.mapsetVersions.length === 0) {
+			this.mapsetInfo = {};
+			this.versionStatuses = [];
+			this.selectedVersion = undefined;
+			return;
+		}
+
+		const getIsInDevelopment = (status: string): boolean => {
+			return status === 'IN_DEVELOPMENT' || status === 'IN DEVELOPMENT';
+		};
+
+		this.mapsetVersions.sort((a, b) => {
+			const aInDev = getIsInDevelopment(a.versionStatus);
+			const bInDev = getIsInDevelopment(b.versionStatus);
+
+			if (aInDev && !bInDev) {
+				return -1;
+			}
+			if (bInDev && !aInDev) {
+				return 1;
+			}
+
+			const ad = a.versionDate || 0;
+			const bd = b.versionDate || 0;
+			return bd - ad;
+		});
+
+		this.mapsetInfo = this.mapsetVersions[0];
+
+		this.versionStatuses = this.mapsetVersions.map((v) => {
+			const versionDate = v.versionDate || new Date();
+			return formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
+		});
+
+		if (this.versionStatuses.length > 0) {
+			this.selectedVersion = this.versionStatuses[0];
+		}
 	}
 
 	getModuleMetadata() {
@@ -1194,19 +1235,12 @@ export class MapsetRecordsComponent implements OnInit {
 			this.workFlowStatus.notes = this.workFlowNotesFC.value;
 		}
 		this.refsetService
-			.setMapsetWorkflowStatus(this.mapsetInfo.refSetCode, this.workFlowStatus.value, this.workFlowStatus.notes)
+			.setMapsetWorkflowStatus(this.mapsetInfo.id, this.workFlowStatus.value, this.workFlowStatus.notes)
 			.subscribe((response) => {
 				if (response) {
 					this.mapsetInfo = response;
-					this.versionStatuses.push(
-						formatDate(this.mapsetInfo.modified, 'MM-dd-yyyy', 'en-US') + ' (' + this.mapsetInfo.versionStatus + ') ',
-					);
-					//reset selection?
-					// if (this.versionStatuses.length === 1) {
-					// 	this.selectedVersion = this.versionStatuses[0];
-					// }
-
 					this.setWorkflowStatus();
+					this.getMapsetInfo();
 				}
 			});
 	}

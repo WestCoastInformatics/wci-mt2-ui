@@ -228,7 +228,29 @@ export class EditMappingComponent implements OnInit {
 
 	getMapsetInfo() {
 		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
-			this.mapsetInfo = results;
+			const mapsetVersions = Array.isArray(results) ? results : [results];
+
+			const getIsInDevelopment = (status: string): boolean => {
+				return status === 'IN_DEVELOPMENT' || status === 'IN DEVELOPMENT';
+			};
+
+			mapsetVersions.sort((a, b) => {
+				const aInDev = getIsInDevelopment(a.versionStatus);
+				const bInDev = getIsInDevelopment(b.versionStatus);
+
+				if (aInDev && !bInDev) {
+					return -1;
+				}
+				if (bInDev && !aInDev) {
+					return 1;
+				}
+
+				const ad = a.versionDate || 0;
+				const bd = b.versionDate || 0;
+				return bd - ad;
+			});
+
+			this.mapsetInfo = mapsetVersions[0];
 		});
 		this.refsetService.getMapsets().subscribe({
 			next: (results) => {
@@ -879,7 +901,7 @@ export class EditMappingComponent implements OnInit {
 		};
 
 		this.userChanged = false;
-		this.refsetService.getMapsetWorkflowStatus(this.mapsetCode).subscribe((status) => {
+		this.refsetService.getMapsetWorkflowStatus(this.mapsetInfo.id).subscribe((status) => {
 			if (status.workflowStatus === 'IN_EDIT') {
 				this.refsetService.updateMapsetMapping(this.mapsetCode, saveMapset).subscribe(
 					(status) => {

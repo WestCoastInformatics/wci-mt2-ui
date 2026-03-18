@@ -1302,7 +1302,7 @@ export class BatchMappingComponent implements OnInit {
 		}
 
 		this.userChanged = false;
-		this.refsetService.getMapsetWorkflowStatus(this.mapsetCode).subscribe((status) => {
+		this.refsetService.getMapsetWorkflowStatus(this.mapsetInfo.id).subscribe((status) => {
 			if (status.workflowStatus === 'IN_EDIT') {
 				this.refsetService.updateMapsetMappingBulk(this.mapsetCode, this.mapsetResponse).subscribe(
 					(status) => {
