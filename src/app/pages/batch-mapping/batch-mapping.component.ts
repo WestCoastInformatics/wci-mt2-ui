@@ -1304,7 +1304,7 @@ export class BatchMappingComponent implements OnInit {
 		this.userChanged = false;
 		this.refsetService.getMapsetWorkflowStatus(this.mapsetInfo.id).subscribe((status) => {
 			if (status.workflowStatus === 'IN_EDIT') {
-				this.refsetService.updateMapsetMappingBulk(this.mapsetCode, this.mapsetResponse).subscribe(
+				this.refsetService.updateMapsetMappingBulk(this.mapsetInfo.id, this.mapsetResponse).subscribe(
 					(status) => {
 						this.saving = false;
 						this.notificationService.show('The mappings have been saved.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
