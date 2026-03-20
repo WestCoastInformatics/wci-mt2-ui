@@ -6,7 +6,11 @@
 		<div class="row d-flex">
 			<div class="col-md-10 page-title" title="{{ mapsetInfo.refSetName }}">
 				<div class="rt2-wrap">{{ mapsetInfo.refSetName }}</div>
-				<app-workflow-status [workflowStatus]="mapsetInfo.workflowStatus" class="col-1"> </app-workflow-status>
+				<app-workflow-status
+					[workflowStatus]="mapsetInfo.workflowStatus !== null ? mapsetInfo.workflowStatus : mapsetInfo.versionStatus"
+					class="col-1"
+				>
+				</app-workflow-status>
 			</div>
 
 			<!-- <div class="col-md-2 page-title">{{ mapsetInfo.workflowStatus }}</div> -->

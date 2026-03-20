@@ -4,12 +4,17 @@
 <div class="top-search-bar content-header">
 	<div class="d-flex justify-content-end">
 		<div class="row d-flex">
-			<div class="col-md-10 page-title">
+			<div class="col-md-9 page-title">
 				<div class="rt2-wrap" *ngIf="loaded" title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}">
 					<span>{{ mapsetData[0].code + ' ' + mapsetData[0].name }} </span>
 				</div>
-				<app-workflow-status [workflowStatus]="mapsetInfo.workflowStatus" class="col-1"> </app-workflow-status>
+				<app-workflow-status
+					[workflowStatus]="mapsetInfo.workflowStatus !== null ? mapsetInfo.workflowStatus : mapsetInfo.versionStatus"
+					class="col-1"
+				>
+				</app-workflow-status>
 			</div>
+			<div class="col-md-3 list-font align-items-center">{{ selectedVersion }}</div>
 		</div>
 		<div class="col-md-2 d-flex header-menu">
 			<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: mapsetData }"></template>

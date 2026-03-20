@@ -1,9 +1,9 @@
 import { Subscription } from 'rxjs';
 import { ElementRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { formatDate } from '@angular/common';
 import { MatSelect } from '@angular/material/select';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
-import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { MT2Service } from 'src/app/services/mt2.service';
@@ -83,6 +83,7 @@ export class MapsetMappingComponent implements OnInit {
 	formats = [];
 	downloadTitle = 'Download';
 	mapsetInfo: any = {};
+	selectedVersion: any;
 	rowColors = [{ background: 'white' }, { background: '#f2f2f2' }];
 	currentRowColor = 0;
 	moduleMetadata: any;
@@ -145,7 +146,38 @@ export class MapsetMappingComponent implements OnInit {
 		});
 
 		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
-			this.mapsetInfo = results;
+			const mapsetVersions = Array.isArray(results) ? results : [results];
+
+			const getIsInDevelopment = (status: string): boolean => {
+				return status === 'IN_DEVELOPMENT' || status === 'IN DEVELOPMENT';
+			};
+
+			mapsetVersions.sort((a, b) => {
+				const aInDev = getIsInDevelopment(a.versionStatus);
+				const bInDev = getIsInDevelopment(b.versionStatus);
+
+				if (aInDev && !bInDev) {
+					return -1;
+				}
+				if (bInDev && !aInDev) {
+					return 1;
+				}
+
+				const ad = a.versionDate || 0;
+				const bd = b.versionDate || 0;
+				return bd - ad;
+			});
+
+			this.mapsetInfo = mapsetVersions[0];
+			if (localStorage.getItem('mapsetVersion')) {
+				this.selectedVersion = JSON.parse(localStorage.getItem('mapsetVersion'));
+				this.mapsetInfo = mapsetVersions.filter((v) => {
+					const versionDate = v.versionDate || new Date();
+					const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
+					return mapsetVersionStatus === this.selectedVersion;
+				});
+				this.mapsetInfo = this.mapsetInfo[0];
+			}
 		});
 	}
 

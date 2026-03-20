@@ -3,13 +3,18 @@
 <!-- Search Bar -->
 <div class="top-search-bar content-header">
 	<div class="d-flex justify-content-end">
-		<div class="col-md-12 d-flex">
-			<div class="page-title" *ngIf="loaded && !loadError" title="Batch Edit ({{ mapsetData.length }})">
+		<div class="row d-flex">
+			<div class="col-md-9 page-title" *ngIf="loaded && !loadError" title="Batch Edit ({{ mapsetData.length }})">
 				<div class="rt2-wrap">Batch Edit ({{ mapsetData.length }})</div>
 				<div class="workflow-margin">
-					<app-workflow-status [workflowStatus]="mapsetInfo.workflowStatus" class="col-1 m-t-1"> </app-workflow-status>
+					<app-workflow-status
+						[workflowStatus]="mapsetInfo.workflowStatus !== null ? mapsetInfo.workflowStatus : mapsetInfo.versionStatus"
+						class="col-1"
+					>
+					</app-workflow-status>
 				</div>
 			</div>
+			<div class="col-md-3 list-font align-items-center">{{ selectedVersion }}</div>
 		</div>
 	</div>
 </div>
