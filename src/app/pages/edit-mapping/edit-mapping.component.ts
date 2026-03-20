@@ -11,6 +11,7 @@ import {
 	HostListener,
 	Renderer2,
 } from '@angular/core';
+import { formatDate } from '@angular/common';
 import { PaginationChangedEvent } from 'ag-grid-community';
 import { Subscription, Observable, OperatorFunction, of, map } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -105,6 +106,7 @@ export class EditMappingComponent implements OnInit {
 	showBrowserSection = false;
 	mapsetCode: string;
 	mapsetInfo: any = {};
+	selectedVersion: any;
 	conceptCode: string;
 	mapping: string;
 	routeParamsSubscription$: Subscription;
@@ -251,7 +253,17 @@ export class EditMappingComponent implements OnInit {
 			});
 
 			this.mapsetInfo = mapsetVersions[0];
+			if (localStorage.getItem('mapsetVersion')) {
+				this.selectedVersion = JSON.parse(localStorage.getItem('mapsetVersion'));
+				this.mapsetInfo = mapsetVersions.filter((v) => {
+					const versionDate = v.versionDate || new Date();
+					const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
+					return mapsetVersionStatus === this.selectedVersion;
+				});
+				this.mapsetInfo = this.mapsetInfo[0];
+			}
 		});
+
 		this.refsetService.getMapsets().subscribe({
 			next: (results) => {
 				const thisResult = results.filter((res) => {

@@ -235,87 +235,6 @@ export class MapsetRecordsComponent implements OnInit {
 
 			this.updateVersionDropdown();
 
-			this.breadcrumbService.setBreadcrumbs([{ path: '/library', label: 'Library' }, { label: this.mapsetInfo.refSetName }]);
-
-			switch (this.mapsetInfo.workflowStatus) {
-				case 'READY_FOR_EDIT':
-					this.editStatus = true;
-					this.showReview = true;
-					this.showUpgrade = true;
-					this.showPublish = true;
-					break;
-				case 'IN_EDIT':
-					this.editStatus = false;
-					this.showReview = false;
-					this.showUpgrade = false;
-					this.showPublish = false;
-
-					// if (this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('AUTHOR')) {
-					// 	this.adminOverride = true;
-					// 	this.adminOverrideText = 'Admin ';
-					// }
-					break;
-				case 'READY_FOR_REVIEW':
-					this.requestStatus = false;
-					this.reviewStatus = false;
-					this.showEdit = false;
-					this.showUpgrade = false;
-					this.showPublish = false;
-					break;
-				case 'IN_REVIEW':
-					this.requestStatus = false;
-					this.reviewStatus = true;
-					this.showEdit = false;
-					this.showUpgrade = false;
-					this.showPublish = false;
-
-					// if (this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('REVIEWER')) {
-					// 	this.adminOverride = true;
-					// 	this.adminOverrideText = 'Admin ';
-					// }
-					break;
-				case 'REVIEW_COMPLETED':
-					this.editStatus = true;
-					this.showReview = true;
-					this.showUpgrade = false;
-					this.showPublish = true;
-					break;
-				case 'READY_FOR_PUBLICATION':
-					this.publishStatus = false;
-					this.startPublish = true;
-					this.finishPublish = false;
-					this.showReview = false;
-					this.showEdit = false;
-					this.showUpgrade = false;
-					break;
-				case 'IN_UPGRADE':
-					this.upgradeStatus = false;
-					this.showReview = false;
-					this.showEdit = false;
-					this.showPublish = false;
-					break;
-				case 'IN_PUBLICATION':
-					this.publishStatus = false;
-					this.startPublish = false;
-					this.finishPublish = true;
-					this.showReview = false;
-					this.showEdit = false;
-					this.showUpgrade = false;
-					break;
-				case 'PUBLISHED':
-					this.showEdit = false;
-					this.showReview = false;
-					this.showUpgrade = false;
-					this.showPublish = false;
-					break;
-				default: //null
-					this.editStatus = true;
-					this.showReview = true;
-					this.showUpgrade = true;
-					this.showPublish = true;
-					break;
-			}
-
 			this.columnDefs = [
 				{
 					field: 'index',
@@ -572,9 +491,100 @@ export class MapsetRecordsComponent implements OnInit {
 			const versionDate = v.versionDate || new Date();
 			return formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
 		});
-
 		if (this.versionStatuses.length > 0) {
 			this.selectedVersion = this.versionStatuses[0];
+		}
+
+		this.setMapsetInfo();
+	}
+
+	setMapsetInfo() {
+		localStorage.setItem('mapsetVersion', JSON.stringify(this.selectedVersion));
+		this.breadcrumbService.setBreadcrumbs([{ path: '/library', label: 'Library' }, { label: this.mapsetInfo.refSetName }]);
+
+		switch (this.mapsetInfo.workflowStatus) {
+			case 'READY_FOR_EDIT':
+				this.editStatus = true;
+				this.showReview = true;
+				this.showUpgrade = true;
+				this.showPublish = true;
+				break;
+			case 'IN_EDIT':
+				this.editStatus = false;
+				this.showReview = false;
+				this.showUpgrade = false;
+				this.showPublish = false;
+
+				// if (this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('AUTHOR')) {
+				// 	this.adminOverride = true;
+				// 	this.adminOverrideText = 'Admin ';
+				// }
+				break;
+			case 'READY_FOR_REVIEW':
+				this.requestStatus = false;
+				this.reviewStatus = false;
+				this.showEdit = false;
+				this.showUpgrade = false;
+				this.showPublish = false;
+				break;
+			case 'IN_REVIEW':
+				this.requestStatus = false;
+				this.reviewStatus = true;
+				this.showEdit = false;
+				this.showUpgrade = false;
+				this.showPublish = false;
+
+				// if (this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('REVIEWER')) {
+				// 	this.adminOverride = true;
+				// 	this.adminOverrideText = 'Admin ';
+				// }
+				break;
+			case 'REVIEW_COMPLETED':
+				this.editStatus = true;
+				this.showReview = true;
+				this.showUpgrade = false;
+				this.showPublish = true;
+				break;
+			case 'READY_FOR_PUBLICATION':
+				this.publishStatus = false;
+				this.startPublish = true;
+				this.finishPublish = false;
+				this.showReview = false;
+				this.showEdit = false;
+				this.showUpgrade = false;
+				break;
+			case 'IN_UPGRADE':
+				this.upgradeStatus = false;
+				this.showReview = false;
+				this.showEdit = false;
+				this.showPublish = false;
+				break;
+			case 'IN_PUBLICATION':
+				this.publishStatus = false;
+				this.startPublish = false;
+				this.finishPublish = true;
+				this.showReview = false;
+				this.showEdit = false;
+				this.showUpgrade = false;
+				break;
+			case 'PUBLISHED':
+				this.showEdit = false;
+				this.showReview = false;
+				this.showUpgrade = false;
+				this.showPublish = false;
+				break;
+			default: //null
+				this.editStatus = true;
+				this.showReview = true;
+				this.showUpgrade = true;
+				this.showPublish = true;
+				if (this.mapsetInfo.versionStatus === 'PUBLISHED') {
+					this.showEdit = false;
+					this.showReview = false;
+					this.showUpgrade = false;
+					this.showPublish = false;
+				}
+				break;
 		}
 	}
 
@@ -955,9 +965,13 @@ export class MapsetRecordsComponent implements OnInit {
 
 	@Debounce()
 	changedVersionStatus() {
-		//this.loaded = false;
-		//this.onGridReady(this.originalGridParams);
-		this.openToBeDevelopedModal(this.tbdModal);
+		this.mapsetInfo = this.mapsetVersions.filter((v) => {
+			const versionDate = v.versionDate || new Date();
+			const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
+			return mapsetVersionStatus === this.selectedVersion;
+		});
+		this.mapsetInfo = this.mapsetInfo[0];
+		this.setMapsetInfo();
 	}
 
 	selectAction(selectedAction: string) {
@@ -1234,15 +1248,13 @@ export class MapsetRecordsComponent implements OnInit {
 		if (this.workFlowNotesFC.dirty) {
 			this.workFlowStatus.notes = this.workFlowNotesFC.value;
 		}
-		this.refsetService
-			.setMapsetWorkflowStatus(this.mapsetInfo.id, this.workFlowStatus.value, this.workFlowStatus.notes)
-			.subscribe((response) => {
-				if (response) {
-					this.mapsetInfo = response;
-					this.setWorkflowStatus();
-					this.getMapsetInfo();
-				}
-			});
+		this.refsetService.setMapsetWorkflowStatus(this.mapsetInfo.id, this.workFlowStatus.value, this.workFlowStatus.notes).subscribe((response) => {
+			if (response) {
+				this.mapsetInfo = response;
+				this.setWorkflowStatus();
+				this.getMapsetInfo();
+			}
+		});
 	}
 
 	setWorkflowStatus() {

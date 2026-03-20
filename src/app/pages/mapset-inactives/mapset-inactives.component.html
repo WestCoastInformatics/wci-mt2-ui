@@ -4,26 +4,17 @@
 <div class="top-search-bar content-header">
 	<div class="d-flex justify-content-end">
 		<div class="row d-flex">
-			<div class="col-md-10 page-title">
+			<div class="col-md-9 page-title">
 				<div class="rt2-wrap" *ngIf="loaded" title="Manage Inactivated Concepts for {{ mapsetName }}">
 					<span>Manage Inactivated Concepts for {{ mapsetName }}</span>
 				</div>
-				<app-workflow-status [workflowStatus]="mapsetInfo.workflowStatus" class="col-1"> </app-workflow-status>
+				<app-workflow-status
+					[workflowStatus]="mapsetInfo.workflowStatus !== null ? mapsetInfo.workflowStatus : mapsetInfo.versionStatus"
+					class="col-1"
+				>
+				</app-workflow-status>
 			</div>
-			<div class="col-md-2 d-flex header-menu">
-				<mat-form-field floatLabel="never" class="directoryViewFilterField format-version-drop-down" appearance="fill">
-					<mat-label></mat-label>
-					<mat-select
-						title="Choose Version"
-						placeholder="Choose Version"
-						#directoryViewSelect
-						[(value)]="selectedVersion"
-						(selectionChange)="changedVersionStatus()"
-					>
-						<mat-option *ngFor="let option of versionStatuses" [value]="option" class="no-checkbox"> {{ option }} </mat-option>
-					</mat-select>
-				</mat-form-field>
-			</div>
+			<div class="col-md-3 list-font align-items-center">{{ selectedVersion }}</div>
 		</div>
 		<div class="col-md-auto d-flex ml-15">
 			<div class="col">
