@@ -382,12 +382,12 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + `concept/${terminology}/${version}?limit=${limit}&offset=${offset}&query=${query}`, '', false);
 	}
 
-	updateMapsetMapping(mapSetCode: string, params): Observable<any> {
-		return this.put(this.contextPath + `mapset/${mapSetCode}`, params);
+	updateMapsetMapping(mapsetId: string, params): Observable<any> {
+		return this.put(this.contextPath + `mapset/${mapsetId}`, params);
 	}
 
-	updateMapsetMappingBulk(mapSetCode: string, params): Observable<any> {
-		return this.put(this.contextPath + `mapset/${mapSetCode}/bulk`, params);
+	updateMapsetMappingBulk(mapsetId: string, params): Observable<any> {
+		return this.put(this.contextPath + `mapset/${mapsetId}/bulk`, params);
 	}
 
 	exportMapset(params: any): Observable<any> {

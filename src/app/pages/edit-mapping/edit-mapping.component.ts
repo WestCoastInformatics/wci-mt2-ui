@@ -903,7 +903,7 @@ export class EditMappingComponent implements OnInit {
 		this.userChanged = false;
 		this.refsetService.getMapsetWorkflowStatus(this.mapsetInfo.id).subscribe((status) => {
 			if (status.workflowStatus === 'IN_EDIT') {
-				this.refsetService.updateMapsetMapping(this.mapsetCode, saveMapset).subscribe(
+				this.refsetService.updateMapsetMapping(this.mapsetInfo.id, saveMapset).subscribe(
 					(status) => {
 						this.notificationService.show('The mapping has been saved.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
 					},
