@@ -569,6 +569,12 @@ export class MapsetRecordsComponent implements OnInit {
 				break;
 			case 'PUBLISHED':
 				this.showEdit = false;
+				const inDevelopmentFound = this.mapsetVersions.find((mapset)=>{ return mapset.versionStatus ===  'IN_DEVELOPMENT' || mapset.versionStatus === 'IN DEVELOPMENT' });
+				if(!inDevelopmentFound){
+					if(this.mapsetInfo?.latestPublishedVersion === true){
+						this.showEdit = true;
+					}
+				}
 				this.showReview = false;
 				this.showUpgrade = false;
 				this.showPublish = false;
@@ -1087,12 +1093,12 @@ export class MapsetRecordsComponent implements OnInit {
 			this.refsetGridApi.purgeInfiniteCache();
 			localStorage.setItem(this.mapsetSearchInput, JSON.stringify(this.searchInput));
 		}
-	}
+	} 
 
 	/*Pagination functions */
 	onPaginationChanged(event: PaginationChangedEvent) {
 		if (this.refsetGridApi) {
-			this.isNewPageSize = event.newPageSize ?? false;
+			this.isNewPageSize = this.refsetGridPaging.pageSize !== this.refsetGridApi.paginationGetPageSize();
 			if (this.isNewPageSize) {
 				this.loaded = false;
 			}
@@ -1354,6 +1360,12 @@ export class MapsetRecordsComponent implements OnInit {
 				this.startPublish = false;
 				this.finishPublish = false;
 				this.showEdit = false;
+				const inDevelopmentFound = this.mapsetVersions.find((mapset)=>{ return mapset.versionStatus ===  'IN_DEVELOPMENT' || mapset.versionStatus === 'IN DEVELOPMENT' });
+				if(!inDevelopmentFound){
+					if(this.mapsetInfo?.latestPublishedVersion === true){
+						this.showEdit = true;
+					}
+				}
 				this.showReview = false;
 				this.showUpgrade = false;
 				this.showPublish = false;

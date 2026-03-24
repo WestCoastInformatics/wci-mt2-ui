@@ -1346,7 +1346,7 @@ export class EditMappingComponent implements OnInit {
 	/*Pagination functions */
 	onPaginationChanged(event: PaginationChangedEvent) {
 		if (this.browserApi) {
-			this.isNewPageSize = event.newPageSize ?? false;
+			this.isNewPageSize = this.browserPaging.pageSize !== this.browserApi.paginationGetPageSize();
 			this.browserPaging.pageSize = this.browserApi.paginationGetPageSize();
 			this.browserApi.updateGridOptions({
 				paginationPageSize: this.browserPaging.pageSize,
