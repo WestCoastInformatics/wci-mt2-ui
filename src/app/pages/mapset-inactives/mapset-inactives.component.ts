@@ -1039,7 +1039,7 @@ export class MapsetInactivesComponent implements OnInit {
 	/*Pagination functions */
 	onPaginationChanged(event: PaginationChangedEvent) {
 		if (this.refsetGridApi) {
-			this.isNewPageSize = event.newPageSize ?? false;
+			this.isNewPageSize = this.refsetGridPaging.pageSize !== this.refsetGridApi.paginationGetPageSize();
 			if (this.isNewPageSize) {
 				this.loaded = false;
 			}
