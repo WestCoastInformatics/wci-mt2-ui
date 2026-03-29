@@ -19,9 +19,9 @@ jobs:
             - name: Install Dependencies
               run: npm install
             - name: Build Application
-              run: make build # change to command that builds the project
+              run: npm build # change to command that builds the project
             - name: Run Jest Tests
-              run: make test # change to command that tests the project
+              run: npm test # change to command that tests the project
     cypress-run:
         needs: run-jest-tests
         runs-on: ubuntu-latest
@@ -34,10 +34,10 @@ jobs:
                   node-version: '20' #set the project Angular version
             - name: Install Dependencies
               run: npm install
-            - name: Run E2E tests using make command
+            - name: Run E2E tests
               uses: cypress-io/github-action@v4
               with:
-                  command: 'make cypresstest'
+                  command: 'npx cypress run'
                   # If your app needs a server, add build and start parameters
-                  build: make build
-                  start: make run
+                  build: npm build
+                  start: npm start
