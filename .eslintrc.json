@@ -24,21 +24,12 @@
       	"@angular-eslint/no-empty-lifecycle-method": "off",
 		"@typescript-eslint/no-var-requires": 0,
 		"@typescript-eslint/no-this-alias": 0,
-		"@typescript-eslint/ban-types": ["error",
-			{
-				"types": {
-					"String": false,
-					"Boolean": false,
-					"Number": false,
-					"Symbol": false,
-					"{}": false,
-					"Object": false,
-					"object": false,
-					"Function": false
-				},
-				"extendDefaults": false
-			}
-		]
+		"@angular-eslint/prefer-standalone": "off",
+		"@angular-eslint/prefer-inject": "off",
+		"@typescript-eslint/no-unsafe-function-type": "off",
+		"@typescript-eslint/no-wrapper-object-types": "off",
+		"@typescript-eslint/no-empty-object-type": "off"
+
       }
     },
     {
@@ -48,7 +39,9 @@
       "extends": [
         "plugin:@angular-eslint/template/recommended"
       ],
-      "rules": {}
+      "rules": {
+        "@angular-eslint/template/prefer-control-flow": "off"
+      }
     }
   ]
 }

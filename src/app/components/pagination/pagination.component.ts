@@ -100,7 +100,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
 		this.lastPageButton.disabled = this.currentPage === this.paginationPages.totalPages || !this.totalKnown;
 
 		for (const pageNumberButton of this.pageNumberButtons.toArray()) {
-			if (pageNumberButton._elementRef.nativeElement.innerText == this.currentPage) {
+			if (Number(pageNumberButton._elementRef.nativeElement.innerText) === this.currentPage) {
 				pageNumberButton.color = 'primary';
 			} else {
 				pageNumberButton.color = null;

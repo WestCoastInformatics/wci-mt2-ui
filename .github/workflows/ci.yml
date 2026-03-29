@@ -1,0 +1,43 @@
+name: Angular Source Automated Tests
+on:
+    push:
+        branches:
+            - develop # the primary branch
+    pull_request:
+        branches:
+            - develop # the primary branch
+jobs:
+    run-jest-tests:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v5
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20' #set the project Angular version
+            - name: Install Dependencies
+              run: npm install
+            - name: Build Application
+              run: make build # change to command that builds the project
+            - name: Run Jest Tests
+              run: make test # change to command that tests the project
+    cypress-run:
+        needs: run-jest-tests
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v5
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20' #set the project Angular version
+            - name: Install Dependencies
+              run: npm install
+            - name: Run E2E tests using make command
+              uses: cypress-io/github-action@v4
+              with:
+                  command: 'make cypresstest'
+                  # If your app needs a server, add build and start parameters
+                  build: make build
+                  start: make run

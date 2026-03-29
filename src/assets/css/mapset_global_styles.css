@@ -1172,15 +1172,15 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 	margin-bottom: 5px;
 	border-radius: 8px;
 
-	--mdc-chip-elevated-container-color: #fff;
-	--mdc-chip-elevated-disabled-container-color: #e0e0e0;
-	--mdc-chip-label-text-color: #212121;
-	--mdc-chip-disabled-label-text-color: #212121;
-	--mdc-chip-with-icon-icon-color: #212121;
-	--mdc-chip-with-icon-disabled-icon-color: #212121;
-	--mdc-chip-with-trailing-icon-disabled-trailing-icon-color: #212121;
-	--mdc-chip-with-trailing-icon-trailing-icon-color: #212121;
-	--mdc-chip-with-icon-selected-icon-color: #212121;
+	--mat-chip-elevated-container-color: #fff;
+	--mat-chip-elevated-disabled-container-color: #e0e0e0;
+	--mat-chip-label-text-color: #212121;
+	--mat-chip-disabled-label-text-color: #212121;
+	--mat-chip-with-icon-icon-color: #212121;
+	--mat-chip-with-icon-disabled-icon-color: #212121;
+	--mat-chip-with-trailing-icon-disabled-trailing-icon-color: #212121;
+	--mat-chip-with-trailing-icon-trailing-icon-color: #212121;
+	--mat-chip-with-icon-selected-icon-color: #212121;
 }
 
 .col.create-new-refset-label {
