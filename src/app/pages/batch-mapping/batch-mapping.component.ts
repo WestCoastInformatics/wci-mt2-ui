@@ -234,7 +234,7 @@ export class BatchMappingComponent implements OnInit {
 			this.conceptCodes = routeParams.concepts.split('_');
 			this.mapsetBatchColumnStorage += routeParams.concepts;
 			this.batchSearchInput += routeParams.concepts;
-			this.getMapsetData();
+
 			this.getMapsetInfo();
 			this.getModuleMetadata();
 			this.getMapProject();
@@ -653,6 +653,7 @@ export class BatchMappingComponent implements OnInit {
 				});
 				this.mapsetInfo = this.mapsetInfo[0];
 			}
+			this.getMapsetData();
 		});
 		this.refsetService.getMapsets().subscribe({
 			next: (results) => {
@@ -825,7 +826,6 @@ export class BatchMappingComponent implements OnInit {
 		this.selectedTarget = '';
 		this.clearTargetInput();
 		this.getMapsetInfo();
-		this.getMapsetData();
 		const refreshInterval = setInterval(() => {
 			this.notificationService.show('The changes have been removed.', null, 'success', { timeOut: 4500, extendedTimeOut: 0 });
 			clearInterval(refreshInterval);
@@ -1008,7 +1008,7 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	getMapsetData() {
-		this.refsetService.getMappingByMapsetConceptList(this.mapsetCode, this.conceptCodes.join(',')).subscribe({
+		this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCodes.join(',')).subscribe({
 			next: (response) => {
 				this.loaded = true;
 				const batch = [];

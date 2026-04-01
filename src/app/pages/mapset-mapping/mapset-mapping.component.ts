@@ -120,7 +120,7 @@ export class MapsetMappingComponent implements OnInit {
 			this.mapsetCode = routeParams.code;
 			this.conceptCode = routeParams.concept;
 			this.getMapsetInfo();
-			this.getMapsetData();
+
 			this.getModuleMetadata();
 		});
 
@@ -178,6 +178,7 @@ export class MapsetMappingComponent implements OnInit {
 				});
 				this.mapsetInfo = this.mapsetInfo[0];
 			}
+			this.getMapsetData();
 		});
 	}
 
@@ -195,7 +196,7 @@ export class MapsetMappingComponent implements OnInit {
 	}
 
 	getMapsetData() {
-		this.refsetService.getMappingByMapsetConceptList(this.mapsetCode, this.conceptCode).subscribe({
+		this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCode).subscribe({
 			next: (response) => {
 				this.loaded = true;
 				const data = [];
