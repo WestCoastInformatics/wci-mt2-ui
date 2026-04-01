@@ -205,7 +205,6 @@ export class EditMappingComponent implements OnInit {
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.conceptCode = routeParams.concept;
-			this.getMapsetData();
 			this.getMapsetInfo();
 			this.getModuleMetadata();
 			this.getMapProject();
@@ -262,6 +261,7 @@ export class EditMappingComponent implements OnInit {
 				});
 				this.mapsetInfo = this.mapsetInfo[0];
 			}
+			this.getMapsetData();
 		});
 
 		this.refsetService.getMapsets().subscribe({
@@ -443,7 +443,6 @@ export class EditMappingComponent implements OnInit {
 		this.selectedTarget.id = '';
 		this.clearTargetInput();
 		this.getMapsetInfo();
-		this.getMapsetData();
 		const refreshInterval = setInterval(() => {
 			this.notificationService.show('The changes have been removed.', null, 'success', { timeOut: 4500, extendedTimeOut: 0 });
 			clearInterval(refreshInterval);
@@ -514,7 +513,7 @@ export class EditMappingComponent implements OnInit {
 	}
 
 	getMapsetData() {
-		this.refsetService.getMappingByMapsetConceptList(this.mapsetCode, this.conceptCode).subscribe({
+		this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCode).subscribe({
 			next: (response) => {
 				this.loaded = true;
 				const data = [];

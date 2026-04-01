@@ -345,9 +345,9 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + `mapset/${code}`, '', false);
 	}
 
-	getMappingsByMapset(mapset: string, params): Observable<any> {
+	getMappingsByMapset(mapsetId: string, params): Observable<any> {
 		return this.get(
-			this.contextPath + `mapset/${mapset}/mappings?limit=` + params.limit + `&offset=` + params.offset + `&filter=` + params.filter,
+			this.contextPath + `mapset/${mapsetId}/mappings?limit=` + params.limit + `&offset=` + params.offset + `&filter=` + params.filter,
 			'',
 			false,
 		);
@@ -366,8 +366,8 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + `mapset/${mapset}/mappings/${concept}`, '', false);
 	}
 
-	getMappingByMapsetConceptList(mapset: string, concepts: string): Observable<any> {
-		return this.get(this.contextPath + `mapset/${mapset}/mappings?conceptCodes=${concepts}&showOverriddenEntries=false`, '', false);
+	getMappingByMapsetConceptList(mapsetId: string, concepts: string): Observable<any> {
+		return this.get(this.contextPath + `mapset/${mapsetId}/mappings?conceptCodes=${concepts}&showOverriddenEntries=false`, '', false);
 	}
 
 	getConceptByCode(terminology: string, version: string, code: string): Observable<any> {

@@ -569,9 +569,11 @@ export class MapsetRecordsComponent implements OnInit {
 				break;
 			case 'PUBLISHED':
 				this.showEdit = false;
-				const inDevelopmentFound = this.mapsetVersions.find((mapset)=>{ return mapset.versionStatus ===  'IN_DEVELOPMENT' || mapset.versionStatus === 'IN DEVELOPMENT' });
-				if(!inDevelopmentFound){
-					if(this.mapsetInfo?.latestPublishedVersion === true){
+				const inDevelopmentFound = this.mapsetVersions.find((mapset) => {
+					return mapset.versionStatus === 'IN_DEVELOPMENT' || mapset.versionStatus === 'IN DEVELOPMENT';
+				});
+				if (!inDevelopmentFound) {
+					if (this.mapsetInfo?.latestPublishedVersion === true) {
 						this.showEdit = true;
 					}
 				}
@@ -712,7 +714,7 @@ export class MapsetRecordsComponent implements OnInit {
 					} else {
 						restParams.filter = '';
 					}
-					this.mapSetSubscription = this.refsetService.getMappingsByMapset(this.mapsetCode, restParams).subscribe({
+					this.mapSetSubscription = this.refsetService.getMappingsByMapset(this.mapsetInfo.id, restParams).subscribe({
 						next: (results) => {
 							this.changeDetectorRef.detectChanges();
 							this.loaded = false;
@@ -977,6 +979,10 @@ export class MapsetRecordsComponent implements OnInit {
 			return mapsetVersionStatus === this.selectedVersion;
 		});
 		this.mapsetInfo = this.mapsetInfo[0];
+		this.setPageSize(10);
+		this.goToPage(0);
+		this.loaded = false;
+		this.refsetGridApi.purgeInfiniteCache();
 		this.setMapsetInfo();
 	}
 
@@ -1093,7 +1099,7 @@ export class MapsetRecordsComponent implements OnInit {
 			this.refsetGridApi.purgeInfiniteCache();
 			localStorage.setItem(this.mapsetSearchInput, JSON.stringify(this.searchInput));
 		}
-	} 
+	}
 
 	/*Pagination functions */
 	onPaginationChanged(event: PaginationChangedEvent) {
@@ -1360,9 +1366,11 @@ export class MapsetRecordsComponent implements OnInit {
 				this.startPublish = false;
 				this.finishPublish = false;
 				this.showEdit = false;
-				const inDevelopmentFound = this.mapsetVersions.find((mapset)=>{ return mapset.versionStatus ===  'IN_DEVELOPMENT' || mapset.versionStatus === 'IN DEVELOPMENT' });
-				if(!inDevelopmentFound){
-					if(this.mapsetInfo?.latestPublishedVersion === true){
+				const inDevelopmentFound = this.mapsetVersions.find((mapset) => {
+					return mapset.versionStatus === 'IN_DEVELOPMENT' || mapset.versionStatus === 'IN DEVELOPMENT';
+				});
+				if (!inDevelopmentFound) {
+					if (this.mapsetInfo?.latestPublishedVersion === true) {
 						this.showEdit = true;
 					}
 				}

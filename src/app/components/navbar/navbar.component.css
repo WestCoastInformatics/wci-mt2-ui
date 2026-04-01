@@ -253,6 +253,11 @@ nav {
 			cursor: pointer;
 			color: var(--standard_default_button_color) !important;
 		}
+		&.rt2-breadcrumb-selectable:hover {
+			.ellipsed-label {
+				text-decoration: underline;
+			}
+		}
 	}
 }
 

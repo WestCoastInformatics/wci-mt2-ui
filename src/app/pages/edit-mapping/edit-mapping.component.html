@@ -14,7 +14,7 @@
 				>
 				</app-workflow-status>
 			</div>
-			<div class="col-md-3 list-font align-items-center">{{ selectedVersion }}</div>
+			<div *ngIf="loaded" class="col-md-3 list-font align-items-center">{{ selectedVersion }}</div>
 		</div>
 		<div class="col-md-2 d-flex header-menu">
 			<div *ngIf="loaded && !loadError">

@@ -1,4 +1,6 @@
-<div *ngIf="showLoadingSpinner" class="loading"></div>
+@if (showLoadingSpinner) {
+	<div class="loading"></div>
+}
 
 <!-- Search Bar -->
 <div class="top-search-bar content-header">
