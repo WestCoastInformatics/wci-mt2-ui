@@ -1,5 +1,5 @@
-import { DOCUMENT } from '@angular/common';
-import { Component, Inject, HostListener } from '@angular/core';
+
+import { Component, Inject, HostListener, DOCUMENT } from '@angular/core';
 
 @Component({
 	standalone: false,

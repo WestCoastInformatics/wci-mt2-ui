@@ -29,26 +29,26 @@
 	--mat-sys-surface-container: #ffffff;
 	--mat-menu-container-color: #ffffff;
 	--mat-stepper-line-color: #0000001f;
-	--mat-standard-button-toggle-selected-state-background-color: #e0e0e0;
-	--mat-legacy-button-toggle-selected-state-background-color: #e0e0e0;
-	/* --mat-standard-button-toggle-background-color: #e0e0e0; */
+	--mat-button-toggle-selected-state-background-color: #e0e0e0;
+	--mat-button-toggle-legacy-selected-state-background-color: #e0e0e0;
+	/* --mat-button-toggle-background-color: #e0e0e0; */
 	--mat-sys-on-surface: rgba(0, 0, 0, 0);
 	--mat-select-enabled-trigger-text-color: #000003;
-	--mat-standard-button-toggle-shape: 4px;
+	--mat-button-toggle-shape: 4px;
 	--mat-sys-corner-extra-large: 4px;
-	--mat-legacy-button-toggle-shape: 4px;
+	--mat-button-toggle-legacy-shape: 4px;
 	--mat-menu-item-label-text-color: #000003;
 	--mat-menu-item-hover-state-layer-color: rgba(0, 0, 0, 0.04);
-	--mdc-filled-text-field-input-text-color: rgb(102, 102, 102);
+	--mat-form-field-filled-input-text-color: rgb(102, 102, 102);
 	--mat-badge-container-shape: 15px;
 	--mat-sys-corner-full: 15px;
 	--mat-checkbox-disabled-label-color: rgb(102, 102, 102);
 	--mat-checkbox-label-text-color: rgb(102, 102, 102);
-	--mdc-checkbox-disabled-selected-icon-color: #000003;
-	--mdc-checkbox-unselected-focus-icon-color: #000003;
-	--mdc-checkbox-unselected-hover-icon-color: rgb(102, 102, 102);
-	--mdc-filled-text-field-disabled-container-color: #666;
+	--mat-checkbox-disabled-selected-icon-color: #000003;
+	--mat-checkbox-unselected-focus-icon-color: #000003;
+	--mat-checkbox-unselected-hover-icon-color: rgb(102, 102, 102);
+	--mat-form-field-filled-disabled-container-color: #666;
 	--mat-select-disabled-trigger-text-color: #999;
-	--mdc-protected-button-label-text-color: #fefbff;
-	--mdc-protected-button-container-color: #448aff;
+	--mat-button-protected-label-text-color: #fefbff;
+	--mat-button-protected-container-color: #448aff;
 }
