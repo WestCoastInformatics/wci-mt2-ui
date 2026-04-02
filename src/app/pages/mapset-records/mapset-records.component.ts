@@ -69,7 +69,6 @@ export class MapsetRecordsComponent implements OnInit {
 	showFullNotesText = false;
 	showLoadingSpinner = false;
 	toggleDropdown = false;
-	numOfResults = 0;
 	directUrl: string;
 	numOfMembers: any;
 	disableChannel = new BroadcastChannel('disable-button-channel');
@@ -779,7 +778,9 @@ export class MapsetRecordsComponent implements OnInit {
 							this.mapsetData = data;
 							mapsetResults.items = this.mapsetData;
 							this.numOfMembers = mapsetResults.total;
-							this.numOfResults = mapsetResults.total;
+							if (this.numOfMembers > 10000) {
+								this.numOfMembers = 10000;
+							}
 
 							setTimeout(() => {
 								const lastIndexH = document.getElementsByClassName('ag-header').length - 1;
@@ -802,7 +803,6 @@ export class MapsetRecordsComponent implements OnInit {
 											true,
 										)
 									: {};
-
 								this.paginationPages.currentPage = this.getCurrentPage();
 
 								this.loaded = true;
