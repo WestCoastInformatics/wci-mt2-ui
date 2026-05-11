@@ -122,9 +122,24 @@ export class MapsetLibraryComponent implements OnInit {
 		this.user = this.authenticationService.getUser();
 		this.titleService.setTitle('Mapping Tool - Map Set Library');
 		this.breadcrumbService.setBreadcrumbs([{ label: 'Map Set Library' }]);
+		this.clearMapsetSearchInputs();
 
 		this.getMapsetData();
 		this.disableChannel.postMessage(false);
+	}
+
+	private clearMapsetSearchInputs(): void {
+		const keysToRemove: string[] = [];
+
+		for (let i = 0; i < localStorage.length; i++) {
+			const key = localStorage.key(i);
+
+			if (key?.startsWith('mapsetSearchInput')) {
+				keysToRemove.push(key);
+			}
+		}
+
+		keysToRemove.forEach((key) => localStorage.removeItem(key));
 	}
 
 	getMapsetData() {
