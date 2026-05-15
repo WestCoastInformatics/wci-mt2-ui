@@ -517,7 +517,7 @@ export class BatchMappingComponent implements OnInit {
 				field: 'mapEntries',
 				headerName: 'Advices',
 				headerTooltip: 'Advices',
-				cellClass: 'rt2-directory-column-version-date',
+				cellClass: 'rt2-directory-column-advices',
 				minWidth: 85,
 				width: 135,
 				resizable: true,

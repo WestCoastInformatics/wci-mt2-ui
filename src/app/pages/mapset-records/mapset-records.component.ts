@@ -355,7 +355,7 @@ export class MapsetRecordsComponent implements OnInit {
 					field: 'advices',
 					headerName: 'Advices',
 					headerTooltip: 'Advices',
-					cellClass: 'rt2-directory-column-version-date',
+					cellClass: 'rt2-directory-column-advices',
 					minWidth: 65,
 					width: 125,
 					resizable: true,
@@ -672,13 +672,12 @@ export class MapsetRecordsComponent implements OnInit {
 				const startRow = rowParams.startRow;
 				const endRow = rowParams.endRow;
 				const sortModel = rowParams.sortModel;
+				let query = '';
 				this.refsetGridApi.showLoadingOverlay();
 
-				let query = '';
-
-				if (localStorage.getItem(this.mapsetSearchInput)) {
-					this.searchInput = JSON.parse(localStorage.getItem(this.mapsetSearchInput));
-					// this.refsetGridApi.setGridOption('quickFilterText', this.searchInput);
+				const storedSearchInput = localStorage.getItem(this.mapsetSearchInput);
+				if (storedSearchInput) {
+					this.searchInput = JSON.parse(storedSearchInput);
 				}
 
 				if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
@@ -698,7 +697,8 @@ export class MapsetRecordsComponent implements OnInit {
 					}
 
 					if (this.refsetGridPaging.pageSize === undefined) {
-						this.refsetGridPaging.pageSize = Number(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageSize)));
+						const storedPageSize = localStorage.getItem(this.mapsetGridCurrentPageSize);
+						this.refsetGridPaging.pageSize = storedPageSize ? Number(JSON.parse(storedPageSize)) : 10;
 					}
 					if (this.refsetGridPaging.pageSize === undefined) {
 						this.refsetGridPaging.pageSize = 10;
@@ -738,10 +738,11 @@ export class MapsetRecordsComponent implements OnInit {
 									for (let i = 0; i < results[a].mapEntries[b].advices.length; i++) {
 										adviceArray.push(results[a].mapEntries[b].advices[i]);
 									}
+
 									data.push({
-										index: results[a].code !== '' ? a + results[a].code + count : false,
+										index: results[a].code !== '' ? a + results[a].code + count : count,
 										spanned: spanned,
-										downloadable: results[a].code !== '' ? true : false,
+										downloadable: true,
 										mapEntries: results[a].mapEntries,
 										descriptions: results[a].descriptions,
 										entries: results[a].mapEntries.length,
@@ -764,8 +765,7 @@ export class MapsetRecordsComponent implements OnInit {
 										rule: results[a].mapEntries[b].rule.length > 0 ? results[a].mapEntries[b].rule : '---',
 										relation: results[a].mapEntries[b].relation.length > 0 ? results[a].mapEntries[b].relation : '---',
 										modified: results[a].mapEntries[b].modified,
-										advices:
-											results[a].code !== '' ? { number: adviceArray.length, list: adviceArray } : { number: -1, list: [] },
+										advices: { number: adviceArray.length, list: adviceArray },
 										group: results[a].mapEntries[b].group,
 										priority: results[a].mapEntries[b].priority,
 										moduleId: results[a].mapEntries[b].moduleId,

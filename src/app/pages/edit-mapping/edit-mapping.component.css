@@ -43,6 +43,10 @@
 }
 
 .advice-column {
+	overflow-y: auto;
+	max-height: 40px;
+	overflow-x: hidden;
+	line-height: 16px;
 	font-size: 12px;
 }
 
