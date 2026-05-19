@@ -919,7 +919,7 @@ export class MapsetRecordsComponent implements OnInit {
 		});
 		params.data.advices_open = true;
 		let popHeight = 0;
-		const showInterval = setInterval(() => {
+		setTimeout(() => {
 			params.data.advice_top = true;
 			params.data.advice_bottom = false;
 			popHeight = document.getElementById('popover_' + params.data.code).offsetHeight;
@@ -940,7 +940,6 @@ export class MapsetRecordsComponent implements OnInit {
 				params.data.advice_top = false;
 				this.advicePopoverLocation = Number(-popHeight + 5) + 'px';
 			}
-			clearInterval(showInterval);
 		}, 5);
 	}
 
@@ -997,9 +996,8 @@ export class MapsetRecordsComponent implements OnInit {
 						}
 					}
 					if (codes.length > 0) {
-						const ddInterval = setInterval(() => {
+						setTimeout(() => {
 							this.goToBatchMappingsPage(codes);
-							clearInterval(ddInterval);
 						}, 2);
 					}
 				}
@@ -1014,9 +1012,8 @@ export class MapsetRecordsComponent implements OnInit {
 				if (this.checkedNum === 1) {
 					for (let c = 0; c < this.mapsetData.length; c++) {
 						if (this.mapsetData[c].checked === true) {
-							const ddInterval = setInterval(() => {
+							setTimeout(() => {
 								this.goToMappingPage(this.mapsetData[c].code);
-								clearInterval(ddInterval);
 							}, 2);
 						}
 					}
@@ -1026,9 +1023,8 @@ export class MapsetRecordsComponent implements OnInit {
 				if (this.checkedNum === 1) {
 					for (let c = 0; c < this.mapsetData.length; c++) {
 						if (this.mapsetData[c].checked === true) {
-							const ddInterval = setInterval(() => {
+							setTimeout(() => {
 								this.goToEditMappingPage(this.mapsetData[c].code);
-								clearInterval(ddInterval);
 							}, 2);
 						}
 					}

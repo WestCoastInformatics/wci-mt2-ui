@@ -810,7 +810,7 @@ export class MapsetInactivesComponent implements OnInit {
 		});
 		params.data.advices_open = true;
 		let popHeight = 0;
-		const showInterval = setInterval(() => {
+		setTimeout(() => {
 			params.data.advice_top = true;
 			params.data.advice_bottom = false;
 			popHeight = document.getElementById('popover_' + params.data.code).offsetHeight;
@@ -831,7 +831,6 @@ export class MapsetInactivesComponent implements OnInit {
 				params.data.advice_top = false;
 				this.advicePopoverLocation = Number(-popHeight + 5) + 'px';
 			}
-			clearInterval(showInterval);
 		}, 5);
 	}
 

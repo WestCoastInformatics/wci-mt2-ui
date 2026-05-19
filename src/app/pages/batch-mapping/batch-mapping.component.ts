@@ -235,7 +235,9 @@ export class BatchMappingComponent implements OnInit {
 			this.mapsetBatchColumnStorage += routeParams.concepts;
 			this.batchSearchInput += routeParams.concepts;
 
-			this.getMapsetInfo();
+			if (this.mapsetCode) {
+				this.getMapsetInfo();
+			}
 			this.getModuleMetadata();
 			this.getMapProject();
 			this.firstLoadBrowser();
@@ -489,7 +491,7 @@ export class BatchMappingComponent implements OnInit {
 				sortable: false,
 				suppressSorting: true,
 				minWidth: 165,
-				editable: this.mapsetInfo.workflowStatus === 'IN_EDIT',
+				editable: this.mapsetInfo?.workflowStatus ? this.mapsetInfo.workflowStatus === 'IN_EDIT' : false,
 				width: 165,
 			},
 			{
@@ -508,7 +510,7 @@ export class BatchMappingComponent implements OnInit {
 				cellEditorParams: {
 					values: this.ruleOptions,
 				},
-				editable: this.mapsetInfo.workflowStatus === 'IN_EDIT',
+				editable: this.mapsetInfo?.workflowStatus ? this.mapsetInfo.workflowStatus === 'IN_EDIT' : false,
 				unSortIcon: true,
 				sortable: false,
 				suppressSorting: true,
@@ -826,9 +828,8 @@ export class BatchMappingComponent implements OnInit {
 		this.selectedTarget = '';
 		this.clearTargetInput();
 		this.getMapsetInfo();
-		const refreshInterval = setInterval(() => {
+		setTimeout(() => {
 			this.notificationService.show('The changes have been removed.', null, 'success', { timeOut: 4500, extendedTimeOut: 0 });
-			clearInterval(refreshInterval);
 		}, 250);
 	}
 
@@ -1008,93 +1009,95 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	getMapsetData() {
-		this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCodes.join(',')).subscribe({
-			next: (response) => {
-				this.loaded = true;
-				const batch = [];
-				const list = response.items;
-				this.mapsetResponse = list;
+		if (this.mapsetInfo?.id !== undefined) {
+			this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCodes.join(',')).subscribe({
+				next: (response) => {
+					this.loaded = true;
+					const batch = [];
+					const list = response.items;
+					this.mapsetResponse = list;
 
-				for (let i = 0; i < list.length; i++) {
-					const results = list[i];
-					let data = {};
-					let count = 0;
-					for (let b = 0; b < results.mapEntries.length; b++) {
-						if (this.numOfGroups < results.mapEntries[b].group) {
-							this.numOfGroups = results.mapEntries[b].group;
+					for (let i = 0; i < list.length; i++) {
+						const results = list[i];
+						let data = {};
+						let count = 0;
+						for (let b = 0; b < results.mapEntries.length; b++) {
+							if (this.numOfGroups < results.mapEntries[b].group) {
+								this.numOfGroups = results.mapEntries[b].group;
+							}
+							results.mapEntries[b].advices = results.mapEntries[b].advices.filter(function (res) {
+								return res !== '';
+							});
+							let adviceAlways = [];
+							adviceAlways = results.mapEntries[b].advices.filter(function (res) {
+								return res.indexOf('ALWAYS') > -1;
+							});
+							let mapAdvices = [];
+							mapAdvices = results.mapEntries[b].advices.filter(function (res) {
+								return res.indexOf('ALWAYS') === -1;
+							});
+							results.mapEntries[b].mapAdvices = mapAdvices;
+							results.mapEntries[b].adviceAlways = adviceAlways;
+							data = {
+								uuid: results.code + results.mapEntries[b].modified + b,
+								index: results.code + count,
+								active: results.active,
+								feedback: true,
+								mapEntries: results.mapEntries[b],
+								descriptions: results.descriptions[b],
+								entries: results.mapEntries.length,
+								code: results.code,
+								name: results.name,
+								toName:
+									results.mapEntries[b].toName.length > 0 && results.mapEntries[b].toName !== ' DOES NOT EXIST'
+										? results.mapEntries[b].toName
+										: '---',
+								toCode:
+									results.mapEntries[b].toCode.length > 0
+										? results.mapEntries[b].group + '/' + results.mapEntries[b].priority + '#' + results.mapEntries[b].toCode
+										: results.mapEntries[b].group + '/' + results.mapEntries[b].priority + '#[Empty Target]',
+								rule: results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
+								relation: results.mapEntries[b].relation.length > 0 ? this.titleCaseWord(results.mapEntries[b].relation) : '---',
+								modified: results.mapEntries[b].modified,
+								advices: results.mapEntries[b].advices,
+								advices_open: false,
+								group: results.mapEntries[b].group,
+								priority: results.mapEntries[b].priority,
+								moduleId: results.mapEntries[b].moduleId,
+								modFlag: this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
+								modLang: this.getModuleLanguageName(results.mapEntries[b].moduleId),
+							};
+							count++;
+							batch.push(data);
 						}
-						results.mapEntries[b].advices = results.mapEntries[b].advices.filter(function (res) {
-							return res !== '';
-						});
-						let adviceAlways = [];
-						adviceAlways = results.mapEntries[b].advices.filter(function (res) {
-							return res.indexOf('ALWAYS') > -1;
-						});
-						let mapAdvices = [];
-						mapAdvices = results.mapEntries[b].advices.filter(function (res) {
-							return res.indexOf('ALWAYS') === -1;
-						});
-						results.mapEntries[b].mapAdvices = mapAdvices;
-						results.mapEntries[b].adviceAlways = adviceAlways;
-						data = {
-							uuid: results.code + results.mapEntries[b].modified + b,
-							index: results.code + count,
-							active: results.active,
-							feedback: true,
-							mapEntries: results.mapEntries[b],
-							descriptions: results.descriptions[b],
-							entries: results.mapEntries.length,
-							code: results.code,
-							name: results.name,
-							toName:
-								results.mapEntries[b].toName.length > 0 && results.mapEntries[b].toName !== ' DOES NOT EXIST'
-									? results.mapEntries[b].toName
-									: '---',
-							toCode:
-								results.mapEntries[b].toCode.length > 0
-									? results.mapEntries[b].group + '/' + results.mapEntries[b].priority + '#' + results.mapEntries[b].toCode
-									: results.mapEntries[b].group + '/' + results.mapEntries[b].priority + '#[Empty Target]',
-							rule: results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
-							relation: results.mapEntries[b].relation.length > 0 ? this.titleCaseWord(results.mapEntries[b].relation) : '---',
-							modified: results.mapEntries[b].modified,
-							advices: results.mapEntries[b].advices,
-							advices_open: false,
-							group: results.mapEntries[b].group,
-							priority: results.mapEntries[b].priority,
-							moduleId: results.mapEntries[b].moduleId,
-							modFlag: this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
-							modLang: this.getModuleLanguageName(results.mapEntries[b].moduleId),
-						};
-						count++;
-						batch.push(data);
 					}
-				}
-				this.mapsetData = batch;
-				setTimeout(() => {
-					const lastIndex = document.getElementsByClassName('ag-header').length - 1;
-					const child = document.getElementsByClassName('ag-header')[0]; //lastIndex];
-					document.getElementById('directoryHeader').appendChild(child);
-				}, 400);
+					this.mapsetData = batch;
+					setTimeout(() => {
+						const lastIndex = document.getElementsByClassName('ag-header').length - 1;
+						const child = document.getElementsByClassName('ag-header')[0]; //lastIndex];
+						document.getElementById('directoryHeader').appendChild(child);
+					}, 400);
 
-				this.breadcrumbService.setBreadcrumbs([
-					{ path: '/library', label: 'Library' },
-					{ path: '/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
-					{ label: 'Batch Edit Mappings' },
-				]);
-				if (localStorage.getItem(this.batchSearchInput)) {
-					this.searchInput = JSON.parse(localStorage.getItem(this.batchSearchInput));
-					this.gridApi.setGridOption('quickFilterText', this.searchInput);
-				}
-			},
-			error: (error) => {
-				//
-				this.notificationService.show('Error loading map sets by id, please try again.');
-				setTimeout(() => {
-					this.goToMappingsPage();
-				}, 1500);
-				console.log(' error', error);
-			},
-		});
+					this.breadcrumbService.setBreadcrumbs([
+						{ path: '/library', label: 'Library' },
+						{ path: '/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
+						{ label: 'Batch Edit Mappings' },
+					]);
+					if (localStorage.getItem(this.batchSearchInput)) {
+						this.searchInput = JSON.parse(localStorage.getItem(this.batchSearchInput));
+						this.gridApi.setGridOption('quickFilterText', this.searchInput);
+					}
+				},
+				error: (error) => {
+					//
+					this.notificationService.show('Error loading map sets by id, please try again.');
+					setTimeout(() => {
+						this.goToMappingsPage();
+					}, 1500);
+					console.log(' error', error);
+				},
+			});
+		}
 	}
 
 	addMapGroup() {
@@ -1111,35 +1114,20 @@ export class BatchMappingComponent implements OnInit {
 		this.userChanged = true;
 	}
 
-	addEmptyTargetToGroup(id: string, groupNum: number) {
+	addEmptyTargetToGroup(code: string, groupNum: number) {
 		let nextPriorityNum = 1;
 		let selectEntryIndex = 0;
 		let orginalFrom = { code: '', name: '' };
 		for (let p = 0; p < this.mapsetData.length; p++) {
-			if (this.mapsetData[p].uuid == id) {
+			if (this.mapsetData[p].code == code) {
 				orginalFrom = { code: this.mapsetData[p].code, name: this.mapsetData[p].name };
 				if (this.mapsetData[p].group === groupNum) {
 					if (this.mapsetData[p].priority >= nextPriorityNum) {
 						selectEntryIndex = p;
 						nextPriorityNum = this.mapsetData[p].priority + 1;
 					}
-					break;
 				}
 			}
-		}
-		let maxPriorityNum = 1;
-		let maxIndex = 1;
-		for (let p = 0; p < this.mapsetData.length; p++) {
-			if (this.mapsetData[p].group === groupNum) {
-				if (this.mapsetData[p].priority >= maxPriorityNum) {
-					maxPriorityNum = this.mapsetData[p].priority + 1;
-					maxIndex = p;
-				}
-			}
-		}
-		if (maxPriorityNum > nextPriorityNum) {
-			nextPriorityNum = maxPriorityNum;
-			selectEntryIndex = maxIndex;
 		}
 		let defaultRule = '';
 		if (!this.ruleBased) {
@@ -1189,8 +1177,6 @@ export class BatchMappingComponent implements OnInit {
 		};
 
 		this.mapsetData.splice(selectEntryIndex + 1, 0, newMapEntry);
-		this.gridApi.setGridOption('rowData', this.mapsetData);
-		this.userChanged = true;
 	}
 
 	removeTarget(uuid: string) {
@@ -1374,12 +1360,10 @@ export class BatchMappingComponent implements OnInit {
 			this.showGroupPopover = true;
 			this.showAdvicePopover = false;
 			this.showTargetPopover = false;
-
-			const showInterval = setInterval(() => {
+			setTimeout(() => {
 				this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
 				this.popoverLocationX = event.x - 190;
 				this.groupInput.nativeElement.focus();
-				clearInterval(showInterval);
 			}, 5);
 		}
 	}
@@ -1424,6 +1408,7 @@ export class BatchMappingComponent implements OnInit {
 				data.toCode = this.groupFC.value + '/' + data.mapEntries.priority + '#' + data.mapEntries.toCode;
 			}
 		});
+		//want to sort group entries?
 		this.gridApi.refreshCells(this.gridParams);
 		this.gridApi.redrawRows();
 		this.closeGroup();
@@ -1443,11 +1428,10 @@ export class BatchMappingComponent implements OnInit {
 			this.showTargetPopover = true;
 			this.showAdvicePopover = false;
 			this.showGroupPopover = false;
-			const showInterval = setInterval(() => {
+			setTimeout(() => {
 				this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
 				this.popoverLocationX = event.x - 210;
 				this.targetInput.nativeElement.focus();
-				clearInterval(showInterval);
 			}, 5);
 		}
 	}
@@ -1464,10 +1448,9 @@ export class BatchMappingComponent implements OnInit {
 			this.toggleSectionView('showBrowserSection');
 			this.secondWindow.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
 		}
-		const openInterval = setInterval(() => {
+		setTimeout(() => {
 			this.searchBrowserInput = this.targetFC.value['code'];
 			this.onBrowserSearchChange();
-			clearInterval(openInterval);
 		}, 100);
 	}
 
@@ -1697,19 +1680,23 @@ export class BatchMappingComponent implements OnInit {
 						return map;
 					}
 				});
-				checkList.forEach((check) => {
-					this.addEmptyTargetToGroup(check.uuid, check.group);
-				});
+				if (checkList.length > 0) {
+					checkList.forEach((check) => {
+						this.addEmptyTargetToGroup(check.code, check.group);
+					});
+					setTimeout(() => {
+						this.gridApi.setGridOption('rowData', this.mapsetData);
+						this.userChanged = true;
+					}, 500);
+				}
 				break;
 			case 'group':
 				modal = true;
 				this.headerGroupModal = this.modalService.open(this.headerGroup, { centered: true });
 				this.isModalOpen = true;
-				showInterval = setInterval(() => {
+				setTimeout(() => {
 					document.getElementById('headerGroupCodeInput').focus();
-					clearInterval(showInterval);
 				}, 500);
-
 				break;
 			case 'set':
 				this.mapsetData.forEach((map) => {
@@ -1818,6 +1805,7 @@ export class BatchMappingComponent implements OnInit {
 				map.toCode = this.headerGroupFC.value + '/' + map.mapEntries.priority + '#' + map.mapEntries.toCode;
 			}
 		});
+		//want to sort group entries?
 		this.userChanged = true;
 		this.gridApi.refreshCells(this.gridParams);
 		this.gridApi.redrawRows();
@@ -1837,7 +1825,7 @@ export class BatchMappingComponent implements OnInit {
 
 	getModuleLanguageIcon(moduleId: string) {
 		let flag = '';
-		this.moduleMetadata.module.forEach((data) => {
+		this.moduleMetadata?.module.forEach((data) => {
 			if (data.id === moduleId) {
 				flag = data.countryCode;
 			}

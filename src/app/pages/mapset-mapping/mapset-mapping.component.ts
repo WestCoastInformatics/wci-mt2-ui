@@ -290,9 +290,8 @@ export class MapsetMappingComponent implements OnInit {
 		switch (action) {
 			case 'edit':
 				if (action === 'edit') {
-					const ddInterval = setInterval(() => {
+					setTimeout(() => {
 						this.goToEditMappingPage();
-						clearInterval(ddInterval);
 					}, 2);
 				}
 				break;
