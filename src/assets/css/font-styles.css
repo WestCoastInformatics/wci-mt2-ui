@@ -138,6 +138,10 @@
 	text-transform: capitalize;
 }
 
+.rt2-directory-column-advices {
+	align-content: center;
+}
+
 .mat-option-text {
 	text-transform: capitalize;
 }
