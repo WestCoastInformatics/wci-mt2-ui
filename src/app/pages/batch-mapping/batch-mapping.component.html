@@ -829,11 +829,7 @@
 
 	<!-- Advice Templates -->
 	<ng-template #directoryAdviceSection let-params>
-		<div
-			class="advice-column"
-			[ngStyle]="{ 'line-height': 50 / getValueLength(params) > 10 ? 50 / getValueLength(params) + 'px' : 10 + 'px' }"
-			[hidden]="getValueLength(params) < 1"
-		>
+		<div class="advice-column" [hidden]="getValueLength(params) < 1">
 			<div *ngFor="let item of getValueList(params)">
 				<span title="{{ item }}" [hidden]="item.indexOf('ALWAYS') > -1">{{ item }}</span>
 			</div>

@@ -359,7 +359,7 @@ export class MapsetInactivesComponent implements OnInit {
 					field: 'advices',
 					headerName: 'Advices',
 					headerTooltip: 'Advices',
-					cellClass: 'rt2-directory-column-version-date',
+					cellClass: 'rt2-directory-column-advices',
 					minWidth: 65,
 					width: 95,
 					resizable: true,
@@ -633,9 +633,9 @@ export class MapsetInactivesComponent implements OnInit {
 										adviceArray.push(results[a].mapEntries[b].advices[i]);
 									}
 									data.push({
-										index: results[a].code !== '' ? a + results[a].code + count : false,
+										index: results[a].code !== '' ? a + results[a].code + count : count,
 										spanned: spanned,
-										downloadable: results[a].code !== '' ? true : false,
+										downloadable: true,
 										mapEntries: results[a].mapEntries,
 										descriptions: results[a].descriptions,
 										entries: results[a].mapEntries.length,
@@ -659,8 +659,7 @@ export class MapsetInactivesComponent implements OnInit {
 										rule: results[a].mapEntries[b].rule.length > 0 ? results[a].mapEntries[b].rule : '---',
 										relation: results[a].mapEntries[b].relation.length > 0 ? results[a].mapEntries[b].relation : '---',
 										modified: results[a].mapEntries[b].modified,
-										advices:
-											results[a].code !== '' ? { number: adviceArray.length, list: adviceArray } : { number: -1, list: [] },
+										advices: { number: adviceArray.length, list: adviceArray },
 										group: results[a].mapEntries[b].group,
 										priority: results[a].mapEntries[b].priority,
 										moduleId: results[a].mapEntries[b].moduleId,
@@ -811,7 +810,7 @@ export class MapsetInactivesComponent implements OnInit {
 		});
 		params.data.advices_open = true;
 		let popHeight = 0;
-		const showInterval = setInterval(() => {
+		setTimeout(() => {
 			params.data.advice_top = true;
 			params.data.advice_bottom = false;
 			popHeight = document.getElementById('popover_' + params.data.code).offsetHeight;
@@ -832,7 +831,6 @@ export class MapsetInactivesComponent implements OnInit {
 				params.data.advice_top = false;
 				this.advicePopoverLocation = Number(-popHeight + 5) + 'px';
 			}
-			clearInterval(showInterval);
 		}, 5);
 	}
 

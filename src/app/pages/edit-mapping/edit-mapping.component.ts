@@ -443,9 +443,8 @@ export class EditMappingComponent implements OnInit {
 		this.selectedTarget.id = '';
 		this.clearTargetInput();
 		this.getMapsetInfo();
-		const refreshInterval = setInterval(() => {
+		setTimeout(() => {
 			this.notificationService.show('The changes have been removed.', null, 'success', { timeOut: 4500, extendedTimeOut: 0 });
-			clearInterval(refreshInterval);
 		}, 250);
 	}
 
@@ -653,10 +652,9 @@ export class EditMappingComponent implements OnInit {
 			this.secondWindow.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
 		}
 		if (this.selectedTarget.id !== '') {
-			const openInterval = setInterval(() => {
+			setTimeout(() => {
 				this.searchBrowserInput = this.targetFC.value['code'];
 				this.onBrowserSearchChange();
-				clearInterval(openInterval);
 			}, 100);
 		}
 	}
@@ -949,10 +947,9 @@ export class EditMappingComponent implements OnInit {
 			});
 			const popHeight = 0;
 
-			const showInterval = setInterval(() => {
+			setTimeout(() => {
 				this.advicePopoverLocation = event.layerY + event.offsetY + 5;
 				this.groupInput.nativeElement.focus();
-				clearInterval(showInterval);
 			}, 5);
 		}
 	}
@@ -1044,9 +1041,8 @@ export class EditMappingComponent implements OnInit {
 		this.updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
 		const popHeight = 0;
 
-		const showInterval = setInterval(() => {
+		setTimeout(() => {
 			this.advicePopoverLocation = event.layerY + event.offsetY + 5;
-			clearInterval(showInterval);
 		}, 5);
 	}
 
