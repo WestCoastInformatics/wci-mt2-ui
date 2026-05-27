@@ -122,9 +122,31 @@ export class MapsetLibraryComponent implements OnInit {
 		this.user = this.authenticationService.getUser();
 		this.titleService.setTitle('Mapping Tool - Map Set Library');
 		this.breadcrumbService.setBreadcrumbs([{ label: 'Map Set Library' }]);
+		this.clearSavedSelections();
 
 		this.getMapsetData();
 		this.disableChannel.postMessage(false);
+	}
+
+	private clearSavedSelections(): void {
+		const keysToRemove: string[] = [];
+
+		for (let i = 0; i < localStorage.length; i++) {
+			const key = localStorage.key(i);
+
+			if (
+				key?.startsWith('mapsetSearchInput') ||
+				key?.startsWith('showMapTable') ||
+				key?.startsWith('mapsetVersion') ||
+				key?.startsWith('mapsetGridCurrentPageSize') ||
+				key?.startsWith('mapsetGridCurrentPageNum') ||
+				key?.startsWith('batchSearchInput')
+			) {
+				keysToRemove.push(key);
+			}
+		}
+
+		keysToRemove.forEach((key) => localStorage.removeItem(key));
 	}
 
 	getMapsetData() {
