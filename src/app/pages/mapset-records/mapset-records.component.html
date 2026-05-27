@@ -153,8 +153,8 @@
 		</div>
 		<div class="metadata-collapsible-container-group-header pointer" (click)="toggleSectionView('showMappingsSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
-				<span>Mappings&nbsp; </span><span [hidden]="!numOfMembers">{{ '(' + numOfMembers + ')' }}</span>
-				<span [hidden]="numOfMembers">{{ '(0)' }}</span>
+				<span>Mappings&nbsp; </span><span [hidden]="!maxTotal">{{ '(' + maxTotal + ')' }}</span>
+				<span [hidden]="maxTotal">{{ '(0)' }}</span>
 				<div class="sub-header-font">
 					<span [hidden]="checkedNum === 0">selected {{ checkedNum }}</span>
 				</div>
@@ -361,7 +361,7 @@
 					<button
 						#paginationFirstPage
 						mat-raised-button
-						(click)="goToPage(0)"
+						(click)="gridReset(); goToPage(0)"
 						class="pagination-page-buttons"
 						[ngClass]="{ disabled: getCurrentPage() === 0 }"
 						title="Go To First Page"
@@ -424,7 +424,7 @@
 						(click)="goToPage(getCurrentPage() + 1)"
 						title="Go To Next Page {{ getCurrentPage() + 2 }}"
 						class="pagination-page-buttons"
-						[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
+						[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages - 1 }"
 						attr.aria-label="Go To Next Page {{ getCurrentPage() + 2 }}"
 					>
 						<mat-icon aria-hidden="false">arrow_right</mat-icon>
@@ -436,7 +436,7 @@
 						(click)="goToPage(paginationPages.totalPages)"
 						title="Go To Last Page ({{ paginationPages.totalPages }})"
 						class="pagination-page-buttons"
-						[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
+						[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages - 1 }"
 						attr.aria-label="Go To Last Page {{ paginationPages.totalPages }}"
 					>
 						<mat-icon aria-hidden="false">last_page</mat-icon>
@@ -468,7 +468,8 @@
 							: (getCurrentPage() + 1) * refsetGridPaging.pageSize
 					}}
 				</span>
-				of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
+				of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span
+				><span class="p-r-5" *ngIf="numOfMembers === 10000">maximum </span> results
 			</div>
 			<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
 		</div>

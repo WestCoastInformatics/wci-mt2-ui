@@ -69,9 +69,9 @@ export class MapsetRecordsComponent implements OnInit {
 	showFullNotesText = false;
 	showLoadingSpinner = false;
 	toggleDropdown = false;
-	numOfResults = 0;
 	directUrl: string;
 	numOfMembers: any;
+	maxTotal: any;
 	disableChannel = new BroadcastChannel('disable-button-channel');
 	originalGridParams: any;
 	uiUtility = UiUtility;
@@ -802,8 +802,11 @@ export class MapsetRecordsComponent implements OnInit {
 
 							this.mapsetData = data;
 							mapsetResults.items = this.mapsetData;
+							this.maxTotal = mapsetResults.total;
 							this.numOfMembers = mapsetResults.total;
-							this.numOfResults = mapsetResults.total;
+							if (this.numOfMembers > 10000) {
+								this.numOfMembers = 10000;
+							}
 
 							setTimeout(() => {
 								const lastIndexH = document.getElementsByClassName('ag-header').length - 1;
@@ -826,7 +829,6 @@ export class MapsetRecordsComponent implements OnInit {
 											true,
 										)
 									: {};
-
 								this.paginationPages.currentPage = this.getCurrentPage();
 
 								this.loaded = true;
@@ -1003,7 +1005,7 @@ export class MapsetRecordsComponent implements OnInit {
 		});
 		this.mapsetInfo = this.mapsetInfo[0];
 		this.setPageSize(10);
-		this.goToPage(0);
+		// this.goToPage(0);
 		this.loaded = false;
 		this.refsetGridApi.purgeInfiniteCache();
 		this.setMapsetInfo();
@@ -1114,7 +1116,7 @@ export class MapsetRecordsComponent implements OnInit {
 		this.searchInput = this.searchInput.trim();
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
 			this.setPageSize(10);
-			this.goToPage(0);
+			// this.goToPage(0);
 			this.loaded = false;
 			this.refsetGridApi.purgeInfiniteCache();
 			localStorage.setItem(this.mapsetSearchInput, JSON.stringify(this.searchInput));
@@ -1141,9 +1143,19 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	setPageSize(size: number) {
-		localStorage.setItem(this.mapsetGridCurrentPageSize, JSON.stringify(size));
-		this.refsetGridApi.paginationGoToFirstPage();
-		this.refsetGridApi.setGridOption('paginationPageSize', size);
+		if (size !== this.refsetGridPaging.pageSize) {
+			localStorage.setItem(this.mapsetGridCurrentPageSize, JSON.stringify(size));
+			this.goToPage(0);
+			setTimeout(() => {
+				this.refsetGridApi.setGridOption('paginationPageSize', size);
+			}, 50);
+		}
+	}
+
+	gridReset() {
+		setTimeout(() => {
+			this.refsetGridApi.purgeInfiniteCache();
+		}, 150);
 	}
 
 	goToPage(number: number) {
