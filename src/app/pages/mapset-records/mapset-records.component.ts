@@ -899,7 +899,7 @@ export class MapsetRecordsComponent implements OnInit {
 
 	getModuleLanguageIcon(moduleId: string) {
 		let flag = '';
-		this.moduleMetadata.module.forEach((data) => {
+		this.moduleMetadata?.module.forEach((data) => {
 			if (data.id === moduleId) {
 				flag = data.countryCode;
 			}
@@ -1720,7 +1720,7 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	resizeSectionView() {
-		const sectionHeight = $('.section-background').parent().parent().height();
+		const sectionHeight = $('.section-background').parent().parent().height() || 0;
 		let sectionsMinHeight = 0;
 		let sectionsMaxHeight = 0;
 
@@ -1743,7 +1743,7 @@ export class MapsetRecordsComponent implements OnInit {
 			document.getElementsByClassName('grid-wrapper')[0]?.setAttribute('style', `max-height: ${sectionsMaxHeight}px;`);
 		}
 		if (this.showMetadataSection) {
-			document.getElementsByClassName('metadata-section')[0]?.setAttribute('style', `max-height: ${sectionsMinHeight}px;`);
+			document.getElementsByClassName('metadata-section')[0]?.setAttribute('style', `max-height: ${sectionsMaxHeight}px;`);
 		}
 		if (this.showHistorySection) {
 			document.getElementsByClassName('history-section')[0]?.setAttribute('style', `max-height: ${sectionsMinHeight}px;`);

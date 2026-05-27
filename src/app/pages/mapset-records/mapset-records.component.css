@@ -487,6 +487,34 @@
 	padding-left: 10px;
 }
 
+.metadata-group {
+	padding-left: 10px !important;
+	padding-bottom: 10px !important;
+	padding-right: 10px !important;
+	margin: 0;
+}
+
+.metadata-row {
+	width: 100%;
+	border: none !important;
+	.col-6,
+	.col-12 {
+		padding: 5px !important;
+	}
+	.col-6 {
+		margin-right: 15px;
+	}
+	.code-name {
+		display: inline-block;
+		width: 200px;
+		margin-top: 0;
+	}
+}
+
+.metadata-section {
+	padding: 0 !important;
+}
+
 .menu-button {
 	display: flex;
 	flex-direction: column;

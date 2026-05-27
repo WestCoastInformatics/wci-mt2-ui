@@ -496,8 +496,71 @@
 				class="caret-down-solid"
 			/>
 		</div>
-		<div [hidden]="!showMetadataSection" class="section-background metadata-section overflow">
-			<div class="d-flex dropdown-group">This feature is not yet available. Please check back later.</div>
+		<div [hidden]="!showMetadataSection" class="section-background metadata-section">
+			<div class="col-12 row metadata-group">
+				<div class="record-row metadata-row d-flex">
+					<div class="col-6 odd-row d-flex">
+						<div class="code-name col-2">Map Set ID</div>
+						{{ mapsetInfo.refSetCode }}
+					</div>
+					<div class="col-6 odd-row d-flex">
+						<span class="date-column second-row"
+							><div class="code-name col-2">Version Status</div>
+							{{ mapsetInfo.versionStatus }}</span
+						>
+					</div>
+				</div>
+				<div class="record-row metadata-row d-flex">
+					<div class="col-6 d-flex">
+						<div class="code-name col-2">Map Set Name</div>
+						{{ mapsetInfo.refSetName }}
+					</div>
+					<div class="col-6 d-flex">
+						<span class="date-column second-row"
+							><div class="code-name col-2">Version Date</div>
+							{{ mapsetInfo.version }}</span
+						>
+					</div>
+				</div>
+				<div class="record-row metadata-row d-flex">
+					<div class="col-6 odd-row d-flex">
+						<div class="code-name col-2">Map from</div>
+						{{ mapsetInfo.fromTerminology }} {{ mapsetInfo.fromVersion }}
+					</div>
+					<div class="col-6 odd-row d-flex">
+						<span class="date-column second-row"
+							><div class="code-name col-2">Last Modified</div>
+							{{ dateFormatter(mapsetInfo.modified) }}</span
+						>
+					</div>
+				</div>
+				<div class="record-row metadata-row d-flex">
+					<div class="col-6 d-flex">
+						<div class="code-name col-2">Map to</div>
+						{{ mapsetInfo.toTerminology }} {{ mapsetInfo.toVersion }}
+					</div>
+					<div class="col-6 d-flex">
+						<span class="date-column second-row"
+							><div class="code-name col-2">Language</div>
+							<span *ngIf="getModuleLanguageIcon(mapsetInfo.moduleId) !== ''">
+								<img
+									class="mapset-mod-icon"
+									*ngIf="mapsetInfo.moduleId !== internationalId"
+									src="{{ 'assets/flags/' + getModuleLanguageIcon(mapsetInfo.moduleId) + '.png' }}"
+									title="{{ getModuleLanguageName(mapsetInfo.moduleId) }}"
+									aria-label="{{ getModuleLanguageName(mapsetInfo.moduleId) }}" /></span
+						></span>
+					</div>
+				</div>
+				<div class="record-row metadata-row d-flex">
+					<div class="col-12 odd-row d-flex">
+						<div class="code-name col-2">Current Branch</div>
+						{{ mapsetInfo.editionBranch }}/REFSETS/REFSET-{{ mapsetInfo.refSetCode }}-{{ mapsetInfo.refsetBranchId }}/EDIT-{{
+							mapsetInfo.editBranchId
+						}}
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
