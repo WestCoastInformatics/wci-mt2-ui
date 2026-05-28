@@ -175,7 +175,7 @@ export class MapsetLibraryComponent implements OnInit {
 					{
 						field: 'refSetCode',
 						tooltipField: 'refSetCode',
-						headerName: 'Mapset ID',
+						headerName: 'Map Set ID',
 						cellClass: 'rt2-directory-column-id',
 						minWidth: 65,
 						resizable: true,
