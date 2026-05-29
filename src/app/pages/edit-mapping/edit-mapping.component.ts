@@ -26,7 +26,6 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { UiUtility } from 'src/app/utilities/ui.utility';
-import { environment } from '../../../environments/environment';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
@@ -205,9 +204,10 @@ export class EditMappingComponent implements OnInit {
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.conceptCode = routeParams.concept;
-			this.getMapsetInfo();
+			if (this.mapsetCode) {
+				this.getMapsetInfo();
+			}
 			this.getModuleMetadata();
-			this.getMapProject();
 			this.firstLoadBrowser();
 		});
 		this.formats = [
@@ -262,6 +262,7 @@ export class EditMappingComponent implements OnInit {
 				this.mapsetInfo = this.mapsetInfo[0];
 			}
 			this.getMapsetData();
+			this.getMapProject();
 		});
 
 		this.refsetService.getMapsets().subscribe({
@@ -292,7 +293,7 @@ export class EditMappingComponent implements OnInit {
 		const params: any = {
 			includeMembers: false,
 		};
-		const projectId = environment.defaultProjectId; //TEST ONLY
+		const projectId = this.mapsetInfo.mapProject.id;
 		this.refsetService.getMapProjectById(projectId, params).subscribe({
 			next: (results) => {
 				this.targetTerminology = results.destinationTerminology;

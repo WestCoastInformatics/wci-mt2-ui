@@ -26,7 +26,6 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { UiUtility } from 'src/app/utilities/ui.utility';
-import { environment } from '../../../environments/environment';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
@@ -239,7 +238,6 @@ export class BatchMappingComponent implements OnInit {
 				this.getMapsetInfo();
 			}
 			this.getModuleMetadata();
-			this.getMapProject();
 			this.firstLoadBrowser();
 		});
 
@@ -656,6 +654,7 @@ export class BatchMappingComponent implements OnInit {
 				this.mapsetInfo = this.mapsetInfo[0];
 			}
 			this.getMapsetData();
+			this.getMapProject();
 		});
 		this.refsetService.getMapsets().subscribe({
 			next: (results) => {
@@ -685,7 +684,7 @@ export class BatchMappingComponent implements OnInit {
 		const params: any = {
 			includeMembers: false,
 		};
-		const projectId = environment.defaultProjectId; //TEST ONLY
+		const projectId = this.mapsetInfo.mapProject.id;
 		this.refsetService.getMapProjectById(projectId, params).subscribe({
 			next: (results) => {
 				this.targetTerminology = results.destinationTerminology;
