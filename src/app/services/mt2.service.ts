@@ -5,7 +5,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 	providedIn: 'root',
 })
 export class MT2Service {
-	public defaultProjectId: string;
 	public moduleMetadata = new BehaviorSubject<Array<any>>([]);
 
 	public getModuleMetadata(): Observable<{ moduleMetadata: [] }> {
