@@ -300,27 +300,8 @@ export class EditMappingComponent implements OnInit {
 				this.targetTerminologyVersion = results.destinationTerminologyVersion;
 				this.ruleBased = results.ruleBased;
 				this.projectRelations = results.mapRelations || [];
-				const that = this;
 				if (this.projectRelations.length > 0) {
-					this.targetRelations = this.projectRelations
-						.filter(function (res) {
-							return res.allowableForNullTarget === false;
-						})
-						.map(function (res) {
-							return that.titleCaseWord(res.name);
-						});
-
-					this.noTargetRelations = this.projectRelations
-						.filter(function (res) {
-							return res.allowableForNullTarget === true;
-						})
-						.map(function (res) {
-							return that.titleCaseWord(res.name);
-						});
-
-					this.mapRelations = this.projectRelations.map((res) => {
-						return this.titleCaseWord(res.name);
-					});
+					this.buildProjectRelationLists();
 				}
 				this.mapAdvices = results.mapAdvices || [];
 				if (this.mapAdvices.length > 0) {
@@ -339,6 +320,34 @@ export class EditMappingComponent implements OnInit {
 	titleCaseWord(word: string) {
 		if (!word) return word;
 		return word[0].toUpperCase() + word.substr(1).toLowerCase();
+	}
+
+	buildProjectRelationLists() {
+		if (this.projectRelations.length === 1) {
+			const relationName = this.titleCaseWord(this.projectRelations[0].name);
+			this.targetRelations = [relationName];
+			this.noTargetRelations = [relationName];
+		} else {
+			this.targetRelations = this.projectRelations
+				.filter((res) => res.allowableForNullTarget === false)
+				.map((res) => this.titleCaseWord(res.name));
+			this.noTargetRelations = this.projectRelations
+				.filter((res) => res.allowableForNullTarget === true)
+				.map((res) => this.titleCaseWord(res.name));
+		}
+		this.mapRelations = this.projectRelations.map((res) => this.titleCaseWord(res.name));
+	}
+
+	getDefaultRelationship(forNullTarget: boolean): string {
+		if (this.projectRelations.length === 1) {
+			return this.titleCaseWord(this.projectRelations[0].name);
+		}
+		for (let r = 0; r < this.projectRelations.length; r++) {
+			if (this.projectRelations[r].allowableForNullTarget === forNullTarget) {
+				return this.titleCaseWord(this.projectRelations[r].name);
+			}
+		}
+		return '';
 	}
 
 	getModuleLanguageIcon(moduleId: string) {
@@ -667,13 +676,7 @@ export class EditMappingComponent implements OnInit {
 		if (!this.ruleBased) {
 			defaultRule = 'TRUE';
 		}
-		let defaultRelationship = '';
-		for (let r = 0; r < this.projectRelations.length; r++) {
-			if (this.projectRelations[r].allowableForNullTarget === true) {
-				defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
-				break;
-			}
-		}
+		const defaultRelationship = this.getDefaultRelationship(true);
 		this.mapsetData[0].mapEntries.forEach((data) => {
 			if (data.uuid === this.selectedTarget.id) {
 				data.toCode = '';
@@ -705,15 +708,7 @@ export class EditMappingComponent implements OnInit {
 		if (!this.ruleBased) {
 			defaultRule = 'TRUE';
 		}
-		let defaultRelationship = '';
-		if (this.projectRelations.length > 0) {
-			for (let r = 0; r < this.projectRelations.length; r++) {
-				if (this.projectRelations[r].allowableForNullTarget === true) {
-					defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
-					break;
-				}
-			}
-		}
+		const defaultRelationship = this.getDefaultRelationship(true);
 		const newMapEntry = {
 			active: true,
 			additionalMapEntryInfos: [],
@@ -786,13 +781,7 @@ export class EditMappingComponent implements OnInit {
 		if (!this.ruleBased) {
 			defaultRule = 'TRUE';
 		}
-		let defaultRelationship = '';
-		for (let r = 0; r < this.projectRelations.length; r++) {
-			if (this.projectRelations[r].allowableForNullTarget === false) {
-				defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
-				break;
-			}
-		}
+		const defaultRelationship = this.getDefaultRelationship(false);
 		if (this.selectedTarget.id === '') {
 			let nextPriorityNum = 1;
 			for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
