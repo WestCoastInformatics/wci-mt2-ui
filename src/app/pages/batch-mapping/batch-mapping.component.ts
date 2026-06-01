@@ -693,7 +693,19 @@ export class BatchMappingComponent implements OnInit {
 				this.ruleOptions = this.ruleBased ? this.rulesFalse : this.rulesTrue;
 				this.projectRelations = results.mapRelations || [];
 				if (this.projectRelations.length > 0) {
-					this.buildProjectRelationLists();
+					if (this.projectRelations.length === 1) {
+						const relationName = this.titleCaseWord(this.projectRelations[0].name);
+						this.targetRelations = [relationName];
+						this.noTargetRelations = [relationName];
+					} else {
+						this.targetRelations = this.projectRelations
+							.filter((res) => res.allowableForNullTarget === false)
+							.map((res) => this.titleCaseWord(res.name));
+						this.noTargetRelations = this.projectRelations
+							.filter((res) => res.allowableForNullTarget === true)
+							.map((res) => this.titleCaseWord(res.name));
+					}
+					this.mapRelations = this.projectRelations.map((res) => this.titleCaseWord(res.name));
 				}
 				this.mapAdvices = results.mapAdvices || [];
 				if (this.mapAdvices.length > 0) {
@@ -714,22 +726,6 @@ export class BatchMappingComponent implements OnInit {
 	titleCaseWord(word: string) {
 		if (!word) return word;
 		return word[0].toUpperCase() + word.substr(1).toLowerCase();
-	}
-
-	buildProjectRelationLists() {
-		if (this.projectRelations.length === 1) {
-			const relationName = this.titleCaseWord(this.projectRelations[0].name);
-			this.targetRelations = [relationName];
-			this.noTargetRelations = [relationName];
-		} else {
-			this.targetRelations = this.projectRelations
-				.filter((res) => res.allowableForNullTarget === false)
-				.map((res) => this.titleCaseWord(res.name));
-			this.noTargetRelations = this.projectRelations
-				.filter((res) => res.allowableForNullTarget === true)
-				.map((res) => this.titleCaseWord(res.name));
-		}
-		this.mapRelations = this.projectRelations.map((res) => this.titleCaseWord(res.name));
 	}
 
 	getDefaultRelationship(forNullTarget: boolean): string {
