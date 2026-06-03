@@ -692,26 +692,20 @@ export class BatchMappingComponent implements OnInit {
 				this.ruleBased = results.ruleBased;
 				this.ruleOptions = this.ruleBased ? this.rulesFalse : this.rulesTrue;
 				this.projectRelations = results.mapRelations || [];
-				const that = this;
 				if (this.projectRelations.length > 0) {
-					this.targetRelations = this.projectRelations
-						.filter(function (res) {
-							return res.allowableForNullTarget === false;
-						})
-						.map(function (res) {
-							return that.titleCaseWord(res.name);
-						});
-					this.noTargetRelations = this.projectRelations
-						.filter(function (res) {
-							return res.allowableForNullTarget === true;
-						})
-						.map(function (res) {
-							return that.titleCaseWord(res.name);
-						});
-
-					this.mapRelations = this.projectRelations.map((res) => {
-						return this.titleCaseWord(res.name);
-					});
+					if (this.projectRelations.length === 1) {
+						const relationName = this.titleCaseWord(this.projectRelations[0].name);
+						this.targetRelations = [relationName];
+						this.noTargetRelations = [relationName];
+					} else {
+						this.targetRelations = this.projectRelations
+							.filter((res) => res.allowableForNullTarget === false)
+							.map((res) => this.titleCaseWord(res.name));
+						this.noTargetRelations = this.projectRelations
+							.filter((res) => res.allowableForNullTarget === true)
+							.map((res) => this.titleCaseWord(res.name));
+					}
+					this.mapRelations = this.projectRelations.map((res) => this.titleCaseWord(res.name));
 				}
 				this.mapAdvices = results.mapAdvices || [];
 				if (this.mapAdvices.length > 0) {
@@ -732,6 +726,18 @@ export class BatchMappingComponent implements OnInit {
 	titleCaseWord(word: string) {
 		if (!word) return word;
 		return word[0].toUpperCase() + word.substr(1).toLowerCase();
+	}
+
+	getDefaultRelationship(forNullTarget: boolean): string {
+		if (this.projectRelations.length === 1) {
+			return this.titleCaseWord(this.projectRelations[0].name);
+		}
+		for (let r = 0; r < this.projectRelations.length; r++) {
+			if (this.projectRelations[r].allowableForNullTarget === forNullTarget) {
+				return this.titleCaseWord(this.projectRelations[r].name);
+			}
+		}
+		return '';
 	}
 
 	clearTargetInput() {
@@ -1132,13 +1138,7 @@ export class BatchMappingComponent implements OnInit {
 		if (!this.ruleBased) {
 			defaultRule = 'TRUE';
 		}
-		let defaultRelationship = '';
-		for (let r = 0; r < this.projectRelations.length; r++) {
-			if (this.projectRelations[r].allowableForNullTarget === true) {
-				defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
-				break;
-			}
-		}
+		const defaultRelationship = this.getDefaultRelationship(true);
 
 		const newMapEntry = {
 			feedback: true,
@@ -1220,13 +1220,7 @@ export class BatchMappingComponent implements OnInit {
 			if (!this.ruleBased) {
 				defaultRule = 'TRUE';
 			}
-			let defaultRelationship = '';
-			for (let r = 0; r < this.projectRelations.length; r++) {
-				if (this.projectRelations[r].allowableForNullTarget === true) {
-					defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
-					break;
-				}
-			}
+			const defaultRelationship = this.getDefaultRelationship(true);
 			const newMapEntry = {
 				active: true,
 				additionalMapEntryInfos: [],
@@ -1460,13 +1454,7 @@ export class BatchMappingComponent implements OnInit {
 		if (!this.ruleBased) {
 			defaultRule = 'TRUE';
 		}
-		let defaultRelationship = '';
-		for (let r = 0; r < this.projectRelations.length; r++) {
-			if (this.projectRelations[r].allowableForNullTarget === true) {
-				defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
-				break;
-			}
-		}
+		const defaultRelationship = this.getDefaultRelationship(true);
 		this.mapsetData.forEach((data) => {
 			if (data.uuid === this.selectedTarget) {
 				data.mapEntries.toCode = '[Empty Target]';
@@ -1508,13 +1496,7 @@ export class BatchMappingComponent implements OnInit {
 		if (!this.ruleBased) {
 			defaultRule = 'TRUE';
 		}
-		let defaultRelationship = '';
-		for (let r = 0; r < this.projectRelations.length; r++) {
-			if (this.projectRelations[r].allowableForNullTarget === false) {
-				defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
-				break;
-			}
-		}
+		const defaultRelationship = this.getDefaultRelationship(false);
 		this.mapsetData.forEach((data) => {
 			if (data.uuid === this.selectedTarget) {
 				const targetValue = value;
@@ -1664,13 +1646,6 @@ export class BatchMappingComponent implements OnInit {
 		let defaultRule = '';
 		if (!this.ruleBased) {
 			defaultRule = 'TRUE';
-		}
-		let defaultRelationship = '';
-		for (let r = 0; r < this.projectRelations.length; r++) {
-			if (this.projectRelations[r].allowableForNullTarget === false) {
-				defaultRelationship = this.titleCaseWord(this.projectRelations[r].name);
-				break;
-			}
 		}
 		switch (action) {
 			case 'add':
