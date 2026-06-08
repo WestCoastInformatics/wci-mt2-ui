@@ -265,8 +265,10 @@ export class MapsetRecordsComponent implements OnInit {
 		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
 			// results is now an array of MapSet versions (PUBLISHED + IN_DEVELOPMENT)
 			this.mapsetVersions = Array.isArray(results) ? results : [results];
-
 			this.updateVersionDropdown();
+
+			const storedPageSize = localStorage.getItem(this.mapsetGridCurrentPageSize);
+			this.refsetGridPaging.pageSize = storedPageSize ? Number(JSON.parse(storedPageSize)) : 10;
 
 			this.columnDefs = [
 				{
@@ -840,13 +842,6 @@ export class MapsetRecordsComponent implements OnInit {
 						}
 					}
 
-					if (this.refsetGridPaging.pageSize === undefined) {
-						const storedPageSize = localStorage.getItem(this.mapsetGridCurrentPageSize);
-						this.refsetGridPaging.pageSize = storedPageSize ? Number(JSON.parse(storedPageSize)) : 10;
-					}
-					if (this.refsetGridPaging.pageSize === undefined) {
-						this.refsetGridPaging.pageSize = 10;
-					}
 					const restParams: any = {
 						offset: startRow,
 						limit: this.refsetGridPaging.pageSize,
@@ -1287,25 +1282,9 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	checkStored() {
-		if (this.mapsetGridCurrentPageSize !== undefined && this.mapsetGridCurrentPageNum !== undefined) {
-			if (localStorage.getItem(this.mapsetGridCurrentPageSize) !== null) {
-				this.refsetGridApi.setGridOption('paginationPageSize', Number(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageSize))));
-			}
-			setTimeout(() => {
-				if (localStorage.getItem(this.mapsetGridCurrentPageNum) !== null) {
-					this.goToPage(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageNum)));
-				}
-			}, 5);
-		} else {
-			if (this.mapsetGridCurrentPageSize !== undefined) {
-				if (localStorage.getItem(this.mapsetGridCurrentPageSize) !== null) {
-					this.setPageSize(Number(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageSize))));
-				}
-			}
-			if (this.mapsetGridCurrentPageNum !== undefined) {
-				if (localStorage.getItem(this.mapsetGridCurrentPageNum) !== null) {
-					this.goToPage(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageNum)));
-				}
+		if (this.mapsetGridCurrentPageNum !== undefined) {
+			if (localStorage.getItem(this.mapsetGridCurrentPageNum) !== null) {
+				this.goToPage(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageNum)));
 			}
 		}
 	}
