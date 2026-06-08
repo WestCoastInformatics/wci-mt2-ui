@@ -196,8 +196,12 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + `refset/${refsetId}/artifacts${params}`);
 	}
 
-	getWorkflowHistory(refsetId: string, params: any) {
-		return this.get(this.contextPath + `refset/${refsetId}/workflowHistory${params}`);
+	getWorkflowHistory(mapsetId: string, params): Observable<any> {
+		return this.get(
+			this.contextPath + `mapset/${mapsetId}/workflowHistory?limit=` + params.limit + `&offset=` + params.offset + `&filter=` + params.filter,
+			'',
+			false,
+		);
 	}
 
 	convertRefsetToExtensional(refsetId: string) {
