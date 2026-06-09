@@ -11,13 +11,19 @@
 				<app-workflow-status
 					[workflowStatus]="mapsetInfo.workflowStatus !== null ? mapsetInfo.workflowStatus : mapsetInfo.versionStatus"
 					class="col-1"
+					[hidden]="waitingForResponse"
 				>
 				</app-workflow-status>
 			</div>
 
 			<!-- <div class="col-md-2 page-title">{{ mapsetInfo.workflowStatus }}</div> -->
 			<div class="col-md-2 d-flex header-menu">
-				<mat-form-field floatLabel="never" class="directoryViewFilterField format-version-drop-down" appearance="fill">
+				<mat-form-field
+					floatLabel="never"
+					class="directoryViewFilterField format-version-drop-down"
+					appearance="fill"
+					[hidden]="waitingForResponse"
+				>
 					<mat-label></mat-label>
 					<mat-select
 						title="Choose Version"
@@ -37,6 +43,7 @@
 					class="library-app-refset-download mr-15"
 					(click)="openDownloadModal(downloadModal)"
 					[disabled]="!selectedVersion || numOfMembers === 0"
+					[hidden]="waitingForResponse"
 				>
 					<div class="mat-button-wrapper mapset-download-icon">
 						<i class="fa fa-download fa-lg" title="Download Map Set" aria-label="Download Map Set"></i>
@@ -44,20 +51,24 @@
 				</button>
 			</div>
 			<div class="col" *ngIf="mapsetInfo.workflowStatus === 'IN_UPGRADE'">
-				<button (click)="goToMapsInactivesPage(mapsetCode)" class="library-app-refset-notes mr-20 no-padding">
+				<button (click)="goToMapsInactivesPage(mapsetCode)" class="library-app-refset-notes mr-20 no-padding" [hidden]="waitingForResponse">
 					<img src="/assets/no-preview-icon.svg" title="Manage Inactives" aria-label="Manage Inactives" class="no-preview-icon" />
 				</button>
 			</div>
 			<div class="col">
-				<button (click)="openToBeDevelopedModal(toBeDevelopedModal)" class="library-app-refset-notes mr-20 no-padding">
+				<button
+					(click)="openToBeDevelopedModal(toBeDevelopedModal)"
+					class="library-app-refset-notes mr-20 no-padding"
+					[hidden]="waitingForResponse"
+				>
 					<img src="/assets/comment-dots-regular.svg" title="Add Feedback" aria-label="Add Feedback" class="discussion-icon" />
 				</button>
 			</div>
 		</div>
 	</div>
 </div>
-<div [hidden]="loaded" class="section-loading">Loading...</div>
-<div class="row edit-actions" *ngIf="loaded">
+<div [hidden]="loaded || waitingForResponse" class="section-loading">Loading...</div>
+<div class="row edit-actions" *ngIf="loaded && !waitingForResponse">
 	<div class="col"></div>
 	<div class="col-md-auto no-margin-top">
 		<span class="date-column">
@@ -767,7 +778,13 @@
 	<ng-template #workFlowModal let-modal>
 		<div class="modal-header rt2-modal-header">
 			<div class="modal-title">{{ workFlowStatus.label }}</div>
-			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeWorkFlowModal()">
+			<button
+				type="button"
+				class="close dialog-close-x close-icon-font"
+				title="Close"
+				aria-label="Close"
+				(click)="!waitingForResponse ? closeWorkFlowModal() : null"
+			>
 				<span aria-hidden="true">&times;</span>
 			</button>
 		</div>
@@ -783,8 +800,13 @@
 			></textarea>
 		</div>
 		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeWorkFlowModal()">Cancel</button>
-			<button type="button" title="Confirm {{ workFlowStatus.label }}" class="rt2-btn rt2-action-btn" (click)="changeWorkFlowStatus()">
+			<button type="button" class="rt2-btn rt2-action-btn" (click)="!waitingForResponse ? closeWorkFlowModal() : null">Cancel</button>
+			<button
+				type="button"
+				title="Confirm {{ workFlowStatus.label }}"
+				class="rt2-btn rt2-action-btn"
+				(click)="!waitingForResponse ? changeWorkFlowStatus() : null"
+			>
 				Confirm
 			</button>
 		</div>

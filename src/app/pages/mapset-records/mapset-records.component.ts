@@ -133,6 +133,7 @@ export class MapsetRecordsComponent implements OnInit {
 	currentRowColor = 0;
 	downloadTitle = 'Download';
 	downloadType = 'all';
+	waitingForResponse = false;
 	workFlowStatus = { label: '', value: '', message: '', notes: '' };
 	workFlowNotesFC = new FormControl('');
 	batchListFC = new FormControl('');
@@ -545,6 +546,19 @@ export class MapsetRecordsComponent implements OnInit {
 	setMapsetInfo() {
 		localStorage.setItem('mapsetVersion', JSON.stringify(this.selectedVersion));
 		this.breadcrumbService.setBreadcrumbs([{ path: '/library', label: 'Library' }, { label: this.mapsetInfo.refSetName }]);
+
+		this.showEdit = true;
+		this.editStatus = true;
+		this.showUpgrade = true;
+		this.upgradeStatus = true;
+		this.showReview = true;
+		this.requestStatus = true;
+		this.reviewStatus = false;
+		this.showPublish = true;
+		this.publishStatus = true;
+		this.startPublish = false;
+		this.finishPublish = false;
+
 		switch (this.mapsetInfo.workflowStatus) {
 			case 'READY_FOR_EDIT':
 				this.editStatus = true;
@@ -1385,12 +1399,14 @@ export class MapsetRecordsComponent implements OnInit {
 		this.workFlowStatus = { label: '', value: '', message: '', notes: '' };
 		this.workFlowNotesFC.setValue('');
 		this.workFlowNotesFC.reset();
+		this.waitingForResponse = false;
 	}
 
 	changeWorkFlowStatus() {
 		if (this.workFlowNotesFC.dirty) {
 			this.workFlowStatus.notes = this.workFlowNotesFC.value;
 		}
+		this.waitingForResponse = true;
 		this.refsetService.setMapsetWorkflowStatus(this.mapsetInfo.id, this.workFlowStatus.value, this.workFlowStatus.notes).subscribe((response) => {
 			if (response) {
 				this.mapsetInfo = response;
