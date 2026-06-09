@@ -42,12 +42,14 @@ export class MapsetRecordsComponent implements OnInit {
 	selectedVersion: any;
 	refsetGridApi: any;
 	columnDefs = [];
+	historyColumnDefs = [];
 	refsetGridColumns = [
 		{ name: 'information', show: true },
 		{ name: 'refsetId', show: true },
 	];
 	rowSelection = 'multiple';
 	refsetGridOptions: any;
+	historyGridOptions: any;
 	refsetGridPaging = {
 		pageSize: 10,
 		pageSizeOptions: [10, 25, 50, 100],
@@ -59,6 +61,7 @@ export class MapsetRecordsComponent implements OnInit {
 	refsetGridLastFilter = '';
 	refsetGridLastSort = '';
 	showTable = false;
+	showHistoryTable = false;
 	mapsetData: any;
 	dialog: DialogService;
 	versionStatuses = [];
@@ -71,6 +74,7 @@ export class MapsetRecordsComponent implements OnInit {
 	toggleDropdown = false;
 	directUrl: string;
 	numOfMembers: any;
+	numOfRecords: any;
 	maxTotal: any;
 	disableChannel = new BroadcastChannel('disable-button-channel');
 	originalGridParams: any;
@@ -100,10 +104,24 @@ export class MapsetRecordsComponent implements OnInit {
 	types = [];
 	selectExportMetadata = false;
 	loaded = false;
+	historyLoaded = false;
 	showPaging = false;
 	datasource: any;
 	recordRows = [];
 	mapSetSubscription: Subscription;
+	isNewHistoryPageSize = false;
+	historyGridApi: any;
+	historyGridPaging = {
+		pageSize: 1000,
+		pageSizeOptions: [10, 25, 50, 100],
+		totalKnown: false,
+		totalRows: null,
+		manualStateRefresh: Boolean(true),
+	};
+	historySubscription: Subscription;
+	mapsetHistoryData: any;
+	numOfHistory: any;
+	showHistoryPaging = false;
 	isNewPageSize = false;
 	internationalId = '449080006';
 	mapsetRecordsColumnStorage = 'mapsetRecordsColumnStorage';
@@ -247,8 +265,10 @@ export class MapsetRecordsComponent implements OnInit {
 		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
 			// results is now an array of MapSet versions (PUBLISHED + IN_DEVELOPMENT)
 			this.mapsetVersions = Array.isArray(results) ? results : [results];
-
 			this.updateVersionDropdown();
+
+			const storedPageSize = localStorage.getItem(this.mapsetGridCurrentPageSize);
+			this.refsetGridPaging.pageSize = storedPageSize ? Number(JSON.parse(storedPageSize)) : 10;
 
 			this.columnDefs = [
 				{
@@ -525,7 +545,6 @@ export class MapsetRecordsComponent implements OnInit {
 	setMapsetInfo() {
 		localStorage.setItem('mapsetVersion', JSON.stringify(this.selectedVersion));
 		this.breadcrumbService.setBreadcrumbs([{ path: '/library', label: 'Library' }, { label: this.mapsetInfo.refSetName }]);
-
 		switch (this.mapsetInfo.workflowStatus) {
 			case 'READY_FOR_EDIT':
 				this.editStatus = true;
@@ -633,6 +652,110 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 	}
 
+	firstLoadHistory() {
+		this.historyColumnDefs = [
+			{
+				field: 'modified',
+				tooltipValueGetter: UiUtility.gridDateValueGetter,
+				headerName: 'Last Modified',
+				cellClass: 'rt2-directory-column-modified-date',
+				minWidth: 125,
+				flex: 1,
+				resizable: true,
+				valueGetter: UiUtility.gridDateValueGetter,
+				floatingFilterComponent: DateTextFilterComponent,
+				floatingFilterComponentParams: { suppressFilterButton: true },
+				unSortIcon: true,
+			},
+			{
+				field: 'workflowStatus',
+				tooltipField: 'workflowStatus',
+				headerName: 'Workflow Status',
+				cellClass: 'rt2-directory-column-version-status',
+				minWidth: 125,
+				flex: 1,
+				resizable: true,
+				valueGetter: this.workflowStatusValueGetter,
+				unSortIcon: true,
+			},
+			{
+				field: 'notes',
+				tooltipField: 'notes',
+				headerName: 'Notes',
+				headerTooltip: 'Notes',
+				flex: 2,
+				minWidth: 165,
+				resizable: false,
+				sortable: false,
+				suppressSorting: true,
+			},
+		];
+		this.historyGridOptions = {
+			context: { componentParent: this },
+			pagination: true,
+			angularCompileHeaders: true,
+			suppressColumnVirtualisation: true,
+			suppressPaginationPanel: true,
+			rowModelType: 'infinite',
+			suppressScrollOnNewData: true,
+			suppressColumnMoveAnimation: true,
+			suppressDragLeaveHidesColumns: true,
+			debounceVerticalScrollbar: true,
+			animateRows: false,
+			debug: false,
+			cacheOverflowSize: 2,
+			maxBlocksInCache: 2,
+			maxConcurrentDatasourceRequests: 2,
+			serverSideEnableClientSideSort: true,
+			cacheBlockSize: this.historyGridPaging.pageSize,
+			paginationPageSize: this.historyGridPaging.pageSize,
+			paginationPageSizeSelector: this.historyGridPaging.pageSizeOptions,
+			rowSelection: 'single',
+			datasource: this.createHistorySource(),
+			enableCellTextSelection: true,
+			onGridReady: this.onHistoryReady,
+			onPaginationChanged: (event: any) => this.onHistoryPaginationChanged(event),
+			domLayout: 'autoHeight',
+			frameworkComponents: {
+				templateRenderer: TemplateRendererComponent,
+			},
+			defaultColDef: {
+				sortable: false,
+				filter: false,
+				sortingOrder: ['asc', 'desc'],
+				floatingFilter: false,
+				suppressMenu: true,
+				resizable: true,
+				suppressSorting: true,
+				suppressMovable: true,
+			},
+			enableBrowserTooltips: true,
+			rowClassRules: {
+				refset_tool_grid_inactive_row: function (params) {
+					let inactivatedRow = false;
+
+					if (params.data) {
+						inactivatedRow = params.data.active == false;
+					}
+
+					return inactivatedRow;
+				},
+			},
+		};
+		this.showHistoryTable = true;
+	}
+
+	workflowStatusValueGetter = function (params) {
+		if (!CodeUtility.hasValue(params?.data)) {
+			return '';
+		}
+		return params.data.workflowStatus
+			.toLowerCase()
+			.split('_')
+			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+			.join(' ');
+	};
+
 	dateFormatter(val): any {
 		return UiUtility.dateFormatter(val);
 	}
@@ -648,7 +771,6 @@ export class MapsetRecordsComponent implements OnInit {
 			this.currentRowColor = 0;
 		}
 		const rowStyle = this.rowColors[this.currentRowColor];
-
 		return rowStyle;
 	}
 
@@ -720,13 +842,6 @@ export class MapsetRecordsComponent implements OnInit {
 						}
 					}
 
-					if (this.refsetGridPaging.pageSize === undefined) {
-						const storedPageSize = localStorage.getItem(this.mapsetGridCurrentPageSize);
-						this.refsetGridPaging.pageSize = storedPageSize ? Number(JSON.parse(storedPageSize)) : 10;
-					}
-					if (this.refsetGridPaging.pageSize === undefined) {
-						this.refsetGridPaging.pageSize = 10;
-					}
 					const restParams: any = {
 						offset: startRow,
 						limit: this.refsetGridPaging.pageSize,
@@ -810,7 +925,7 @@ export class MapsetRecordsComponent implements OnInit {
 
 							setTimeout(() => {
 								const lastIndexH = document.getElementsByClassName('ag-header').length - 1;
-								const childH = document.getElementsByClassName('ag-header')[lastIndexH];
+								const childH = document.getElementsByClassName('ag-header')[0];
 								document.getElementById('directoryHeader').appendChild(childH);
 								const lastIndexP = document.getElementsByClassName('ag-paging-panel').length - 1;
 								const childP = document.getElementsByClassName('ag-paging-panel')[lastIndexP];
@@ -1167,25 +1282,9 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	checkStored() {
-		if (this.mapsetGridCurrentPageSize !== undefined && this.mapsetGridCurrentPageNum !== undefined) {
-			if (localStorage.getItem(this.mapsetGridCurrentPageSize) !== null) {
-				this.refsetGridApi.setGridOption('paginationPageSize', Number(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageSize))));
-			}
-			setTimeout(() => {
-				if (localStorage.getItem(this.mapsetGridCurrentPageNum) !== null) {
-					this.goToPage(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageNum)));
-				}
-			}, 5);
-		} else {
-			if (this.mapsetGridCurrentPageSize !== undefined) {
-				if (localStorage.getItem(this.mapsetGridCurrentPageSize) !== null) {
-					this.setPageSize(Number(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageSize))));
-				}
-			}
-			if (this.mapsetGridCurrentPageNum !== undefined) {
-				if (localStorage.getItem(this.mapsetGridCurrentPageNum) !== null) {
-					this.goToPage(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageNum)));
-				}
+		if (this.mapsetGridCurrentPageNum !== undefined) {
+			if (localStorage.getItem(this.mapsetGridCurrentPageNum) !== null) {
+				this.goToPage(JSON.parse(localStorage.getItem(this.mapsetGridCurrentPageNum)));
 			}
 		}
 	}
@@ -1709,6 +1808,10 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	toggleSectionView(section: string) {
+		if (section === 'showHistorySection' && !this.historyLoaded) {
+			this.firstLoadHistory();
+		}
+
 		if (this[section]) {
 			this[section] = false;
 		} else {
@@ -1746,7 +1849,114 @@ export class MapsetRecordsComponent implements OnInit {
 			document.getElementsByClassName('metadata-section')[0]?.setAttribute('style', `max-height: ${sectionsMaxHeight}px;`);
 		}
 		if (this.showHistorySection) {
-			document.getElementsByClassName('history-section')[0]?.setAttribute('style', `max-height: ${sectionsMinHeight}px;`);
+		}
+	}
+
+	onHistoryReady = (gridReadyParams) => {
+		if (gridReadyParams?.api && gridReadyParams.type === 'gridReady') {
+			this.historyGridApi = gridReadyParams.api;
+		}
+		if (this.historySubscription) {
+			this.historySubscription.unsubscribe();
+		}
+	};
+
+	createHistorySource() {
+		return {
+			rowCount: null,
+			getRows: (rowParams) => {
+				const startRow = rowParams.startRow;
+				const endRow = rowParams.endRow;
+				const sortModel = rowParams.sortModel;
+				let query = '';
+				this.historyGridApi.showLoadingOverlay();
+				if (this.isNewHistoryPageSize) {
+					rowParams.failCallback();
+				} else {
+					this.historyLoaded = false;
+					let limit = endRow - startRow;
+
+					if (this.numOfMembers > 0) {
+						if (startRow + limit > this.numOfMembers) {
+							limit = this.numOfMembers - startRow;
+						}
+					}
+
+					if (this.historyGridPaging.pageSize === undefined) {
+						this.historyGridPaging.pageSize = 10;
+					}
+					const restParams: any = {
+						offset: startRow,
+						limit: this.historyGridPaging.pageSize,
+					};
+
+					if (CodeUtility.hasValue(query)) {
+						query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
+						restParams.filter = query;
+					} else {
+						restParams.filter = '';
+					}
+					this.historySubscription = this.refsetService.getWorkflowHistory(this.mapsetInfo.id, restParams).subscribe({
+						next: (results) => {
+							this.changeDetectorRef.detectChanges();
+							this.historyLoaded = true;
+							this.mapsetHistoryData = results.items;
+							this.numOfHistory = results.total;
+							this.numOfRecords = results.total;
+							this.showHistoryPaging = true;
+							if (this.mapsetHistoryData?.length > 0) {
+								this.showHistoryPaging = true;
+								this.historyGridApi.hideOverlay();
+								this.paginationPages = Math.ceil(this.numOfHistory / this.historyGridPaging.pageSize)
+									? this.pagerService.getPager(
+											Math.ceil(this.numOfHistory / this.historyGridPaging.pageSize),
+											this.historyGridApi.paginationGetCurrentPage(),
+											true,
+										)
+									: {};
+								this.paginationPages.currentPage = this.getCurrentPage();
+								const lastRow = this.numOfHistory;
+								rowParams.successCallback(this.mapsetHistoryData, lastRow);
+							} else {
+								this.showHistoryPaging = false;
+								this.historyGridApi.showNoRowsOverlay();
+								rowParams.successCallback([], 0);
+							}
+							this.historyGridPaging.manualStateRefresh = Boolean(true);
+							this.historySubscription.unsubscribe();
+						},
+						error: (error) => {
+							this.historyLoaded = true;
+							this.historyGridApi.showNoRowsOverlay();
+							rowParams.successCallback([], 0);
+						},
+					});
+				}
+			},
+		};
+	}
+
+	/*Pagination functions */
+	onHistoryPaginationChanged(event: PaginationChangedEvent) {
+		if (this.historyGridApi) {
+			this.isNewHistoryPageSize = this.historyGridPaging.pageSize !== this.historyGridApi.paginationGetPageSize();
+			if (this.isNewHistoryPageSize) {
+				this.historyLoaded = false;
+			}
+			this.historyGridPaging.pageSize = this.historyGridApi.paginationGetPageSize();
+			this.historyGridApi.updateGridOptions({
+				paginationPageSize: this.historyGridPaging.pageSize,
+				cacheBlockSize: this.historyGridPaging.pageSize,
+			});
+		}
+	}
+
+	setHistoryPageSize(size: number) {
+		if (size !== this.historyGridPaging.pageSize) {
+			this.goToPage(0);
+			setTimeout(() => {
+				this.historyGridApi.setGridOption('paginationPageSize', size);
+			}, 50);
 		}
 	}
 }

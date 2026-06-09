@@ -586,8 +586,24 @@
 				class="caret-down-solid"
 			/>
 		</div>
-		<div [hidden]="!showHistorySection" class="section-background history-section overflow">
-			<div class="d-flex dropdown-group">This feature is not yet available. Please check back later.</div>
+
+		<div [hidden]="!showHistorySection" class="history-section">
+			<div [hidden]="!historyLoaded" *ngIf="numOfRecords === 0" class="status-no-results">No Results to Show</div>
+			<div class="content-wrapper">
+				<div #gridWrapperHistory class="grid-wrapper-history">
+					<ag-grid-angular
+						*ngIf="showHistoryTable"
+						id="historyTable"
+						#historyTable
+						class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter"
+						style="width: 100%; height: 100%"
+						[columnDefs]="historyColumnDefs"
+						[suppressRowTransform]="true"
+						[gridOptions]="historyGridOptions"
+					>
+					</ag-grid-angular>
+				</div>
+			</div>
 		</div>
 	</div>
 
