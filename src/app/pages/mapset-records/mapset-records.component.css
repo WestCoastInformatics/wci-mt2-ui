@@ -56,7 +56,8 @@
 	height: 100%;
 }
 
-.grid-wrapper {
+.grid-wrapper,
+.grid-wrapper-history {
 	flex: 1 1 0px;
 	width: 100%;
 	overflow: auto;
@@ -485,6 +486,17 @@
 	margin-left: 11px;
 	padding-right: 10px;
 	padding-left: 10px;
+}
+
+.history-section {
+	height: 100vh;
+	min-height: 40vh;
+	max-height: 55vh;
+	margin: 10px;
+}
+
+.grid-wrapper-history {
+	max-height: 55vh;
 }
 
 .metadata-group {
