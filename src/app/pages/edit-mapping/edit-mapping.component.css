@@ -13,8 +13,8 @@
 	box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.35);
 	line-height: 16px;
 	font-size: 13px;
-	min-width: 300px;
-	max-width: 300px;
+	min-width: 400px;
+	max-width: 400px;
 	gap: 0 !important;
 	ul {
 		margin-left: 0 !important;
@@ -51,7 +51,7 @@
 }
 
 .advice-selection {
-	width: 250px;
+	width: 350px;
 	margin-left: 20px !important;
 }
 
@@ -148,6 +148,19 @@
 	display: inline-block;
 }
 
+.line-clamp-2 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+
+.advice-line {
+	line-height: 11px;
+	font-size: 11px;
+}
+
 .advice-name-wrap {
 	max-width: 100%;
 	width: 300px;
@@ -172,6 +185,16 @@
 	padding: 0;
 	line-height: 25px;
 	display: flex;
+}
+
+.advice-item {
+	display: -webkit-box;
+}
+
+.advice-selection-box {
+	padding-left: 2px;
+	padding-right: 2px;
+	width: 350px;
 }
 
 .target-selection-box {
@@ -489,6 +512,7 @@
 
 .section-background {
 	overflow-y: auto;
+	overflow-x: hidden;
 	padding: 0 0 10px 10px;
 }
 
@@ -717,6 +741,13 @@
 	margin-top: 15px;
 }
 
+.advice-item:hover {
+	color: #2169e8;
+}
+.code-color {
+	color: #2169e8;
+}
+
 .code-link,
 .link-icon {
 	color: #2169e8;
@@ -793,6 +824,22 @@
 	margin-right: 5px;
 	vertical-align: middle;
 	margin-bottom: 2.5px;
+}
+
+.border-bottom {
+	border-bottom: 1px solid #aaa;
+}
+
+.no-list {
+	list-style: none;
+	margin-left: -12px;
+}
+
+.advice-icon-sm {
+	font-size: 9px;
+	margin-right: 2px;
+	vertical-align: middle;
+	margin-bottom: 5.5px;
 }
 
 .info-message {

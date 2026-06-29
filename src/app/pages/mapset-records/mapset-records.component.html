@@ -692,7 +692,9 @@
 	<ng-template #directoryAdviceSection let-params>
 		<div class="advice-column" [hidden]="getValueLength(params) < 1">
 			<div *ngFor="let item of getValueList(params)">
-				<span title="{{ item }}" [hidden]="item.indexOf('ALWAYS') > -1">{{ item }}</span>
+				<span [hidden]="item.indexOf('ALWAYS') > -1">
+					<i class="fa-solid fa-star-of-life advice-icon-sm"></i><span title="{{ item }}">{{ item }}</span></span
+				>
 			</div>
 		</div>
 		<div [hidden]="getValueLength(params) !== 0">---</div>

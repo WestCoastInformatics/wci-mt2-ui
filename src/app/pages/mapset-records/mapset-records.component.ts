@@ -1277,7 +1277,8 @@ export class MapsetRecordsComponent implements OnInit {
 			this.goToPage(0);
 			setTimeout(() => {
 				this.refsetGridApi.setGridOption('paginationPageSize', size);
-			}, 50);
+				this.refsetGridApi.redrawRows();
+			}, 150);
 		}
 	}
 

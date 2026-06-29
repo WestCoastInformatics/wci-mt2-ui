@@ -347,12 +347,12 @@
 						/>
 						<ul>
 							<li *ngFor="let advice of popover_updateAdviceList" class="advice-list-item" [hidden]="advice.indexOf('ALWAYS') > -1">
-								<span title="{{ advice }}" class="code-link">{{ advice }}</span
+								<span title="{{ advice }}" class="code-color">{{ advice }}</span
 								><span title="Remove advice" class="clear-search adjust-clear" (click)="removeAdviceFromList(advice)">&#10005;</span>
 							</li>
 						</ul>
 						<div class="target-selection advice-selection" [hidden]="popover_addAdviceList.length === 0">
-							<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box target-selection-box-advice">
+							<mat-form-field appearance="fill" floatLabel="never" class="advice-selection-box target-selection-box-advice">
 								<mat-select
 									#selectAdvice
 									title="Select advice to add"
@@ -364,8 +364,11 @@
 										*ngFor="let advice of popover_addAdviceList"
 										value="{{ advice }}"
 										title="{{ advice }}"
-										class="no-checkbox"
-										>{{ advice }}</mat-option
+										class="no-checkbox border-bottom"
+										><span class="advice-item">
+											<i class="fa-solid fa-star-of-life advice-icon-sm"></i>
+											<div class="line-clamp-2">{{ advice }}</div></span
+										></mat-option
 									>
 								</mat-select>
 							</mat-form-field>
@@ -862,8 +865,8 @@
 	<ng-template #targetAdviceSection let-params>
 		<div id="{{ 'popover_' + params.data.uuid }}">
 			<ul [hidden]="params.value.mapAdvices.length === 0" class="max-list">
-				<li *ngFor="let advice of params.value.mapAdvices; index as i" class="advice-line">
-					<span class="advice-name-wrap" title="{{ advice }}">{{ advice }}</span>
+				<li *ngFor="let advice of params.value.mapAdvices; index as i" class="advice-line no-list">
+					<i class="fa-solid fa-star-of-life advice-icon-sm"></i><span class="advice-name-wrap" title="{{ advice }}">{{ advice }}</span>
 				</li>
 
 				<li class="advice-line" [hidden]="params.value.mapAdvices.length === 0 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
