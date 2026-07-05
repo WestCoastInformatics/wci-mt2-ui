@@ -428,6 +428,18 @@
 	margin-bottom: 2.5px;
 }
 
+.no-list {
+	list-style: none;
+	margin-left: -12px;
+}
+
+.advice-icon-sm {
+	font-size: 9px;
+	margin-right: 2px;
+	vertical-align: middle;
+	margin-bottom: 5.5px;
+}
+
 .info-message {
 	font-size: 12px;
 	text-wrap: wrap;

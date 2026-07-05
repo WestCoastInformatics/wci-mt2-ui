@@ -254,12 +254,14 @@ export class EditMappingComponent implements OnInit {
 			this.mapsetInfo = mapsetVersions[0];
 			if (localStorage.getItem('mapsetVersion')) {
 				this.selectedVersion = JSON.parse(localStorage.getItem('mapsetVersion'));
-				this.mapsetInfo = mapsetVersions.filter((v) => {
+				const mapsetFound = mapsetVersions.filter((v) => {
 					const versionDate = v.versionDate || new Date();
 					const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
 					return mapsetVersionStatus === this.selectedVersion;
 				});
-				this.mapsetInfo = this.mapsetInfo[0];
+				if (mapsetFound.length > 0) {
+					this.mapsetInfo = mapsetFound[0];
+				}
 			}
 			this.getMapsetData();
 			this.getMapProject();

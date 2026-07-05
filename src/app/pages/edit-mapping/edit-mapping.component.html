@@ -911,12 +911,12 @@
 		/>
 		<ul>
 			<li *ngFor="let advice of entry.updateAdviceList" class="advice-list-item" [hidden]="advice.indexOf('ALWAYS') > -1">
-				<span title="{{ advice }}" class="code-link">{{ advice }}</span
+				<span title="{{ advice }}" class="code-color">{{ advice }}</span
 				><span title="Remove Advice" class="clear-search adjust-clear" (click)="removeAdviceFromList(entry.uuid, advice)">&#10005;</span>
 			</li>
 		</ul>
 		<div class="target-selection advice-selection" [hidden]="entry.addAdviceList?.length === 0">
-			<mat-form-field appearance="fill" floatLabel="never" class="target-selection-box">
+			<mat-form-field appearance="fill" floatLabel="never" class="advice-selection-box">
 				<mat-select
 					#selectAdvice
 					title="Select advice to add"
@@ -924,9 +924,12 @@
 					[(value)]="entry.adviceToAdd"
 					(selectionChange)="addAdviceToList(entry.uuid)"
 				>
-					<mat-option *ngFor="let advice of entry.addAdviceList" value="{{ advice }}" title="{{ advice }}" class="no-checkbox">{{
-						advice
-					}}</mat-option>
+					<mat-option *ngFor="let advice of entry.addAdviceList" value="{{ advice }}" title="{{ advice }}" class="no-checkbox border-bottom"
+						><span class="advice-item">
+							<i class="fa-solid fa-star-of-life advice-icon-sm"></i>
+							<div class="line-clamp-2">{{ advice }}</div></span
+						></mat-option
+					>
 				</mat-select>
 			</mat-form-field>
 		</div>
@@ -939,10 +942,10 @@
 	</div>
 	<div id="{{ 'popover_' + entry.uuid }}">
 		<ul [hidden]="entry.mapAdvices.length === 0">
-			<li *ngFor="let advice of entry.mapAdvices; index as i">
-				<span class="advice-name-wrap" title="{{ advice }}">{{ advice }}</span>
+			<li *ngFor="let advice of entry.mapAdvices; index as i" class="advice-line no-list">
+				<i class="fa-solid fa-star-of-life advice-icon-sm"></i><span class="advice-name-wrap" title="{{ advice }}">{{ advice }}</span>
 			</li>
-			<li [hidden]="mapAdvices.length === 0 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
+			<li class="advice-line" [hidden]="mapAdvices.length === 0 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
 				<span class="code-link" (click)="openPopover($event, entry.uuid)" title="Add/Edit Advice">Add/Edit Advice</span>
 			</li>
 		</ul>
