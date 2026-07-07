@@ -4,8 +4,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Setup
 
-* Install Node (<https://nodejs.org/en/download/>)
-* Run these commands in a command prompt from the root folder of the project to install the Angular CLI and then the project.  Review the log to identify vulnerabilities potentially related to older versions of libraries that require updating.
+- Install Node (<https://nodejs.org/en/download/>)
+- Run these commands in a command prompt from the root folder of the project to install the Angular CLI and then the project. Review the log to identify vulnerabilities potentially related to older versions of libraries that require updating.
 
 ```
 npm install -g @angular/cli
@@ -14,8 +14,8 @@ npm install
 
 There are some properties that need to be configured to the specific environment in:
 
-* /src/environments/environment.ts (for local installs)
-* /src/environments/environment.prod.ts (for server installs)
+- /src/environments/environment.ts (for local installs)
+- /src/environments/environment.prod.ts (for server installs)
 
 ```
 export const environment = {
@@ -33,13 +33,16 @@ For local installs configure the URL to the java backend application using the "
 single sign on as described below.
 
 ## Backend Application
-The backend Java application is its own GitHub project. There are additional configuration steps outlined there:
-* https://github.com/IHTSDO/snomed-refset-service/tree/main
 
-##  Application Authentication
-* This application uses single sign on to authenticate with IMS. Users must have accounts in IMS.
-* For a local install you will need to install NGINX proxy server and add the following configuration to to the nginx.conf file under the /conf directory, changing the IMS URL and
-port numbers to match you local setup. The standard URL for local server is http://local.ihtsdotools.org:8888
+The backend Java application is its own GitHub project. There are additional configuration steps outlined there:
+
+- https://github.com/IHTSDO/snomed-refset-service/tree/main
+
+## Application Authentication
+
+- This application uses single sign on to authenticate with IMS. Users must have accounts in IMS.
+- For a local install you will need to install NGINX proxy server and add the following configuration to to the nginx.conf file under the /conf directory, changing the IMS URL and
+  port numbers to match you local setup. The standard URL for local server is http://local.ihtsdotools.org:8888
 
 ```
 http {
@@ -90,4 +93,17 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 Run `npm outdated` to understand situations where package.json references are not current versions of things.
 
-Understand the difference between "^" and "~" in package versions and generally be consistent in their use.  "^" is generally preferred.
+Understand the difference between "^" and "~" in package versions and generally be consistent in their use. "^" is generally preferred.
+
+## AI instruction documentation
+
+This repository includes workspace-level AI and Copilot guidance for Angular code generation and custom agent behavior.
+
+- Repository-wide AI coding expectations: `.github/copilot-instructions.md`
+- Workspace agent rules and behavior: `.agents/AGENTS.md`
+- Shared Angular conventions: `.github/references/angular-shared.md`
+- Angular code generation skill: `.agents/skills/angular-developer/SKILL.md`
+- Angular customization helper skill: `.github/skills/angular-agent/SKILL.md`
+- AI skills setup and extension guidance: `.github/AI_SKILLS_SETUP.md`
+
+> Do not read the large tutorial archive `.github/skills/angular-agent/references/angular-ai-tutorial-reference.md` unless the task explicitly requires tutorial or setup content.
