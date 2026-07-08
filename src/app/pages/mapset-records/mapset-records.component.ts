@@ -1420,6 +1420,7 @@ export class MapsetRecordsComponent implements OnInit {
 	setWorkflowStatus() {
 		switch (this.workFlowStatus.value) {
 			case 'EDIT':
+				localStorage.removeItem('mapsetVersion');
 				this.editStatus = false;
 				this.showReview = false;
 				this.showUpgrade = false;
