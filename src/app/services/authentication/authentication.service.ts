@@ -21,7 +21,7 @@ export class AuthenticationService {
 	userSubject = new Subject<User>();
 	authCookie = { name: 'rt2-auth', path: '/' };
 	referralUrl = null;
-	sessionTimeoutReference;
+	sessionTimeoutReference: number | undefined;
 	sessionTimeout = 86400000; // 1 day
 
 	constructor(
@@ -29,7 +29,7 @@ export class AuthenticationService {
 		private readonly modalService: NgbModal,
 		private router: Router,
 		private readonly notificationService: NotificationService,
-		private restService: RestService
+		private restService: RestService,
 	) {
 		this.apiCalled = new EventEmitter();
 	}
@@ -51,7 +51,7 @@ export class AuthenticationService {
 			},
 			(err) => {
 				window.location.href = this.generateImsUrl('login');
-			}
+			},
 		);
 	}
 
@@ -70,20 +70,20 @@ export class AuthenticationService {
 		return url;
 	}
 
-	handleImsSuccess(userData) {
+	handleImsSuccess(userData: User) {
 		this.authenticateWithBackend(userData).subscribe(
 			(data) => {
 				this.setSessionTimeout();
 
 				sessionStorage.setItem('auth_token', data.authToken);
-				sessionStorage.setItem('refset_user', JSON.stringify(data));
+				sessionStorage.setItem('mapset_user', JSON.stringify(data));
 
 				const referralUrl = localStorage.getItem('loginReferralUrl');
 				localStorage.removeItem('loginReferralUrl');
 
 				this.userSubject.next(userData);
 
-				if (CodeUtility.hasValue(referralUrl)) {
+				if (referralUrl) {
 					this.router.navigateByUrl(referralUrl, { replaceUrl: true, skipLocationChange: false });
 				} else {
 					this.router.navigate(['/library'], { replaceUrl: false, skipLocationChange: false }); //dashboard
@@ -97,7 +97,7 @@ export class AuthenticationService {
 				} else {
 					this.notificationService.show('Problem with login: ' + err?.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
 				}
-			}
+			},
 		);
 	}
 
@@ -111,7 +111,6 @@ export class AuthenticationService {
 	}
 
 	logoutUser() {
-
 		const user = this.getUser();
 		this.http.post<any>(environment.restUrl + environment.restContextPath + 'logout/' + user.userName, {}).subscribe((data) => {
 			console.log('Back end logged out');
@@ -153,7 +152,8 @@ export class AuthenticationService {
 		if (oldUser == null || oldUser.userName != this.GUEST_USER) {
 			const user = new User();
 			user.userName = this.GUEST_USER;
-			sessionStorage.setItem('refset_user', JSON.stringify(user));
+			//fix with authentication service to set user to guest user
+			// sessionStorage.setItem('mapset_user', JSON.stringify(user));
 			this.userSubject.next(user);
 		}
 
@@ -200,7 +200,7 @@ export class AuthenticationService {
 		let user;
 
 		try {
-			user = JSON.parse(sessionStorage.getItem('refset_user'));
+			user = JSON.parse(sessionStorage.getItem('mapset_user'));
 		} catch (ex) {
 			this.noCookieAccess();
 			return null;
@@ -209,12 +209,12 @@ export class AuthenticationService {
 		return user;
 	}
 
-	updateUser(updatedUser) {
+	updateUser(updatedUser: User) {
 		try {
-			const currentUser = JSON.parse(sessionStorage.getItem('refset_user'));
+			const currentUser = JSON.parse(sessionStorage.getItem('mapset_user'));
 
 			if (currentUser.userName != this.GUEST_USER) {
-				sessionStorage.setItem('refset_user', JSON.stringify(updatedUser));
+				sessionStorage.setItem('mapset_user', JSON.stringify(updatedUser));
 				this.userSubject.next(updatedUser);
 			}
 		} catch (ex) {
@@ -224,10 +224,15 @@ export class AuthenticationService {
 	}
 
 	noCookieAccess() {
-		this.notificationService.show('There was a problem accessing local storage or cookies - make sure they are enabled for this site in your browser.', null, 'error', {
-			timeOut: 0,
-			extendedTimeOut: 0,
-		});
+		this.notificationService.show(
+			'There was a problem accessing local storage or cookies - make sure they are enabled for this site in your browser.',
+			null,
+			'error',
+			{
+				timeOut: 0,
+				extendedTimeOut: 0,
+			},
+		);
 		this.router.navigateByUrl('');
 	}
 
