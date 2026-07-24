@@ -21,7 +21,7 @@ export class AuthenticationService {
 	userSubject = new Subject<User>();
 	authCookie = { name: 'rt2-auth', path: '/' };
 	referralUrl = null;
-	sessionTimeoutReference: number | undefined;
+	sessionTimeoutReference: any;
 	sessionTimeout = 86400000; // 1 day
 
 	constructor(
