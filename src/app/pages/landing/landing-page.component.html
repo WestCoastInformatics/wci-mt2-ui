@@ -1,16 +1,53 @@
 <div *ngIf="showLoadingSpinner" class="loading"></div>
 
 <div class="landing-page-container">
-	<div class="container p-b-20">
+	<div>
 		<div class="container-fluid">
 			<div class="nav-bar page-section">
-				<div class="container">
-					<p class="modal-title">Welcome to Mapping Tool 2.0!</p>
-					<div class="d-flex rt2-wrap landing-page-center p-b-20">
-						<div class="col-4">
-							<button type="button" title="Login" class="rt2-btn rt2-action-btn col-md-6 no-margin-top" (click)="login()">
-								Log In
-							</button>
+				<div>
+					<div class="landing-page-info-section">
+						<div class="page-title">Welcome to the Next-Generation Mapping Tool!</div>
+
+						<p class="section">
+							Designed to simplify complex terminology mapping, our new Mapping Tool combines an intuitive modern interface with
+							powerful terminology management. Easily map local codes, classifications, and international standards while leveraging
+							direct Snowstorm integration and seamless team collaboration.
+						</p>
+					</div>
+					<div class="section page-section" id="learnSection">
+						<div class="row">
+							<div class="col-md-6 col-12">
+								<div class="panel panel-well height-auto">
+									<span class="page-title"> Key Features & Functionality: </span>
+									<ul class="section">
+										<li>Native integration with the Snowstorm Terminology Server</li>
+										<li>Flexible map creation, validation, and review workflows</li>
+										<li>Rich in-tool messaging and reviewer feedback features</li>
+										<li>Automated map-version comparison and change tracking</li>
+										<li>Streamlined upgrade wizard for new terminology releases</li>
+										<li>Secure multi-organization and external partner collaboration</li>
+									</ul>
+									<p class="intro-header-font">
+										<a
+											href="https://drive.google.com/drive/folders/1yTpyTor6UFN8JSHoXReUR20CsyOHgFpo"
+											target="_blank"
+											class="landing-page-center"
+											><span class="text-main mr-3">Norway MT2 Shared Documentation GDrive</span></a
+										>
+									</p>
+								</div>
+							</div>
+							<div class="col-md-6 col-12 videos-section">
+								<iframe
+									width="560"
+									height="315"
+									src="https://www.youtube.com/embed/k0EbX5Lsp_M"
+									title="WCI Mapping Tool MT2 Demo"
+									frameborder="0"
+									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+									allowfullscreen
+								></iframe>
+							</div>
 						</div>
 					</div>
 				</div>
