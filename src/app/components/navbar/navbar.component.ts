@@ -15,7 +15,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 })
 export class NavbarComponent implements OnInit {
 	environment: string;
-	user: User;
+	user?: User;
 	userSubscription: Subscription;
 	guestUser: string;
 	isUserLoggedIn = false;
@@ -27,9 +27,9 @@ export class NavbarComponent implements OnInit {
 	constructor(
 		private authenticationService: AuthenticationService,
 		private breadcrumbService: BreadcrumbService,
-		private router: Router,
+		public router: Router,
 		private changeDetectorRef: ChangeDetectorRef,
-		readonly refsetService: RefsetService
+		readonly refsetService: RefsetService,
 	) {
 		this.guestUser = authenticationService.GUEST_USER;
 		//this.environment = window.location.host.split(/[.]/)[0].split(/[-]/)[0];
@@ -58,7 +58,7 @@ export class NavbarComponent implements OnInit {
 
 	setUserInfo() {
 		this.user = this.authenticationService.getUser();
-		this.isUserLoggedIn = true; //this.user && this.user.userName != this.guestUser;
+		this.isUserLoggedIn = !!this.user && this.user.userName != this.guestUser;
 	}
 
 	showProjectRoleAndAssignee(): boolean {
@@ -73,7 +73,7 @@ export class NavbarComponent implements OnInit {
 		return this.router.url.includes('details') && this.refsetRole.length > 0;
 	}
 
-	navigate(breadcrumbId) {
+	navigate(breadcrumbId: string) {
 		const breadcrumb = this.breadcrumbs[breadcrumbId];
 
 		if (breadcrumb.selectable) {
@@ -86,7 +86,7 @@ export class NavbarComponent implements OnInit {
 	}
 
 	landing() {
-		const breadcrumbs = [];
+		const breadcrumbs: never[] = [];
 		this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 		this.router.navigate([''], { replaceUrl: false, skipLocationChange: false });
 	}
@@ -96,8 +96,11 @@ export class NavbarComponent implements OnInit {
 	}
 
 	login() {
-		localStorage.removeItem('loginReferralUrl');
-		this.router.navigate(['/login'], { replaceUrl: false, skipLocationChange: false });
+		//placeholder for login functionality, currently just sets user to Admin and reloads the page
+		sessionStorage.setItem('mapset_user', JSON.stringify({ userName: 'Admin' }));
+		window.location.reload();
+		// localStorage.removeItem('loginReferralUrl');
+		// this.router.navigate(['/login'], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	assignedUser(): string {
@@ -106,12 +109,12 @@ export class NavbarComponent implements OnInit {
 
 	breadcrumbsHasDir(): boolean {
 		if (this.breadcrumbs.length == 0) return false;
-		return this.breadcrumbs.find((bc) => bc.label == 'Map Set Library') != undefined;
+		return this.breadcrumbs.find((bc: { label: string }) => bc.label == 'Map Set Library') != undefined;
 	}
 
 	breadcrumbsHasProjects(): boolean {
 		if (this.breadcrumbs.length == 0) return false;
-		return this.breadcrumbs.find((bc) => bc.label == 'Projects') != undefined;
+		return this.breadcrumbs.find((bc: { label: string }) => bc.label == 'Projects') != undefined;
 	}
 
 	navigateToRoute(route: string): void {

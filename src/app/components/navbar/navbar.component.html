@@ -45,7 +45,12 @@
 			<span class="project-assignee" *ngIf="assignedUser() !== 'Unassigned'">Assignee: {{ assignedUser() }}</span>
 		</div>
 
-		<div class="navbar-div navbar-divider" (click)="navigateToRoute('/library')" [ngClass]="{ 'active-page': router.url.includes('library') }">
+		<div
+			*ngIf="isUserLoggedIn"
+			class="navbar-div navbar-divider"
+			(click)="navigateToRoute('/library')"
+			[ngClass]="{ 'active-page': router.url.includes('library') }"
+		>
 			<div class="navbar-icon"><img src="/assets/directory-icon.svg" /></div>
 			<div class="navbar-icon-label header-icon-font">Library</div>
 		</div>
@@ -90,7 +95,7 @@
 			<div class="navbar-icon-label header-icon-font">Dashboard</div>
 		</div>
 
-		<div *ngIf="isUserLoggedIn" class="navbar-divider float-right mr-2">
+		<div *ngIf="isUserLoggedIn" class="navbar-divider float-right mr-2 p-l-5">
 			<div class="dropdown navbar-icon-menu" id="userDropdownMenu">
 				<label
 					class="dropdown-toggle pointer text-ghost-grey btn-sm mb-0"
@@ -100,14 +105,14 @@
 					aria-haspopup="true"
 					aria-expanded="false"
 				>
-					<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="medium-icon-image mr-2" />
+					<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri || '')" class="medium-icon-image mr-2" />
 				</label>
 
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
 					<div class="dropdown-item pl-3">
 						<!--[routerLink]="" (click)="navigateToRoute('/personal/' + user?.id + '/landing')">-->
 						<div class="d-flex pointer">
-							<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="medium-icon-image mr-2" />
+<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri || '')" class="medium-icon-image mr-2" />
 
 							<div class="profile-block">
 								<strong>{{ user?.userName }}</strong>
@@ -118,7 +123,7 @@
 					<div class="dropdown-divider hide"></div>
 					<a class="dropdown-item text-center pointer hide" (click)="resources()">Resources</a>
 					<div class="dropdown-divider"></div>
-					<a class="dropdown-item text-center" href="#" (click)="logoutUser()">Logout</a>
+					<a class="dropdown-item text-center" href="#" (click)="logoutUser()">Log Out</a>
 				</div>
 			</div>
 		</div>
@@ -140,12 +145,8 @@
 		</ng-container>
 	</div>
 	<div class="left-title-buttons">
-		<div class="navbar-div navbar-divider no-m-r m-l-auto" (click)="navigateToRoute('/library')">
-			<div class="navbar-icon"><img src="/assets/directory-icon.svg" /></div>
-			<div class="navbar-icon-label header-icon-font">Library</div>
-		</div>
 		<div class="navbar-divider">
-			<div class="navbar-menu-link"><a class="btn text-white m-r-10 rt2-nav-title" (click)="login()">Log In</a></div>
+			<div class="navbar-menu-link p-l-10"><a class="btn text-white m-r-10 rt2-nav-title" (click)="login()">Log In</a></div>
 		</div>
 	</div>
 </nav>
