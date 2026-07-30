@@ -1,22 +1,19 @@
 <div *ngIf="showLoadingSpinner" class="loading"></div>
 
-<!-- Search Bar -->
+<!-- Heading -->
 <div class="top-search-bar content-header">
-	<div class="d-flex justify-content-end">
-		<div class="row d-flex">
+	<div class="d-flex">
+		<div class="row">
 			<div class="col-md-9 page-title">
 				<div class="rt2-wrap" *ngIf="loaded" title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}">
 					<span>{{ mapsetData[0].code + ' ' + mapsetData[0].name }} </span>
 				</div>
-				<app-workflow-status
-					[workflowStatus]="mapsetInfo.workflowStatus !== null ? mapsetInfo.workflowStatus : mapsetInfo.versionStatus"
-					class="col-1"
-				>
-				</app-workflow-status>
 			</div>
-			<div *ngIf="loaded" class="col-md-3 list-font align-items-center">{{ selectedVersion }}</div>
+			<div *ngIf="loaded" class="col-md-3 d-flex header-menu">
+				<span class="list-font align-self-center m-r-10"> {{ selectedVersion }}</span>
+			</div>
 		</div>
-		<div class="col-md-2 d-flex header-menu">
+		<div class="col-md-auto d-flex m-r-10">
 			<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: mapsetData }"></template>
 		</div>
 	</div>
@@ -68,7 +65,12 @@
 							</button>
 						</div>
 						<mat-menu #actionMenu="matMenu">
-							<button mat-menu-item (click)="selectAction('edit')" [disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'">
+							<button
+								*ngIf="!libraryOnly"
+								mat-menu-item
+								(click)="selectAction('edit')"
+								[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
+							>
 								<span>Edit Maps</span>
 							</button>
 							<button mat-menu-item (click)="selectAction('review')">
@@ -143,7 +145,7 @@
 		<!-- Action Templates -->
 		<ng-template #directoryActionSection let-params>
 			<div class="d-flex">
-				<div class="col">
+				<div class="col" *ngIf="!libraryOnly">
 					<button
 						class="library-app-refset-notes m-r-15 no-padding"
 						(click)="selectAction('edit')"
@@ -161,13 +163,23 @@
 				</div>
 				<div class="col">
 					<button class="library-app-refset-notes m-r-20 no-padding" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-						<img src="/assets/sticky-note.svg" title="View Notes" aria-label="View Notes" class="mapset-notes-icon" />
+						<img
+							src="/assets/sticky-note.svg"
+							title="{{ `${libraryOnly ? 'View' : 'Add'} Notes` }}"
+							aria-label="{{ `${libraryOnly ? 'View' : 'Add'} Notes` }}"
+							class="mapset-notes-icon"
+						/>
 					</button>
 				</div>
 
 				<div class="col">
 					<button class="library-app-refset-discussion-list m-r-20 no-padding" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-						<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
+						<img
+							src="/assets/comment-dots-regular.svg"
+							title="{{ `${libraryOnly ? 'View' : 'Add'} Feedback` }}"
+							aria-label="{{ `${libraryOnly ? 'View' : 'Add'} Feedback` }}"
+							class="discussion-icon"
+						/>
 					</button>
 				</div>
 			</div>
@@ -230,7 +242,5 @@
 				<button type="button" title="Download" class="rt2-btn rt2-action-btn" (click)="startDownload()">Download</button>
 			</div>
 		</ng-template>
-
-		<scroll-top></scroll-top>
 	</div>
 </div>

@@ -181,7 +181,7 @@ export class MapsetInactivesComponent implements OnInit {
 	}
 
 	getMapsetInfo() {
-		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
+		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe((results) => {
 			const mapsetVersions = Array.isArray(results) ? results : [results];
 			const getIsInDevelopment = (status: string): boolean => {
 				return status === 'IN_DEVELOPMENT' || status === 'IN DEVELOPMENT';
@@ -1109,7 +1109,7 @@ export class MapsetInactivesComponent implements OnInit {
 	}
 
 	goToMappingsPage(code) {
-		this.router.navigate(['/mapset/' + code + '/mappings'], { replaceUrl: false, skipLocationChange: false });
+		this.router.navigate(['/projects/mapset/' + code + '/mappings'], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	goToDetailsPage(refsetId, versionDate) {
@@ -1117,15 +1117,21 @@ export class MapsetInactivesComponent implements OnInit {
 	}
 
 	goToMappingPage(code) {
-		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + code], { replaceUrl: false, skipLocationChange: false });
+		this.router.navigate(['/projects' + '/mapset/' + this.mapsetCode + '/mapping/' + code], {
+			replaceUrl: false,
+			skipLocationChange: false,
+		});
 	}
 
 	goToEditMappingPage(code) {
-		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + code + '/edit'], { replaceUrl: false, skipLocationChange: false });
+		this.router.navigate(['/projects/mapset/' + this.mapsetCode + '/mapping/' + code + '/edit'], {
+			replaceUrl: false,
+			skipLocationChange: false,
+		});
 	}
 
 	goToBatchMappingsPage(codes) {
-		this.router.navigate(['/mapset/' + this.mapsetCode + '/mappings/' + codes.join('_') + '/batch'], {
+		this.router.navigate(['/projects/mapset/' + this.mapsetCode + '/mappings/' + codes.join('_') + '/batch'], {
 			replaceUrl: false,
 			skipLocationChange: false,
 		});

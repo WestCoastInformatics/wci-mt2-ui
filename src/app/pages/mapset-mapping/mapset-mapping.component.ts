@@ -23,6 +23,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 })
 export class MapsetMappingComponent implements OnInit {
 	user: User;
+	libraryOnly: any;
 	searchInput = '';
 	viewOptions = [
 		{ value: 'all', display: 'All' },
@@ -74,6 +75,7 @@ export class MapsetMappingComponent implements OnInit {
 	conceptCode: string;
 	mapping: string;
 	routeParamsSubscription$: Subscription;
+	mapsetVersionStorage = 'mapsetVersion';
 	gridSelectAll = false;
 	internationalId = '449080006';
 	loaded = false;
@@ -117,35 +119,44 @@ export class MapsetMappingComponent implements OnInit {
 		this.user = this.authenticationService.getUser();
 		this.titleService.setTitle('Mapping Tool - Map');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
+			this.route.url.forEach((part) => {
+				part.forEach((value) => {
+					if (value.path === 'library') {
+						this.libraryOnly = true;
+					}
+					if (value.path === 'projects') {
+						this.libraryOnly = false;
+					}
+				});
+			});
+			const prefix = this.libraryOnly ? 'library_' : 'projects_';
+			this.mapsetVersionStorage = prefix + this.mapsetVersionStorage;
 			this.mapsetCode = routeParams.code;
 			this.conceptCode = routeParams.concept;
 			this.getMapsetInfo();
-
 			this.getModuleMetadata();
 		});
-
 		if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
 			this.formats.splice(1, 0, { value: 'rf2_with_names', display: 'RF2 With Names' });
 		}
-
 		if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
 			this.formats.splice(-1, 0, { value: 'freeset', display: 'Free Set' });
 		}
-
 		this.disableChannel.postMessage(false);
 	}
 
 	getMapsetInfo() {
-		this.refsetService.getMapsets().subscribe({
+		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe({
 			next: (results) => {
-				const thisResult = results.filter((res) => {
-					return res.refSetCode === this.mapsetCode;
-				});
-				this.mapsetName = thisResult[0]?.refSetName;
+				if (results?.length > 0) {
+					this.mapsetName = results[0]?.refSetName;
+				} else {
+					console.error('no mapset found');
+				}
 			},
 		});
 
-		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
+		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe((results) => {
 			const mapsetVersions = Array.isArray(results) ? results : [results];
 
 			const getIsInDevelopment = (status: string): boolean => {
@@ -169,8 +180,9 @@ export class MapsetMappingComponent implements OnInit {
 			});
 
 			this.mapsetInfo = mapsetVersions[0];
-			if (localStorage.getItem('mapsetVersion')) {
-				this.selectedVersion = JSON.parse(localStorage.getItem('mapsetVersion'));
+			const _storedVersion = localStorage.getItem(this.mapsetVersionStorage);
+			if (_storedVersion) {
+				this.selectedVersion = JSON.parse(_storedVersion);
 				this.mapsetInfo = mapsetVersions.filter((v) => {
 					const versionDate = v.versionDate || new Date();
 					const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
@@ -251,8 +263,13 @@ export class MapsetMappingComponent implements OnInit {
 				this.mapsetData = data;
 
 				this.breadcrumbService.setBreadcrumbs([
-					{ path: '/library', label: 'Library' },
-					{ path: '/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
+					{ path: this.libraryOnly ? '/library/' : '/projects/', label: this.libraryOnly ? 'Library' : 'Projects' },
+					{
+						path: this.libraryOnly
+							? '/library' + '/mapset/' + this.mapsetCode + '/mappings'
+							: '/projects' + '/mapset/' + this.mapsetCode + '/mappings',
+						label: this.mapsetName,
+					},
 					{ label: this.mapsetData.length > 0 ? this.mapsetData[0]?.name : 'Map' },
 				]);
 			},
@@ -318,7 +335,7 @@ export class MapsetMappingComponent implements OnInit {
 	}
 
 	goToEditMappingPage() {
-		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode + '/edit'], {
+		this.router.navigate(['/projects/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode + '/edit'], {
 			replaceUrl: false,
 			skipLocationChange: false,
 		});

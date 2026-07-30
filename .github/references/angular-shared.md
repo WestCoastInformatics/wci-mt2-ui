@@ -9,7 +9,7 @@ Keep this file focused on shared context — do not put one skill's operational 
 ## Purpose
 
 - Single canonical source of Angular guidance for all AI skills.
-- Covers WCI naming, CSS, API, and library preferences for TermHub UI.
+- Covers WCI naming, CSS, API, and library preferences for MT2 UI.
 - Cross-skill links to more detailed Angular reference material.
 
 ---
@@ -36,8 +36,8 @@ Use reactive forms.
 ## WCI CSS Conventions
 
 - Define all styles in component `.scss` files or global stylesheets. **Never use inline `style=""` attributes.**
-  - ✅ `<div class="cssClass">`
-  - ❌ `<div style="margin: 5px">`
+    - ✅ `<div class="cssClass">`
+    - ❌ `<div style="margin: 5px">`
 - Organize CSS class rules **alphabetically** within shared style files.
 - Always add new CSS rules in the correct alphabetical position — do not append to the bottom of a file.
 - Avoid utility-style ad-hoc classes; prefer semantic class names tied to the component's purpose.
@@ -46,7 +46,7 @@ Use reactive forms.
 
 ## WCI UI Library Preference
 
-TermHub UI includes both Bootstrap and Angular Material. Follow this preference order:
+MT2 UI includes both Bootstrap and Angular Material. Follow this preference order:
 
 | Use Case                                                                               | Preferred Library                                                                             |
 | -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
@@ -62,21 +62,21 @@ Do not mix Bootstrap and Angular Material for the same UI pattern within a compo
 ## WCI API Conventions
 
 - **Never call `HttpClient` directly from a component.** All HTTP calls must go through:
-  - `ApiService` (`src/app/services/api.service.ts`) for generic REST calls, or
-  - A domain-specific service (e.g., `terminology.service.ts`, `project.service.ts`) that wraps `ApiService`.
+    - `ApiService` (`src/app/services/api.service.ts`) for generic REST calls, or
+    - A domain-specific service (e.g., `terminology.service.ts`, `project.service.ts`) that wraps `ApiService`.
 - **Base URL**: Always source the API base URL from the environment file.
 
-  ```typescript
-  import { environment } from '../../environments/environment';
-  // environment.url resolves to:
-  //   Dev:  'https://dev.terminologyhub.com'
-  //   Prod: 'https://api.terminologyhub.com'
-  // Angular's build system automatically swaps the file at build time.
-  ```
+    ```typescript
+    import { environment } from '../../environments/environment';
+    // environment.url resolves to:
+    //   Dev:  'https://dev.terminologyhub.com'
+    //   Prod: 'https://api.terminologyhub.com'
+    // Angular's build system automatically swaps the file at build time.
+    ```
 
 - Use template literals for URL construction — never string concatenation with `+`:
-  - ✅ `` `${this.apiUrl}/v1/concept/${id}` ``
-  - ❌ `this.apiUrl + '/v1/concept/' + id`
+    - ✅ `` `${this.apiUrl}/v1/concept/${id}` ``
+    - ❌ `this.apiUrl + '/v1/concept/' + id`
 - Use typed generics on all `HttpClient` calls: `this.http.get<ConceptModel>(url)`.
 - Handle errors in the service layer using `catchError`; do not let raw HTTP errors surface to components.
 

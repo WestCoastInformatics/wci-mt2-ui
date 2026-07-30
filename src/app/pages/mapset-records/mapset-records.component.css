@@ -74,7 +74,8 @@
 }
 
 .header-menu {
-	height: 40px;
+	min-width: 16vw;
+	justify-content: end;
 }
 
 .sub-header-font {
@@ -223,8 +224,7 @@
 }
 
 .rt2-wrap {
-	display: inline-block;
-	max-width: 450px !important;
+	min-width: 75vw;
 }
 
 .rt2-directory-chooser-column {
@@ -358,7 +358,7 @@
 }
 
 .status-no-results {
-	float: right;
+	text-align: center;
 	margin-right: 145px;
 	color: #7f7f7f;
 	font-size: 14px;

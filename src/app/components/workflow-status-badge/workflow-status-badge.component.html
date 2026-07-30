@@ -1,7 +1,10 @@
 <!--<object  [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)"> {{ params?.value}}</object>-->
-<ng-container *ngIf="status === 'PUBLISHED'"> Published </ng-container>
+<ng-container *ngIf="status === 'PUBLISHED'"><div class="published-projects-button">Published</div> </ng-container>
 <ng-container *ngIf="status === 'READY_FOR_EDIT'">
 	<div class="ready-for-edit-projects-button">Ready For Edit</div>
+</ng-container>
+<ng-container *ngIf="status === 'IN DEVELOPMENT'">
+	<div class="in-edit-projects-button">In Development</div>
 </ng-container>
 <ng-container *ngIf="status === 'IN_EDIT'">
 	<div class="in-edit-projects-button">In Edit</div>

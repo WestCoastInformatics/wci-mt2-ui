@@ -30,7 +30,7 @@ This reference provides Angular-specific context for Copilot skills, prompts, ag
 
 ## Best practices for AI skills in this workspace
 
-- Keep Angular guidance aligned with TermHub UI conventions.
+- Keep Angular guidance aligned with MT2 UI conventions.
 - Prefer strict typing and accessible output.
 - Avoid plain text files for skill definitions; use `SKILL.md` instead.
 - Put shared context and reference material in companion markdown files.

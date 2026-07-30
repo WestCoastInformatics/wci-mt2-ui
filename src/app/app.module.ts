@@ -89,7 +89,6 @@ import { PersonalComponentService } from './pages/personal/personal-component.se
 
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
-import { ScrollTopComponent } from 'src/app/components/scroll-top/scroll-top.component';
 import { ReadonlyTextModalComponent } from 'src/app/components/readonly-text-modal/readonly-text-modal.component';
 import { ReadyForPublicationModalComponent } from 'src/app/components/ready-for-publication-modal/ready-for-publication-modal.component';
 import { WorkflowHistoryNotesModalComponent } from 'src/app/components/workflow-history-notes-modal/workflow-history-notes-modal.component';
@@ -126,13 +125,19 @@ const appRoutes: Routes = [
 	{ path: 'conflict', component: ConflictComponent },
 	{ path: 'library', component: MapsetLibraryComponent, data: { breadcrumbLabel: 'Map Set Library' } },
 	{ path: 'projects', component: MapsetProjectsComponent, data: { breadcrumbLabel: 'Map Set Projects' } },
-	{ path: 'mapset/:code/mappings', component: MapsetRecordsComponent, data: { breadcrumbLabel: 'Mappings' } },
-	{ path: 'mapset/:code/mappings/inactives', component: MapsetInactivesComponent, data: { breadcrumbLabel: 'Manage Inactivated Concepts' } },
-	{ path: 'mapset/:code/mappings/:concepts/batch', component: BatchMappingComponent, data: { breadcrumbLabel: 'Batch Edit Mappings' } },
-	{ path: 'mapset/:code/mapping/:concept', component: MapsetMappingComponent, data: { breadcrumbLabel: 'Mapping' } },
-	{ path: 'mapset/:code/mapping/:concept/edit', component: EditMappingComponent, data: { breadcrumbLabel: 'Edit Map' } },
-	{ path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
-	//mapset/{mapSetCode}/mapping/{conceptCode}
+	{ path: 'library/mapset/:code/mappings', component: MapsetRecordsComponent, data: { breadcrumbLabel: 'Library Mappings' } },
+	{ path: 'projects/mapset/:code/mappings', component: MapsetRecordsComponent, data: { breadcrumbLabel: 'Projects Mappings' } },
+	{
+		path: 'projects/mapset/:code/mappings/inactives',
+		component: MapsetInactivesComponent,
+		data: { breadcrumbLabel: 'Manage Inactivated Concepts' },
+	},
+	{ path: 'library/mapset/:code/mapping/:concept', component: MapsetMappingComponent, data: { breadcrumbLabel: 'Mapping' } },
+	{ path: 'projects/mapset/:code/mapping/:concept', component: MapsetMappingComponent, data: { breadcrumbLabel: 'Mapping' } },
+	{ path: 'projects/mapset/:code/mappings/:concepts/batch', component: BatchMappingComponent, data: { breadcrumbLabel: 'Batch Edit Mappings' } },
+	{ path: 'projects/mapset/:code/mapping/:concept/edit', component: EditMappingComponent, data: { breadcrumbLabel: 'Edit Map' } },
+	{ path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' } },
+	//, canActivate: [AuthGuardGuard]
 	{
 		path: 'personal',
 		component: PersonalComponent,
@@ -172,7 +177,6 @@ const appRoutes: Routes = [
 		GridHeaderFilterComponent,
 		ImportFromFileModalComponent,
 		ImportFromListModalComponent,
-		ScrollTopComponent,
 		ReadonlyTextModalComponent,
 		ReadyForPublicationModalComponent,
 		ReviewModalComponent,

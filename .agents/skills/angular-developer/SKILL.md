@@ -3,8 +3,8 @@ name: angular-developer
 description: Generates Angular code and provides architectural guidance. Trigger when creating projects, components, or services, or for best practices on reactivity (signals, linkedSignal, resource), forms, dependency injection, routing, SSR, accessibility (ARIA), animations, styling (component styles, Tailwind CSS), testing, or CLI tooling.
 license: MIT
 metadata:
-  author: Copyright 2026 Google LLC
-  version: '1.0'
+    author: Copyright 2026 Google LLC
+    version: '1.0'
 ---
 
 # Angular Developer Guidelines
@@ -31,29 +31,29 @@ metadata:
 - Use the `host` object in component metadata instead of `@HostBinding` or `@HostListener`.
 - Use `NgOptimizedImage` for static images.
 - Keep HTTP out of components; wrap `HttpClient` in `ApiService` or domain-specific services.
-- Use reactive forms for all forms in TermHub UI.
+- Use reactive forms for all forms in MT2 UI.
 
 ## Creating New Projects
 
 If the user does not provide any specific project requirements or preferences, follow these default rules when creating a new Angular project:
 
 1. Use the latest stable version of Angular unless the user specifies otherwise.
-2. Use reactive forms for form management in current TermHub UI work.
+2. Use reactive forms for form management in current MT2 UI work.
 
 **Execution Rules for `ng new`:**
 Use these simple rules to choose the correct command when creating a new Angular project.
 
 1. If the user requests a specific Angular version, use `npx` with that version.
-   - Command: `npx @angular/cli@<requested_version> new <project-name>`
-   - If the requested version is not available, inform the user and suggest using the latest stable version instead.
+    - Command: `npx @angular/cli@<requested_version> new <project-name>`
+    - If the requested version is not available, inform the user and suggest using the latest stable version instead.
 
 2. If the user does not request a specific version, check whether `ng` is already available.
-   - Run: `ng version`
-   - If the command succeeds, use the installed CLI:
-     - `ng new <project-name>`
+    - Run: `ng version`
+    - If the command succeeds, use the installed CLI:
+        - `ng new <project-name>`
 
 3. If no version is requested and `ng version` is not available, fallback to the latest CLI using `npx`.
-   - Command: `npx @angular/cli@latest new <project-name>`
+    - Command: `npx @angular/cli@latest new <project-name>`
 
 ## Components
 
@@ -83,7 +83,7 @@ When managing state and data reactivity, use Angular Signals and consult the fol
 
 For this project, use reactive forms for all forms.
 
-- **Reactive forms**: Preferred for TermHub UI. Read [reactive-forms.md](references/reactive-forms.md)
+- **Reactive forms**: Preferred for MT2 UI. Read [reactive-forms.md](references/reactive-forms.md)
 - **Reactive forms**: Preferred for this project. Read [reactive-forms.md](references/reactive-forms.md)
 - **Template-driven forms**: Use for simple forms or when matching existing app patterns. Read [template-driven-forms.md](references/template-driven-forms.md)
 

@@ -620,7 +620,7 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	getMapsetInfo() {
-		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
+		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe((results) => {
 			const mapsetVersions = Array.isArray(results) ? results : [results];
 
 			const getIsInDevelopment = (status: string): boolean => {
@@ -658,13 +658,14 @@ export class BatchMappingComponent implements OnInit {
 			this.getMapsetData();
 			this.getMapProject();
 		});
-		this.refsetService.getMapsets().subscribe({
+		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe({
 			next: (results) => {
-				const thisResult = results.filter((res) => {
-					return res.refSetCode === this.mapsetCode;
-				});
-				this.mapsetName = thisResult[0]?.refSetName;
-				this.selectedMapset = thisResult[0];
+				if (results?.length > 0) {
+					this.mapsetName = results[0]?.refSetName;
+					this.selectedMapset = results[0];
+				} else {
+					console.error('no mapset found');
+				}
 			},
 		});
 	}

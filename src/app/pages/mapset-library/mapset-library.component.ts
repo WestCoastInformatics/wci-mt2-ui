@@ -89,6 +89,7 @@ export class MapsetLibraryComponent implements OnInit {
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
+	@ViewChild('workflowStatusSection') workflowStatus: TemplateRef<any>;
 	@ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
 	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
 	@ViewChild('directoryInfoSection') infoSection: TemplateRef<any>;
@@ -123,7 +124,6 @@ export class MapsetLibraryComponent implements OnInit {
 		this.titleService.setTitle('Mapping Tool - Map Set Library');
 		this.breadcrumbService.setBreadcrumbs([{ label: 'Map Set Library' }]);
 		this.clearSavedSelections();
-
 		this.getMapsetData();
 		this.disableChannel.postMessage(false);
 	}
@@ -135,12 +135,12 @@ export class MapsetLibraryComponent implements OnInit {
 			const key = localStorage.key(i);
 
 			if (
-				key?.startsWith('mapsetSearchInput') ||
-				key?.startsWith('showMapTable') ||
-				key?.startsWith('mapsetVersion') ||
-				key?.startsWith('mapsetGridCurrentPageSize') ||
-				key?.startsWith('mapsetGridCurrentPageNum') ||
-				key?.startsWith('batchSearchInput')
+				key?.startsWith('library_mapsetSearchInput') ||
+				key?.startsWith('library_showMapTable') ||
+				key?.startsWith('library_mapsetVersion') ||
+				key?.startsWith('library_mapsetGridCurrentPageSize') ||
+				key?.startsWith('library_mapsetGridCurrentPageNum') ||
+				key?.startsWith('library_batchSearchInput')
 			) {
 				keysToRemove.push(key);
 			}
@@ -150,7 +150,7 @@ export class MapsetLibraryComponent implements OnInit {
 	}
 
 	getMapsetData() {
-		this.refsetService.getMapsets().subscribe({
+		this.refsetService.getMapsetsByStatus('PUBLISHED').subscribe({
 			next: ([results]) => {
 				this.versionStatuses;
 				let versionStatusArray;
@@ -197,10 +197,11 @@ export class MapsetLibraryComponent implements OnInit {
 						tooltipField: 'versionStatus',
 						headerName: 'Version Status',
 						cellClass: 'rt2-directory-column-version-status',
-						minWidth: 65,
-						width: 170,
+						minWidth: 165,
+						width: 200,
 						resizable: true,
-						valueGetter: this.versionStatusValueGetter,
+						cellRenderer: TemplateRendererComponent,
+						cellRendererParams: { template: this.workflowStatus },
 						unSortIcon: true,
 					},
 					{
@@ -336,7 +337,7 @@ export class MapsetLibraryComponent implements OnInit {
 			restParams.query = query;
 		}
 
-		this.refsetService.getMapsets().subscribe({
+		this.refsetService.getMapsetsByStatus('PUBLISHED').subscribe({
 			next: (results) => {
 				this.showLoadingSearch = false;
 
@@ -485,7 +486,7 @@ export class MapsetLibraryComponent implements OnInit {
 		this.downloadError = '';
 		if (this.selectedFormat['value'] !== undefined && this.selectedType['value'] !== undefined) {
 			this.downloading = true;
-			this.refsetService.getMapsetByCode(this.mapsetInfo.refSetCode).subscribe((results) => {
+			this.refsetService.getMapsetsByCode(this.mapsetInfo.refSetCode).subscribe((results) => {
 				this.mapsetInfo = results;
 				const params = {
 					branch: this.mapsetInfo.branchPath,
@@ -577,7 +578,7 @@ export class MapsetLibraryComponent implements OnInit {
 	}
 
 	goToMapRecordsPage(code) {
-		this.router.navigate(['/mapset/' + code + '/mappings'], { replaceUrl: false, skipLocationChange: false });
+		this.router.navigate(['library/mapset/' + code + '/mappings'], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	getRefsetRow(refsetId: string) {
