@@ -574,7 +574,6 @@ export class MapsetRecordsComponent implements OnInit {
 			});
 		}
 		this.mapsetInfo = this.mapsetVersions[0];
-
 		this.versionStatuses = this.mapsetVersions.map((v) => {
 			const versionDate = v.versionDate || new Date();
 			return formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
@@ -582,12 +581,14 @@ export class MapsetRecordsComponent implements OnInit {
 		const storedMapsetVersion = localStorage.getItem(this.mapsetVersionStorage);
 		if (storedMapsetVersion) {
 			this.selectedVersion = JSON.parse(storedMapsetVersion);
-			this.mapsetInfo = this.mapsetVersions.filter((v) => {
+			const foundVersion = this.mapsetVersions.filter((v) => {
 				const versionDate = v.versionDate || new Date();
 				const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
 				return mapsetVersionStatus === this.selectedVersion;
 			});
-			this.mapsetInfo = this.mapsetInfo[0];
+			if (foundVersion.length > 0) {
+				this.mapsetInfo = foundVersion[0];
+			}
 		} else {
 			if (this.versionStatuses.length > 0) {
 				this.selectedVersion = this.versionStatuses[0];

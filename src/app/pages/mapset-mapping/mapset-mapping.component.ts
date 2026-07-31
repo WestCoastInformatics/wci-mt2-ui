@@ -22,7 +22,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 	styleUrls: ['./mapset-mapping.component.css'],
 })
 export class MapsetMappingComponent implements OnInit {
-	user: User;
+	user!: User;
 	libraryOnly: any;
 	searchInput = '';
 	viewOptions = [
@@ -49,40 +49,40 @@ export class MapsetMappingComponent implements OnInit {
 	refsetGridLastFilter = '';
 	refsetGridLastSort = '';
 	showTable = false;
-	mapsetData = [];
-	dialog: DialogService;
+	mapsetData: any[] = [];
+	dialog!: DialogService;
 	versionStatuses: any;
 	versions: any;
 	organizations: any;
-	initialGridWidth: number;
+	initialGridWidth: number | undefined;
 	showFullNarrativeText = false;
 	showFullNotesText = false;
 	showLoadingSpinner = false;
 	toggleDropdown = false;
 	numOfResults = 0;
-	directUrl: string;
+	directUrl: string | undefined;
 	numOfMembers: any;
 	disableChannel = new BroadcastChannel('disable-button-channel');
 	originalGridParams: any;
 	searchCallArray = [];
 	uiUtility = UiUtility;
 	showLoadingSearch = true;
-	toBeDevelopedModalRef: NgbModalRef;
-	downloadModalRef: NgbModalRef;
+	toBeDevelopedModalRef!: NgbModalRef;
+	downloadModalRef!: NgbModalRef;
 	isModalOpen = false;
 	mapsetName = 'Mapset Name';
-	mapsetCode: string;
-	conceptCode: string;
-	mapping: string;
-	routeParamsSubscription$: Subscription;
+	mapsetCode: string | undefined;
+	conceptCode: string | undefined;
+	mapping: string | undefined;
+	routeParamsSubscription$!: Subscription;
 	mapsetVersionStorage = 'mapsetVersion';
 	gridSelectAll = false;
 	internationalId = '449080006';
 	loaded = false;
 	downloadError = '';
 	downloading = false;
-	selectedFormat = {};
-	formats = [];
+	selectedFormat: { value?: string; display?: string } = {};
+	formats: { value: string; display: string }[] = [];
 	downloadTitle = 'Download';
 	mapsetInfo: any = {};
 	selectedVersion: any;
@@ -93,13 +93,13 @@ export class MapsetMappingComponent implements OnInit {
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
-	@ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
-	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
-	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
-	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
-	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
-	@ViewChild('actions') private actions: MatSelect;
-	@ViewChild('directorySearchInput') private directorySearchInput: ElementRef;
+	@ViewChild('directoryInfoDialog') infoDialog!: TemplateRef<any>;
+	@ViewChild('directoryFeedbackDialog') feedbackDialog!: TemplateRef<any>;
+	@ViewChild('directoryActionSection') actionSection!: TemplateRef<any>;
+	@ViewChild('downloadModal') downloadModal!: TemplateRef<any>;
+	@ViewChild('toBeDevelopedModal') tbdModal!: TemplateRef<any>;
+	@ViewChild('actions') private actions!: MatSelect;
+	@ViewChild('directorySearchInput') private directorySearchInput!: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -136,17 +136,17 @@ export class MapsetMappingComponent implements OnInit {
 			this.getMapsetInfo();
 			this.getModuleMetadata();
 		});
-		if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
-			this.formats.splice(1, 0, { value: 'rf2_with_names', display: 'RF2 With Names' });
-		}
-		if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
-			this.formats.splice(-1, 0, { value: 'freeset', display: 'Free Set' });
-		}
+		// if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
+		// 	this.formats.splice(1, 0, { value: 'rf2_with_names', display: 'RF2 With Names' });
+		// }
+		// if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
+		// 	this.formats.splice(-1, 0, { value: 'freeset', display: 'Free Set' });
+		// }
 		this.disableChannel.postMessage(false);
 	}
 
 	getMapsetInfo() {
-		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe({
+		this.refsetService.getMapsetsByCode(this.mapsetCode!).subscribe({
 			next: (results) => {
 				if (results?.length > 0) {
 					this.mapsetName = results[0]?.refSetName;
@@ -156,7 +156,7 @@ export class MapsetMappingComponent implements OnInit {
 			},
 		});
 
-		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe((results) => {
+		this.refsetService.getMapsetsByCode(this.mapsetCode!).subscribe((results) => {
 			const mapsetVersions = Array.isArray(results) ? results : [results];
 
 			const getIsInDevelopment = (status: string): boolean => {
@@ -183,12 +183,14 @@ export class MapsetMappingComponent implements OnInit {
 			const _storedVersion = localStorage.getItem(this.mapsetVersionStorage);
 			if (_storedVersion) {
 				this.selectedVersion = JSON.parse(_storedVersion);
-				this.mapsetInfo = mapsetVersions.filter((v) => {
+				const foundVersion = mapsetVersions.filter((v) => {
 					const versionDate = v.versionDate || new Date();
 					const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
 					return mapsetVersionStatus === this.selectedVersion;
 				});
-				this.mapsetInfo = this.mapsetInfo[0];
+				if (foundVersion.length > 0) {
+					this.mapsetInfo = foundVersion[0];
+				}
 			}
 			this.getMapsetData();
 		});
@@ -208,7 +210,7 @@ export class MapsetMappingComponent implements OnInit {
 	}
 
 	getMapsetData() {
-		this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCode).subscribe({
+		this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCode || '').subscribe({
 			next: (response) => {
 				this.loaded = true;
 				const data = [];
@@ -281,7 +283,7 @@ export class MapsetMappingComponent implements OnInit {
 
 	getModuleLanguageIcon(moduleId: string) {
 		let flag = '';
-		this.moduleMetadata.module.forEach((data) => {
+		this.moduleMetadata.module.forEach((data: any) => {
 			if (data.id === moduleId) {
 				flag = data.countryCode;
 			}
@@ -291,7 +293,7 @@ export class MapsetMappingComponent implements OnInit {
 
 	getModuleLanguageName(moduleId: string) {
 		let lang = '';
-		this.moduleMetadata.module.forEach((data) => {
+		this.moduleMetadata.module.forEach((data: any) => {
 			if (data.id === moduleId) {
 				lang = data.name;
 			}
@@ -375,7 +377,7 @@ export class MapsetMappingComponent implements OnInit {
 		}
 	}
 
-	openDownloadModal(content) {
+	openDownloadModal(content: any) {
 		this.downloadModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
 	}
@@ -389,7 +391,7 @@ export class MapsetMappingComponent implements OnInit {
 
 	//***** General Functions *****/
 
-	openToBeDevelopedModal(content) {
+	openToBeDevelopedModal(content: any) {
 		this.toBeDevelopedModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
 	}
@@ -407,11 +409,11 @@ export class MapsetMappingComponent implements OnInit {
 		return stringValue;
 	}
 
-	dateFormatter(val): any {
+	dateFormatter(val: any): any {
 		return UiUtility.dateFormatter(val);
 	}
 
-	onResize(event) {
+	onResize(event: any) {
 		const sectionWidth = $('.section-background').parent().width();
 		document.getElementsByClassName('ag-header')[0]?.setAttribute('style', `width: ${sectionWidth}px;`);
 		//this.resizeSectionView();

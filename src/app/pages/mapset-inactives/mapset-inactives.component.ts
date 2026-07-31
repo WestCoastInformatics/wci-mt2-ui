@@ -206,12 +206,14 @@ export class MapsetInactivesComponent implements OnInit {
 			this.mapsetInfo = mapsetVersions[0];
 			if (localStorage.getItem('mapsetVersion')) {
 				this.selectedVersion = JSON.parse(localStorage.getItem('mapsetVersion'));
-				this.mapsetInfo = mapsetVersions.filter((v) => {
+				const foundVersion = mapsetVersions.filter((v) => {
 					const versionDate = v.versionDate || new Date();
 					const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
 					return mapsetVersionStatus === this.selectedVersion;
 				});
-				this.mapsetInfo = this.mapsetInfo[0];
+				if (foundVersion.length > 0) {
+					this.mapsetInfo = foundVersion[0];
+				}
 			}
 			this.mapsetName = this.mapsetInfo.refSetName;
 			this.breadcrumbService.setBreadcrumbs([{ path: '/library', label: 'Library' }, { label: this.mapsetName }]);

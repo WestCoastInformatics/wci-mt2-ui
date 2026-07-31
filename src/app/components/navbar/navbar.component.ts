@@ -57,6 +57,8 @@ export class NavbarComponent implements OnInit {
 	}
 
 	setUserInfo() {
+		sessionStorage.setItem('mapset_user', JSON.stringify({ userName: 'Admin' }));
+		//temp auth
 		this.user = this.authenticationService.getUser();
 		this.isUserLoggedIn = !!this.user && this.user.userName != this.guestUser;
 	}
