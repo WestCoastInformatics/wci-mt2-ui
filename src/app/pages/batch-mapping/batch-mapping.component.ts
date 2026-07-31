@@ -438,7 +438,7 @@ export class BatchMappingComponent implements OnInit {
 				headerTooltip: 'Source PT',
 				flex: 2,
 				resizable: true,
-				minWidth: 165,
+				minWidth: 155,
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.nameSection },
 				sortable: false,
@@ -450,7 +450,7 @@ export class BatchMappingComponent implements OnInit {
 				headerName: 'Target',
 				headerTooltip: 'Target',
 				flex: 1,
-				minWidth: 135,
+				minWidth: 125,
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: {
 					template: this.codeSection,
@@ -499,8 +499,8 @@ export class BatchMappingComponent implements OnInit {
 				tooltipField: 'rule',
 				headerName: 'Rule',
 				headerTooltip: 'Rule',
-				minWidth: 100,
-				width: 100,
+				minWidth: 90,
+				width: 90,
 				resizable: true,
 				//cellRenderer: TemplateRendererComponent,
 				//cellRendererParams: { template: this.ruleSection },
@@ -519,7 +519,7 @@ export class BatchMappingComponent implements OnInit {
 				headerTooltip: 'Advices',
 				cellClass: 'rt2-directory-column-advices',
 				minWidth: 85,
-				width: 145,
+				width: 135,
 				resizable: true,
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.adviceSection },
@@ -534,7 +534,7 @@ export class BatchMappingComponent implements OnInit {
 				headerTooltip: 'Last Modified',
 				cellClass: 'rt2-directory-column-modified-date',
 				minWidth: 65,
-				width: 135,
+				width: 155,
 				resizable: true,
 				valueGetter: UiUtility.gridDateValueGetter,
 				floatingFilterComponent: DateTextFilterComponent,
@@ -1087,8 +1087,8 @@ export class BatchMappingComponent implements OnInit {
 					}, 400);
 
 					this.breadcrumbService.setBreadcrumbs([
-						{ path: '/library', label: 'Library' },
-						{ path: '/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
+						{ path: '/projects', label: 'Projects' },
+						{ path: '/projects/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
 						{ label: 'Batch Edit Mappings' },
 					]);
 					if (localStorage.getItem(this.batchSearchInput)) {

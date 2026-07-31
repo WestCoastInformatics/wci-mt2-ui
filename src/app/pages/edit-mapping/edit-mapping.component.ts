@@ -603,8 +603,8 @@ export class EditMappingComponent implements OnInit {
 
 				this.mapsetData = data;
 				this.breadcrumbService.setBreadcrumbs([
-					{ path: '/library', label: 'Library' },
-					{ path: '/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
+					{ path: '/projects', label: 'Projects' },
+					{ path: '/projects/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
 					{ label: 'Edit ' + (this.mapsetData.length > 0 ? this.mapsetData[0]?.name : 'Map') },
 				]);
 			},

@@ -422,8 +422,7 @@
 }
 
 .rt2-wrap {
-	min-width: 1300px !important;
-	max-width: 1300px !important;
+	min-width: 75vw;
 }
 
 .workflow-margin {

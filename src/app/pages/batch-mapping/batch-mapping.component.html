@@ -1,20 +1,15 @@
 <div *ngIf="showLoadingSpinner" class="loading"></div>
 
-<!-- Search Bar -->
+<!-- Heading -->
 <div class="top-search-bar content-header">
-	<div class="d-flex justify-content-end">
-		<div class="row d-flex">
+	<div class="d-flex">
+		<div class="row">
 			<div class="col-md-9 page-title" *ngIf="loaded && !loadError" title="Batch Edit ({{ mapsetData.length }})">
 				<div class="rt2-wrap">Batch Edit ({{ mapsetData.length }})</div>
-				<div class="workflow-margin">
-					<app-workflow-status
-						[workflowStatus]="mapsetInfo.workflowStatus !== null ? mapsetInfo.workflowStatus : mapsetInfo.versionStatus"
-						class="col-1"
-					>
-					</app-workflow-status>
-				</div>
 			</div>
-			<div *ngIf="loaded" class="col-md-3 list-font align-items-center">{{ selectedVersion }}</div>
+		</div>
+		<div *ngIf="loaded" class="col-md-3 d-flex header-menu">
+			<span class="list-font align-self-center m-r-10"> {{ selectedVersion }}</span>
 		</div>
 	</div>
 </div>
@@ -78,7 +73,7 @@
 			<div class="col-md-auto rt2-directory-chooser-column m-l-20">
 				<app-column-chooser
 					title="Select Columns to Display"
-					[gridColumnApi]="gridColumnApi"
+					[gridColumnApi]="gridApi"
 					[useDialog]="useDialog"
 					[columnStorage]="mapsetBatchColumnStorage"
 				>
@@ -295,7 +290,7 @@
 							<span class="mappings-section m-b-10">{{ targetToName }}</span>
 						</div>
 
-						<div class="modal-footer mt-20 mb-10 rt2-lockable rt2-btn-group">
+						<div class="modal-footer mt-20 mb-10 rt2-lockable rt2-btn-group align-items-center">
 							<div class="mappings-section code-link no-wrap" title="Search Browser" (click)="searchBrowser()">
 								<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#2269e8">
 									<path

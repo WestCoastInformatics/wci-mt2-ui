@@ -57,7 +57,7 @@ export class NavbarComponent implements OnInit {
 	}
 
 	setUserInfo() {
-		sessionStorage.setItem('mapset_user', JSON.stringify({ userName: 'Admin' }));
+		//sessionStorage.setItem('mapset_user', JSON.stringify({ userName: 'Admin' }));
 		//temp auth
 		this.user = this.authenticationService.getUser();
 		this.isUserLoggedIn = !!this.user && this.user.userName != this.guestUser;
@@ -83,7 +83,9 @@ export class NavbarComponent implements OnInit {
 	}
 
 	logoutUser() {
-		this.authenticationService.logoutUser();
+		//this.authenticationService.logoutUser();
+		sessionStorage.removeItem('mapset_user');
+		window.location.reload();
 	}
 
 	landing() {
@@ -99,9 +101,10 @@ export class NavbarComponent implements OnInit {
 	login() {
 		//placeholder for login functionality, currently just sets user to Admin and reloads the page
 		sessionStorage.setItem('mapset_user', JSON.stringify({ userName: 'Admin' }));
-		window.location.reload();
+		//window.location.reload();
 		// localStorage.removeItem('loginReferralUrl');
-		// this.router.navigate(['/login'], { replaceUrl: false, skipLocationChange: false });
+		this.router.navigate(['/library'], { replaceUrl: false, skipLocationChange: false });
+		this.setUserInfo();
 	}
 
 	assignedUser(): string {

@@ -30,31 +30,12 @@ export class MapsetMappingComponent implements OnInit {
 		{ value: 'public', display: 'Public' },
 		{ value: 'private', display: 'Private' },
 	];
-	selectedView = 'all';
 	refsetGridApi: any;
-	columnDefs = [];
-	refsetGridColumns = [
-		{ name: 'information', show: true },
-		{ name: 'refsetId', show: true },
-	];
-	rowSelection = 'multiple';
-	refsetGridOptions: any;
-	refsetGridPaging = {
-		pageSize: 10,
-		pageSizeOptions: [10, 25, 50, 100],
-		totalKnown: false,
-		totalRows: null,
-		manualStateRefresh: Boolean(true),
-	};
-	refsetGridLastFilter = '';
-	refsetGridLastSort = '';
-	showTable = false;
 	mapsetData: any[] = [];
 	dialog!: DialogService;
 	versionStatuses: any;
 	versions: any;
 	organizations: any;
-	initialGridWidth: number | undefined;
 	showFullNarrativeText = false;
 	showFullNotesText = false;
 	showLoadingSpinner = false;

@@ -4,7 +4,7 @@
 <div class="top-search-bar content-header">
 	<div class="d-flex">
 		<div class="row">
-			<div class="col-md-9 page-title">
+			<div class="col-md-9 page-title" *ngIf="loaded">
 				<div class="rt2-wrap" *ngIf="loaded" title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}">
 					<span>{{ mapsetData[0].code + ' ' + mapsetData[0].name }} </span>
 				</div>
@@ -13,12 +13,11 @@
 				<span class="list-font align-self-center m-r-10"> {{ selectedVersion }}</span>
 			</div>
 		</div>
-		<div class="col-md-auto d-flex m-r-10">
+		<div class="col-md-auto d-flex m-r-10" *ngIf="loaded">
 			<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: mapsetData }"></template>
 		</div>
 	</div>
 </div>
-
 <div [hidden]="loaded" class="section-loading">Loading...</div>
 <div class="rt2-container">
 	<div class="metadata-collapsible-container" [ngClass]="{ 'm-t-20': loaded }">
