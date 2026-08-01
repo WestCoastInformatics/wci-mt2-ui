@@ -27,7 +27,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 	styleUrls: ['./mapset-library.component.css'],
 })
 export class MapsetLibraryComponent implements OnInit {
-	user: User;
+	user!: User;
 	searchInput = '';
 	viewOptions = [
 		{ value: 'all', display: 'All' },
@@ -36,7 +36,7 @@ export class MapsetLibraryComponent implements OnInit {
 	];
 	selectedView = 'all';
 	refsetGridApi: any;
-	columnDefs = [];
+	columnDefs: any;
 	refsetGridColumns = [
 		{ name: 'information', show: true },
 		{ name: 'refsetId', show: true },
@@ -53,7 +53,7 @@ export class MapsetLibraryComponent implements OnInit {
 	refsetGridLastSort = '';
 	showTable = false;
 	refsetData: any;
-	dialog: DialogService;
+	dialog!: DialogService;
 	versionStatuses: any;
 	versions: any;
 	organizations: any;
@@ -70,8 +70,8 @@ export class MapsetLibraryComponent implements OnInit {
 	originalGridParams: any;
 	uiUtility = UiUtility;
 	showLoadingSearch = true;
-	toBeDevelopedModalRef: NgbModalRef;
-	downloadModalRef: NgbModalRef;
+	toBeDevelopedModalRef!: NgbModalRef;
+	downloadModalRef!: NgbModalRef;
 	isModalOpen = false;
 	showPaging = false;
 	paginationPages: any = {};
@@ -89,18 +89,18 @@ export class MapsetLibraryComponent implements OnInit {
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
-	@ViewChild('workflowStatusSection') workflowStatus: TemplateRef<any>;
-	@ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
-	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
-	@ViewChild('directoryInfoSection') infoSection: TemplateRef<any>;
-	@ViewChild('directoryVersionDate') versionDate: TemplateRef<any>;
-	@ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
-	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
-	@ViewChild('directoryPaging') paginationComponent: PaginationComponent;
-	@ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
-	@ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
-	@ViewChild('directorySearchInput') private directorySearchInput: ElementRef;
-	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
+	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
+	@ViewChild('directoryInfoDialog') infoDialog!: TemplateRef<any>;
+	@ViewChild('directoryFeedbackDialog') feedbackDialog!: TemplateRef<any>;
+	@ViewChild('directoryInfoSection') infoSection!: TemplateRef<any>;
+	@ViewChild('directoryVersionDate') versionDate!: TemplateRef<any>;
+	@ViewChild('directoryNameSection') nameSection!: TemplateRef<any>;
+	@ViewChild('directoryActionSection') actionSection!: TemplateRef<any>;
+	@ViewChild('directoryPaging') paginationComponent!: PaginationComponent;
+	@ViewChild('directoryCategoryFilter') categoryFilter!: TemplateRef<any>;
+	@ViewChild('directoryWorkflowStatusSection') versionStatus!: TemplateRef<any>;
+	@ViewChild('directorySearchInput') private directorySearchInput!: ElementRef;
+	@ViewChild('downloadModal') downloadModal!: TemplateRef<any>;
 
 	constructor(
 		private router: Router,
@@ -168,7 +168,7 @@ export class MapsetLibraryComponent implements OnInit {
 						filter: false,
 						resizable: false,
 						sortable: false,
-						getQuickFilterText: (params) => {
+						getQuickFilterText: (params: any) => {
 							return '';
 						},
 					},
@@ -243,7 +243,7 @@ export class MapsetLibraryComponent implements OnInit {
 						sortable: false,
 						filter: false,
 						resizable: false,
-						getQuickFilterText: (params) => {
+						getQuickFilterText: (params: any) => {
 							return '';
 						},
 					},
@@ -276,7 +276,7 @@ export class MapsetLibraryComponent implements OnInit {
 					},
 					enableBrowserTooltips: true,
 					rowClassRules: {
-						refset_tool_grid_inactive_row: function (params) {
+						refset_tool_grid_inactive_row: function (params: any) {
 							let inactivatedRow = false;
 
 							if (params.data) {
@@ -291,8 +291,9 @@ export class MapsetLibraryComponent implements OnInit {
 				this.showTable = true;
 				this.changeDetectorRef.detectChanges();
 			},
-			error: (error) => {
-				//
+			error: (error: any) => {
+				console.log(' Error: ', error);
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
 			},
 		});
 	}
@@ -306,7 +307,7 @@ export class MapsetLibraryComponent implements OnInit {
 	}
 
 	//***** AG Grid Functions *****/
-	onGridReady = (gridReadyParams) => {
+	onGridReady = (gridReadyParams: any) => {
 		this.originalGridParams = gridReadyParams;
 		this.refsetGridApi = gridReadyParams.api;
 		this.refsetGridApi.setFilterModel(null);
@@ -373,7 +374,8 @@ export class MapsetLibraryComponent implements OnInit {
 
 				UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
 			},
-			error: (error) => {
+			error: (error: any) => {
+				console.log(' Error: ', error);
 				this.refsetGridApi.showNoRowsOverlay();
 				this.refsetGridApi.setGridOption('rowData', []);
 			},
@@ -400,7 +402,7 @@ export class MapsetLibraryComponent implements OnInit {
 		return current;
 	}
 
-	editionValueGetter = function (params) {
+	editionValueGetter = function (params: any) {
 		if (!CodeUtility.hasValue(params?.data)) {
 			return '';
 		}
@@ -409,7 +411,7 @@ export class MapsetLibraryComponent implements OnInit {
 		return params?.data?.edition?.name;
 	};
 
-	versionStatusValueGetter = function (params) {
+	versionStatusValueGetter = function (params: any) {
 		if (!CodeUtility.hasValue(params?.data)) {
 			return '';
 		}
@@ -417,7 +419,7 @@ export class MapsetLibraryComponent implements OnInit {
 		return params.data.versionStatus.toLowerCase();
 	};
 
-	onGridCellClick = (event) => {
+	onGridCellClick = (event: any) => {
 		if (event.column.colId === 'information' || event.column.colId === 'actions') {
 			//
 		} else {
@@ -426,7 +428,7 @@ export class MapsetLibraryComponent implements OnInit {
 			let selectedVersionDate: string;
 			let selectedCode: string;
 
-			selectedRows.forEach(function (selectedRow, index) {
+			selectedRows.forEach(function (selectedRow: any, index: any) {
 				selectedId = selectedRow.refsetId;
 				selectedCode = selectedRow.refSetCode;
 				selectedVersionDate = RefsetUtility.getVersionDateForRefsetApiCall(selectedRow);
@@ -463,11 +465,11 @@ export class MapsetLibraryComponent implements OnInit {
 
 	//***** General Functions *****/
 
-	openEclBuilder(fieldId) {
+	openEclBuilder(fieldId: any) {
 		UiUtility.openEclBuilder(fieldId, 'MAIN');
 	}
 
-	downloadMapsets(params) {
+	downloadMapsets(params: any) {
 		this.mapsetInfo = params.data;
 		this.downloadTitle = 'Download ' + this.mapsetInfo.refSetCode + ' ' + this.mapsetInfo.refSetName;
 		this.types = [
@@ -500,12 +502,16 @@ export class MapsetLibraryComponent implements OnInit {
 					exportMetadata: this.selectExportMetadata,
 				};
 				this.refsetService.exportMapset(params).subscribe(
-					(data) => {
+					(data: any) => {
 						this.getMapsetDownloadStatus(data.url);
 					},
-					(err) => {
+					(err: any) => {
 						this.downloading = false;
-						console.error(err);
+						console.error(' Error: ', err);
+						this.notificationService.show('Error downloading, please try again.', 'Error', 'error', {
+							timeOut: 1500,
+							extendedTimeOut: 0,
+						});
 					},
 				);
 			});
@@ -539,14 +545,15 @@ export class MapsetLibraryComponent implements OnInit {
 						}, 200);
 				}
 			},
-			(err) => {
+			(err: any) => {
 				this.downloading = false;
-				console.error(err);
+				console.error(' Error: ', err);
+				this.notificationService.show('Error downloading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
 			},
 		);
 	}
 
-	openDownloadModal(content) {
+	openDownloadModal(content: any) {
 		this.downloadModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
 	}
@@ -560,7 +567,7 @@ export class MapsetLibraryComponent implements OnInit {
 		this.isModalOpen = false;
 	}
 
-	openToBeDevelopedModal(content) {
+	openToBeDevelopedModal(content: any) {
 		this.toBeDevelopedModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
 	}
@@ -570,14 +577,14 @@ export class MapsetLibraryComponent implements OnInit {
 		this.isModalOpen = false;
 	}
 
-	goToDetailsPage(refsetId, versionDate) {
+	goToDetailsPage(refsetId: any, versionDate: any) {
 		const url = new URL(window.location.href);
 		url.searchParams.set('reload', 'true');
 		window.history.pushState({}, '', url.href);
 		this.router.navigate(['/details', refsetId, versionDate], { replaceUrl: false, skipLocationChange: false });
 	}
 
-	goToMapRecordsPage(code) {
+	goToMapRecordsPage(code: any) {
 		this.router.navigate(['library/mapset/' + code + '/mappings'], { replaceUrl: false, skipLocationChange: false });
 	}
 
@@ -594,7 +601,7 @@ export class MapsetLibraryComponent implements OnInit {
 		return refset;
 	}
 
-	formatVersionDate(date): string {
+	formatVersionDate(date: any): string {
 		return date.slice(0, 4) + '-' + date.slice(4, 6) + '-' + date.slice(6, 8);
 	}
 
@@ -638,7 +645,7 @@ export class MapsetLibraryComponent implements OnInit {
 		return stringValue;
 	}
 
-	onResize(event) {
+	onResize(event: any) {
 		const gridWidth = document.getElementsByClassName('rt2-ag-grid')[0]?.clientWidth;
 		document.getElementsByClassName('ag-header')[0]?.setAttribute('style', `width: ${gridWidth}px;`);
 	}
@@ -647,7 +654,7 @@ export class MapsetLibraryComponent implements OnInit {
 		return refsetData?.descriptions;
 	}
 
-	showFlagIcon(event, show) {
+	showFlagIcon(event: any, show: any) {
 		if (show) {
 			event.target.style.display = 'inline';
 		} else {
@@ -655,7 +662,7 @@ export class MapsetLibraryComponent implements OnInit {
 		}
 	}
 
-	latestDate(refset, versionList: any[]): string {
+	latestDate(refset: any, versionList: any[]): string {
 		if (refset.versionStatus === Constants.IN_DEVELOPMENT) {
 			return 'Latest';
 		}

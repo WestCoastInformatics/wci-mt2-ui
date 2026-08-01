@@ -1043,7 +1043,7 @@ export class MapsetRecordsComponent implements OnInit {
 							});
 							this.mapSetSubscription.unsubscribe();
 						},
-						error: (error) => {
+						error: (error: any) => {
 							this.refsetGridApi.showNoRowsOverlay();
 							rowParams.successCallback([], 0);
 						},
@@ -1676,8 +1676,12 @@ export class MapsetRecordsComponent implements OnInit {
 						this.unCheckAll();
 						this.closeDownloadModal();
 					},
-					(err) => {
-						console.error(err);
+					(err: any) => {
+						this.notificationService.show('Error downloading, please try again.', 'Error', 'error', {
+							timeOut: 1500,
+							extendedTimeOut: 0,
+						});
+						console.log(' Error: ', err);
 					},
 				);
 			} else {
@@ -1702,9 +1706,13 @@ export class MapsetRecordsComponent implements OnInit {
 					(data) => {
 						this.getMapsetDownloadStatus(data.url);
 					},
-					(err) => {
+					(err: any) => {
 						this.downloading = false;
-						console.error(err);
+						this.notificationService.show('Error downloading, please try again.', 'Error', 'error', {
+							timeOut: 1500,
+							extendedTimeOut: 0,
+						});
+						console.log(' Error: ', err);
 					},
 				);
 			} else {
@@ -1738,9 +1746,10 @@ export class MapsetRecordsComponent implements OnInit {
 						}, 200);
 				}
 			},
-			(err) => {
+			(err: any) => {
 				this.downloading = false;
-				console.error(err);
+				this.notificationService.show('Error downloading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				console.log(' Error: ', err);
 			},
 		);
 	}
@@ -2027,7 +2036,8 @@ export class MapsetRecordsComponent implements OnInit {
 							this.historyGridPaging.manualStateRefresh = Boolean(true);
 							this.historySubscription.unsubscribe();
 						},
-						error: (error) => {
+						error: (error: any) => {
+							console.log(' Error: ', error);
 							this.historyLoaded = true;
 							this.historyGridApi.showNoRowsOverlay();
 							rowParams.successCallback([], 0);
