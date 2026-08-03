@@ -122,6 +122,7 @@ export class MapsetRecordsComponent implements OnInit {
 	historySubscription!: Subscription;
 	mapsetHistoryData: any;
 	numOfHistory: any;
+	manualStateRefresh = false;
 	showHistoryPaging = false;
 	isNewPageSize = false;
 	internationalId = '449080006';
@@ -385,6 +386,7 @@ export class MapsetRecordsComponent implements OnInit {
 					cellRendererParams: { template: this.toNameSection },
 				},
 				{
+					colId: 'relation',
 					field: 'relation',
 					tooltipField: 'relation',
 					headerName: 'Relationship',
@@ -399,6 +401,7 @@ export class MapsetRecordsComponent implements OnInit {
 					hide: !this.libraryOnly ? true : false,
 				},
 				{
+					colId: 'rule',
 					field: 'rule',
 					tooltipField: 'rule',
 					headerName: 'Rule',
@@ -413,6 +416,7 @@ export class MapsetRecordsComponent implements OnInit {
 					hide: !this.libraryOnly ? true : false,
 				},
 				{
+					colId: 'advices',
 					field: 'advices',
 					headerName: 'Advices',
 					headerTooltip: 'Advices',
@@ -428,19 +432,7 @@ export class MapsetRecordsComponent implements OnInit {
 					hide: !this.libraryOnly ? true : false,
 				},
 				{
-					field: 'modifiedBy',
-					tooltipField: 'modifiedBy',
-					headerName: 'Modified By',
-					headerTooltip: 'Modified By',
-					cellClass: 'rt2-directory-column-id',
-					width: 145,
-					resizable: true,
-					unSortIcon: true,
-					sortable: false,
-					suppressSorting: true,
-					hide: this.libraryOnly ? true : false,
-				},
-				{
+					colId: 'workflowStatus',
 					field: 'workflowStatus',
 					tooltipField: 'workflowStatus',
 					headerName: 'Workflow Status',
@@ -451,6 +443,20 @@ export class MapsetRecordsComponent implements OnInit {
 					cellRenderer: TemplateRendererComponent,
 					cellRendererParams: { template: this.workflowStatus },
 					unSortIcon: true,
+					hide: this.libraryOnly ? true : false,
+				},
+				{
+					colId: 'modifiedBy',
+					field: 'modifiedBy',
+					tooltipField: 'modifiedBy',
+					headerName: 'Modified By',
+					headerTooltip: 'Modified By',
+					cellClass: 'rt2-directory-column-id',
+					width: 145,
+					resizable: true,
+					unSortIcon: true,
+					sortable: false,
+					suppressSorting: true,
 					hide: this.libraryOnly ? true : false,
 				},
 				{
@@ -871,6 +877,43 @@ export class MapsetRecordsComponent implements OnInit {
 	onGridReady = (gridReadyParams: any) => {
 		if (gridReadyParams?.api && gridReadyParams.type === 'gridReady') {
 			this.refsetGridApi = gridReadyParams.api;
+			if (this.mapsetRecordsColumnStorage) {
+				if (!localStorage.getItem(this.mapsetRecordsColumnStorage)) {
+					const columns: any = [];
+					const columnDefs = this.refsetGridApi.getColumnDefs?.();
+					for (const column of columnDefs) {
+						const columnData: any = {};
+						if (!column.colId) {
+							columnData.colId = column.field;
+						} else {
+							columnData.colId = column.colId;
+						}
+						columnData.show = true;
+						if (columnData.colId !== 'action-btns' && columnData.colId !== 'checkbox') {
+							columns.push(columnData);
+						}
+					}
+
+					const state: any = [];
+					for (const column of columns) {
+						column.show = true;
+						if (this.libraryOnly) {
+							if (column.colId === 'workflowStatus' || column.colId === 'modifiedBy') {
+								column.show = false;
+							}
+							this.manualStateRefresh = true;
+						} else {
+							if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
+								column.show = false;
+							}
+							this.manualStateRefresh = true;
+						}
+						state.push({ colId: column.colId, hide: !column.show });
+					}
+					this.refsetGridApi.applyColumnState({ state: state });
+					localStorage.setItem(this.mapsetRecordsColumnStorage, JSON.stringify(state));
+				}
+			}
 		}
 		const _window = window;
 		_window['checkboxHandleClick'] = () => {

@@ -146,6 +146,7 @@ export class MapsetProjectsComponent implements OnInit {
 				key?.startsWith('projects_mapsetVersion') ||
 				key?.startsWith('projects_mapsetGridCurrentPageSize') ||
 				key?.startsWith('projects_mapsetGridCurrentPageNum') ||
+				key?.startsWith('projects_mapsetRecordsColumns') ||
 				key?.startsWith('projects_batchSearchInput')
 			) {
 				keysToRemove.push(key);
