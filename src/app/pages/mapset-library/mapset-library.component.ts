@@ -7,6 +7,7 @@ import { CategoryFilterComponent } from 'src/app/components/categoryFilter/categ
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
@@ -72,6 +73,7 @@ export class MapsetLibraryComponent implements OnInit {
 	showLoadingSearch = true;
 	toBeDevelopedModalRef!: NgbModalRef;
 	downloadModalRef!: NgbModalRef;
+	mapsetInfoModalRef!: NgbModalRef;
 	isModalOpen = false;
 	showPaging = false;
 	paginationPages: any = {};
@@ -82,6 +84,8 @@ export class MapsetLibraryComponent implements OnInit {
 	formats = [];
 	selectedType = {};
 	types = [];
+	internationalId = '449080006';
+	moduleMetadata: any;
 	selectExportMetadata = false;
 	downloadTitle = 'Download';
 	mapsetInfo: any = {};
@@ -112,6 +116,7 @@ export class MapsetLibraryComponent implements OnInit {
 		private authenticationService: AuthenticationService,
 		private modalService: NgbModal,
 		private pagerService: PaginationService,
+		private mt2Service: MT2Service,
 		private notificationService: NotificationService,
 	) {
 		document.body.scrollTop = 0;
@@ -125,6 +130,7 @@ export class MapsetLibraryComponent implements OnInit {
 		this.breadcrumbService.setBreadcrumbs([{ label: 'Map Set Library' }]);
 		this.clearSavedSelections();
 		this.getMapsetData();
+		this.getModuleMetadata();
 		this.disableChannel.postMessage(false);
 	}
 
@@ -567,6 +573,17 @@ export class MapsetLibraryComponent implements OnInit {
 		this.isModalOpen = false;
 	}
 
+	openMapsetInfoModal(params: any, content: any) {
+		this.mapsetInfo = params.data;
+		this.mapsetInfoModalRef = this.modalService.open(content, { size: 'lg', centered: true });
+		this.isModalOpen = true;
+	}
+
+	closeMapsetInfoModal() {
+		this.mapsetInfoModalRef.close();
+		this.isModalOpen = false;
+	}
+
 	openToBeDevelopedModal(content: any) {
 		this.toBeDevelopedModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
@@ -603,6 +620,43 @@ export class MapsetLibraryComponent implements OnInit {
 
 	formatVersionDate(date: any): string {
 		return date.slice(0, 4) + '-' + date.slice(4, 6) + '-' + date.slice(6, 8);
+	}
+
+	dateFormatter(val: any): any {
+		return UiUtility.dateFormatter(val);
+	}
+
+	getModuleLanguageIcon(moduleId: string) {
+		let flag = '';
+		this.moduleMetadata.module.forEach((data: any) => {
+			if (data.id === moduleId) {
+				flag = data.countryCode;
+			}
+		});
+		return flag;
+	}
+
+	getModuleLanguageName(moduleId: string) {
+		let lang = '';
+		this.moduleMetadata.module.forEach((data: any) => {
+			if (data.id === moduleId) {
+				lang = data.name;
+			}
+		});
+		return lang;
+	}
+
+	getModuleMetadata() {
+		if (this.mt2Service.moduleMetadata.value?.length === 0) {
+			this.refsetService.getMetadata().subscribe({
+				next: (results) => {
+					this.mt2Service.setModuleMetadata(results);
+					this.moduleMetadata = results;
+				},
+			});
+		} else {
+			this.moduleMetadata = this.mt2Service.moduleMetadata.value;
+		}
 	}
 
 	openFeedback(refsetId: string) {

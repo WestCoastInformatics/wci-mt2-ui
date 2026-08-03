@@ -1087,7 +1087,7 @@ export class MapsetRecordsComponent implements OnInit {
 
 	getModuleLanguageIcon(moduleId: string) {
 		let flag = '';
-		this.moduleMetadata?.module.forEach((data) => {
+		this.moduleMetadata?.module.forEach((data: any) => {
 			if (data.id === moduleId) {
 				flag = data.countryCode;
 			}
@@ -1097,7 +1097,7 @@ export class MapsetRecordsComponent implements OnInit {
 
 	getModuleLanguageName(moduleId: string) {
 		let lang = '';
-		this.moduleMetadata.module.forEach((data) => {
+		this.moduleMetadata.module.forEach((data: any) => {
 			if (data.id === moduleId) {
 				lang = data.name;
 			}
@@ -1931,28 +1931,20 @@ export class MapsetRecordsComponent implements OnInit {
 		if (this.showMappingsSection) {
 			sectionsMaxHeight = sectionHeight - sectionsSectionHeight;
 		}
-		if (this.showMetadataSection && this.showHistorySection) {
-			sectionsMaxHeight = sectionHeight - sectionsSectionHeight - sectionsMinHeight;
-		} else {
-			if (this.showMetadataSection || this.showHistorySection) {
-				sectionsMaxHeight = sectionHeight - sectionsSectionHeight - sectionsMinHeight;
-			}
-		}
-
 		if (this.showMappingsSection) {
 			document.getElementsByClassName('mappings-section')[0]?.setAttribute('style', `max-height: ${sectionsMaxHeight}px;`);
 
 			document.getElementsByClassName('grid-wrapper')[0]?.setAttribute('style', `max-height: ${sectionsMaxHeight}px;`);
 		}
 		if (this.showMetadataSection) {
-			document.getElementsByClassName('metadata-section')[0]?.setAttribute('style', `max-height: ${sectionsMaxHeight}px;`);
+			document.getElementsByClassName('metadata-section')[0]?.setAttribute('style', `max-height: 200px;`);
 		}
 		if (this.showHistorySection) {
 			if (this.numOfRecords === 0) {
 				document.getElementsByClassName('history-section')[0]?.setAttribute('style', `height: 85px !important; min-height: 85px !important;`);
 			} else {
-				document.getElementsByClassName('history-section')[0]?.setAttribute('style', `max-height: ${sectionsMaxHeight}px;`);
-				document.getElementsByClassName('history-section')[0]?.setAttribute('style', `height: ${sectionsMaxHeight}px;`);
+				document.getElementsByClassName('history-section')[0]?.setAttribute('style', `max-height: 300px;`);
+				document.getElementsByClassName('history-section')[0]?.setAttribute('style', `height: 300px;overflow-y: auto;`);
 			}
 		}
 	}

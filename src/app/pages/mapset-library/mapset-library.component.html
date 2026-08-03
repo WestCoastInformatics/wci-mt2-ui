@@ -212,10 +212,12 @@
 			</div>
 		</div>
 	</div>
+
 	<!-- Workflow Status Templates -->
 	<ng-template #dashboardWorkflowStatusSection let-params>
 		<workflow-status-badge [status]="params?.data?.workflowStatus"> </workflow-status-badge>
 	</ng-template>
+
 	<!-- Information Templates -->
 	<ng-template #directoryInfoSection let-params>
 		<div class="d-flex rt2-wrap">
@@ -226,7 +228,7 @@
 					class="mat-button-wrapper mapset-notes-icon"
 					aria-label="View Map Set Metadata"
 					title="View Map Set Metadata"
-					(click)="openToBeDevelopedModal(toBeDevelopedModal)"
+					(click)="openMapsetInfoModal(params, mapsetInfoModalRef)"
 				>
 					<mat-icon class="scale-85-pct">information</mat-icon>
 				</div>
@@ -317,6 +319,77 @@
 		</div>
 		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
 			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		</div>
+	</ng-template>
+
+	<ng-template #mapsetInfoModalRef let-modal>
+		<div class="modal-header rt2-modal-header">
+			<h4 class="modal-title">Map Set Metadata</h4>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeMapsetInfoModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<div class="section-background metadata-section">
+				<div class="col-12 row metadata-group">
+					<div class="record-row metadata-row d-flex">
+						<div class="col-6 odd-row d-flex">
+							<div class="code-name col-4">Map Set ID</div>
+							{{ mapsetInfo.refSetCode }}
+						</div>
+						<div class="col-6 odd-row d-flex">
+							<div class="code-name date-column second-row col-4">Version Status</div>
+							{{ mapsetInfo.versionStatus }}
+						</div>
+					</div>
+					<div class="record-row metadata-row d-flex">
+						<div class="col-6 d-flex">
+							<div class="code-name col-4">Map Set Name</div>
+							{{ mapsetInfo.refSetName }}
+						</div>
+						<div class="col-6 d-flex">
+							<div class="code-name date-column second-row col-4">Version Date</div>
+							{{ mapsetInfo.version }}
+						</div>
+					</div>
+					<div class="record-row metadata-row d-flex">
+						<div class="col-6 odd-row d-flex">
+							<div class="code-name col-4">Map from</div>
+							{{ mapsetInfo.fromTerminology }} {{ mapsetInfo.fromVersion }}
+						</div>
+						<div class="col-6 odd-row d-flex">
+							<div class="code-name date-column second-row col-4">Last Modified</div>
+							{{ dateFormatter(mapsetInfo.modified) }}
+						</div>
+					</div>
+					<div class="record-row metadata-row d-flex">
+						<div class="col-6 d-flex">
+							<div class="code-name col-4">Map to</div>
+							{{ mapsetInfo.toTerminology }} {{ mapsetInfo.toVersion }}
+						</div>
+						<div class="col-6 d-flex">
+							<div class="code-name date-column second-row col-4">Language</div>
+							<span *ngIf="getModuleLanguageIcon(mapsetInfo.moduleId) !== ''">
+								<img
+									class="mapset-mod-icon"
+									*ngIf="mapsetInfo.moduleId !== internationalId"
+									src="{{ 'assets/flags/' + getModuleLanguageIcon(mapsetInfo.moduleId) + '.png' }}"
+									title="{{ getModuleLanguageName(mapsetInfo.moduleId) }}"
+									aria-label="{{ getModuleLanguageName(mapsetInfo.moduleId) }}"
+							/></span>
+						</div>
+					</div>
+					<div class="record-row metadata-row d-flex">
+						<div class="col-12 odd-row d-flex">
+							<div class="code-name col-2">Current Branch</div>
+							<div>{{ mapsetInfo.editionBranch }}/REFSETS/REFSET-{{ mapsetInfo.refSetCode }}-{{ mapsetInfo.refsetBranchId }}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeMapsetInfoModal()">Close</button>
 		</div>
 	</ng-template>
 

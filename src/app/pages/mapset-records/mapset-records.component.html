@@ -574,9 +574,8 @@
 				<div class="record-row metadata-row d-flex">
 					<div class="col-12 odd-row d-flex">
 						<div class="code-name col-2">Current Branch</div>
-						{{ mapsetInfo.editionBranch }}/REFSETS/REFSET-{{ mapsetInfo.refSetCode }}-{{ mapsetInfo.refsetBranchId }}/EDIT-{{
-							mapsetInfo.editBranchId
-						}}
+						{{ mapsetInfo.editionBranch }}/REFSETS/REFSET-{{ mapsetInfo.refSetCode }}-{{ mapsetInfo.refsetBranchId
+						}}<span *ngIf="!libraryOnly">/EDIT-{{ mapsetInfo.editBranchId }}</span>
 					</div>
 				</div>
 			</div>
