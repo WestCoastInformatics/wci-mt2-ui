@@ -207,7 +207,12 @@
 						</div>
 						<div *ngIf="searchInput !== ''">Showing {{ refsetGridApi.getDisplayedRowCount() }} search results</div>
 					</div>
-					<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
+				</div>
+				<div
+					class="rt2-pagination-total-label directory-new-paging ag-theme-alpine"
+					[hidden]="showPaging || !showTable || !showLoadingSearch"
+				>
+					No results to show
 				</div>
 			</div>
 		</div>

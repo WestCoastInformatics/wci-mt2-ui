@@ -164,139 +164,129 @@ export class DashboardComponent implements OnInit {
 	}
 
 	getMapsetData() {
-		this.refsetService.getMapsetsByStatus('PUBLISHED').subscribe({
-			next: ([results]) => {
-				this.versionStatuses;
-				let versionStatusArray;
-				this.columnDefs = [
-					{
-						field: 'refSetCode',
-						tooltipField: 'refSetCode',
-						headerName: 'Map Set ID',
-						cellClass: 'rt2-directory-column-id',
-						minWidth: 65,
-						resizable: true,
-						sortable: false,
-						unSortIcon: false,
-						suppressSorting: true,
-					},
-					{
-						field: 'refSetName',
-						tooltipField: 'refSetName',
-						headerName: 'Map Set Name',
-						cellClass: 'rt2-directory-column-name',
-						flex: 2,
-						resizable: true,
-						minWidth: 65,
-						sort: 'asc',
-						sortable: false,
-						unSortIcon: false,
-						suppressSorting: true,
-					},
-					{
-						field: 'code',
-						tooltipField: 'code',
-						headerName: 'Source',
-						headerTooltip: 'Source',
-						flex: 1,
-						minWidth: 125,
-						cellClass: 'blue-link',
-						resizable: true,
-						sortable: false,
-						suppressSorting: true,
-					},
-					{
-						field: 'name',
-						tooltipField: 'name',
-						headerName: 'Source PT',
-						headerTooltip: 'Source PT',
-						flex: 2,
-						resizable: true,
-						minWidth: 165,
-						cellRenderer: TemplateRendererComponent,
-						cellRendererParams: { template: this.nameSection },
-						sortable: false,
-						unSortIcon: false,
-						suppressSorting: true,
-					},
-					{
-						field: 'versionStatus',
-						tooltipField: 'versionStatus',
-						headerName: 'Workflow Status',
-						cellClass: 'rt2-directory-column-version-status',
-						minWidth: 165,
-						width: 200,
-						resizable: true,
-						cellRenderer: TemplateRendererComponent,
-						cellRendererParams: { template: this.workflowStatus },
-						sortable: false,
-						unSortIcon: false,
-						suppressSorting: true,
-					},
-					{
-						field: 'modified',
-						tooltipValueGetter: UiUtility.gridDateValueGetter,
-						headerName: 'Last Modified',
-						cellClass: 'rt2-directory-column-modified-date',
-						minWidth: 65,
-						width: 170,
-						resizable: true,
-						valueGetter: UiUtility.gridDateValueGetter,
-						floatingFilterComponent: DateTextFilterComponent,
-						floatingFilterComponentParams: { suppressFilterButton: true },
-						sortable: false,
-						unSortIcon: false,
-						suppressSorting: true,
-					},
-				];
-				this.refsetGridOptions = {
-					context: { componentParent: this },
-					pagination: true,
-					animateRows: false,
-					rowModelType: 'clientSide',
-					suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-					suppressPaginationPanel: true,
-					paginationPageSize: this.refsetGridPaging.pageSize,
-					rowSelection: 'single',
-					enableCellTextSelection: true,
-					onCellDoubleClicked: this.onGridCellClick,
-					onGridReady: this.onGridReady,
-					frameworkComponents: {
-						templateRenderer: TemplateRendererComponent,
-						categoryFilterComponent: CategoryFilterComponent,
-						dateTextFilterComponent: DateTextFilterComponent,
-					},
-					defaultColDef: {
-						sortable: true,
-						filter: false,
-						sortingOrder: ['asc', 'desc'],
-						floatingFilter: false,
-						floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false },
-						suppressMenu: true,
-						resizable: true,
-					},
-					enableBrowserTooltips: true,
-					rowClassRules: {
-						refset_tool_grid_inactive_row: function (params: any) {
-							let inactivatedRow = false;
-
-							if (params.data) {
-								inactivatedRow = params.data.active == false;
-							}
-
-							return inactivatedRow;
-						},
-					},
-				};
-
-				this.showTable = true;
-				this.changeDetectorRef.detectChanges();
+		this.columnDefs = [
+			{
+				field: 'refSetCode',
+				tooltipField: 'refSetCode',
+				headerName: 'Map Set ID',
+				cellClass: 'rt2-directory-column-id',
+				minWidth: 65,
+				resizable: true,
+				sortable: false,
+				unSortIcon: false,
+				suppressSorting: true,
 			},
-			error: (error: any) => {
-				console.log(' Error: ', error);
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+			{
+				field: 'refSetName',
+				tooltipField: 'refSetName',
+				headerName: 'Map Set Name',
+				cellClass: 'rt2-directory-column-name',
+				flex: 2,
+				resizable: true,
+				minWidth: 65,
+				sort: 'asc',
+				sortable: false,
+				unSortIcon: false,
+				suppressSorting: true,
 			},
-		});
+			{
+				field: 'code',
+				tooltipField: 'code',
+				headerName: 'Source',
+				headerTooltip: 'Source',
+				flex: 1,
+				minWidth: 125,
+				cellClass: 'blue-link',
+				resizable: true,
+				sortable: false,
+				suppressSorting: true,
+			},
+			{
+				field: 'name',
+				tooltipField: 'name',
+				headerName: 'Source PT',
+				headerTooltip: 'Source PT',
+				flex: 2,
+				resizable: true,
+				minWidth: 165,
+				cellRenderer: TemplateRendererComponent,
+				cellRendererParams: { template: this.nameSection },
+				sortable: false,
+				unSortIcon: false,
+				suppressSorting: true,
+			},
+			{
+				field: 'versionStatus',
+				tooltipField: 'versionStatus',
+				headerName: 'Workflow Status',
+				cellClass: 'rt2-directory-column-version-status',
+				minWidth: 165,
+				width: 200,
+				resizable: true,
+				cellRenderer: TemplateRendererComponent,
+				cellRendererParams: { template: this.workflowStatus },
+				sortable: false,
+				unSortIcon: false,
+				suppressSorting: true,
+			},
+			{
+				field: 'modified',
+				tooltipValueGetter: UiUtility.gridDateValueGetter,
+				headerName: 'Last Modified',
+				cellClass: 'rt2-directory-column-modified-date',
+				minWidth: 65,
+				width: 170,
+				resizable: true,
+				valueGetter: UiUtility.gridDateValueGetter,
+				floatingFilterComponent: DateTextFilterComponent,
+				floatingFilterComponentParams: { suppressFilterButton: true },
+				sortable: false,
+				unSortIcon: false,
+				suppressSorting: true,
+			},
+		];
+		this.refsetGridOptions = {
+			context: { componentParent: this },
+			pagination: true,
+			animateRows: false,
+			rowModelType: 'clientSide',
+			suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+			suppressPaginationPanel: true,
+			paginationPageSize: this.refsetGridPaging.pageSize,
+			rowSelection: 'single',
+			enableCellTextSelection: true,
+			onCellDoubleClicked: this.onGridCellClick,
+			onGridReady: this.onGridReady,
+			frameworkComponents: {
+				templateRenderer: TemplateRendererComponent,
+				categoryFilterComponent: CategoryFilterComponent,
+				dateTextFilterComponent: DateTextFilterComponent,
+			},
+			defaultColDef: {
+				sortable: true,
+				filter: false,
+				sortingOrder: ['asc', 'desc'],
+				floatingFilter: false,
+				floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false },
+				suppressMenu: true,
+				resizable: true,
+			},
+			enableBrowserTooltips: true,
+			rowClassRules: {
+				refset_tool_grid_inactive_row: function (params: any) {
+					let inactivatedRow = false;
+
+					if (params.data) {
+						inactivatedRow = params.data.active == false;
+					}
+
+					return inactivatedRow;
+				},
+			},
+		};
+
+		this.showTable = true;
+		this.changeDetectorRef.detectChanges();
 	}
 
 	showDropdown(): void {
@@ -343,7 +333,6 @@ export class DashboardComponent implements OnInit {
 		this.refsetService.getMappingsRecentlyModified().subscribe({
 			next: (results) => {
 				this.showLoadingSearch = false;
-				console.log(' -- results: ', results);
 				const data = results;
 
 				this.refsetData = data;
@@ -358,7 +347,6 @@ export class DashboardComponent implements OnInit {
 					this.refsetGridPaging.totalKnown = true;
 					this.refsetGridApi.showNoRowsOverlay();
 					this.refsetGridApi.setGridOption('rowData', []);
-					console.log(' -0000- results.length: ', results.length);
 					if (pageNumber > 1) {
 						this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
 						this.refsetGridPaging.totalKnown = true;
@@ -373,7 +361,6 @@ export class DashboardComponent implements OnInit {
 					this.searchInput = JSON.parse(localStorage.getItem('librarySearchInput'));
 					this.refsetGridApi.setGridOption('quickFilterText', this.searchInput);
 				}
-
 				UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
 			},
 			error: (error: any) => {

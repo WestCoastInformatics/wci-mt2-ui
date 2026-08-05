@@ -70,6 +70,7 @@ import { MapsetMappingComponent } from './pages/mapset-mapping/mapset-mapping.co
 import { EditMappingComponent } from './pages/edit-mapping/edit-mapping.component';
 import { BatchMappingComponent } from './pages/batch-mapping/batch-mapping.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { InboxComponent } from './pages/inbox/inbox.component';
 import { PersonalComponent } from './pages/personal/personal.component';
 import { PersonalLandingComponent } from './pages/personal/landing/landing.component';
 import { PersonalConfigurationComponent } from './pages/personal/configuration/configuration.component';
@@ -97,7 +98,6 @@ import { LoginComponent } from 'src/app/auth/login/login.component';
 import { InviteComponent } from 'src/app/auth/invite/invite.component';
 import { ReviewModalComponent } from 'src/app/components/review-modal/review-modal.component';
 import { UsersService } from './services/rest/users.service';
-import { RemoveDashboardComponentModalComponent } from './components/remove-dashboard-component-modal/remove-dashboard-component-modal.component';
 import { RefsetFeedbackListComponent } from './components/refset-feedback-list/refset-feedback-list.component';
 import { DomService } from './services/dom.service';
 import { PaginationModule } from './components/pagination/pagination.module';
@@ -216,6 +216,7 @@ const appRoutes: Routes = [
 		InviteComponent,
 		LandingComponent,
 		DashboardComponent,
+		InboxComponent,
 		SidebarComponent,
 		MapsetLibraryComponent,
 		MapsetProjectsComponent,
@@ -231,7 +232,6 @@ const appRoutes: Routes = [
 		PersonalComponent,
 		PersonalLandingComponent,
 		PersonalConfigurationComponent,
-		RemoveDashboardComponentModalComponent,
 		WorkflowStatusBadgeComponent,
 		RefsetMetaTableComponent,
 		WorkflowStatusComponent,
