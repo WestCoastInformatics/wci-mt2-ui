@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
@@ -27,7 +27,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 	templateUrl: './inbox.component.html',
 	styleUrls: ['./inbox.component.css'],
 })
-export class InboxComponent implements OnInit, AfterViewInit {
+export class InboxComponent implements OnInit {
 	user!: User;
 	searchInput = '';
 	viewOptions = [
@@ -93,7 +93,7 @@ export class InboxComponent implements OnInit, AfterViewInit {
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
-	@ViewChild('workflowStatusSection') workflowStatusSection!: TemplateRef<any>;
+	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
 	@ViewChild('directoryInfoDialog') infoDialog!: TemplateRef<any>;
 	@ViewChild('directoryFeedbackDialog') feedbackDialog!: TemplateRef<any>;
 	@ViewChild('directoryInfoSection') infoSection!: TemplateRef<any>;
@@ -129,6 +129,7 @@ export class InboxComponent implements OnInit, AfterViewInit {
 		this.titleService.setTitle('Mapping Tool - Inbox');
 		this.breadcrumbService.setBreadcrumbs([{ label: 'Inbox' }]);
 		this.clearSavedSelections();
+		this.getMapsetData();
 		this.getModuleMetadata();
 		this.disableChannel.postMessage(false);
 	}
@@ -206,8 +207,8 @@ export class InboxComponent implements OnInit, AfterViewInit {
 				suppressSorting: true,
 			},
 			{
-				field: 'conceptCode',
-				tooltipField: 'conceptCode',
+				field: 'code',
+				tooltipField: 'code',
 				headerName: 'Source',
 				headerTooltip: 'Source',
 				flex: 1,
@@ -218,30 +219,32 @@ export class InboxComponent implements OnInit, AfterViewInit {
 				suppressSorting: true,
 			},
 			{
-				field: 'conceptName',
-				tooltipField: 'conceptName',
+				field: 'name',
+				tooltipField: 'name',
 				headerName: 'Source PT',
-				cellClass: 'rt2-directory-column-name',
+				headerTooltip: 'Source PT',
 				flex: 2,
 				resizable: true,
-				minWidth: 65,
-				sort: 'asc',
+				minWidth: 165,
+				cellRenderer: TemplateRendererComponent,
+				cellRendererParams: { template: this.nameSection },
 				sortable: false,
 				unSortIcon: false,
 				suppressSorting: true,
 			},
 			{
-				field: 'workflowStatus',
-				tooltipField: 'workflowStatus',
+				field: 'versionStatus',
+				tooltipField: 'versionStatus',
 				headerName: 'Workflow Status',
 				cellClass: 'rt2-directory-column-version-status',
 				minWidth: 165,
 				width: 200,
 				resizable: true,
 				cellRenderer: TemplateRendererComponent,
-				cellRendererParams: { template: this.workflowStatusSection },
-				unSortIcon: false,
+				cellRendererParams: { template: this.workflowStatus },
 				sortable: false,
+				unSortIcon: false,
+				suppressSorting: true,
 			},
 			{
 				field: 'modified',
@@ -405,7 +408,6 @@ export class InboxComponent implements OnInit, AfterViewInit {
 				this.refsetData = mappings;
 				this.numOfMembers = results.total;
 				this.numOfResults = results.total;
-				results.items = this.refsetData;
 
 				const lastIndex = document.getElementsByClassName('ag-header').length - 1;
 				const child = document.getElementsByClassName('ag-header')[lastIndex];
