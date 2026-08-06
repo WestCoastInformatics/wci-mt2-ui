@@ -42,6 +42,7 @@ export class MapsetRecordsComponent implements OnInit {
 	];
 	selectedVersion: any;
 	refsetGridApi: any;
+	refsetGridParams: any;
 	columnDefs: any;
 	historyColumnDefs: any;
 	refsetGridColumns = [
@@ -880,6 +881,7 @@ export class MapsetRecordsComponent implements OnInit {
 	onGridReady = (gridReadyParams: any) => {
 		if (gridReadyParams?.api && gridReadyParams.type === 'gridReady') {
 			this.refsetGridApi = gridReadyParams.api;
+			this.refsetGridParams = gridReadyParams;
 			if (this.mapsetRecordsColumnStorage) {
 				if (!localStorage.getItem(this.mapsetRecordsColumnStorage)) {
 					const columns: any = [];
@@ -1055,6 +1057,7 @@ export class MapsetRecordsComponent implements OnInit {
 							this.showPaging = true;
 
 							if (data?.length > 0) {
+								this.getMappingWorkflowStatus();
 								this.showPaging = true;
 								this.refsetGridApi.hideOverlay();
 								this.paginationPages = Math.ceil(this.numOfMembers / this.refsetGridPaging.pageSize)
@@ -1098,6 +1101,24 @@ export class MapsetRecordsComponent implements OnInit {
 				}
 			},
 		};
+	}
+
+	getMappingWorkflowStatus() {
+		for (let i = 0; i < this.mapsetData.length; i++) {
+			this.refsetService.getMappingWorkflowStatus(this.mapsetCode!, this.mapsetData[i].code).subscribe({
+				next: (results) => {
+					console.log(' status results', results);
+					this.mapsetData.forEach((data: any) => {
+						if (data.code === results.sourceConceptCode) {
+							data.workflowStatus = results.workflowStatus.replace('_', ' ').trim();
+						}
+					});
+					//want to sort group entries?
+					this.refsetGridApi.refreshCells(this.refsetGridParams);
+					this.refsetGridApi.redrawRows();
+				},
+			});
+		}
 	}
 
 	checkboxRowSelect(event, index) {

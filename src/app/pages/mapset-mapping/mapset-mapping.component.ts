@@ -73,13 +73,15 @@ export class MapsetMappingComponent implements OnInit {
 	currentRowColor = 0;
 	moduleMetadata: any;
 	refsetData: any;
+	userList: string[] = [];
+	selectedUser = '';
 	waitingForResponse = false;
 	workFlowStatus = { label: '', value: '', message: '', notes: '' };
 	workFlowNotesFC = new FormControl('');
 	mappingStatus = { current: '', next: '' };
 
 	reviewWF = [
-		{ label: 'Finish Editing', value: 'FINISH_EDITING', message: 'Are you sure you want to finish editing this Mapping?', notes: '' },
+		{ label: 'Request Review', value: 'FINISH_EDITING', message: 'Are you sure you want to finish editing this Mapping?', notes: '' },
 		{ label: 'Start Review', value: 'START_REVIEW', message: 'Are you sure you want to start reviewing this Mapping?', notes: '' },
 		{ label: 'Accept Review', value: 'ACCEPT_REVIEW', message: 'Are you sure you want to accept the review for this Mapping?', notes: '' },
 		{ label: 'Reject Review', value: 'REJECT_REVIEW', message: 'Are you sure you want to reject the review for this Mapping?', notes: '' },
@@ -145,18 +147,23 @@ export class MapsetMappingComponent implements OnInit {
 		this.refsetService.getMappingWorkflowStatus(this.mapsetCode!, this.conceptCode).subscribe({
 			next: (results) => {
 				console.log(' status results', results);
-
-				this.mappingStatus.current = results.workflowStatus;
-				switch (results.workflowStatus) {
-					case 'EDITING_DONE':
+				this.userList = ['devUser'];
+				this.selectedUser = '';
+				this.mappingStatus.current = results.workflowStatus.replace('_', ' ').trim();
+				switch (this.mappingStatus.current) {
+					case 'NEW':
+						this.mappingStatus.next = 'FINISH_EDITING';
+						break;
+					case 'EDITING DONE':
 						this.mappingStatus.next = 'START_REVIEW';
 						break;
-					case 'IN_REVIEW':
+					case 'IN REVIEW':
 						this.mappingStatus.next = 'ACCEPT_REVIEW';
 						break;
 					default:
 						this.mappingStatus.next = '';
 				}
+				console.log(' this.mappingStatus.current', this.mappingStatus.current);
 			},
 		});
 
@@ -419,7 +426,7 @@ export class MapsetMappingComponent implements OnInit {
 		}
 		this.waitingForResponse = true;
 		this.refsetService
-			.setMappingWorkflowStatus(this.mapsetInfo.id, this.conceptCode, this.workFlowStatus.value, this.workFlowStatus.notes, '')
+			.setMappingWorkflowStatus(this.mapsetInfo.id, this.conceptCode, this.workFlowStatus.value, this.workFlowStatus.notes, this.selectedUser)
 			.subscribe((response) => {
 				if (response) {
 					//this.mapsetInfo = response;

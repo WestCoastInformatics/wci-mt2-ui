@@ -2415,6 +2415,11 @@ app-grid-header-floating-filter {
 	-webkit-text-fill-color: unset !important;
 }
 
+.mat-mdc-select-placeholder {
+	color: #666 !important;
+	font-weight: 500;
+}
+
 .no-outline,
 .no-outline:focus {
 	outline: none !important;
