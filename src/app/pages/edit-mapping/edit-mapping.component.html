@@ -984,3 +984,40 @@
 		<button type="button" title="Confirm" class="rt2-btn rt2-action-btn" (click)="confirmRemoveItem()">Confirm</button>
 	</div>
 </ng-template>
+
+<ng-template #workFlowModal let-modal>
+	<div class="modal-header rt2-modal-header">
+		<div class="modal-title">{{ workFlowStatus.label }}</div>
+		<button
+			type="button"
+			class="close dialog-close-x close-icon-font"
+			title="Close"
+			aria-label="Close"
+			(click)="!waitingForResponse ? closeWorkFlowModal() : null"
+		>
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<p class="p-l-30 p-t-10 p-b-0">{{ workFlowStatus.message }}</p>
+	<div class="modal-body m-t-5">
+		<textarea
+			#workFlowModalNotes
+			class="form-field-value notes-text"
+			type="text"
+			name="notes"
+			placeholder="enter status change notes..."
+			[formControl]="workFlowNotesFC"
+		></textarea>
+	</div>
+	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+		<button type="button" class="rt2-btn rt2-action-btn" (click)="!waitingForResponse ? closeWorkFlowModal() : null">Cancel</button>
+		<button
+			type="button"
+			title="Confirm {{ workFlowStatus.label }}"
+			class="rt2-btn rt2-action-btn"
+			(click)="!waitingForResponse ? changeWorkFlowStatus() : null"
+		>
+			Confirm
+		</button>
+	</div>
+</ng-template>

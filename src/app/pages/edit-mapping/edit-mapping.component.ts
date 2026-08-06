@@ -98,6 +98,7 @@ export class EditMappingComponent implements OnInit {
 	showLoadingSearch = true;
 	toBeDevelopedModalRef!: NgbModalRef;
 	confirmModalRef!: NgbModalRef;
+	workFlowModalRef!: NgbModalRef;
 	isModalOpen = false;
 	mapsetName = 'Mapset Name';
 	selectedMapset: any;
@@ -151,6 +152,9 @@ export class EditMappingComponent implements OnInit {
 	browserColumnDefs: any;
 	conceptDetail = false;
 	currentConcept: any;
+	waitingForResponse = false;
+	workFlowStatus = { label: '', value: '', message: '', notes: '' };
+	workFlowNotesFC = new FormControl('');
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -159,7 +163,9 @@ export class EditMappingComponent implements OnInit {
 	@ViewChild('directoryActionSection') actionSection!: TemplateRef<any>;
 	@ViewChild('confirmationModal') confirmationModal!: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal!: TemplateRef<any>;
+	@ViewChild('workFlowModalNotes') private workflowModalNotes!: ElementRef;
 	@ViewChild('browserSearchInput') private browserSearchInput!: ElementRef;
+	@ViewChild('workFlowModal') workflowModal!: TemplateRef<any>;
 	@ViewChild('actions') private actions!: MatSelect;
 	@ViewChild('selectRelationship') private selectRelationship!: MatSelect;
 	@ViewChild('selectRule') private selectRule!: MatSelect;
@@ -1422,6 +1428,10 @@ export class EditMappingComponent implements OnInit {
 			case 'view':
 				this.goToMappingPage('_self');
 				break;
+			case 'review':
+				this.workFlowStatus = { label: 'Finish Editing', value: 'FINISH_EDITING', message: 'message?', notes: '' }; //'Review'; //this.publishWF[0];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
 			default:
 				this.openToBeDevelopedModal(this.tbdModal);
 		}
@@ -1440,6 +1450,38 @@ export class EditMappingComponent implements OnInit {
 					skipLocationChange: false,
 				});
 		}
+	}
+
+	openWorkFlowModal(content: any) {
+		this.workFlowModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+		setTimeout(() => {
+			this.workflowModalNotes.nativeElement.focus();
+		}, 50);
+	}
+
+	closeWorkFlowModal() {
+		this.workFlowModalRef.close();
+		this.isModalOpen = false;
+		this.workFlowStatus = { label: '', value: '', message: '', notes: '' };
+		this.workFlowNotesFC.setValue('');
+		this.workFlowNotesFC.reset();
+		this.waitingForResponse = false;
+	}
+
+	changeWorkFlowStatus() {
+		if (this.workFlowNotesFC.dirty) {
+			this.workFlowStatus.notes = this.workFlowNotesFC.value;
+		}
+		this.waitingForResponse = true;
+		this.refsetService.setMapsetWorkflowStatus(this.mapsetInfo.id, this.workFlowStatus.value, this.workFlowStatus.notes).subscribe((response) => {
+			if (response) {
+				//this.mapsetInfo = response;
+				console.log(' Mapset Info: ', response);
+				//this.setWorkflowStatus();
+				this.getMapsetInfo();
+			}
+		});
 	}
 
 	toggleSectionView(section: string) {

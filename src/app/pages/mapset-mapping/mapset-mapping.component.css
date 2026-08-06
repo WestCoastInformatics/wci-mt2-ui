@@ -508,6 +508,10 @@
 	filter: invert(10%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 
+.notes-text {
+	width: 100%;
+}
+
 .discussion-icon {
 	cursor: pointer;
 	margin-top: -0.2em;

@@ -91,6 +91,7 @@ export class BatchMappingComponent implements OnInit {
 	toBeDevelopedModalRef!: NgbModalRef;
 	confirmModalRef!: NgbModalRef;
 	headerGroupModal!: NgbModalRef;
+	workFlowModalRef!: NgbModalRef;
 	isModalOpen = false;
 	mapsetName = 'Mapset Name';
 	selectedMapset: any;
@@ -162,6 +163,9 @@ export class BatchMappingComponent implements OnInit {
 	browserColumnDefs: any;
 	conceptDetail = false;
 	currentConcept: any;
+	waitingForResponse = false;
+	workFlowStatus = { label: '', value: '', message: '', notes: '' };
+	workFlowNotesFC = new FormControl('');
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -174,6 +178,7 @@ export class BatchMappingComponent implements OnInit {
 	@ViewChild('headerGroupModal') headerGroup!: TemplateRef<any>;
 	@ViewChild('directoryCheckSection') checkSection!: TemplateRef<any>;
 	@ViewChild('browserCheckSection') checkBrowserSection!: TemplateRef<any>;
+	@ViewChild('workFlowModalNotes') private workflowModalNotes!: ElementRef;
 	@ViewChild('directoryCodeSection') codeSection!: TemplateRef<any>;
 	@ViewChild('directoryNameSection') nameSection!: TemplateRef<any>;
 	@ViewChild('directoryToNameSection') toNameSection!: TemplateRef<any>;
@@ -1854,6 +1859,38 @@ export class BatchMappingComponent implements OnInit {
 
 	goToMappingsPage() {
 		this.router.navigate(['/mapset/' + this.mapsetCode + '/mappings'], { replaceUrl: false, skipLocationChange: false });
+	}
+
+	openWorkFlowModal(content: any) {
+		this.workFlowModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+		setTimeout(() => {
+			this.workflowModalNotes.nativeElement.focus();
+		}, 50);
+	}
+
+	closeWorkFlowModal() {
+		this.workFlowModalRef.close();
+		this.isModalOpen = false;
+		this.workFlowStatus = { label: '', value: '', message: '', notes: '' };
+		this.workFlowNotesFC.setValue('');
+		this.workFlowNotesFC.reset();
+		this.waitingForResponse = false;
+	}
+
+	changeWorkFlowStatus() {
+		if (this.workFlowNotesFC.dirty) {
+			this.workFlowStatus.notes = this.workFlowNotesFC.value;
+		}
+		this.waitingForResponse = true;
+		this.refsetService.setMapsetWorkflowStatus(this.mapsetInfo.id, this.workFlowStatus.value, this.workFlowStatus.notes).subscribe((response) => {
+			if (response) {
+				//this.mapsetInfo = response;
+				console.log(' Mapset Info: ', response);
+				//this.setWorkflowStatus();
+				this.getMapsetInfo();
+			}
+		});
 	}
 
 	toggleSectionView(section: string) {

@@ -373,8 +373,24 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + `mapset/${mapsetId}/workflowStatus/`, '', false);
 	}
 
+	getMappingWorkflowStatus(mapsetId: string, conceptCode: string): Observable<any> {
+		return this.get(this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/workflowStatus`, '', false);
+	}
+
 	setMapsetWorkflowStatus(mapsetId: string, action: string, notes: string): Observable<any> {
 		return this.post(this.contextPath + `mapset/${mapsetId}/workflowStatus?action=${action}&notes=${notes}`, '');
+	}
+
+	setMappingWorkflowStatus(mapsetId: string, conceptCode: string, action: string, notes: string, assign: string): Observable<any> {
+		return this.post(
+			this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/workflowStatus?action=${action}&notes=${notes}&assignToUser=${assign}`,
+			'',
+		);
+	}
+
+	setMappingsWorkflowStatus(mapsetId: string, conceptCodes: any, action: string, notes: string, assign: string): Observable<any> {
+		const url = this.contextPath + `mapset/${mapsetId}/mappings/workflowStatus?action=${action}&notes=${notes}&assignToUser=${assign}`;
+		return this.post(url, conceptCodes);
 	}
 
 	//not used

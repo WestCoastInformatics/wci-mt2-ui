@@ -736,6 +736,10 @@
 	padding-left: 0.5em !important;
 }
 
+.notes-text {
+	width: 100%;
+}
+
 .discussion-icon {
 	cursor: pointer;
 	margin-top: -0.2em;

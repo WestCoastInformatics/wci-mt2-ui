@@ -13,6 +13,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
+import { FormControl } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
@@ -50,10 +51,11 @@ export class MapsetMappingComponent implements OnInit {
 	showLoadingSearch = true;
 	toBeDevelopedModalRef!: NgbModalRef;
 	downloadModalRef!: NgbModalRef;
+	workFlowModalRef!: NgbModalRef;
 	isModalOpen = false;
 	mapsetName = 'Mapset Name';
 	mapsetCode: string | undefined;
-	conceptCode: string | undefined;
+	conceptCode = '';
 	mapping: string | undefined;
 	routeParamsSubscription$!: Subscription;
 	mapsetVersionStorage = 'mapsetVersion';
@@ -71,12 +73,25 @@ export class MapsetMappingComponent implements OnInit {
 	currentRowColor = 0;
 	moduleMetadata: any;
 	refsetData: any;
+	waitingForResponse = false;
+	workFlowStatus = { label: '', value: '', message: '', notes: '' };
+	workFlowNotesFC = new FormControl('');
+	mappingStatus = { current: '', next: '' };
+
+	reviewWF = [
+		{ label: 'Finish Editing', value: 'FINISH_EDITING', message: 'Are you sure you want to finish editing this Mapping?', notes: '' },
+		{ label: 'Start Review', value: 'START_REVIEW', message: 'Are you sure you want to start reviewing this Mapping?', notes: '' },
+		{ label: 'Accept Review', value: 'ACCEPT_REVIEW', message: 'Are you sure you want to accept the review for this Mapping?', notes: '' },
+		{ label: 'Reject Review', value: 'REJECT_REVIEW', message: 'Are you sure you want to reject the review for this Mapping?', notes: '' },
+	];
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
 	@ViewChild('directoryInfoDialog') infoDialog!: TemplateRef<any>;
 	@ViewChild('directoryFeedbackDialog') feedbackDialog!: TemplateRef<any>;
 	@ViewChild('directoryActionSection') actionSection!: TemplateRef<any>;
+	@ViewChild('workFlowModalNotes') private workflowModalNotes!: ElementRef;
+	@ViewChild('workFlowModal') workflowModal!: TemplateRef<any>;
 	@ViewChild('downloadModal') downloadModal!: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal!: TemplateRef<any>;
 	@ViewChild('actions') private actions!: MatSelect;
@@ -127,6 +142,24 @@ export class MapsetMappingComponent implements OnInit {
 	}
 
 	getMapsetInfo() {
+		this.refsetService.getMappingWorkflowStatus(this.mapsetCode!, this.conceptCode).subscribe({
+			next: (results) => {
+				console.log(' status results', results);
+
+				this.mappingStatus.current = results.workflowStatus;
+				switch (results.workflowStatus) {
+					case 'EDITING_DONE':
+						this.mappingStatus.next = 'START_REVIEW';
+						break;
+					case 'IN_REVIEW':
+						this.mappingStatus.next = 'ACCEPT_REVIEW';
+						break;
+					default:
+						this.mappingStatus.next = '';
+				}
+			},
+		});
+
 		this.refsetService.getMapsetsByCode(this.mapsetCode!).subscribe((results) => {
 			if (results?.length > 0) {
 				this.mapsetName = results[0]?.refSetName;
@@ -291,9 +324,6 @@ export class MapsetMappingComponent implements OnInit {
 					}, 2);
 				}
 				break;
-			case 'review':
-				this.openToBeDevelopedModal(this.tbdModal);
-				break;
 		}
 	}
 
@@ -364,6 +394,62 @@ export class MapsetMappingComponent implements OnInit {
 		this.selectedFormat = {};
 		this.downloadModalRef.close();
 		this.isModalOpen = false;
+	}
+
+	openWorkFlowModal(content: any) {
+		this.workFlowModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+		setTimeout(() => {
+			this.workflowModalNotes.nativeElement.focus();
+		}, 50);
+	}
+
+	closeWorkFlowModal() {
+		this.workFlowModalRef.close();
+		this.isModalOpen = false;
+		this.workFlowStatus = { label: '', value: '', message: '', notes: '' };
+		this.workFlowNotesFC.setValue('');
+		this.workFlowNotesFC.reset();
+		this.waitingForResponse = false;
+	}
+
+	changeWorkFlowStatus() {
+		if (this.workFlowNotesFC.dirty) {
+			this.workFlowStatus.notes = this.workFlowNotesFC.value;
+		}
+		this.waitingForResponse = true;
+		this.refsetService
+			.setMappingWorkflowStatus(this.mapsetInfo.id, this.conceptCode, this.workFlowStatus.value, this.workFlowStatus.notes, '')
+			.subscribe((response) => {
+				if (response) {
+					//this.mapsetInfo = response;
+					console.log(' Mapset Info: ', response);
+					//this.setWorkflowStatus();
+					this.getMapsetInfo();
+					this.closeWorkFlowModal();
+				}
+			});
+	}
+
+	reviewWorkflow(status: any) {
+		switch (status) {
+			case this.reviewWF[0].value: //FINISH_EDIT
+				this.workFlowStatus = this.reviewWF[0];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+			case this.reviewWF[1].value: //START_REVIEW
+				this.workFlowStatus = this.reviewWF[1];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+			case this.reviewWF[2].value: //ACCEPT_REVIEW
+				this.workFlowStatus = this.reviewWF[2];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+			case this.reviewWF[3].value: //REJECT_REVIEW
+				this.workFlowStatus = this.reviewWF[3];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+		}
 	}
 
 	//***** General Functions *****/

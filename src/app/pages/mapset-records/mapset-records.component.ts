@@ -886,6 +886,7 @@ export class MapsetRecordsComponent implements OnInit {
 					const columnDefs = this.refsetGridApi.getColumnDefs?.();
 					for (const column of columnDefs) {
 						const columnData: any = {};
+
 						if (!column.colId) {
 							columnData.colId = column.field;
 						} else {
