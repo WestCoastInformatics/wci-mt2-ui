@@ -68,6 +68,7 @@
 .workflow-container {
 	position: relative;
 	white-space: nowrap;
+	margin-right: 120px;
 }
 
 .user-selection {

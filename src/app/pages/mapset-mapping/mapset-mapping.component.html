@@ -63,8 +63,8 @@
 						</mat-menu>
 					</div>
 				</div>
-				<div class="action-column d-flex col-2">
-					<div class="workflow-container" *ngIf="!libraryOnly && loaded">
+				<div class="action-column align-self-center col-2">
+					<div class="workflow-container d-flex justify-content-end" *ngIf="!libraryOnly && loaded">
 						<workflow-status-badge [status]="mappingStatus.current"></workflow-status-badge>
 					</div>
 				</div>
