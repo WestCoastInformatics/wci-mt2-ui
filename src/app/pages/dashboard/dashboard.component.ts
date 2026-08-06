@@ -214,7 +214,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				resizable: true,
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.workflowStatusSection },
-				unSortIcon: true,
+				unSortIcon: false,
+				sortable: false,
 			},
 			{
 				field: 'modified',
