@@ -15,6 +15,9 @@
 <ng-container *ngIf="status === 'READY_FOR_REVIEW'">
 	<div class="ready-for-review-projects-button">Ready For Review</div>
 </ng-container>
+<ng-container *ngIf="status === 'EDITING DONE'">
+	<div class="ready-for-review-projects-button">Ready For Review</div>
+</ng-container>
 <ng-container *ngIf="status === 'IN_REVIEW'">
 	<div class="in-review-projects-button">In Review</div>
 </ng-container>
@@ -24,3 +27,7 @@
 <ng-container *ngIf="status === 'READY_FOR_PUBLICATION'">
 	<div class="ready-for-publication-projects-button">Ready For Publication</div>
 </ng-container>
+<!-- FINISH_EDITING   Specialist submits for review → REVIEW_NEEDED
+  START_REVIEW     Lead starts review            → REVIEW_IN_PROGRESS
+  ACCEPT_REVIEW    Lead accepts review           → REVIEW_RESOLVED
+  REJECT_REVIEW    Lead rejects review           → NEW -->
