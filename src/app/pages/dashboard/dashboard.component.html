@@ -1,12 +1,14 @@
 <div *ngIf="showLoadingSpinner" class="loading"></div>
-<div class="content-header">
-	<div class="row header-title">
-		<span class="title-label dashboard-title">My Dashboard</span>
+<div class="content-header top-search-bar">
+	<div class="d-flex">
+		<div class="row d-flex">
+			<div class="col-10 rt2-wrap page-title">My Dashboard</div>
+		</div>
 	</div>
 </div>
 <div class="rt2-container">
 	<div class="row">
-		<div class="col-md-4 col-12">
+		<!-- <div class="col-md-4 col-12">
 			<section>
 				<heading-with-count title="My Organizations" [count]="organizationList.length"></heading-with-count>
 				<div class="dashboard-section">
@@ -20,11 +22,7 @@
 							</div>
 						</ng-container>
 					</div>
-					<!--
-					<div>
-						<create-new-organization-modal></create-new-organization-modal>
-					</div>
-					-->
+		
 				</div>
 			</section>
 
@@ -60,16 +58,16 @@
 					</div>
 				</div>
 			</section>
-		</div>
-		<div class="col-md-8 col-12">
+		</div> -->
+		<div class="col-md-12 col-12">
 			<section>
-				<heading-with-count title="Recent Reference Sets" [count]="data.length"></heading-with-count>
+				<heading-with-count title="Recent Mappings" [count]="data.length"></heading-with-count>
 				<div class="ag-theme-alpine">
 					<ag-grid-angular [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" class="w-100-pct h-638"> </ag-grid-angular>
 
 					<!-- Workflow Status Templates -->
-					<ng-template #dashboardWorkflowStatusSection let-params>
-						<workflow-status-badge [status]="params?.data?.workflowStatus"> </workflow-status-badge>
+					<ng-template #workflowStatusSection let-params>
+						<workflow-status-badge [status]="params?.value"> </workflow-status-badge>
 					</ng-template>
 				</div>
 			</section>

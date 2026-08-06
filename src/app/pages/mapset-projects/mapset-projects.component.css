@@ -5,7 +5,6 @@
 	width: 340px;
 	margin-top: 0.25em;
 
-	/* // set this to 20px less than the field to leave room for the cancel 'X' */
 	.mat-form-field-flex {
 		width: 320px;
 	}
@@ -94,6 +93,14 @@
 	padding-right: 15px;
 }
 
+.modal-select {
+	text-align: center;
+}
+
+.modal-label {
+	padding-right: 10px;
+}
+
 .rt2-directory-chooser-column {
 	padding-right: 20px;
 	margin-top: -0.5em;
@@ -154,24 +161,20 @@
 	filter: none;
 }
 
-.loading-details {
-	position: absolute;
-	z-index: 100;
-	background: white;
+.section-loading {
+	background: rgba(232, 240, 255, 1) !important;
 	border: 0.2px groove #999 !important;
-	border-radius: 0;
-	margin-left: 45%;
-	margin-top: 10%;
+	border-radius: 3px !important;
+	margin-left: 45% !important;
+	margin-top: 1% !important;
 	padding: 0.25em;
-	width: 6.5em;
-	padding-left: 0;
+	width: fit-content;
 }
 
 .mapset-notes-icon {
 	cursor: pointer;
 	width: 24px;
-	/* //height: 24px; */
-	/* //color: #2269e8; */
+
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 
@@ -189,7 +192,7 @@
 	margin-top: -0.2em;
 	width: 24px;
 	height: 24px;
-	/* //color: #2269e8; */
+
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 

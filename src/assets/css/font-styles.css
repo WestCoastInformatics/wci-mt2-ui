@@ -295,6 +295,8 @@ p,
 	font-size: var(--standard_font_size_h4);
 	font-weight: var(--standard_font_weight);
 	font-family: var(--standard_font_family) !important;
+	font-weight: var(--standard_font_weight) !important;
+	color: var(--standard_table_data_color);
 }
 
 .sidebar-icon-font {

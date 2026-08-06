@@ -2,27 +2,19 @@
 	<div class="loading"></div>
 }
 
-<!-- Search Bar -->
+<!-- Heading -->
 <div class="top-search-bar content-header">
-	<div class="d-flex justify-content-end">
-		<div class="row d-flex">
-			<div class="col-md-10 page-title" title="{{ mapsetInfo.refSetName }}">
+	<div class="d-flex">
+		<div class="row">
+			<div class="col-md-9 page-title" title="{{ mapsetInfo.refSetName }}">
 				<div class="rt2-wrap">{{ mapsetInfo.refSetName }}</div>
-				<app-workflow-status
-					[workflowStatus]="mapsetInfo.workflowStatus !== null ? mapsetInfo.workflowStatus : mapsetInfo.versionStatus"
-					class="col-1"
-					[hidden]="waitingForResponse"
-				>
-				</app-workflow-status>
 			</div>
-
-			<!-- <div class="col-md-2 page-title">{{ mapsetInfo.workflowStatus }}</div> -->
-			<div class="col-md-2 d-flex header-menu">
+			<div class="col-md-3 d-flex header-menu">
 				<mat-form-field
 					floatLabel="never"
-					class="directoryViewFilterField format-version-drop-down"
+					class="directoryViewFilterField format-version-drop-down m-r-10"
 					appearance="fill"
-					[hidden]="waitingForResponse"
+					*ngIf="!waitingForResponse && versionStatuses.length > 1"
 				>
 					<mat-label></mat-label>
 					<mat-select
@@ -35,6 +27,7 @@
 						<mat-option *ngFor="let option of versionStatuses" [value]="option" class="no-checkbox"> {{ option }} </mat-option>
 					</mat-select>
 				</mat-form-field>
+				<span *ngIf="versionStatuses.length === 1" class="list-font align-self-center m-r-5">{{ versionStatuses[0] }}</span>
 			</div>
 		</div>
 		<div class="col-md-auto d-flex">
@@ -61,14 +54,19 @@
 					class="library-app-refset-notes mr-20 no-padding"
 					[hidden]="waitingForResponse"
 				>
-					<img src="/assets/comment-dots-regular.svg" title="Add Feedback" aria-label="Add Feedback" class="discussion-icon" />
+					<img
+						src="/assets/comment-dots-regular.svg"
+						title="{{ `${libraryOnly ? 'View' : 'Add'} Feedback` }}"
+						aria-label="Add Feedback"
+						class="discussion-icon"
+					/>
 				</button>
 			</div>
 		</div>
 	</div>
 </div>
 <div [hidden]="loaded || waitingForResponse" class="section-loading">Loading...</div>
-<div class="row edit-actions" *ngIf="loaded && !waitingForResponse">
+<div class="row edit-actions" *ngIf="loaded && !waitingForResponse && !libraryOnly">
 	<div class="col"></div>
 	<div class="col-md-auto no-margin-top">
 		<span class="date-column">
@@ -148,7 +146,7 @@
 		</span>
 	</div>
 </div>
-<div class="rt2-container" (window:resize)="onResize($event)">
+<div class="rt2-container" (window:resize)="onResize($event)" [ngClass]="{ 'm-t-20': libraryOnly }">
 	<div class="metadata-collapsible-container">
 		<div class="switch-view" *ngIf="showMappingsSection && loaded" [hidden]="numOfMembers === 0">
 			<mat-label class="switch-label">view by</mat-label>
@@ -194,6 +192,7 @@
 					[gridColumnApi]="refsetGridApi"
 					[useDialog]="useDialog"
 					[columnStorage]="mapsetRecordsColumnStorage"
+					[manualStateRefresh]="manualStateRefresh"
 				>
 				</app-column-chooser>
 			</div>
@@ -257,13 +256,23 @@
 					<button mat-menu-item (click)="selectAction('view')" [disabled]="checkedNum !== 1">
 						<span>View Selected Mapping</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('edit')" [disabled]="checkedNum !== 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
+					<button
+						*ngIf="!libraryOnly"
+						mat-menu-item
+						(click)="selectAction('edit')"
+						[disabled]="checkedNum !== 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+					>
 						<span>Edit Selected Mapping</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('batch')" [disabled]="checkedNum < 2 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
+					<button
+						*ngIf="!libraryOnly"
+						mat-menu-item
+						(click)="selectAction('batch')"
+						[disabled]="checkedNum < 2 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+					>
 						<span>Batch Edit Selected Mappings</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('list')" [disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'">
+					<button *ngIf="!libraryOnly" mat-menu-item (click)="selectAction('list')" [disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'">
 						<span>Batch Edit Maps By List</span>
 					</button>
 					<button mat-menu-item (click)="selectAction('selected')" [disabled]="checkedNum < 1">
@@ -566,9 +575,8 @@
 				<div class="record-row metadata-row d-flex">
 					<div class="col-12 odd-row d-flex">
 						<div class="code-name col-2">Current Branch</div>
-						{{ mapsetInfo.editionBranch }}/REFSETS/REFSET-{{ mapsetInfo.refSetCode }}-{{ mapsetInfo.refsetBranchId }}/EDIT-{{
-							mapsetInfo.editBranchId
-						}}
+						{{ mapsetInfo.editionBranch }}/REFSETS/REFSET-{{ mapsetInfo.refSetCode }}-{{ mapsetInfo.refsetBranchId
+						}}<span *ngIf="!libraryOnly">/EDIT-{{ mapsetInfo.editBranchId }}</span>
 					</div>
 				</div>
 			</div>
@@ -600,7 +608,7 @@
 
 		<div [hidden]="!showHistorySection" class="history-section">
 			<div [hidden]="!historyLoaded" *ngIf="numOfRecords === 0" class="status-no-results">No Results to Show</div>
-			<div class="content-wrapper">
+			<div class="content-wrapper" [hidden]="!showHistoryTable">
 				<div #gridWrapperHistory class="grid-wrapper-history">
 					<ag-grid-angular
 						*ngIf="showHistoryTable"
@@ -617,7 +625,10 @@
 			</div>
 		</div>
 	</div>
-
+	<!-- Workflow Status Templates -->
+	<ng-template #workflowStatusSection let-params>
+		<workflow-status-badge [status]="params?.value"> </workflow-status-badge>
+	</ng-template>
 	<ng-template #directoryInfoDialog let-data>
 		<div class="container-fluid w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
 			<div class="row rt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
@@ -676,13 +687,23 @@
 		<div class="d-flex" *ngIf="params?.value === true">
 			<div class="col-6">
 				<div class="library-app-refset-notes" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-					<img src="/assets/sticky-note.svg" title="View Notes" aria-label="View Notes" class="mapset-notes-icon" />
+					<img
+						src="/assets/sticky-note.svg"
+						title="{{ `${libraryOnly ? 'View' : 'Add'} Notes` }}"
+						aria-label="{{ `${libraryOnly ? 'View' : 'Add'} Notes` }}"
+						class="mapset-notes-icon"
+					/>
 				</div>
 			</div>
 
 			<div class="col-6">
 				<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-					<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
+					<img
+						src="/assets/comment-dots-regular.svg"
+						title="{{ `${libraryOnly ? 'View' : 'Add'} Feedback` }}"
+						aria-label="{{ `${libraryOnly ? 'View' : 'Add'} Feedback` }}"
+						class="discussion-icon"
+					/>
 				</div>
 			</div>
 		</div>
@@ -869,6 +890,4 @@
 			<button type="button" title="Download" class="rt2-btn rt2-action-btn" (click)="startDownload()">Download</button>
 		</div>
 	</ng-template>
-
-	<scroll-top></scroll-top>
 </div>

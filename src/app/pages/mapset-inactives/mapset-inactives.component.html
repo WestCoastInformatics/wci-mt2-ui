@@ -1,24 +1,21 @@
 <div *ngIf="showLoadingSpinner" class="loading"></div>
 
-<!-- Search Bar -->
+<!-- Heading -->
 <div class="top-search-bar content-header">
-	<div class="d-flex justify-content-end">
-		<div class="row d-flex">
+	<div class="d-flex">
+		<div class="row">
 			<div class="col-md-9 page-title">
-				<div class="rt2-wrap" *ngIf="loaded" title="Manage Inactivated Concepts for {{ mapsetName }}">
-					<span>Manage Inactivated Concepts for {{ mapsetName }}</span>
+				<div class="rt2-wrap" *ngIf="loaded" title="{{ mapsetName }}">
+					<span>{{ mapsetName }} </span>
 				</div>
-				<app-workflow-status
-					[workflowStatus]="mapsetInfo.workflowStatus !== null ? mapsetInfo.workflowStatus : mapsetInfo.versionStatus"
-					class="col-1"
-				>
-				</app-workflow-status>
 			</div>
-			<div *ngIf="loaded" class="col-md-3 list-font align-items-center">{{ selectedVersion }}</div>
+			<div *ngIf="loaded" class="col-md-3 d-flex header-menu">
+				<span class="list-font align-self-center m-r-10"> {{ selectedVersion }}</span>
+			</div>
 		</div>
-		<div class="col-md-auto d-flex ml-15">
+		<div class="col-md-auto d-flex m-r-10">
 			<div class="col">
-				<button class="library-app-refset-download mr-15" (click)="downloadReports()" [disabled]="!selectedVersion || numOfMembers === 0">
+				<button class="library-app-refset-download mr-5" (click)="downloadReports()" [disabled]="!selectedVersion || numOfMembers === 0">
 					<div class="mat-button-wrapper mapset-download-icon">
 						<i class="fa fa-download fa-lg" title="Download Report" aria-label="Download Report"></i>
 					</div>
@@ -640,6 +637,4 @@
 			<button type="button" title="Save" class="rt2-btn rt2-action-btn" (click)="saveFeedback()">Save</button>
 		</div>
 	</ng-template>
-
-	<scroll-top></scroll-top>
 </div>

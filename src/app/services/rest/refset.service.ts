@@ -345,7 +345,11 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + 'mapset');
 	}
 
-	getMapsetByCode(code: string): Observable<any> {
+	getMapsetsByStatus(status: string): Observable<any> {
+		return this.get(this.contextPath + 'mapset/?query=versionStatus:' + status);
+	}
+
+	getMapsetsByCode(code: string): Observable<any> {
 		return this.get(this.contextPath + `mapset/${code}`, '', false);
 	}
 

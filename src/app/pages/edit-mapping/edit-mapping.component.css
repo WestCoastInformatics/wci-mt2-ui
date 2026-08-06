@@ -582,8 +582,7 @@
 }
 
 .rt2-wrap {
-	display: inline-block;
-	max-width: 450px !important;
+	min-width: 75vw;
 }
 
 .rt2-upgrade {
@@ -940,7 +939,8 @@
 }
 
 .header-menu {
-	height: 40px;
+	min-width: 16vw;
+	justify-content: end;
 }
 
 .col-header-font,

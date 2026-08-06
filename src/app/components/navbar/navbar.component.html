@@ -48,8 +48,8 @@
 		<div
 			*ngIf="isUserLoggedIn"
 			class="navbar-div navbar-divider"
-			(click)="navigateToRoute('/library')"
-			[ngClass]="{ 'active-page': router.url.includes('library') }"
+			(click)="navigateToRoute('/library/')"
+			[ngClass]="{ 'active-page': isCurrentPage('library') }"
 		>
 			<div class="navbar-icon"><img src="/assets/directory-icon.svg" /></div>
 			<div class="navbar-icon-label header-icon-font">Library</div>
@@ -58,8 +58,8 @@
 		<div
 			*ngIf="isUserLoggedIn"
 			class="navbar-div navbar-divider"
-			(click)="navigateToRoute('/library')"
-			[ngClass]="{ 'active-page': router.url.includes('projects') }"
+			(click)="navigateToRoute('/projects/')"
+			[ngClass]="{ 'active-page': isCurrentPage('projects') }"
 		>
 			<div class="navbar-icon"><img src="/assets/projects-icon.svg" /></div>
 			<div class="navbar-icon-label header-icon-font">Projects</div>
@@ -69,7 +69,7 @@
 			*ngIf="isUserLoggedIn"
 			class="navbar-div navbar-divider hide"
 			(click)="navigateToRoute('/library')"
-			[ngClass]="{ 'active-page': router.url.includes('browsers') }"
+			[ngClass]="{ 'active-page': isCurrentPage('browsers') }"
 		>
 			<div class="navbar-icon"><i class="fa fa-earth-europe fa-lg navbar-icon-label navbar-fa-icon"></i></div>
 			<div class="navbar-icon-label header-icon-font">Browsers</div>
@@ -79,7 +79,7 @@
 			*ngIf="isUserLoggedIn"
 			class="navbar-div navbar-divider"
 			(click)="navigateToRoute('/library')"
-			[ngClass]="{ 'active-page': router.url.includes('inbox') }"
+			[ngClass]="{ 'active-page': isCurrentPage('inbox') }"
 		>
 			<div class="navbar-icon"><i class="fa fa-inbox fa-lg navbar-icon-label navbar-fa-icon"></i></div>
 			<div class="navbar-icon-label header-icon-font">Inbox</div>
@@ -89,7 +89,7 @@
 			*ngIf="isUserLoggedIn"
 			class="navbar-div navbar-divider"
 			(click)="navigateToRoute('/library')"
-			[ngClass]="{ 'active-page': router.url.includes('dashboard') }"
+			[ngClass]="{ 'active-page': isCurrentPage('dashboard') }"
 		>
 			<div class="navbar-icon"><img src="/assets/dashboard-icon.svg" /></div>
 			<div class="navbar-icon-label header-icon-font">Dashboard</div>
@@ -112,7 +112,7 @@
 					<div class="dropdown-item pl-3">
 						<!--[routerLink]="" (click)="navigateToRoute('/personal/' + user?.id + '/landing')">-->
 						<div class="d-flex pointer">
-<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri || '')" class="medium-icon-image mr-2" />
+							<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri || '')" class="medium-icon-image mr-2" />
 
 							<div class="profile-block">
 								<strong>{{ user?.userName }}</strong>

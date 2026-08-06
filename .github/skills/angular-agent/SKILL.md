@@ -1,14 +1,14 @@
 ---
 name: angular-agent
 user-invocable: true
-description: 'Angular agent customization helper for TermHub UI. Use this skill to create, update, or review Angular-related Copilot skill, prompt, agent, or instruction files for this workspace.'
+description: 'Angular agent customization helper for MT2 UI. Use this skill to create, update, or review Angular-related Copilot skill, prompt, agent, or instruction files for this workspace.'
 ---
 
 # Angular Agent Customization Helper
 
 ## Purpose
 
-Help create and maintain Angular-related Copilot workspace customizations for TermHub UI.
+Help create and maintain Angular-related Copilot workspace customizations for MT2 UI.
 
 ## Use When
 
@@ -28,7 +28,7 @@ Help create and maintain Angular-related Copilot workspace customizations for Te
 - Prefer signals over class-based state when writing new Angular code.
 - Keep output accessible and WCAG AA compliant.
 - Encapsulate MCP server logic in services, not components.
-- This workspace targets Angular 20. Do not suggest or generate Angular v21+ features for TermHub UI work.
+- This workspace targets Angular 20. Do not suggest or generate Angular v21+ features for MT2 UI work.
 - Prefer reactive forms for this repository.
 - Consult `.agents/AGENTS.md` as the primary authoritative workspace rule source, with `.github/references/angular-shared.md` for shared naming and UI conventions.
 

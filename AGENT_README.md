@@ -2,7 +2,7 @@ Agent documentation — where AI agents should look first
 
 Purpose
 
-This file points AI agents and humans to the canonical workspace instructions, skills, and references used by TermHub UI. It exists to make onboarding and automation deterministic.
+This file points AI agents and humans to the canonical workspace instructions, skills, and references used by MT2 UI. It exists to make onboarding and automation deterministic.
 
 Recommended loading order
 

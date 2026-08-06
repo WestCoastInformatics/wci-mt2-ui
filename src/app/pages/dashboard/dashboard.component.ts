@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
-import { GridHeaderFilterComponent } from 'src/app/components/grid-header-filter/grid-header-filter.component';
+//import { GridHeaderFilterComponent } from 'src/app/components/grid-header-filter/grid-header-filter.component';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -16,6 +16,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 	standalone: false,
 	selector: 'app-dashboard',
 	templateUrl: './dashboard.component.html',
+	styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
 	@ViewChild('dashboardWorkflowStatusSection') workflowStatus: TemplateRef<any>;
@@ -49,7 +50,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		private readonly titleService: Title,
 		private readonly refsetService: RefsetService,
 		private changeDetectorRef: ChangeDetectorRef,
-		private readonly authService: AuthenticationService
+		private readonly authService: AuthenticationService,
 	) {
 		document.body.scrollTop = 0;
 	}
@@ -65,10 +66,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 			onCellClicked: this.onGridCellClick,
 			onGridReady: this.onGridReady,
 			frameworkComponents: {
-				'templateRenderer': TemplateRendererComponent,
-				'categoryFilterComponent': CategoryFilterComponent,
-				'dateTextFilterComponent': DateTextFilterComponent,
-				'gridHeaderFilterComponent': GridHeaderFilterComponent,
+				templateRenderer: TemplateRendererComponent,
+				categoryFilterComponent: CategoryFilterComponent,
+				dateTextFilterComponent: DateTextFilterComponent,
+				// gridHeaderFilterComponent: GridHeaderFilterComponent,
 			},
 			defaultColDef: {
 				sortable: true,
@@ -81,16 +82,16 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				resizable: true,
 			},
 		};
-		this.getOrganizations();
-		this.getProjects();
-		this.getTeams();
+		// this.getOrganizations();
+		// this.getProjects();
+		// this.getTeams();
 	}
 
 	ngAfterViewInit() {
 		this.columnDefs = [
 			{
 				field: 'name',
-				headerName: 'Project / Reference Set Name',
+				headerName: 'Map Set Name',
 				flex: 2,
 				width: 550,
 				minWidth: 65,
@@ -103,36 +104,72 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				cellClass: 'pointer',
 				resizable: true,
 				floatingFilterComponent: 'gridHeaderFilterComponent',
-				floatingFilterComponentParams: { suppressFilterButton: true, placeholder: 'Search by Project or Reference Set Name' },
+				floatingFilterComponentParams: { suppressFilterButton: true, placeholder: 'Search by Map Set Name' },
 			},
 			{
-				field: 'workflowStatus',
-				tooltipField: 'workflowStatus',
-				headerName: 'Workflow Status',
-				unSortIcon: true,
-				cellClass: '',
-				cellRenderer: 'templateRenderer',
-				cellRendererParams: { template: this.workflowStatus },
-				sortable: true,
+				field: 'code',
+				tooltipField: 'code',
+				headerName: 'Source',
+				headerTooltip: 'Source',
 				flex: 1,
-				minWidth: 65,
-				width: 200,
-				floatingFilterComponent: 'categoryFilterComponent',
-				floatingFilterComponentParams: {
-					suppressFilterButton: true,
-					names: [
-						{ type: 'status', name: 'In Edit', value: 'IN_EDIT' },
-						{ type: 'status', name: 'In Review', value: 'IN_REVIEW' },
-						{ type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE' },
-						{ type: 'status', name: 'Published', value: 'PUBLISHED' },
-						{ type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT' },
-						{ type: 'status', name: 'Ready For Publication', value: 'READY_FOR_PUBLICATION' },
-						{ type: 'status', name: 'Ready For Review', value: 'READY_FOR_REVIEW' },
-						{ type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' },
-					],
-				},
+				minWidth: 125,
+				cellClass: 'blue-link',
 				resizable: true,
+				sortable: false,
+				suppressSorting: true,
 			},
+			{
+				field: 'name',
+				tooltipField: 'name',
+				headerName: 'Source PT',
+				headerTooltip: 'Source PT',
+				flex: 2,
+				resizable: true,
+				minWidth: 165,
+				sortable: false,
+				unSortIcon: false,
+				suppressSorting: true,
+			},
+			{
+				field: 'versionStatus',
+				tooltipField: 'versionStatus',
+				headerName: 'Workflow Status',
+				cellClass: 'rt2-directory-column-version-status',
+				minWidth: 165,
+				width: 200,
+				resizable: true,
+				cellRenderer: TemplateRendererComponent,
+				cellRendererParams: { template: this.workflowStatus },
+				unSortIcon: true,
+			},
+			// {
+			// 	field: 'workflowStatus',
+			// 	tooltipField: 'workflowStatus',
+			// 	headerName: 'Workflow Status',
+			// 	unSortIcon: true,
+			// 	cellClass: '',
+			// 	cellRenderer: 'templateRenderer',
+			// 	cellRendererParams: { template: this.workflowStatus },
+			// 	sortable: true,
+			// 	flex: 1,
+			// 	minWidth: 65,
+			// 	width: 200,
+			// 	floatingFilterComponent: 'categoryFilterComponent',
+			// 	floatingFilterComponentParams: {
+			// 		suppressFilterButton: true,
+			// 		names: [
+			// 			{ type: 'status', name: 'In Edit', value: 'IN_EDIT' },
+			// 			{ type: 'status', name: 'In Review', value: 'IN_REVIEW' },
+			// 			{ type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE' },
+			// 			{ type: 'status', name: 'Published', value: 'PUBLISHED' },
+			// 			{ type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT' },
+			// 			{ type: 'status', name: 'Ready For Publication', value: 'READY_FOR_PUBLICATION' },
+			// 			{ type: 'status', name: 'Ready For Review', value: 'READY_FOR_REVIEW' },
+			// 			{ type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' },
+			// 		],
+			// 	},
+			// 	resizable: true,
+			// },
 			{
 				field: 'modified',
 				tooltipValueGetter: UiUtility.gridDateValueGetter,
@@ -156,7 +193,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	onGridReady = (gridReadyParams) => {
 		this.refsetGridApi = gridReadyParams.api;
 		const sortModel = [{ colId: 'modified', sort: 'desc' }];
-		this.refsetGridApi.setSortModel(sortModel);
+		// this.refsetGridApi.setSortModel(sortModel);
 		const dataSource = {
 			rowCount: null,
 			getRows: (rowParams) => {
@@ -193,8 +230,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					restParams.query = query;
 				}
 				this.data = [];
-				this.refsetService.getRefsets({ ...restParams, ...sort }).subscribe({
+				//68101000202102
+				//{ ...restParams, ...sort }
+				this.refsetService.getMapsetsByCode('68101000202102').subscribe({
 					next: (results) => {
+						console.log('results', results);
 						for (const refset of results.items) {
 							this.data.push({
 								name: `${refset?.project?.name}/${refset.name}`,
@@ -283,23 +323,25 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	}
 
 	getTeams(): void {
-		this.refsetService.getTeams('includeMembers=false&onlyUsersTeams=true&hideOrganizationTeams=true&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-			if (results.items != null && results.items.length > 1) {
-				const sortedJson = results.items.sort((a, b) => {
-					const orgA = a.organization.name;
-					const orgB = b.organization.name;
-					if (orgA < orgB) return -1;
-					if (orgA > orgB) return 1;
-					const teamA = a.name;
-					const teamB = b.name;
-					if (teamA < teamB) return -1;
-					if (teamA > teamB) return 1;
-					return 0;
-				});
-				this.teamList = sortedJson;
-			} else {
-				this.teamList = results.items;
-			}
-		});
+		this.refsetService
+			.getTeams('includeMembers=false&onlyUsersTeams=true&hideOrganizationTeams=true&offset=0&sort=name&sortAscending=true')
+			.subscribe((results) => {
+				if (results.items != null && results.items.length > 1) {
+					const sortedJson = results.items.sort((a, b) => {
+						const orgA = a.organization.name;
+						const orgB = b.organization.name;
+						if (orgA < orgB) return -1;
+						if (orgA > orgB) return 1;
+						const teamA = a.name;
+						const teamB = b.name;
+						if (teamA < teamB) return -1;
+						if (teamA > teamB) return 1;
+						return 0;
+					});
+					this.teamList = sortedJson;
+				} else {
+					this.teamList = results.items;
+				}
+			});
 	}
 }

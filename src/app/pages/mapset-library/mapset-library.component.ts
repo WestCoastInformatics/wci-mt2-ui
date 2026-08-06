@@ -7,6 +7,7 @@ import { CategoryFilterComponent } from 'src/app/components/categoryFilter/categ
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
@@ -27,7 +28,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 	styleUrls: ['./mapset-library.component.css'],
 })
 export class MapsetLibraryComponent implements OnInit {
-	user: User;
+	user!: User;
 	searchInput = '';
 	viewOptions = [
 		{ value: 'all', display: 'All' },
@@ -36,7 +37,7 @@ export class MapsetLibraryComponent implements OnInit {
 	];
 	selectedView = 'all';
 	refsetGridApi: any;
-	columnDefs = [];
+	columnDefs: any;
 	refsetGridColumns = [
 		{ name: 'information', show: true },
 		{ name: 'refsetId', show: true },
@@ -53,7 +54,7 @@ export class MapsetLibraryComponent implements OnInit {
 	refsetGridLastSort = '';
 	showTable = false;
 	refsetData: any;
-	dialog: DialogService;
+	dialog!: DialogService;
 	versionStatuses: any;
 	versions: any;
 	organizations: any;
@@ -70,8 +71,9 @@ export class MapsetLibraryComponent implements OnInit {
 	originalGridParams: any;
 	uiUtility = UiUtility;
 	showLoadingSearch = true;
-	toBeDevelopedModalRef: NgbModalRef;
-	downloadModalRef: NgbModalRef;
+	toBeDevelopedModalRef!: NgbModalRef;
+	downloadModalRef!: NgbModalRef;
+	mapsetInfoModalRef!: NgbModalRef;
 	isModalOpen = false;
 	showPaging = false;
 	paginationPages: any = {};
@@ -82,6 +84,8 @@ export class MapsetLibraryComponent implements OnInit {
 	formats = [];
 	selectedType = {};
 	types = [];
+	internationalId = '449080006';
+	moduleMetadata: any;
 	selectExportMetadata = false;
 	downloadTitle = 'Download';
 	mapsetInfo: any = {};
@@ -89,17 +93,18 @@ export class MapsetLibraryComponent implements OnInit {
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
-	@ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
-	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
-	@ViewChild('directoryInfoSection') infoSection: TemplateRef<any>;
-	@ViewChild('directoryVersionDate') versionDate: TemplateRef<any>;
-	@ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
-	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
-	@ViewChild('directoryPaging') paginationComponent: PaginationComponent;
-	@ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
-	@ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
-	@ViewChild('directorySearchInput') private directorySearchInput: ElementRef;
-	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
+	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
+	@ViewChild('directoryInfoDialog') infoDialog!: TemplateRef<any>;
+	@ViewChild('directoryFeedbackDialog') feedbackDialog!: TemplateRef<any>;
+	@ViewChild('directoryInfoSection') infoSection!: TemplateRef<any>;
+	@ViewChild('directoryVersionDate') versionDate!: TemplateRef<any>;
+	@ViewChild('directoryNameSection') nameSection!: TemplateRef<any>;
+	@ViewChild('directoryActionSection') actionSection!: TemplateRef<any>;
+	@ViewChild('directoryPaging') paginationComponent!: PaginationComponent;
+	@ViewChild('directoryCategoryFilter') categoryFilter!: TemplateRef<any>;
+	@ViewChild('directoryWorkflowStatusSection') versionStatus!: TemplateRef<any>;
+	@ViewChild('directorySearchInput') private directorySearchInput!: ElementRef;
+	@ViewChild('downloadModal') downloadModal!: TemplateRef<any>;
 
 	constructor(
 		private router: Router,
@@ -111,6 +116,7 @@ export class MapsetLibraryComponent implements OnInit {
 		private authenticationService: AuthenticationService,
 		private modalService: NgbModal,
 		private pagerService: PaginationService,
+		private mt2Service: MT2Service,
 		private notificationService: NotificationService,
 	) {
 		document.body.scrollTop = 0;
@@ -123,8 +129,8 @@ export class MapsetLibraryComponent implements OnInit {
 		this.titleService.setTitle('Mapping Tool - Map Set Library');
 		this.breadcrumbService.setBreadcrumbs([{ label: 'Map Set Library' }]);
 		this.clearSavedSelections();
-
 		this.getMapsetData();
+		this.getModuleMetadata();
 		this.disableChannel.postMessage(false);
 	}
 
@@ -135,12 +141,13 @@ export class MapsetLibraryComponent implements OnInit {
 			const key = localStorage.key(i);
 
 			if (
-				key?.startsWith('mapsetSearchInput') ||
-				key?.startsWith('showMapTable') ||
-				key?.startsWith('mapsetVersion') ||
-				key?.startsWith('mapsetGridCurrentPageSize') ||
-				key?.startsWith('mapsetGridCurrentPageNum') ||
-				key?.startsWith('batchSearchInput')
+				key?.startsWith('library_mapsetSearchInput') ||
+				key?.startsWith('library_showMapTable') ||
+				key?.startsWith('library_mapsetVersion') ||
+				key?.startsWith('library_mapsetGridCurrentPageSize') ||
+				key?.startsWith('library_mapsetGridCurrentPageNum') ||
+				key?.startsWith('library_mapsetRecordsColumns') ||
+				key?.startsWith('library_batchSearchInput')
 			) {
 				keysToRemove.push(key);
 			}
@@ -150,7 +157,7 @@ export class MapsetLibraryComponent implements OnInit {
 	}
 
 	getMapsetData() {
-		this.refsetService.getMapsets().subscribe({
+		this.refsetService.getMapsetsByStatus('PUBLISHED').subscribe({
 			next: ([results]) => {
 				this.versionStatuses;
 				let versionStatusArray;
@@ -168,7 +175,7 @@ export class MapsetLibraryComponent implements OnInit {
 						filter: false,
 						resizable: false,
 						sortable: false,
-						getQuickFilterText: (params) => {
+						getQuickFilterText: (params: any) => {
 							return '';
 						},
 					},
@@ -197,10 +204,11 @@ export class MapsetLibraryComponent implements OnInit {
 						tooltipField: 'versionStatus',
 						headerName: 'Version Status',
 						cellClass: 'rt2-directory-column-version-status',
-						minWidth: 65,
-						width: 170,
+						minWidth: 165,
+						width: 200,
 						resizable: true,
-						valueGetter: this.versionStatusValueGetter,
+						cellRenderer: TemplateRendererComponent,
+						cellRendererParams: { template: this.workflowStatus },
 						unSortIcon: true,
 					},
 					{
@@ -242,7 +250,7 @@ export class MapsetLibraryComponent implements OnInit {
 						sortable: false,
 						filter: false,
 						resizable: false,
-						getQuickFilterText: (params) => {
+						getQuickFilterText: (params: any) => {
 							return '';
 						},
 					},
@@ -275,7 +283,7 @@ export class MapsetLibraryComponent implements OnInit {
 					},
 					enableBrowserTooltips: true,
 					rowClassRules: {
-						refset_tool_grid_inactive_row: function (params) {
+						refset_tool_grid_inactive_row: function (params: any) {
 							let inactivatedRow = false;
 
 							if (params.data) {
@@ -290,8 +298,9 @@ export class MapsetLibraryComponent implements OnInit {
 				this.showTable = true;
 				this.changeDetectorRef.detectChanges();
 			},
-			error: (error) => {
-				//
+			error: (error: any) => {
+				console.log(' Error: ', error);
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
 			},
 		});
 	}
@@ -305,7 +314,7 @@ export class MapsetLibraryComponent implements OnInit {
 	}
 
 	//***** AG Grid Functions *****/
-	onGridReady = (gridReadyParams) => {
+	onGridReady = (gridReadyParams: any) => {
 		this.originalGridParams = gridReadyParams;
 		this.refsetGridApi = gridReadyParams.api;
 		this.refsetGridApi.setFilterModel(null);
@@ -336,7 +345,7 @@ export class MapsetLibraryComponent implements OnInit {
 			restParams.query = query;
 		}
 
-		this.refsetService.getMapsets().subscribe({
+		this.refsetService.getMapsetsByStatus('PUBLISHED').subscribe({
 			next: (results) => {
 				this.showLoadingSearch = false;
 
@@ -372,7 +381,8 @@ export class MapsetLibraryComponent implements OnInit {
 
 				UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
 			},
-			error: (error) => {
+			error: (error: any) => {
+				console.log(' Error: ', error);
 				this.refsetGridApi.showNoRowsOverlay();
 				this.refsetGridApi.setGridOption('rowData', []);
 			},
@@ -399,7 +409,7 @@ export class MapsetLibraryComponent implements OnInit {
 		return current;
 	}
 
-	editionValueGetter = function (params) {
+	editionValueGetter = function (params: any) {
 		if (!CodeUtility.hasValue(params?.data)) {
 			return '';
 		}
@@ -408,7 +418,7 @@ export class MapsetLibraryComponent implements OnInit {
 		return params?.data?.edition?.name;
 	};
 
-	versionStatusValueGetter = function (params) {
+	versionStatusValueGetter = function (params: any) {
 		if (!CodeUtility.hasValue(params?.data)) {
 			return '';
 		}
@@ -416,7 +426,7 @@ export class MapsetLibraryComponent implements OnInit {
 		return params.data.versionStatus.toLowerCase();
 	};
 
-	onGridCellClick = (event) => {
+	onGridCellClick = (event: any) => {
 		if (event.column.colId === 'information' || event.column.colId === 'actions') {
 			//
 		} else {
@@ -425,7 +435,7 @@ export class MapsetLibraryComponent implements OnInit {
 			let selectedVersionDate: string;
 			let selectedCode: string;
 
-			selectedRows.forEach(function (selectedRow, index) {
+			selectedRows.forEach(function (selectedRow: any, index: any) {
 				selectedId = selectedRow.refsetId;
 				selectedCode = selectedRow.refSetCode;
 				selectedVersionDate = RefsetUtility.getVersionDateForRefsetApiCall(selectedRow);
@@ -462,11 +472,11 @@ export class MapsetLibraryComponent implements OnInit {
 
 	//***** General Functions *****/
 
-	openEclBuilder(fieldId) {
+	openEclBuilder(fieldId: any) {
 		UiUtility.openEclBuilder(fieldId, 'MAIN');
 	}
 
-	downloadMapsets(params) {
+	downloadMapsets(params: any) {
 		this.mapsetInfo = params.data;
 		this.downloadTitle = 'Download ' + this.mapsetInfo.refSetCode + ' ' + this.mapsetInfo.refSetName;
 		this.types = [
@@ -485,7 +495,7 @@ export class MapsetLibraryComponent implements OnInit {
 		this.downloadError = '';
 		if (this.selectedFormat['value'] !== undefined && this.selectedType['value'] !== undefined) {
 			this.downloading = true;
-			this.refsetService.getMapsetByCode(this.mapsetInfo.refSetCode).subscribe((results) => {
+			this.refsetService.getMapsetsByCode(this.mapsetInfo.refSetCode).subscribe((results) => {
 				this.mapsetInfo = results;
 				const params = {
 					branch: this.mapsetInfo.branchPath,
@@ -499,12 +509,16 @@ export class MapsetLibraryComponent implements OnInit {
 					exportMetadata: this.selectExportMetadata,
 				};
 				this.refsetService.exportMapset(params).subscribe(
-					(data) => {
+					(data: any) => {
 						this.getMapsetDownloadStatus(data.url);
 					},
-					(err) => {
+					(err: any) => {
 						this.downloading = false;
-						console.error(err);
+						console.error(' Error: ', err);
+						this.notificationService.show('Error downloading, please try again.', 'Error', 'error', {
+							timeOut: 1500,
+							extendedTimeOut: 0,
+						});
 					},
 				);
 			});
@@ -538,14 +552,15 @@ export class MapsetLibraryComponent implements OnInit {
 						}, 200);
 				}
 			},
-			(err) => {
+			(err: any) => {
 				this.downloading = false;
-				console.error(err);
+				console.error(' Error: ', err);
+				this.notificationService.show('Error downloading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
 			},
 		);
 	}
 
-	openDownloadModal(content) {
+	openDownloadModal(content: any) {
 		this.downloadModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
 	}
@@ -559,7 +574,18 @@ export class MapsetLibraryComponent implements OnInit {
 		this.isModalOpen = false;
 	}
 
-	openToBeDevelopedModal(content) {
+	openMapsetInfoModal(params: any, content: any) {
+		this.mapsetInfo = params.data;
+		this.mapsetInfoModalRef = this.modalService.open(content, { size: 'lg', centered: true });
+		this.isModalOpen = true;
+	}
+
+	closeMapsetInfoModal() {
+		this.mapsetInfoModalRef.close();
+		this.isModalOpen = false;
+	}
+
+	openToBeDevelopedModal(content: any) {
 		this.toBeDevelopedModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
 	}
@@ -569,15 +595,15 @@ export class MapsetLibraryComponent implements OnInit {
 		this.isModalOpen = false;
 	}
 
-	goToDetailsPage(refsetId, versionDate) {
+	goToDetailsPage(refsetId: any, versionDate: any) {
 		const url = new URL(window.location.href);
 		url.searchParams.set('reload', 'true');
 		window.history.pushState({}, '', url.href);
 		this.router.navigate(['/details', refsetId, versionDate], { replaceUrl: false, skipLocationChange: false });
 	}
 
-	goToMapRecordsPage(code) {
-		this.router.navigate(['/mapset/' + code + '/mappings'], { replaceUrl: false, skipLocationChange: false });
+	goToMapRecordsPage(code: any) {
+		this.router.navigate(['library/mapset/' + code + '/mappings'], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	getRefsetRow(refsetId: string) {
@@ -593,8 +619,45 @@ export class MapsetLibraryComponent implements OnInit {
 		return refset;
 	}
 
-	formatVersionDate(date): string {
+	formatVersionDate(date: any): string {
 		return date.slice(0, 4) + '-' + date.slice(4, 6) + '-' + date.slice(6, 8);
+	}
+
+	dateFormatter(val: any): any {
+		return UiUtility.dateFormatter(val);
+	}
+
+	getModuleLanguageIcon(moduleId: string) {
+		let flag = '';
+		this.moduleMetadata.module.forEach((data: any) => {
+			if (data.id === moduleId) {
+				flag = data.countryCode;
+			}
+		});
+		return flag;
+	}
+
+	getModuleLanguageName(moduleId: string) {
+		let lang = '';
+		this.moduleMetadata.module.forEach((data: any) => {
+			if (data.id === moduleId) {
+				lang = data.name;
+			}
+		});
+		return lang;
+	}
+
+	getModuleMetadata() {
+		if (this.mt2Service.moduleMetadata.value?.length === 0) {
+			this.refsetService.getMetadata().subscribe({
+				next: (results) => {
+					this.mt2Service.setModuleMetadata(results);
+					this.moduleMetadata = results;
+				},
+			});
+		} else {
+			this.moduleMetadata = this.mt2Service.moduleMetadata.value;
+		}
 	}
 
 	openFeedback(refsetId: string) {
@@ -637,7 +700,7 @@ export class MapsetLibraryComponent implements OnInit {
 		return stringValue;
 	}
 
-	onResize(event) {
+	onResize(event: any) {
 		const gridWidth = document.getElementsByClassName('rt2-ag-grid')[0]?.clientWidth;
 		document.getElementsByClassName('ag-header')[0]?.setAttribute('style', `width: ${gridWidth}px;`);
 	}
@@ -646,7 +709,7 @@ export class MapsetLibraryComponent implements OnInit {
 		return refsetData?.descriptions;
 	}
 
-	showFlagIcon(event, show) {
+	showFlagIcon(event: any, show: any) {
 		if (show) {
 			event.target.style.display = 'inline';
 		} else {
@@ -654,7 +717,7 @@ export class MapsetLibraryComponent implements OnInit {
 		}
 	}
 
-	latestDate(refset, versionList: any[]): string {
+	latestDate(refset: any, versionList: any[]): string {
 		if (refset.versionStatus === Constants.IN_DEVELOPMENT) {
 			return 'Latest';
 		}

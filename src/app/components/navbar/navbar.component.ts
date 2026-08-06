@@ -57,6 +57,8 @@ export class NavbarComponent implements OnInit {
 	}
 
 	setUserInfo() {
+		//sessionStorage.setItem('mapset_user', JSON.stringify({ userName: 'Admin' }));
+		//temp auth
 		this.user = this.authenticationService.getUser();
 		this.isUserLoggedIn = !!this.user && this.user.userName != this.guestUser;
 	}
@@ -75,14 +77,15 @@ export class NavbarComponent implements OnInit {
 
 	navigate(breadcrumbId: string) {
 		const breadcrumb = this.breadcrumbs[breadcrumbId];
-
 		if (breadcrumb.selectable) {
 			this.router.navigate([breadcrumb.path], { replaceUrl: false, skipLocationChange: false });
 		}
 	}
 
 	logoutUser() {
-		this.authenticationService.logoutUser();
+		//this.authenticationService.logoutUser();
+		sessionStorage.removeItem('mapset_user');
+		window.location.reload();
 	}
 
 	landing() {
@@ -98,9 +101,10 @@ export class NavbarComponent implements OnInit {
 	login() {
 		//placeholder for login functionality, currently just sets user to Admin and reloads the page
 		sessionStorage.setItem('mapset_user', JSON.stringify({ userName: 'Admin' }));
-		window.location.reload();
+		//window.location.reload();
 		// localStorage.removeItem('loginReferralUrl');
-		// this.router.navigate(['/login'], { replaceUrl: false, skipLocationChange: false });
+		this.router.navigate(['/library'], { replaceUrl: false, skipLocationChange: false });
+		this.setUserInfo();
 	}
 
 	assignedUser(): string {
@@ -118,32 +122,12 @@ export class NavbarComponent implements OnInit {
 	}
 
 	navigateToRoute(route: string): void {
-		if (!this.router.url.includes(route)) {
-			if (this.router.url.includes('projects') && route.includes('refsets')) {
-				const parts = this.router.url.split('/');
-				let organizationId = '';
-				let editionId = '';
-				for (let p = 0; p < parts.length; p++) {
-					if (parts[p].includes('organization')) {
-						if (parts[p + 1] != undefined) {
-							organizationId = parts[p + 1];
-						}
-					}
-					if (parts[p].includes('edition')) {
-						if (parts[p + 1] != undefined) {
-							editionId = parts[p + 1];
-						}
-					}
-				}
-				if (organizationId != '' && editionId != '') {
-					route = '/organization/' + organizationId + '/edition/' + editionId + '/projects/0/refsets';
-					this.router.navigate([route], { replaceUrl: false, skipLocationChange: false });
-				}
-			} else {
-				this.router.navigate([route], { replaceUrl: false, skipLocationChange: false });
-			}
-		} else {
-			window.location.reload();
+		if (this.router.url !== route) {
+			this.router.navigate([route], { replaceUrl: false, skipLocationChange: false });
 		}
+	}
+
+	isCurrentPage(page: string): boolean {
+		return this.router.url.includes(page);
 	}
 }

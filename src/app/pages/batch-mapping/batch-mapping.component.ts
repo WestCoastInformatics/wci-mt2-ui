@@ -43,7 +43,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 	styleUrls: ['./batch-mapping.component.css'],
 })
 export class BatchMappingComponent implements OnInit {
-	user: User;
+	user!: User;
 	searchInput = '';
 	searchBrowserInput = '';
 	targetCodeInput = '';
@@ -72,7 +72,7 @@ export class BatchMappingComponent implements OnInit {
 	showTable = false;
 	mapsetResponse = [];
 	mapsetData = [];
-	dialog: DialogService;
+	dialog!: DialogService;
 	versionStatuses: any;
 	versions: any;
 	organizations: any;
@@ -88,9 +88,9 @@ export class BatchMappingComponent implements OnInit {
 	originalGridParams: any;
 	searchCallArray = [];
 	showLoadingSearch = true;
-	toBeDevelopedModalRef: NgbModalRef;
-	confirmModalRef: NgbModalRef;
-	headerGroupModal: NgbModalRef;
+	toBeDevelopedModalRef!: NgbModalRef;
+	confirmModalRef!: NgbModalRef;
+	headerGroupModal!: NgbModalRef;
 	isModalOpen = false;
 	mapsetName = 'Mapset Name';
 	selectedMapset: any;
@@ -101,8 +101,8 @@ export class BatchMappingComponent implements OnInit {
 	selectedVersion: any;
 	conceptCodes: [];
 	mapping: string;
-	routeParamsSubscription$: Subscription;
-	browserSubscription: Subscription;
+	routeParamsSubscription$!: Subscription;
+	browserSubscription!: Subscription;
 	gridSelectAll = false;
 	popoverLocationY = 0;
 	popoverLocationX = 0;
@@ -146,7 +146,7 @@ export class BatchMappingComponent implements OnInit {
 	gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
 	gridParams: any;
 	gridApi: any;
-	gridColumnDefs = [];
+	gridColumnDefs: any;
 	useDialog = false;
 	moduleMetadata: any;
 	internationalId = '449080006';
@@ -159,39 +159,39 @@ export class BatchMappingComponent implements OnInit {
 	browserPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
 	browserParams: any;
 	browserApi: any;
-	browserColumnDefs = [];
+	browserColumnDefs: any;
 	conceptDetail = false;
 	currentConcept: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
-	@ViewChild('selectRelationship') private selectRelationship: MatSelect;
-	@ViewChild('selectRule') private selectRule: MatSelect;
-	@ViewChild('selectAdvice') private selectAdvice: MatSelect;
-	@ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
-	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
-	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
-	@ViewChild('headerGroupModal') headerGroup: TemplateRef<any>;
-	@ViewChild('directoryCheckSection') checkSection: TemplateRef<any>;
-	@ViewChild('browserCheckSection') checkBrowserSection: TemplateRef<any>;
-	@ViewChild('directoryCodeSection') codeSection: TemplateRef<any>;
-	@ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
-	@ViewChild('directoryToNameSection') toNameSection: TemplateRef<any>;
-	@ViewChild('targetAdviceSection') adviceSection: TemplateRef<any>;
-	@ViewChild('targetRuleSection') ruleSection: TemplateRef<any>;
-	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
-	@ViewChild('directoryPaging') paginationComponent: PaginationComponent;
-	@ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
-	@ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
-	@ViewChild('confirmationModal') confirmationModal: TemplateRef<any>;
-	@ViewChild('actions') private actions: MatSelect;
-	@ViewChild('groupInput') private groupInput: ElementRef;
-	@ViewChild('targetInput') private targetInput: ElementRef;
-	@ViewChild('directorySearchInput') private directorySearchInput: ElementRef;
-	@ViewChild('browserSearchInput') private browserSearchInput: ElementRef;
-	@ViewChild('searchMenuTrigger') searchMenuTrigger: MatMenuTrigger;
-	@ViewChild('secondWindow') secondWindow: ElementRef;
-	@ViewChild('browserWrapper') browserWrapper: ElementRef;
+	@ViewChild('selectRelationship') private selectRelationship!: MatSelect;
+	@ViewChild('selectRule') private selectRule!: MatSelect;
+	@ViewChild('selectAdvice') private selectAdvice!: MatSelect;
+	@ViewChild('directoryInfoDialog') infoDialog!: TemplateRef<any>;
+	@ViewChild('directoryFeedbackDialog') feedbackDialog!: TemplateRef<any>;
+	@ViewChild('toBeDevelopedModal') tbdModal!: TemplateRef<any>;
+	@ViewChild('headerGroupModal') headerGroup!: TemplateRef<any>;
+	@ViewChild('directoryCheckSection') checkSection!: TemplateRef<any>;
+	@ViewChild('browserCheckSection') checkBrowserSection!: TemplateRef<any>;
+	@ViewChild('directoryCodeSection') codeSection!: TemplateRef<any>;
+	@ViewChild('directoryNameSection') nameSection!: TemplateRef<any>;
+	@ViewChild('directoryToNameSection') toNameSection!: TemplateRef<any>;
+	@ViewChild('targetAdviceSection') adviceSection!: TemplateRef<any>;
+	@ViewChild('targetRuleSection') ruleSection!: TemplateRef<any>;
+	@ViewChild('directoryActionSection') actionSection!: TemplateRef<any>;
+	@ViewChild('directoryPaging') paginationComponent!: PaginationComponent;
+	@ViewChild('directoryCategoryFilter') categoryFilter!: TemplateRef<any>;
+	@ViewChild('directoryWorkflowStatusSection') versionStatus!: TemplateRef<any>;
+	@ViewChild('confirmationModal') confirmationModal!: TemplateRef<any>;
+	@ViewChild('actions') private actions!: MatSelect;
+	@ViewChild('groupInput') private groupInput!: ElementRef;
+	@ViewChild('targetInput') private targetInput!: ElementRef;
+	@ViewChild('directorySearchInput') private directorySearchInput!: ElementRef;
+	@ViewChild('browserSearchInput') private browserSearchInput!: ElementRef;
+	@ViewChild('searchMenuTrigger') searchMenuTrigger!: MatMenuTrigger;
+	@ViewChild('secondWindow') secondWindow!: ElementRef;
+	@ViewChild('browserWrapper') browserWrapper!: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -286,7 +286,7 @@ export class BatchMappingComponent implements OnInit {
 			},
 			enableBrowserTooltips: true,
 			rowClassRules: {
-				refset_tool_grid_inactive_row: function (params) {
+				refset_tool_grid_inactive_row: function (params: any) {
 					let inactivatedRow = false;
 
 					if (params.data) {
@@ -369,7 +369,7 @@ export class BatchMappingComponent implements OnInit {
 			},
 			enableBrowserTooltips: true,
 			rowClassRules: {
-				refset_tool_grid_inactive_row: function (params) {
+				refset_tool_grid_inactive_row: function (params: any) {
 					let inactivatedRow = false;
 
 					if (params.data) {
@@ -438,7 +438,7 @@ export class BatchMappingComponent implements OnInit {
 				headerTooltip: 'Source PT',
 				flex: 2,
 				resizable: true,
-				minWidth: 165,
+				minWidth: 155,
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.nameSection },
 				sortable: false,
@@ -450,7 +450,7 @@ export class BatchMappingComponent implements OnInit {
 				headerName: 'Target',
 				headerTooltip: 'Target',
 				flex: 1,
-				minWidth: 135,
+				minWidth: 125,
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: {
 					template: this.codeSection,
@@ -499,8 +499,8 @@ export class BatchMappingComponent implements OnInit {
 				tooltipField: 'rule',
 				headerName: 'Rule',
 				headerTooltip: 'Rule',
-				minWidth: 100,
-				width: 100,
+				minWidth: 90,
+				width: 90,
 				resizable: true,
 				//cellRenderer: TemplateRendererComponent,
 				//cellRendererParams: { template: this.ruleSection },
@@ -519,7 +519,7 @@ export class BatchMappingComponent implements OnInit {
 				headerTooltip: 'Advices',
 				cellClass: 'rt2-directory-column-advices',
 				minWidth: 85,
-				width: 145,
+				width: 135,
 				resizable: true,
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.adviceSection },
@@ -534,7 +534,7 @@ export class BatchMappingComponent implements OnInit {
 				headerTooltip: 'Last Modified',
 				cellClass: 'rt2-directory-column-modified-date',
 				minWidth: 65,
-				width: 135,
+				width: 155,
 				resizable: true,
 				valueGetter: UiUtility.gridDateValueGetter,
 				floatingFilterComponent: DateTextFilterComponent,
@@ -587,12 +587,12 @@ export class BatchMappingComponent implements OnInit {
 		}
 	};
 
-	onBrowserReady = (params) => {
+	onBrowserReady = (params: any) => {
 		this.browserParams = params;
 		this.browserApi = params.api;
 	};
 
-	onBrowserCellClick = (event) => {
+	onBrowserCellClick = (event: any) => {
 		if (
 			event.column.colId !== 'checkbox' &&
 			event.column.colId !== 'action-btns' &&
@@ -609,8 +609,9 @@ export class BatchMappingComponent implements OnInit {
 				this.currentConcept = results;
 				this.conceptDetail = true;
 			},
-			error: (error) => {
-				//
+			error: (error: any) => {
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				console.log(' Error: ', error);
 			},
 		});
 	}
@@ -620,7 +621,7 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	getMapsetInfo() {
-		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
+		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe((results) => {
 			const mapsetVersions = Array.isArray(results) ? results : [results];
 
 			const getIsInDevelopment = (status: string): boolean => {
@@ -658,13 +659,18 @@ export class BatchMappingComponent implements OnInit {
 			this.getMapsetData();
 			this.getMapProject();
 		});
-		this.refsetService.getMapsets().subscribe({
+		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe({
 			next: (results) => {
-				const thisResult = results.filter((res) => {
-					return res.refSetCode === this.mapsetCode;
-				});
-				this.mapsetName = thisResult[0]?.refSetName;
-				this.selectedMapset = thisResult[0];
+				if (results?.length > 0) {
+					this.mapsetName = results[0]?.refSetName;
+					this.selectedMapset = results[0];
+				} else {
+					this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				}
+			},
+			error: (error: any) => {
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				console.log(' Error: ', error);
 			},
 		});
 	}
@@ -715,12 +721,12 @@ export class BatchMappingComponent implements OnInit {
 						return res.name;
 					});
 				}
-				//this.getBrowserData();
 				this.loadGridColumns();
 			},
 			error: (err: any) => {
 				this.loadError = true;
-				console.log(' project loading error', err);
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				console.log(' Error: ', err);
 			},
 		});
 	}
@@ -897,8 +903,9 @@ export class BatchMappingComponent implements OnInit {
 					this.targetToName = results.name;
 				}
 			},
-			error: (error) => {
-				//
+			error: (error: any) => {
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				console.log(' Error: ', error);
 			},
 		});
 	}
@@ -906,7 +913,7 @@ export class BatchMappingComponent implements OnInit {
 	createDataSource() {
 		return {
 			rowCount: null,
-			getRows: (rowParams) => {
+			getRows: (rowParams: any) => {
 				const startRow = rowParams.startRow;
 				const endRow = rowParams.endRow;
 				const sortModel = rowParams.sortModel;
@@ -996,7 +1003,7 @@ export class BatchMappingComponent implements OnInit {
 								});
 								this.browserSubscription.unsubscribe();
 							},
-							error: (error) => {
+							error: (error: any) => {
 								this.showPaging = false;
 								this.browserApi.showNoRowsOverlay();
 								rowParams.successCallback([], 0);
@@ -1086,8 +1093,8 @@ export class BatchMappingComponent implements OnInit {
 					}, 400);
 
 					this.breadcrumbService.setBreadcrumbs([
-						{ path: '/library', label: 'Library' },
-						{ path: '/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
+						{ path: '/projects', label: 'Projects' },
+						{ path: '/projects/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
 						{ label: 'Batch Edit Mappings' },
 					]);
 					if (localStorage.getItem(this.batchSearchInput)) {
@@ -1095,13 +1102,12 @@ export class BatchMappingComponent implements OnInit {
 						this.gridApi.setGridOption('quickFilterText', this.searchInput);
 					}
 				},
-				error: (error) => {
-					//
-					this.notificationService.show('Error loading map sets by id, please try again.');
+				error: (error: any) => {
+					console.log(' Error: ', error);
+					this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
 					setTimeout(() => {
 						this.goToMappingsPage();
 					}, 1500);
-					console.log(' error', error);
 				},
 			});
 		}
@@ -1112,7 +1118,7 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	removeMapGroup(groupNum: number) {
-		this.mapsetData[0].mapEntries.forEach((entry, index) => {
+		this.mapsetData[0].mapEntries.forEach((entry: any, index: any) => {
 			if (entry.group === groupNum) {
 				this.mapsetData[0].mapEntries.splice(index, 1);
 			}
@@ -1269,7 +1275,7 @@ export class BatchMappingComponent implements OnInit {
 		this.userChanged = true;
 	}
 
-	userChangeSelection(selectBox) {
+	userChangeSelection(selectBox: any) {
 		switch (selectBox) {
 			case 'norelation':
 				this.selectRelationship.value = '';
@@ -1321,10 +1327,11 @@ export class BatchMappingComponent implements OnInit {
 				this.refsetService.updateMapsetMappingBulk(this.mapsetInfo.id, this.mapsetResponse).subscribe(
 					(status) => {
 						this.saving = false;
-						this.notificationService.show('The mappings have been saved.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+						this.notificationService.show('The mappings have been saved.', 'Success', 'success', { timeOut: 0, extendedTimeOut: 0 });
 					},
-					(error) => {
-						//
+					(error: any) => {
+						this.notificationService.show('Error saving, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+						console.log(' Error: ', error);
 					},
 				);
 			} else {
@@ -1604,7 +1611,7 @@ export class BatchMappingComponent implements OnInit {
 		this.closePopover();
 	}
 
-	openToBeDevelopedModal(content) {
+	openToBeDevelopedModal(content: any) {
 		this.toBeDevelopedModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
 	}
@@ -1741,7 +1748,7 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	/* mappings table functions */
-	checkboxRowSelect(event, index) {
+	checkboxRowSelect(event: any, index: any) {
 		for (let d = 0; d < this.mapsetData.length; d++) {
 			if (this.mapsetData[d].index === index) {
 				if (this.mapsetData[d].checked === undefined) {
@@ -1819,7 +1826,7 @@ export class BatchMappingComponent implements OnInit {
 		return lang;
 	}
 
-	getValueLength(params): number {
+	getValueLength(params: any): number {
 		let number = 0;
 		const value = params.getValue();
 		if (value !== undefined) {
@@ -1830,7 +1837,7 @@ export class BatchMappingComponent implements OnInit {
 		return number;
 	}
 
-	getValueList(params): Array<any> {
+	getValueList(params: any): Array<any> {
 		let list = [];
 		const value = params.getValue();
 		if (value !== undefined) {
@@ -1841,7 +1848,7 @@ export class BatchMappingComponent implements OnInit {
 
 	/*end functions*/
 
-	goToMappingPage(code) {
+	goToMappingPage(code: any) {
 		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + code], { replaceUrl: false, skipLocationChange: false });
 	}
 
@@ -1861,10 +1868,10 @@ export class BatchMappingComponent implements OnInit {
 		}
 	}
 
-	onResize(event) {}
+	onResize(event: any) {}
 
 	@HostListener('window:scroll', ['$event'])
-	onScroll(event) {
+	onScroll(event: any) {
 		//this.closePopover();
 	}
 }

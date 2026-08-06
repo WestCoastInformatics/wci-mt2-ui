@@ -178,8 +178,7 @@
 }
 
 .rt2-wrap {
-	display: inline-block;
-	max-width: 450px !important;
+	min-width: 75vw;
 }
 
 .top-search-bar {
@@ -312,7 +311,8 @@
 }
 
 .header-menu {
-	height: 40px;
+	min-width: 16vw;
+	justify-content: end;
 }
 
 .section-loading {
