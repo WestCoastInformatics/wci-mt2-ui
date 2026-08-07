@@ -402,7 +402,6 @@ export class MapsetRecordsComponent implements OnInit {
 					suppressSorting: true,
 					flex: 1,
 					minWidth: 100,
-					hide: !this.libraryOnly ? true : false,
 				},
 				{
 					colId: 'rule',
@@ -417,7 +416,6 @@ export class MapsetRecordsComponent implements OnInit {
 					unSortIcon: true,
 					sortable: false,
 					suppressSorting: true,
-					hide: !this.libraryOnly ? true : false,
 				},
 				{
 					colId: 'advices',
@@ -433,7 +431,6 @@ export class MapsetRecordsComponent implements OnInit {
 					unSortIcon: true,
 					sortable: false,
 					suppressSorting: true,
-					hide: !this.libraryOnly ? true : false,
 				},
 				{
 					colId: 'workflowStatus',
@@ -447,7 +444,6 @@ export class MapsetRecordsComponent implements OnInit {
 					cellRenderer: TemplateRendererComponent,
 					cellRendererParams: { template: this.workflowStatus },
 					unSortIcon: true,
-					hide: this.libraryOnly ? true : false,
 				},
 				{
 					colId: 'modifiedBy',
@@ -461,7 +457,6 @@ export class MapsetRecordsComponent implements OnInit {
 					unSortIcon: true,
 					sortable: false,
 					suppressSorting: true,
-					hide: this.libraryOnly ? true : false,
 				},
 				{
 					field: 'modified',
@@ -918,6 +913,9 @@ export class MapsetRecordsComponent implements OnInit {
 					}
 					this.refsetGridApi.applyColumnState({ state: state });
 					localStorage.setItem(this.mapsetRecordsColumnStorage, JSON.stringify(state));
+				} else {
+					this.refsetGridApi.applyColumnState({ state: JSON.parse(localStorage.getItem(this.mapsetRecordsColumnStorage)) });
+					this.manualStateRefresh = true;
 				}
 			}
 		}
@@ -1023,15 +1021,15 @@ export class MapsetRecordsComponent implements OnInit {
 												: 'No map entries available.',
 										rule: results[a].mapEntries[b].rule.length > 0 ? results[a].mapEntries[b].rule : '---',
 										relation: results[a].mapEntries[b].relation.length > 0 ? results[a].mapEntries[b].relation : '---',
-										modified: results[a].mapEntries[b].modified,
+										modified: results[a].mappingWorkflow?.modified,
 										advices: { number: adviceArray.length, list: adviceArray },
 										group: results[a].mapEntries[b].group,
 										priority: results[a].mapEntries[b].priority,
 										moduleId: results[a].mapEntries[b].moduleId,
 										modFlag: this.getModuleLanguageIcon(results[a].mapEntries[b].moduleId),
 										modLang: this.getModuleLanguageName(results[a].mapEntries[b].moduleId),
-										workflowStatus: 'in development',
-										modifiedBy: 'test user',
+										workflowStatus: results[a].mappingWorkflow?.workflowStatus,
+										modifiedBy: results[a].mappingWorkflow?.modifiedBy,
 									});
 									count++;
 								}
@@ -1057,7 +1055,6 @@ export class MapsetRecordsComponent implements OnInit {
 							this.showPaging = true;
 
 							if (data?.length > 0) {
-								this.getMappingWorkflowStatus();
 								this.showPaging = true;
 								this.refsetGridApi.hideOverlay();
 								this.paginationPages = Math.ceil(this.numOfMembers / this.refsetGridPaging.pageSize)
@@ -1103,23 +1100,21 @@ export class MapsetRecordsComponent implements OnInit {
 		};
 	}
 
-	getMappingWorkflowStatus() {
-		for (let i = 0; i < this.mapsetData.length; i++) {
-			this.refsetService.getMappingWorkflowStatus(this.mapsetCode!, this.mapsetData[i].code).subscribe({
-				next: (results) => {
-					console.log(' status results', results);
-					this.mapsetData.forEach((data: any) => {
-						if (data.code === results.sourceConceptCode) {
-							data.workflowStatus = results.workflowStatus.replace('_', ' ').trim();
-						}
-					});
-					//want to sort group entries?
-					this.refsetGridApi.refreshCells(this.refsetGridParams);
-					this.refsetGridApi.redrawRows();
-				},
-			});
-		}
-	}
+	// getMappingWorkflowStatus() {
+	// 	for (let i = 0; i < this.mapsetData.length; i++) {
+	// 		this.refsetService.getMappingWorkflowStatus(this.mapsetCode!, this.mapsetData[i].code).subscribe({
+	// 			next: (results) => {
+	// 				this.mapsetData.forEach((data: any) => {
+	// 					if (data.code === results.sourceConceptCode) {
+	// 						data.workflowStatus = results.workflowStatus.replace('_', ' ').trim();
+	// 					}
+	// 				});
+	// 				this.refsetGridApi.refreshCells(this.refsetGridParams);
+	// 				this.refsetGridApi.redrawRows();
+	// 			},
+	// 		});
+	// 	}
+	// }
 
 	checkboxRowSelect(event, index) {
 		for (let d = 0; d < this.mapsetData.length; d++) {

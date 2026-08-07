@@ -79,7 +79,6 @@ export class MapsetMappingComponent implements OnInit {
 	workFlowStatus = { label: '', value: '', message: '', notes: '' };
 	workFlowNotesFC = new FormControl('');
 	mappingStatus = { current: '', next: '' };
-
 	reviewWF = [
 		{ label: 'Request Review', value: 'FINISH_EDITING', message: 'Are you sure you want to finish editing this Mapping?', notes: '' },
 		{ label: 'Start Review', value: 'START_REVIEW', message: 'Are you sure you want to start reviewing this Mapping?', notes: '' },

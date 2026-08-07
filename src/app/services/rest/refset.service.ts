@@ -353,9 +353,11 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + `mapset/${code}`, '', false);
 	}
 
-	getMappingsByMapset(mapsetId: string, params): Observable<any> {
+	//mapset mappings list
+	getMappingsByMapset(mapsetId: string, params: any): Observable<any> {
 		return this.get(
-			this.contextPath + `mapset/${mapsetId}/mappings?limit=` + params.limit + `&offset=` + params.offset + `&filter=` + params.filter,
+			this.contextPath +
+				`mapset/${mapsetId}/mappings?limit=${params.limit}&offset=${params.offset}&filter=${params.filter}&includeWorkflowStatus=true`,
 			'',
 			false,
 		);

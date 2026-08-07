@@ -55,6 +55,12 @@
 	margin-left: 20px !important;
 }
 
+.workflow-container {
+	position: relative;
+	white-space: nowrap;
+	margin-right: 50px;
+}
+
 .advice-list-item {
 	display: flex;
 	justify-content: space-between;

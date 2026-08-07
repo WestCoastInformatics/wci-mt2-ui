@@ -21,7 +21,11 @@
 <div [hidden]="loaded || loadError" class="section-loading m-b-20">Loading...</div>
 <div [hidden]="!loadError || !loaded" class="section-loading m-b-20">Error loading, please contact support.</div>
 <div class="dropdown-group row edit-actions" *ngIf="loaded && !loadError">
-	<div class="col-10"></div>
+	<div class="col-10">
+		<div class="workflow-container d-flex justify-content-end">
+			<workflow-status-badge [status]="mappingStatus.current"></workflow-status-badge>
+		</div>
+	</div>
 	<div class="action-column col-2 no-margin-top">
 		<span class="date-column">
 			<button
@@ -292,6 +296,12 @@
 												title="{{ entry.modLang }}"
 												aria-label="{{ entry.modLang }}" /></span
 									></span>
+								</div>
+								<div class="mappings-section p-l-20">
+									<span [hidden]="!entry.modified"> Last Modified: {{ dateFormatter(entry.modified) }} </span>
+									<span [hidden]="!entry.modifiedBy" [ngClass]="{ 'p-l-40': entry.modified }"
+										>Modified By: {{ entry.modifiedBy }}</span
+									>
 								</div>
 							</div>
 							<div
@@ -816,9 +826,21 @@
 		</div>
 
 		<div class="col">
-			<button class="library-app-refset-discussion-list mr-20 no-padding" (click)="selectActionMenu('review')">
-				<img src="/assets/rate-review.svg" title="Request Review" aria-label="Request Review" class="rate-review-icon" />
-			</button>
+			<ng-container>
+				<span *ngFor="let review of reviewWF"
+					><button
+						*ngIf="mappingStatus.next === review.value"
+						class="library-app-refset-discussion-list mr-20 no-padding"
+						(click)="reviewWorkflow(review.value)"
+					>
+						<img
+							src="/assets/rate-review.svg"
+							title="{{ review.label }}"
+							aria-label="{{ review.label }}"
+							class="rate-review-icon"
+						/></button
+				></span>
+			</ng-container>
 		</div>
 	</div>
 </ng-template>
@@ -1008,6 +1030,18 @@
 			placeholder="enter status change notes..."
 			[formControl]="workFlowNotesFC"
 		></textarea>
+		<div class="user-selection" [hidden]="userList.length === 0">
+			<mat-form-field appearance="fill" floatLabel="never" class="advice-selection-box target-selection-box-advice">
+				<mat-select #selectAdvice title="Select user to assign" placeholder="Select user to assign" [(value)]="selectedUser">
+					<mat-option *ngFor="let user of userList" value="{{ user }}" title="{{ user }}" class="no-checkbox border-bottom"
+						><span class="advice-item">
+							<div class="line-clamp-2">{{ user }}</div></span
+						></mat-option
+					>
+				</mat-select>
+			</mat-form-field>
+		</div>
+		<span class="mappings-section m-l-20" *ngIf="userList.length === 0">No users to assign.</span>
 	</div>
 	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
 		<button type="button" class="rt2-btn rt2-action-btn" (click)="!waitingForResponse ? closeWorkFlowModal() : null">Cancel</button>

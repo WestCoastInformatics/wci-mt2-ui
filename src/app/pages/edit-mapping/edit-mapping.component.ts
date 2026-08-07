@@ -89,7 +89,7 @@ export class EditMappingComponent implements OnInit {
 	showLoadingSpinner = false;
 	toggleDropdown = false;
 	numOfResults = 0;
-	directUrl: string;
+	directUrl = '';
 	numOfMembers: any;
 	disableChannel = new BroadcastChannel('disable-button-channel');
 	originalGridParams: any;
@@ -104,7 +104,7 @@ export class EditMappingComponent implements OnInit {
 	selectedMapset: any;
 	showConfigSection = true;
 	showBrowserSection = false;
-	mapsetCode: string;
+	mapsetCode = '';
 	mapsetInfo: any = {};
 	selectedVersion: any;
 	conceptCode: string;
@@ -128,7 +128,6 @@ export class EditMappingComponent implements OnInit {
 	userChanged = false;
 	internationalId = '449080006';
 	tempModuleIdChangeBeforeRelease = '449080006';
-
 	targetFC = new FormControl('a');
 	groupFC = new FormControl('');
 
@@ -152,9 +151,18 @@ export class EditMappingComponent implements OnInit {
 	browserColumnDefs: any;
 	conceptDetail = false;
 	currentConcept: any;
+	userList: string[] = [];
+	selectedUser = '';
 	waitingForResponse = false;
 	workFlowStatus = { label: '', value: '', message: '', notes: '' };
 	workFlowNotesFC = new FormControl('');
+	mappingStatus = { current: '', next: '' };
+	reviewWF = [
+		{ label: 'Request Review', value: 'FINISH_EDITING', message: 'Are you sure you want to finish editing this Mapping?', notes: '' },
+		{ label: 'Start Review', value: 'START_REVIEW', message: 'Are you sure you want to start reviewing this Mapping?', notes: '' },
+		{ label: 'Accept Review', value: 'ACCEPT_REVIEW', message: 'Are you sure you want to accept the review for this Mapping?', notes: '' },
+		{ label: 'Reject Review', value: 'REJECT_REVIEW', message: 'Are you sure you want to reject the review for this Mapping?', notes: '' },
+	];
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -210,8 +218,11 @@ export class EditMappingComponent implements OnInit {
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.conceptCode = routeParams.concept;
-			if (this.mapsetCode) {
+			if (this.mapsetCode && this.conceptCode) {
 				this.getMapsetInfo();
+			} else {
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				console.error('no mapset found');
 			}
 			this.getModuleMetadata();
 			this.firstLoadBrowser();
@@ -234,6 +245,29 @@ export class EditMappingComponent implements OnInit {
 	}
 
 	getMapsetInfo() {
+		this.refsetService.getMappingWorkflowStatus(this.mapsetCode!, this.conceptCode).subscribe({
+			next: (results) => {
+				console.log(' status results', results);
+				this.userList = ['devUser'];
+				this.selectedUser = '';
+				this.mappingStatus.current = results.workflowStatus.replace('_', ' ').trim();
+				switch (this.mappingStatus.current) {
+					case 'NEW':
+						this.mappingStatus.next = 'FINISH_EDITING';
+						break;
+					case 'EDITING DONE':
+						this.mappingStatus.next = 'START_REVIEW';
+						break;
+					case 'IN REVIEW':
+						this.mappingStatus.next = 'ACCEPT_REVIEW';
+						break;
+					default:
+						this.mappingStatus.next = '';
+				}
+				console.log(' this.mappingStatus.current', this.mappingStatus.current);
+			},
+		});
+
 		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe((results) => {
 			const mapsetVersions = Array.isArray(results) ? results : [results];
 
@@ -594,6 +628,7 @@ export class EditMappingComponent implements OnInit {
 							rule: results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
 							relation: results.mapEntries[b].relation.length > 0 ? results.mapEntries[b].relation.toUpperCase() : '---',
 							modified: results.mapEntries[b].modified,
+							modifiedBy: 'AAA',
 							advices: results.mapEntries[b].advices,
 							group: results.mapEntries[b].group,
 							groupTotal: results.mapEntries[b].group,
@@ -609,7 +644,7 @@ export class EditMappingComponent implements OnInit {
 				for (let i = 0; i < this.numOfGroups; i++) {
 					this.groupList.push('group' + i);
 				}
-
+				console.log(' whehre w', data);
 				this.mapsetData = data;
 				this.breadcrumbService.setBreadcrumbs([
 					{ path: '/projects', label: 'Projects' },
@@ -728,7 +763,7 @@ export class EditMappingComponent implements OnInit {
 			group: groupNum,
 			id: null,
 			modified: null,
-			modifiedBy: null,
+			modifiedBy: this.user?.userName,
 			moduleId: this.tempModuleIdChangeBeforeRelease,
 			modFlag: '',
 			modLang: '',
@@ -811,7 +846,7 @@ export class EditMappingComponent implements OnInit {
 				group: this.numOfGroups,
 				id: null,
 				modified: null,
-				modifiedBy: null,
+				modifiedBy: this.user?.userName,
 				moduleId: this.tempModuleIdChangeBeforeRelease,
 				modFlag: '',
 				modLang: '',
@@ -896,7 +931,7 @@ export class EditMappingComponent implements OnInit {
 				id: uiEntry.id,
 				modified: uiEntry.modified,
 				created: uiEntry.created,
-				modifiedBy: uiEntry.modifiedBy,
+				modifiedBy: this.user?.userName,
 			};
 			saveMapset.mapEntries.push(mapEntry);
 		}
@@ -1428,10 +1463,6 @@ export class EditMappingComponent implements OnInit {
 			case 'view':
 				this.goToMappingPage('_self');
 				break;
-			case 'review':
-				this.workFlowStatus = { label: 'Finish Editing', value: 'FINISH_EDITING', message: 'message?', notes: '' }; //'Review'; //this.publishWF[0];
-				this.openWorkFlowModal(this.workflowModal);
-				break;
 			default:
 				this.openToBeDevelopedModal(this.tbdModal);
 		}
@@ -1474,14 +1505,38 @@ export class EditMappingComponent implements OnInit {
 			this.workFlowStatus.notes = this.workFlowNotesFC.value;
 		}
 		this.waitingForResponse = true;
-		this.refsetService.setMapsetWorkflowStatus(this.mapsetInfo.id, this.workFlowStatus.value, this.workFlowStatus.notes).subscribe((response) => {
-			if (response) {
-				//this.mapsetInfo = response;
-				console.log(' Mapset Info: ', response);
-				//this.setWorkflowStatus();
-				this.getMapsetInfo();
-			}
-		});
+		this.refsetService
+			.setMappingWorkflowStatus(this.mapsetInfo.id, this.conceptCode, this.workFlowStatus.value, this.workFlowStatus.notes, this.selectedUser)
+			.subscribe((response) => {
+				if (response) {
+					//this.mapsetInfo = response;
+					console.log(' Mapset Info: ', response);
+					//this.setWorkflowStatus();
+					this.getMapsetInfo();
+					this.closeWorkFlowModal();
+				}
+			});
+	}
+
+	reviewWorkflow(status: any) {
+		switch (status) {
+			case this.reviewWF[0].value: //FINISH_EDIT
+				this.workFlowStatus = this.reviewWF[0];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+			case this.reviewWF[1].value: //START_REVIEW
+				this.workFlowStatus = this.reviewWF[1];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+			case this.reviewWF[2].value: //ACCEPT_REVIEW
+				this.workFlowStatus = this.reviewWF[2];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+			case this.reviewWF[3].value: //REJECT_REVIEW
+				this.workFlowStatus = this.reviewWF[3];
+				this.openWorkFlowModal(this.workflowModal);
+				break;
+		}
 	}
 
 	toggleSectionView(section: string) {

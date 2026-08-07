@@ -781,6 +781,22 @@
 	</ng-template>
 
 	<!-- Workflow Status Templates -->
+	<ng-template #workflowStatusSection let-params>
+		<workflow-status-badge [status]="params?.value"> </workflow-status-badge>
+	</ng-template>
+	<ng-template #directoryInfoDialog let-data>
+		<div class="container-fluid w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
+			<div class="row rt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
+				<p class="fs-18 mb-0 ml-10">{{ data.name }}</p>
+				<p class="fs-16 ml-10">
+					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span
+					><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
+				</p>
+			</div>
+			<refset-meta [refset]="data"></refset-meta>
+		</div>
+	</ng-template>
+	<!-- Workflow Status Templates -->
 	<ng-template #directoryWorkflowStatusSection let-params>
 		<object [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)">{{ params?.value }}</object>
 	</ng-template>
@@ -1013,6 +1029,18 @@
 				placeholder="enter status change notes..."
 				[formControl]="workFlowNotesFC"
 			></textarea>
+			<div class="user-selection" [hidden]="userList.length === 0">
+				<mat-form-field appearance="fill" floatLabel="never" class="advice-selection-box target-selection-box-advice">
+					<mat-select #selectAdvice title="Select user to assign" placeholder="Select user to assign" [(value)]="selectedUser">
+						<mat-option *ngFor="let user of userList" value="{{ user }}" title="{{ user }}" class="no-checkbox border-bottom"
+							><span class="advice-item">
+								<div class="line-clamp-2">{{ user }}</div></span
+							></mat-option
+						>
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<span class="mappings-section m-l-20" *ngIf="userList.length === 0">No users to assign.</span>
 		</div>
 		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
 			<button type="button" class="rt2-btn rt2-action-btn" (click)="!waitingForResponse ? closeWorkFlowModal() : null">Cancel</button>
