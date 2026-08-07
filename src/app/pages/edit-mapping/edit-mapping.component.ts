@@ -252,8 +252,8 @@ export class EditMappingComponent implements OnInit {
 			});
 
 			this.mapsetInfo = mapsetVersions[0];
-			if (localStorage.getItem('mapsetVersion')) {
-				this.selectedVersion = JSON.parse(localStorage.getItem('mapsetVersion'));
+			if (localStorage.getItem('projects_mapsetVersion')) {
+				this.selectedVersion = JSON.parse(localStorage.getItem('projects_mapsetVersion'));
 				const mapsetFound = mapsetVersions.filter((v) => {
 					const versionDate = v.versionDate || new Date();
 					const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
