@@ -80,6 +80,8 @@ export class MapsetMappingComponent implements OnInit {
 	workFlowNotesFC = new FormControl('');
 	mappingStatus = { current: '', next: '' };
 	reviewWF = [
+		{ label: 'Assign', value: 'ASSIGN', message: 'Are you sure you want to assign this mapping?', notes: '' },
+		{ label: 'Edit', value: 'EDITING_IN_PROGRESS', message: 'Are you sure you want to edit this mapping?', notes: '' },
 		{ label: 'Request Review', value: 'FINISH_EDITING', message: 'Are you sure you want to finish editing this Mapping?', notes: '' },
 		{ label: 'Start Review', value: 'START_REVIEW', message: 'Are you sure you want to start reviewing this Mapping?', notes: '' },
 		{ label: 'Accept Review', value: 'ACCEPT_REVIEW', message: 'Are you sure you want to accept the review for this Mapping?', notes: '' },
@@ -151,6 +153,12 @@ export class MapsetMappingComponent implements OnInit {
 				this.mappingStatus.current = results.workflowStatus.replace('_', ' ').trim();
 				switch (this.mappingStatus.current) {
 					case 'NEW':
+						this.mappingStatus.next = 'ASSIGN';
+						break;
+					case 'ASSIGN':
+						this.mappingStatus.next = 'EDITING_IN_PROGRESS';
+						break;
+					case 'EDITING IN_PROGRESS':
 						this.mappingStatus.next = 'FINISH_EDITING';
 						break;
 					case 'EDITING DONE':
