@@ -327,7 +327,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 						refSetName: item.mapSet.refSetName,
 						conceptCode: item.sourceConceptCode,
 						conceptName: item.sourceConceptName,
-						workflowStatus: item.workflowStatus.replace('_', ' '),
+						workflowStatus: item.workflowStatus.split('_').join(' '),
 					};
 					conceptCodes.push(item.sourceConceptCode);
 					this.refsetData.push(mapping);
