@@ -9,4 +9,5 @@ export class User {
 	password?: string;
 	company?: string;
 	id?: number;
+	authToken?: string;
 }

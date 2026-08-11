@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import { NotificationService } from 'src/app/services/notification.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RestService } from '../rest/rest.service';
-import { CodeUtility } from 'src/app/utilities/code.utility';
 
 @Injectable({
 	providedIn: 'root',
@@ -36,6 +35,75 @@ export class AuthenticationService {
 
 	get isUserLoggedIn(): boolean {
 		return !!sessionStorage.getItem('auth_token');
+	}
+
+	/** Browser login via backend (Entra or IMS chosen by security.handler). */
+	login(): void {
+		window.location.href = this.authenticateBaseUrl() + 'login';
+	}
+
+	/** Browser logout via backend (Entra or IMS chosen by security.handler). */
+	logoutUser() {
+		sessionStorage.clear();
+		this.deleteAllCookies();
+		const guest = new User();
+		guest.userName = this.GUEST_USER;
+		this.userSubject.next(guest);
+		window.location.href = this.authenticateBaseUrl() + 'logout';
+	}
+
+	/**
+	 * After identity-provider redirect, load session User + authToken from the API.
+	 */
+	fetchSession(): Observable<User> {
+		return this.http.get<User>(this.authenticateBaseUrl() + 'session', {
+			withCredentials: true,
+		});
+	}
+
+	/**
+	 * If the URL has auth_login/entra_login success (or error), complete handoff or notify.
+	 */
+	completeLoginIfNeeded(): void {
+		const params = new URLSearchParams(window.location.search);
+		const loginOk = params.get('auth_login') === 'success' || params.get('entra_login') === 'success';
+		const authError = params.get('auth_error') || params.get('entra_error');
+
+		if (authError) {
+			this.notificationService.show('Login failed: ' + authError, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+			this.stripAuthQueryParams();
+			return;
+		}
+
+		if (!loginOk) {
+			return;
+		}
+
+		this.fetchSession().subscribe(
+			(data) => {
+				this.setSessionTimeout();
+				sessionStorage.setItem('auth_token', data.authToken);
+				sessionStorage.setItem('mapset_user', JSON.stringify(data));
+				this.userSubject.next(data);
+				this.stripAuthQueryParams();
+
+				const referralUrl = localStorage.getItem('loginReferralUrl');
+				localStorage.removeItem('loginReferralUrl');
+				if (referralUrl) {
+					window.location.href = referralUrl;
+				} else {
+					this.router.navigate(['/dashboard'], { replaceUrl: true, skipLocationChange: false });
+				}
+			},
+			(err) => {
+				console.error(err);
+				this.notificationService.show('Login succeeded at the identity provider but the session could not be loaded.', null, 'error', {
+					timeOut: 0,
+					extendedTimeOut: 0,
+				});
+				this.stripAuthQueryParams();
+			},
+		);
 	}
 
 	imsLogin(successCallback: Function = this.handleImsSuccess) {
@@ -86,14 +154,14 @@ export class AuthenticationService {
 				if (referralUrl) {
 					this.router.navigateByUrl(referralUrl, { replaceUrl: true, skipLocationChange: false });
 				} else {
-					this.router.navigate(['/library'], { replaceUrl: false, skipLocationChange: false }); //dashboard
+					this.router.navigate(['/dashboard'], { replaceUrl: false, skipLocationChange: false });
 				}
 			},
 			(err) => {
 				console.error(err);
 				if (err.status == 401) {
 					this.notificationService.show(' ' + err?.error, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
-					this.router.navigate(['/library'], { replaceUrl: false, skipLocationChange: false });
+					this.router.navigate(['/landing'], { replaceUrl: false, skipLocationChange: false });
 				} else {
 					this.notificationService.show('Problem with login: ' + err?.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
 				}
@@ -101,7 +169,6 @@ export class AuthenticationService {
 		);
 	}
 
-	// this sends the user to the refset api.
 	authenticateWithBackend(userData: User): Observable<any> {
 		return this.http.post(environment.restUrl + environment.restContextPath + 'authenticate/' + userData.userName, {
 			headers: new HttpHeaders({
@@ -110,54 +177,27 @@ export class AuthenticationService {
 		});
 	}
 
-	logoutUser() {
-		const user = this.getUser();
-		this.http.post<any>(environment.restUrl + environment.restContextPath + 'logout/' + user.userName, {}).subscribe((data) => {
-			console.log('Back end logged out');
-		});
-
-		this.notAuthenticated(true);
-		sessionStorage.clear();
-		this.deleteAllCookies();
-
-		this.http.post<any>('/ims-api/account/logout', {}).subscribe((data) => {
-			console.log('IMS logout');
-		});
-
-		window.location.href = this.generateImsUrl('logout');
-	}
-
 	isAuthenticated(): boolean {
-		let cookieFound = null; //document.cookie.includes(this.IMS_COOKIE_NAME);
-		let token = null; // sessionStorage.getItem('auth_token');
-
 		try {
-			cookieFound = document.cookie.includes(this.IMS_COOKIE_NAME);
-			token = sessionStorage.getItem('auth_token');
+			return sessionStorage.getItem('auth_token') != null;
 		} catch (ex) {
 			this.noCookieAccess();
 			return false;
 		}
-
-		return cookieFound && token != null;
 	}
 
 	notAuthenticated(fromLogout = false): any {
 		const userWasLoggedin = this.isUserLoggedIn;
 		sessionStorage.removeItem('auth_token');
-		//localStorage.clear();
 
 		const oldUser = this.getUser();
 
 		if (oldUser == null || oldUser.userName != this.GUEST_USER) {
 			const user = new User();
 			user.userName = this.GUEST_USER;
-			//fix with authentication service to set user to guest user
-			// sessionStorage.setItem('mapset_user', JSON.stringify(user));
 			this.userSubject.next(user);
 		}
 
-		// if the user is on a page that requires being logged in, then send them to the directory
 		if (userWasLoggedin) {
 			this.modalService.dismissAll();
 			this.notificationService.closeAll();
@@ -179,9 +219,6 @@ export class AuthenticationService {
 		if (this.isUserLoggedIn) {
 			clearTimeout(this.sessionTimeoutReference);
 
-			const date = new Date();
-			// console.log(`Last Activity:${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`)
-
 			this.sessionTimeoutReference = setTimeout(() => {
 				if (this.isUserLoggedIn) {
 					localStorage.setItem('loginReferralUrl', window.location.href);
@@ -192,8 +229,13 @@ export class AuthenticationService {
 	}
 
 	prepareUserSession() {
+		// Drop leftover mapset_user without a real token (e.g. old fake Admin).
+		if (sessionStorage.getItem('mapset_user') && !sessionStorage.getItem('auth_token')) {
+			sessionStorage.removeItem('mapset_user');
+		}
 		this.apiCalled.subscribe(() => this.setSessionTimeout());
 		this.setSessionTimeout();
+		this.completeLoginIfNeeded();
 	}
 
 	getUser() {
@@ -238,6 +280,16 @@ export class AuthenticationService {
 
 	resetSession() {
 		this.apiCalled.emit(null);
+	}
+
+	private authenticateBaseUrl(): string {
+		return environment.restUrl + environment.restContextPath + 'authenticate/';
+	}
+
+	private stripAuthQueryParams(): void {
+		const url = new URL(window.location.href);
+		['auth_login', 'auth_error', 'entra_login', 'entra_error', 'entra_callback'].forEach((key) => url.searchParams.delete(key));
+		window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
 	}
 
 	private readonly deleteAllCookies = () => {
