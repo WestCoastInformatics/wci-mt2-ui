@@ -22,7 +22,6 @@ export const environment = {
 	production: true,
 	restUrl: '',
 	restContextPath: '/refsetservice/',
-	snomedBrowserUrl: 'https://browser.ihtsdotools.org/?perspective=full',
 	mockRestData: false,
 	refsetsExportableAsFreeset: '787778008',
 	freesetUrl: 'https://gps.snomed.org',
@@ -83,13 +82,13 @@ You can run the Angular UI on `localhost:4200` against a remote (or local) API w
 
 1. Set `restUrl` in `src/environments/environment.ts` to a resolvable API host that has CORS open for `localhost:4200`:
 
-   ```ts
-   // Same-origin local API:
-   restUrl: 'http://localhost:8888'
+    ```ts
+    // Same-origin local API:
+    restUrl: 'http://localhost:8888';
 
-   // Remote mt2-dev (use the .com alias — the .tools domain may not resolve):
-   restUrl: 'https://mt2-dev.westcoastinformatics.com'
-   ```
+    // Remote mt2-dev (use the .com alias — the .tools domain may not resolve):
+    restUrl: 'https://mt2-dev.westcoastinformatics.com';
+    ```
 
 2. Run `ng serve` as normal.
 3. Click **Log In** — you will be redirected through Entra and land back on `localhost:4200/?auth_login=success#auth_token=<jwt>`.

@@ -4,9 +4,8 @@
 
 export const environment = {
 	production: false,
-	restUrl: 'http://local.ihtsdotools.org:8888',
+	restUrl: 'https://mt2-dev.westcoastinformatics.com/',
 	restContextPath: '/refsetservice/',
-	snomedBrowserUrl: 'https://browser.ihtsdotools.org/?perspective=full',
 	mockRestData: false,
 	refsetsExportableAsFreeset: '787778008',
 	freesetUrl: 'https://gps.snomed.org',
