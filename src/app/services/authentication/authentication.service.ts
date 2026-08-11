@@ -37,9 +37,14 @@ export class AuthenticationService {
 		return !!sessionStorage.getItem('auth_token');
 	}
 
-	/** Browser login via backend (Entra or IMS chosen by security.handler). */
+	/** Browser login via backend (Entra or IMS chosen by security.handler).
+	 *  Passes the current origin as returnUrl so the API can redirect back here
+	 *  after OAuth instead of going to the hard-coded APP_URL_ROOT. This enables
+	 *  a local UI (e.g. localhost:4200) to work against a remote API.
+	 */
 	login(): void {
-		window.location.href = this.authenticateBaseUrl() + 'login';
+		const returnUrl = encodeURIComponent(window.location.origin);
+		window.location.href = this.authenticateBaseUrl() + 'login?returnUrl=' + returnUrl;
 	}
 
 	/** Browser logout via backend (Entra or IMS chosen by security.handler). */
@@ -54,15 +59,33 @@ export class AuthenticationService {
 
 	/**
 	 * After identity-provider redirect, load session User + authToken from the API.
+	 * When a Bearer token is provided (hash-handoff path for local dev), it is sent
+	 * as an Authorization header; withCredentials is still set so same-origin
+	 * cookie deployments are unaffected.
 	 */
-	fetchSession(): Observable<User> {
+	fetchSession(bearerToken?: string): Observable<User> {
+		const headers: Record<string, string> = {};
+		if (bearerToken) {
+			headers['Authorization'] = 'Bearer ' + bearerToken;
+		}
 		return this.http.get<User>(this.authenticateBaseUrl() + 'session', {
 			withCredentials: true,
+			headers,
 		});
 	}
 
 	/**
 	 * If the URL has auth_login/entra_login success (or error), complete handoff or notify.
+	 *
+	 * Hybrid hash-token path (local UI ↔ remote API):
+	 *   When the API redirects back with `#auth_token=<jwt>` the token is extracted
+	 *   from the hash, stored in sessionStorage immediately, and then used as a
+	 *   Bearer token when calling /authenticate/session so no cross-origin session
+	 *   cookie is required.
+	 *
+	 * Same-origin path (hosted deploy):
+	 *   When no hash token is present, the existing cookie-based flow is used
+	 *   unchanged — fetchSession() is called with credentials only.
 	 */
 	completeLoginIfNeeded(): void {
 		const params = new URLSearchParams(window.location.search);
@@ -79,6 +102,49 @@ export class AuthenticationService {
 			return;
 		}
 
+		// --- Hash-token path (local dev: API redirected with #auth_token=<jwt>) ---
+		const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+		const hashToken = hashParams.get('auth_token');
+
+		if (hashToken) {
+			// Store immediately so isAuthenticated() returns true during the session fetch.
+			sessionStorage.setItem('auth_token', hashToken);
+
+			this.fetchSession(hashToken).subscribe(
+				(data) => {
+					this.setSessionTimeout();
+					// Prefer the canonical token returned by the session endpoint if present.
+					if (data.authToken) {
+						sessionStorage.setItem('auth_token', data.authToken);
+					}
+					sessionStorage.setItem('mapset_user', JSON.stringify(data));
+					this.userSubject.next(data);
+					this.stripAuthQueryParams();
+
+					const referralUrl = localStorage.getItem('loginReferralUrl');
+					localStorage.removeItem('loginReferralUrl');
+					if (referralUrl) {
+						window.location.href = referralUrl;
+					} else {
+						this.router.navigate(['/dashboard'], { replaceUrl: true, skipLocationChange: false });
+					}
+				},
+				(err) => {
+					console.error(err);
+					sessionStorage.removeItem('auth_token');
+					this.notificationService.show(
+						'Login succeeded at the identity provider but the session could not be loaded.',
+						null,
+						'error',
+						{ timeOut: 0, extendedTimeOut: 0 },
+					);
+					this.stripAuthQueryParams();
+				},
+			);
+			return;
+		}
+
+		// --- Cookie-session path (same-origin hosted deploy, no hash token) ---
 		this.fetchSession().subscribe(
 			(data) => {
 				this.setSessionTimeout();
@@ -289,7 +355,15 @@ export class AuthenticationService {
 	private stripAuthQueryParams(): void {
 		const url = new URL(window.location.href);
 		['auth_login', 'auth_error', 'entra_login', 'entra_error', 'entra_callback'].forEach((key) => url.searchParams.delete(key));
-		window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+
+		// Also strip auth_token from the hash (hash-handoff path for local dev).
+		// Remove the key but preserve any other hash fragments that may exist.
+		const hashParams = new URLSearchParams(url.hash.replace(/^#/, ''));
+		hashParams.delete('auth_token');
+		const remainingHash = hashParams.toString();
+		const cleanHash = remainingHash ? '#' + remainingHash : '';
+
+		window.history.replaceState({}, document.title, url.pathname + url.search + cleanHash);
 	}
 
 	private readonly deleteAllCookies = () => {
