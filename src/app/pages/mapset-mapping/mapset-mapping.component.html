@@ -146,16 +146,7 @@
 					</button>
 				</div>
 				<div class="col">
-					<button class="library-app-refset-notes m-r-20 no-padding">
-						<img
-							src="/assets/sticky-note.svg"
-							title="{{ `${libraryOnly ? 'View' : 'Add'} Notes` }}"
-							aria-label="{{ `${libraryOnly ? 'View' : 'Add'} Notes` }}"
-							class="mapset-notes-icon"
-						/>
-					</button>
-					here
-					<notes-modal-component [libraryOnly]="libraryOnly" [mapSetId]="mapsetInfo.id" [conceptCode]="conceptCode"></notes-modal-component>
+					<notes-modal [libraryOnly]="libraryOnly" [mapSetId]="mapsetInfo.id" [conceptCode]="conceptCode"></notes-modal>
 				</div>
 
 				<div class="col">

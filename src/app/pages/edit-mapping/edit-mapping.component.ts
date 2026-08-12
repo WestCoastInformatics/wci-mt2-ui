@@ -221,7 +221,7 @@ export class EditMappingComponent implements OnInit {
 			if (this.mapsetCode && this.conceptCode) {
 				this.getMapsetInfo();
 			} else {
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 				console.error('no mapset found');
 			}
 			this.getModuleMetadata();

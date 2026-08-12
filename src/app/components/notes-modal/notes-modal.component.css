@@ -13,8 +13,25 @@
 	padding: 5px;
 }
 
+.mapset-notes-icon {
+	cursor: pointer;
+	width: 22px;
+	height: 22px;
+
+	filter: invert(10%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
+}
+
+.none {
+	margin-left: 40%;
+}
+
+.notes-text {
+	width: 100%;
+	min-height: 100px;
+}
+
 .scroll {
-	height: 200px;
+	max-height: 200px;
 	overflow-y: auto;
 	overflow-x: hidden;
 }
