@@ -119,7 +119,6 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 const appRoutes: Routes = [
 	// { path: '', pathMatch: 'full', redirectTo: '' },
-	// { path: 'invite/response', component: InviteComponent },
 	{ path: 'login', component: LoginComponent },
 	{ path: '', component: LandingComponent },
 	{ path: 'conflict', component: ConflictComponent }, //demo only
@@ -168,25 +167,7 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuardGuard],
 	},
 	{ path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
-
-	{
-		path: 'personal',
-		component: PersonalComponent,
-		children: [
-			{
-				path: ':userId/landing',
-				component: PersonalLandingComponent,
-				data: { breadcrumbLabel: 'About' },
-				canActivate: [AuthGuardGuard],
-			},
-			{
-				path: ':userId/configuration',
-				component: PersonalConfigurationComponent,
-				data: { breadcrumbLabel: 'Account Configuration' },
-				canActivate: [AuthGuardGuard],
-			},
-		],
-	},
+	{ path: 'inbox', component: InboxComponent, data: { breadcrumbLabel: 'Inbox' }, canActivate: [AuthGuardGuard] },
 	{
 		path: '**',
 		component: LandingComponent,
