@@ -92,8 +92,6 @@ import { PersonalComponentService } from './pages/personal/personal-component.se
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
 import { ReadonlyTextModalComponent } from 'src/app/components/readonly-text-modal/readonly-text-modal.component';
-import { ReadyForPublicationModalComponent } from 'src/app/components/ready-for-publication-modal/ready-for-publication-modal.component';
-import { WorkflowHistoryNotesModalComponent } from 'src/app/components/workflow-history-notes-modal/workflow-history-notes-modal.component';
 import { AuthGuardGuard } from 'src/app/services/authentication/auth-guard.guard';
 import { LoginComponent } from 'src/app/auth/login/login.component';
 import { InviteComponent } from 'src/app/auth/invite/invite.component';
@@ -191,9 +189,7 @@ const appRoutes: Routes = [
 		ImportFromFileModalComponent,
 		ImportFromListModalComponent,
 		ReadonlyTextModalComponent,
-		ReadyForPublicationModalComponent,
 		ReviewModalComponent,
-		WorkflowHistoryNotesModalComponent,
 		LoginComponent,
 		InviteComponent,
 		LandingComponent,
