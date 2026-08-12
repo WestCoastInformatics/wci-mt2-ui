@@ -960,6 +960,9 @@ export class EditMappingComponent implements OnInit {
 		});
 	}
 
+	show(m) {
+		console.log(' mmmm', m);
+	}
 	showDropdown(): void {
 		this.toggleDropdown = !this.toggleDropdown;
 	}

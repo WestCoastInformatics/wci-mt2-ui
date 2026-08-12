@@ -32,7 +32,7 @@
 					<div class="col-1 cell"></div>
 					<div class="col-7 cell">{{ note.notes }}</div>
 					<div class="col-1 cell">
-						<button title="Remove Note" class="remove-btn no-padding" (click)="removeNote(note.id)">&#10005;</button>
+						<button *ngIf="!libraryOnly" title="Remove Note" class="remove-btn no-padding" (click)="removeNote(note.id)">&#10005;</button>
 					</div>
 				</div>
 			</div>
@@ -50,7 +50,7 @@
 	</div>
 	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
 		<button *ngIf="!showAddNotes" type="button" class="rt2-btn rt2-action-btn" (click)="closeNotesModal()">Close</button>
-		<button *ngIf="!showAddNotes" type="button" class="rt2-btn rt2-action-btn" (click)="addNotes()">Add Notes</button>
+		<button *ngIf="!showAddNotes && !libraryOnly" type="button" class="rt2-btn rt2-action-btn" (click)="addNotes()">Add Notes</button>
 		<button *ngIf="showAddNotes" type="button" class="rt2-btn rt2-action-btn" (click)="showAddNotes = false; notesFC.reset()">Cancel</button>
 		<button *ngIf="showAddNotes" type="button" title="Save Notes" class="rt2-btn rt2-action-btn" (click)="saveNotes()">Save</button>
 	</div>

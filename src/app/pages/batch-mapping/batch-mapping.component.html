@@ -825,13 +825,8 @@
 	<!-- Action Templates -->
 	<ng-template #directoryActionSection let-params>
 		<div class="d-flex" *ngIf="params?.value === true">
-			<!-- <div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-				<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
-			</div> -->
 			<div class="col">
-				<div class="library-app-refset-notes p-r-20" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-					<img src="/assets/sticky-note.svg" title="View Notes" aria-label="View Notes" class="mapset-notes-icon" />
-				</div>
+				<notes-modal [libraryOnly]="false" [mapSetId]="mapsetInfo.id" [conceptCode]="params?.data?.code"></notes-modal>
 			</div>
 
 			<div class="col">
