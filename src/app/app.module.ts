@@ -119,25 +119,56 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 const appRoutes: Routes = [
 	// { path: '', pathMatch: 'full', redirectTo: '' },
-	{ path: 'invite/response', component: InviteComponent },
+	// { path: 'invite/response', component: InviteComponent },
 	{ path: 'login', component: LoginComponent },
 	{ path: '', component: LandingComponent },
-	{ path: 'conflict', component: ConflictComponent },
-	{ path: 'library', component: MapsetLibraryComponent, data: { breadcrumbLabel: 'Map Set Library' } },
-	{ path: 'projects', component: MapsetProjectsComponent, data: { breadcrumbLabel: 'Map Set Projects' } },
-	{ path: 'library/mapset/:code/mappings', component: MapsetRecordsComponent, data: { breadcrumbLabel: 'Library Mappings' } },
-	{ path: 'projects/mapset/:code/mappings', component: MapsetRecordsComponent, data: { breadcrumbLabel: 'Projects Mappings' } },
+	{ path: 'conflict', component: ConflictComponent }, //demo only
+	{ path: 'library', component: MapsetLibraryComponent, data: { breadcrumbLabel: 'Map Set Library' }, canActivate: [AuthGuardGuard] },
+	{ path: 'projects', component: MapsetProjectsComponent, data: { breadcrumbLabel: 'Map Set Projects' }, canActivate: [AuthGuardGuard] },
+	{
+		path: 'library/mapset/:code/mappings',
+		component: MapsetRecordsComponent,
+		data: { breadcrumbLabel: 'Library Mappings' },
+		canActivate: [AuthGuardGuard],
+	},
+	{
+		path: 'projects/mapset/:code/mappings',
+		component: MapsetRecordsComponent,
+		data: { breadcrumbLabel: 'Projects Mappings' },
+		canActivate: [AuthGuardGuard],
+	},
 	{
 		path: 'projects/mapset/:code/mappings/inactives',
 		component: MapsetInactivesComponent,
 		data: { breadcrumbLabel: 'Manage Inactivated Concepts' },
+		canActivate: [AuthGuardGuard],
 	},
-	{ path: 'library/mapset/:code/mapping/:concept', component: MapsetMappingComponent, data: { breadcrumbLabel: 'Mapping' } },
-	{ path: 'projects/mapset/:code/mapping/:concept', component: MapsetMappingComponent, data: { breadcrumbLabel: 'Mapping' } },
-	{ path: 'projects/mapset/:code/mappings/:concepts/batch', component: BatchMappingComponent, data: { breadcrumbLabel: 'Batch Edit Mappings' } },
-	{ path: 'projects/mapset/:code/mapping/:concept/edit', component: EditMappingComponent, data: { breadcrumbLabel: 'Edit Map' } },
-	{ path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' } },
-	//, canActivate: [AuthGuardGuard]
+	{
+		path: 'library/mapset/:code/mapping/:concept',
+		component: MapsetMappingComponent,
+		data: { breadcrumbLabel: 'Mapping' },
+		canActivate: [AuthGuardGuard],
+	},
+	{
+		path: 'projects/mapset/:code/mapping/:concept',
+		component: MapsetMappingComponent,
+		data: { breadcrumbLabel: 'Mapping' },
+		canActivate: [AuthGuardGuard],
+	},
+	{
+		path: 'projects/mapset/:code/mappings/:concepts/batch',
+		component: BatchMappingComponent,
+		data: { breadcrumbLabel: 'Batch Edit Mappings' },
+		canActivate: [AuthGuardGuard],
+	},
+	{
+		path: 'projects/mapset/:code/mapping/:concept/edit',
+		component: EditMappingComponent,
+		data: { breadcrumbLabel: 'Edit Map' },
+		canActivate: [AuthGuardGuard],
+	},
+	{ path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
+
 	{
 		path: 'personal',
 		component: PersonalComponent,

@@ -22,7 +22,6 @@ export const environment = {
 	production: true,
 	restUrl: '',
 	restContextPath: '/refsetservice/',
-	snomedBrowserUrl: 'https://browser.ihtsdotools.org/?perspective=full',
 	mockRestData: false,
 	refsetsExportableAsFreeset: '787778008',
 	freesetUrl: 'https://gps.snomed.org',
@@ -74,6 +73,29 @@ http {
     }
 }
 ```
+
+## Local Hybrid Development (UI against a remote API)
+
+You can run the Angular UI on `localhost:4200` against a remote (or local) API without sharing the same origin. The `login()` flow automatically passes `returnUrl=http://localhost:4200` so the API redirects back with the JWT in the URL hash after Entra OAuth — no cross-origin session cookies required.
+
+**Steps:**
+
+1. Set `restUrl` in `src/environments/environment.ts` to a resolvable API host that has CORS open for `localhost:4200`:
+
+    ```ts
+    // Same-origin local API:
+    restUrl: 'http://localhost:8888';
+
+    // Remote mt2-dev (use the .com alias — the .tools domain may not resolve):
+    restUrl: 'https://mt2-dev.westcoastinformatics.com';
+    ```
+
+2. Run `ng serve` as normal.
+3. Click **Log In** — you will be redirected through Entra and land back on `localhost:4200/?auth_login=success#auth_token=<jwt>`.
+
+> **Note:** The hash-token path requires the API-side changes described in the `SecurityController` plan to be deployed. Until then, run a local API with `ENTRAID_POST_LOGIN_REDIRECT_URI=http://localhost:4200/` as an alternative.
+>
+> Same-origin cookie-based deployments (hosted environments where UI and API share an origin) are completely unaffected — the hash-token path is only activated when `#auth_token` is present in the redirect URL.
 
 ## Development server
 

@@ -25,18 +25,11 @@ export class LandingComponent implements OnInit {
 	ngOnInit(): void {
 		// this.user = this.authenticationService.getUser();
 		// if (this.user) {
-		// 	this.router.navigate(['/library'], { replaceUrl: false, skipLocationChange: false });
+		// 	this.router.navigate(['/dashboard'], { replaceUrl: false, skipLocationChange: false });
 		// }
 	}
 
 	login(): void {
-		//placeholder for login functionality, currently just sets user to Admin and reloads the page
-		sessionStorage.setItem('mapset_user', JSON.stringify({ userName: 'Admin' }));
-		//window.location.reload();
-		this.user = this.authenticationService.getUser();
-		if (this.user) {
-			this.router.navigate(['/library'], { replaceUrl: false, skipLocationChange: false });
-		}
-		//this.authenticationService.imsLogin();
+		this.authenticationService.login();
 	}
 }

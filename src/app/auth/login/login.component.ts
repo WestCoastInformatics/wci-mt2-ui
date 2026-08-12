@@ -17,35 +17,10 @@ export class LoginComponent implements OnInit {
 		private authService: AuthenticationService,
 	) {
 		if (this.authService.isAuthenticated()) {
-			console.log('is authenticated');
-			this.router.navigate(['library'], { replaceUrl: false, skipLocationChange: false });
+			this.router.navigate(['dashboard'], { replaceUrl: false, skipLocationChange: false });
 		} else {
-			this.login();
+			this.authService.login();
 		}
-	}
-
-	onSubmit(): any {
-		this.authService.authenticateWithBackend(this.userData).subscribe(
-			(data) => {
-				sessionStorage.setItem('auth_token', data.authToken);
-				sessionStorage.setItem('mapset_user', JSON.stringify(data));
-				this.router.navigate(['library'], { replaceUrl: false, skipLocationChange: false });
-			},
-			(err) => {
-				console.error(err);
-			},
-		);
-	}
-
-	login(): any {
-		// IMS login
-		//this.authService.imsLogin();
-	}
-
-	logout(): any {
-		console.debug('logout user');
-		localStorage.removeItem('loginReferralUrl');
-		this.authService.notAuthenticated();
 	}
 
 	ngOnInit(): void {}
