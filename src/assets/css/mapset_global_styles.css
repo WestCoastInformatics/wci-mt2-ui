@@ -861,6 +861,10 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 	font-size: 1.3rem !important;
 	font-weight: 300;
 }
+
+.mat-mdc-select-value {
+	padding-left: 5px !important;
+}
 .mat-mdc-form-field-infix {
 	padding-bottom: 0 !important;
 }

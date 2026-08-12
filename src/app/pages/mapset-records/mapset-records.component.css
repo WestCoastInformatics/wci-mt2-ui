@@ -566,6 +566,7 @@
 
 .notes-text {
 	width: 100%;
+	min-height: 100px;
 }
 
 .discussion-icon {

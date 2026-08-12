@@ -395,6 +395,26 @@ export class RefsetService extends RestService {
 		return this.post(url, conceptCodes);
 	}
 
+	/*Notes*/
+	getNotes(mapsetId: string, conceptCode: any): Observable<any> {
+		return this.get(this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/notes`, '', false);
+	}
+
+	saveNotes(mapsetId: string, conceptCode: any, notes: string): Observable<any> {
+		const url = this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/notes`;
+		return this.post(url, notes);
+	}
+
+	updateNots(mapsetId: string, conceptCode: any, noteId: string, notes: string): Observable<any> {
+		const url = this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/notes/${noteId}`;
+		return this.put(url, notes);
+	}
+
+	removeNote(mapsetId: string, conceptCode: any, noteId: string): Observable<any> {
+		const url = this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/notes/${noteId}`;
+		return this.delete(url);
+	}
+
 	//not used
 	getMappingByMapsetAndConcept(mapset: string, concept: string): Observable<any> {
 		return this.get(this.contextPath + `mapset/${mapset}/mappings/${concept}`, '', false);

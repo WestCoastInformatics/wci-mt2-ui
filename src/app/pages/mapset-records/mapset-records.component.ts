@@ -1028,7 +1028,7 @@ export class MapsetRecordsComponent implements OnInit {
 										moduleId: results[a].mapEntries[b].moduleId,
 										modFlag: this.getModuleLanguageIcon(results[a].mapEntries[b].moduleId),
 										modLang: this.getModuleLanguageName(results[a].mapEntries[b].moduleId),
-										workflowStatus: results[a].mappingWorkflow?.workflowStatus,
+										workflowStatus: results[a].mappingWorkflow?.workflowStatus.replaceAll('_', ' ').trim(),
 										modifiedBy: results[a].mappingWorkflow?.modifiedBy,
 									});
 									count++;
@@ -1106,7 +1106,7 @@ export class MapsetRecordsComponent implements OnInit {
 	// 			next: (results) => {
 	// 				this.mapsetData.forEach((data: any) => {
 	// 					if (data.code === results.sourceConceptCode) {
-	// 						data.workflowStatus = results.workflowStatus.replace('_', ' ').trim();
+	// 						data.workflowStatus = results.workflowStatus.replaceAll('_', ' ').trim();
 	// 					}
 	// 				});
 	// 				this.refsetGridApi.refreshCells(this.refsetGridParams);

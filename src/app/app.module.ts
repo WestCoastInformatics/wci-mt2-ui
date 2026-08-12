@@ -57,6 +57,7 @@ import { BulkUpgradeModalComponent } from 'src/app/components/bulk-upgrade-modal
 import { HeadingWithCountComponent } from 'src/app/components/heading-with-count/heading-with-count.component';
 import { PageContainerComponent } from 'src/app/components/page-container/page-container.component';
 import { WorkflowStatusBadgeComponent } from './components/workflow-status-badge/workflow-status-badge.component';
+import { NotesModalComponent } from './components/notes-modal/notes-modal.component';
 import { ArtifactsModule } from './components/artifacts/artifacts.module';
 import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
 import { WorkflowStatusComponent } from './components/workflow-status/workflow-status.component';
@@ -214,6 +215,7 @@ const appRoutes: Routes = [
 		PersonalLandingComponent,
 		PersonalConfigurationComponent,
 		WorkflowStatusBadgeComponent,
+		NotesModalComponent,
 		RefsetMetaTableComponent,
 		WorkflowStatusComponent,
 	],

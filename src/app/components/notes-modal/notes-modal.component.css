@@ -1,0 +1,33 @@
+.header-row {
+	background: #fafafa;
+	color: #666;
+	font-size: 14px;
+	padding: 5px;
+	margin: 0;
+}
+
+.cell {
+	background: white;
+	color: #666;
+	font-size: 12px;
+	padding: 5px;
+}
+
+.scroll {
+	height: 200px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.border-top {
+	border-top: 1px solid #666;
+	margin: 0;
+}
+
+.remove-btn {
+	color: var(--standard_default_button_color);
+	background-color: var(--action_button_color);
+	border-radius: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+}

@@ -73,6 +73,15 @@
 
 .user-selection {
 	width: 400px;
+	margin-top: 10px;
+	mat-form-field {
+		width: 400px;
+		background: #fff;
+	}
+}
+
+.none {
+	margin-left: 40%;
 }
 
 .popup-handle-bottom {
@@ -520,6 +529,7 @@
 
 .notes-text {
 	width: 100%;
+	min-height: 100px;
 }
 
 .discussion-icon {

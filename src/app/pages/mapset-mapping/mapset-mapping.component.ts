@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { CodeUtility } from 'src/app/utilities/code.utility';
@@ -108,6 +109,7 @@ export class MapsetMappingComponent implements OnInit {
 		private mt2Service: MT2Service,
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
+		private notificationService: NotificationService,
 		private modalService: NgbModal,
 	) {
 		document.body.scrollTop = 0;
@@ -150,7 +152,7 @@ export class MapsetMappingComponent implements OnInit {
 				console.log(' status results', results);
 				this.userList = ['devUser'];
 				this.selectedUser = '';
-				this.mappingStatus.current = results.workflowStatus.replace('_', ' ').trim();
+				this.mappingStatus.current = results.workflowStatus.replaceAll('_', ' ').trim();
 				switch (this.mappingStatus.current) {
 					case 'NEW':
 						this.mappingStatus.next = 'ASSIGN';

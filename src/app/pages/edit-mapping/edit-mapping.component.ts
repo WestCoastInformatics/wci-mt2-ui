@@ -250,7 +250,7 @@ export class EditMappingComponent implements OnInit {
 				console.log(' status results', results);
 				this.userList = ['devUser'];
 				this.selectedUser = '';
-				this.mappingStatus.current = results.workflowStatus.replace('_', ' ').trim();
+				this.mappingStatus.current = results.workflowStatus.replaceAll('_', ' ').trim();
 				switch (this.mappingStatus.current) {
 					case 'NEW':
 						this.mappingStatus.next = 'FINISH_EDITING';
