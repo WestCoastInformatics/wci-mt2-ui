@@ -4,7 +4,7 @@
 
 export const environment = {
 	production: false,
-	restUrl: 'https://mt2-dev.westcoastinformatics.com/',
+	restUrl: 'https://mt2-dev.westcoastinformatics.com',
 	restContextPath: '/refsetservice/',
 	mockRestData: false,
 	refsetsExportableAsFreeset: '787778008',

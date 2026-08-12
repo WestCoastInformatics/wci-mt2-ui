@@ -49,12 +49,13 @@ export class AuthenticationService {
 
 	/** Browser logout via backend (Entra or IMS chosen by security.handler). */
 	logoutUser() {
+		sessionStorage.removeItem('auth_token');
+		sessionStorage.removeItem('mapset_user');
 		sessionStorage.clear();
+		localStorage.clear();
 		this.deleteAllCookies();
-		const guest = new User();
-		guest.userName = this.GUEST_USER;
-		this.userSubject.next(guest);
-		window.location.href = this.authenticateBaseUrl() + 'logout';
+		const returnUrl = encodeURIComponent(window.location.origin + '/landing');
+		window.location.href = this.authenticateBaseUrl() + 'logout?returnUrl=' + returnUrl;
 	}
 
 	/**
@@ -132,12 +133,10 @@ export class AuthenticationService {
 				(err) => {
 					console.error(err);
 					sessionStorage.removeItem('auth_token');
-					this.notificationService.show(
-						'Login succeeded at the identity provider but the session could not be loaded.',
-						null,
-						'error',
-						{ timeOut: 0, extendedTimeOut: 0 },
-					);
+					this.notificationService.show('Login succeeded at the identity provider but the session could not be loaded.', null, 'error', {
+						timeOut: 0,
+						extendedTimeOut: 0,
+					});
 					this.stripAuthQueryParams();
 				},
 			);
