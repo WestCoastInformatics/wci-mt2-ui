@@ -610,7 +610,7 @@ export class BatchMappingComponent implements OnInit {
 				this.conceptDetail = true;
 			},
 			error: (error: any) => {
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 				console.log(' Error: ', error);
 			},
 		});
@@ -665,11 +665,11 @@ export class BatchMappingComponent implements OnInit {
 					this.mapsetName = results[0]?.refSetName;
 					this.selectedMapset = results[0];
 				} else {
-					this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+					this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 				}
 			},
 			error: (error: any) => {
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 				console.log(' Error: ', error);
 			},
 		});
@@ -725,7 +725,7 @@ export class BatchMappingComponent implements OnInit {
 			},
 			error: (err: any) => {
 				this.loadError = true;
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 				console.log(' Error: ', err);
 			},
 		});
@@ -904,7 +904,7 @@ export class BatchMappingComponent implements OnInit {
 				}
 			},
 			error: (error: any) => {
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 				console.log(' Error: ', error);
 			},
 		});
@@ -1104,7 +1104,7 @@ export class BatchMappingComponent implements OnInit {
 				},
 				error: (error: any) => {
 					console.log(' Error: ', error);
-					this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+					this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 					setTimeout(() => {
 						this.goToMappingsPage();
 					}, 1500);
@@ -1330,7 +1330,7 @@ export class BatchMappingComponent implements OnInit {
 						this.notificationService.show('The mappings have been saved.', 'Success', 'success', { timeOut: 0, extendedTimeOut: 0 });
 					},
 					(error: any) => {
-						this.notificationService.show('Error saving, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+						this.notificationService.show('Error saving, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 						console.log(' Error: ', error);
 					},
 				);

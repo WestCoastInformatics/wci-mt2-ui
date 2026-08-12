@@ -398,6 +398,14 @@ export class RefsetService extends RestService {
 		return this.put(this.contextPath + `mapset/${mapsetId}/bulk`, params);
 	}
 
+	requestReport_NRMR() {
+		return this.post(`${this.contextPath}report/norway/replacement-map`, '');
+	}
+
+	requestReport_NRTR() {
+		return this.post(`${this.contextPath}report/norway/replacement-translation`, '');
+	}
+
 	exportMapset(params: any): Observable<any> {
 		return this.post(this.contextPath + 'mapset/export', params);
 	}

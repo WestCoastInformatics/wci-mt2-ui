@@ -557,6 +557,12 @@
 	display: inline-block;
 }
 
+.dropdown-divider {
+	border-top: 1px solid #666 !important;
+	margin-bottom: 10px !important;
+	margin-top: 1px !important;
+}
+
 .notes-text {
 	width: 100%;
 }

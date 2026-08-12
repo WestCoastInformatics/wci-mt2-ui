@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
@@ -23,11 +23,11 @@ import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
 	standalone: false,
-	selector: 'app-mapset-library',
-	templateUrl: './mapset-library.component.html',
-	styleUrls: ['./mapset-library.component.css'],
+	selector: 'app-inbox',
+	templateUrl: './inbox.component.html',
+	styleUrls: ['./inbox.component.css'],
 })
-export class MapsetLibraryComponent implements OnInit {
+export class InboxComponent implements OnInit, AfterViewInit {
 	user!: User;
 	searchInput = '';
 	viewOptions = [
@@ -55,7 +55,6 @@ export class MapsetLibraryComponent implements OnInit {
 	showTable = false;
 	refsetData: any;
 	dialog!: DialogService;
-	versionStatuses: any;
 	versions: any;
 	organizations: any;
 	initialGridWidth: number;
@@ -93,7 +92,7 @@ export class MapsetLibraryComponent implements OnInit {
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
-	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
+	@ViewChild('workflowStatusSection') workflowStatusSection!: TemplateRef<any>;
 	@ViewChild('directoryInfoDialog') infoDialog!: TemplateRef<any>;
 	@ViewChild('directoryFeedbackDialog') feedbackDialog!: TemplateRef<any>;
 	@ViewChild('directoryInfoSection') infoSection!: TemplateRef<any>;
@@ -126,12 +125,17 @@ export class MapsetLibraryComponent implements OnInit {
 	//***** Framework Functions *****/
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
-		this.titleService.setTitle('Mapping Tool - Map Set Library');
-		this.breadcrumbService.setBreadcrumbs([{ label: 'Map Set Library' }]);
+		this.titleService.setTitle('Mapping Tool - Inbox');
+		this.breadcrumbService.setBreadcrumbs([{ label: 'Inbox' }]);
 		this.clearSavedSelections();
-		this.getMapsetData();
 		this.getModuleMetadata();
 		this.disableChannel.postMessage(false);
+	}
+
+	ngAfterViewInit() {
+		if (this.workflowStatusSection) {
+			this.getMapsetData();
+		}
 	}
 
 	private clearSavedSelections(): void {
@@ -147,7 +151,14 @@ export class MapsetLibraryComponent implements OnInit {
 				key?.startsWith('library_mapsetGridCurrentPageSize') ||
 				key?.startsWith('library_mapsetGridCurrentPageNum') ||
 				key?.startsWith('library_mapsetRecordsColumns') ||
-				key?.startsWith('library_batchSearchInput')
+				key?.startsWith('library_batchSearchInput') ||
+				key?.startsWith('projects_mapsetSearchInput') ||
+				key?.startsWith('projects_showMapTable') ||
+				key?.startsWith('projects_mapsetVersion') ||
+				key?.startsWith('projects_mapsetGridCurrentPageSize') ||
+				key?.startsWith('projects_mapsetGridCurrentPageNum') ||
+				key?.startsWith('projects_mapsetRecordsColumns') ||
+				key?.startsWith('projects_batchSearchInput')
 			) {
 				keysToRemove.push(key);
 			}
@@ -157,152 +168,135 @@ export class MapsetLibraryComponent implements OnInit {
 	}
 
 	getMapsetData() {
-		this.refsetService.getMapsetsByStatus('PUBLISHED').subscribe({
-			next: ([results]) => {
-				this.versionStatuses;
-				let versionStatusArray;
-				this.columnDefs = [
-					// This is an exception to resizeable field because it is an info icon field
-					{
-						field: 'id',
-						colId: 'information',
-						headerName: '',
-						minWidth: 50,
-						width: 70,
-						cellClass: 'rt2-directory-column-information',
-						cellRenderer: TemplateRendererComponent,
-						cellRendererParams: { template: this.infoSection },
-						filter: false,
-						resizable: false,
-						sortable: false,
-						getQuickFilterText: (params: any) => {
-							return '';
-						},
-					},
-					{
-						field: 'refSetCode',
-						tooltipField: 'refSetCode',
-						headerName: 'Map Set ID',
-						cellClass: 'rt2-directory-column-id',
-						minWidth: 65,
-						resizable: true,
-						unSortIcon: true,
-					},
-					{
-						field: 'refSetName',
-						tooltipField: 'refSetName',
-						headerName: 'Map Set Name',
-						cellClass: 'rt2-directory-column-name',
-						flex: 2,
-						resizable: true,
-						minWidth: 65,
-						sort: 'asc',
-						unSortIcon: true,
-					},
-					{
-						field: 'versionStatus',
-						tooltipField: 'versionStatus',
-						headerName: 'Version Status',
-						cellClass: 'rt2-directory-column-version-status',
-						minWidth: 165,
-						width: 200,
-						resizable: true,
-						cellRenderer: TemplateRendererComponent,
-						cellRendererParams: { template: this.workflowStatus },
-						unSortIcon: true,
-					},
-					{
-						field: 'version',
-						tooltipValueGetter: UiUtility.gridDateValueGetter,
-						headerName: 'Version Date',
-						cellClass: 'rt2-directory-column-version-date',
-						minWidth: 65,
-						width: 170,
-						resizable: true,
-						valueGetter: UiUtility.gridDateValueGetter,
-						floatingFilterComponent: DateTextFilterComponent,
-						floatingFilterComponentParams: { suppressFilterButton: true },
-						unSortIcon: true,
-						filter: false,
-					},
-					{
-						field: 'modified',
-						tooltipValueGetter: UiUtility.gridDateValueGetter,
-						headerName: 'Last Modified',
-						cellClass: 'rt2-directory-column-modified-date',
-						minWidth: 65,
-						width: 170,
-						resizable: true,
-						valueGetter: UiUtility.gridDateValueGetter,
-						floatingFilterComponent: DateTextFilterComponent,
-						floatingFilterComponentParams: { suppressFilterButton: true },
-						unSortIcon: true,
-					},
-					// This is an exception to a resizeable field because it is an action field
-					{
-						field: 'downloadable',
-						colId: 'actions',
-						headerName: '',
-						width: 90,
-						cellClass: 'rt2-directory-column-actions',
-						cellRenderer: TemplateRendererComponent,
-						cellRendererParams: { template: this.actionSection },
-						sortable: false,
-						filter: false,
-						resizable: false,
-						getQuickFilterText: (params: any) => {
-							return '';
-						},
-					},
-				];
-				this.refsetGridOptions = {
-					context: { componentParent: this },
-					pagination: true,
-					animateRows: false,
-					rowModelType: 'clientSide',
-					suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-					suppressPaginationPanel: true,
-					paginationPageSize: this.refsetGridPaging.pageSize,
-					rowSelection: 'single',
-					enableCellTextSelection: true,
-					onCellDoubleClicked: this.onGridCellClick,
-					onGridReady: this.onGridReady,
-					frameworkComponents: {
-						templateRenderer: TemplateRendererComponent,
-						categoryFilterComponent: CategoryFilterComponent,
-						dateTextFilterComponent: DateTextFilterComponent,
-					},
-					defaultColDef: {
-						sortable: true,
-						filter: false,
-						sortingOrder: ['asc', 'desc'],
-						floatingFilter: false,
-						floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false },
-						suppressMenu: true,
-						resizable: true,
-					},
-					enableBrowserTooltips: true,
-					rowClassRules: {
-						refset_tool_grid_inactive_row: function (params: any) {
-							let inactivatedRow = false;
-
-							if (params.data) {
-								inactivatedRow = params.data.active == false;
-							}
-
-							return inactivatedRow;
-						},
-					},
-				};
-
-				this.showTable = true;
-				this.changeDetectorRef.detectChanges();
+		// this.refsetService.getMapsetsByStatus('PUBLISHED').subscribe({
+		// 	next: ([results]) => {
+		this.columnDefs = [
+			{
+				field: 'refSetCode',
+				tooltipField: 'refSetCode',
+				headerName: 'Map Set ID',
+				cellClass: 'rt2-directory-column-id',
+				minWidth: 65,
+				resizable: true,
+				sortable: false,
+				unSortIcon: false,
+				suppressSorting: true,
 			},
-			error: (error: any) => {
-				console.log(' Error: ', error);
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+			{
+				field: 'refSetName',
+				tooltipField: 'refSetName',
+				headerName: 'Map Set Name',
+				cellClass: 'rt2-directory-column-name',
+				flex: 2,
+				resizable: true,
+				minWidth: 65,
+				sort: 'asc',
+				sortable: false,
+				unSortIcon: false,
+				suppressSorting: true,
 			},
-		});
+			{
+				field: 'conceptCode',
+				tooltipField: 'conceptCode',
+				headerName: 'Source',
+				headerTooltip: 'Source',
+				flex: 1,
+				minWidth: 125,
+				cellClass: 'blue-link',
+				resizable: true,
+				sortable: false,
+				suppressSorting: true,
+			},
+			{
+				field: 'conceptName',
+				tooltipField: 'conceptName',
+				headerName: 'Source PT',
+				cellClass: 'rt2-directory-column-name',
+				flex: 2,
+				resizable: true,
+				minWidth: 65,
+				sort: 'asc',
+				sortable: false,
+				unSortIcon: false,
+				suppressSorting: true,
+			},
+			{
+				field: 'workflowStatus',
+				tooltipField: 'workflowStatus',
+				headerName: 'Workflow Status',
+				cellClass: 'rt2-directory-column-version-status',
+				minWidth: 165,
+				width: 200,
+				resizable: true,
+				cellRenderer: TemplateRendererComponent,
+				cellRendererParams: { template: this.workflowStatusSection },
+				unSortIcon: false,
+				sortable: false,
+			},
+			{
+				field: 'modified',
+				tooltipValueGetter: UiUtility.gridDateValueGetter,
+				headerName: 'Last Modified',
+				cellClass: 'rt2-directory-column-modified-date',
+				minWidth: 65,
+				width: 170,
+				resizable: true,
+				valueGetter: UiUtility.gridDateValueGetter,
+				floatingFilterComponent: DateTextFilterComponent,
+				floatingFilterComponentParams: { suppressFilterButton: true },
+				sortable: false,
+				unSortIcon: false,
+				suppressSorting: true,
+			},
+		];
+		this.refsetGridOptions = {
+			context: { componentParent: this },
+			pagination: true,
+			animateRows: false,
+			rowModelType: 'clientSide',
+			suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+			suppressPaginationPanel: true,
+			paginationPageSize: this.refsetGridPaging.pageSize,
+			rowSelection: 'single',
+			enableCellTextSelection: true,
+			onCellDoubleClicked: this.onGridCellClick,
+			onGridReady: this.onGridReady,
+			frameworkComponents: {
+				templateRenderer: TemplateRendererComponent,
+				categoryFilterComponent: CategoryFilterComponent,
+				dateTextFilterComponent: DateTextFilterComponent,
+			},
+			defaultColDef: {
+				sortable: true,
+				filter: false,
+				sortingOrder: ['asc', 'desc'],
+				floatingFilter: false,
+				floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false },
+				suppressMenu: true,
+				resizable: true,
+			},
+			enableBrowserTooltips: true,
+			rowClassRules: {
+				refset_tool_grid_inactive_row: function (params: any) {
+					let inactivatedRow = false;
+
+					if (params.data) {
+						inactivatedRow = params.data.active == false;
+					}
+
+					return inactivatedRow;
+				},
+			},
+		};
+
+		this.showTable = true;
+		this.changeDetectorRef.detectChanges();
+		// 	},
+		// 	error: (error: any) => {
+		// 		console.log(' Error: ', error);
+		// 		this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+		// 	},
+		// });
 	}
 
 	showDropdown(): void {
@@ -345,25 +339,36 @@ export class MapsetLibraryComponent implements OnInit {
 			restParams.query = query;
 		}
 
-		this.refsetService.getMapsetsByStatus('PUBLISHED').subscribe({
+		this.refsetService.getMappingsCurrentlyAssigned().subscribe({
 			next: (results) => {
 				this.showLoadingSearch = false;
-
 				const data = results;
-
-				this.refsetData = data;
-				this.numOfMembers = results.length;
+				let conceptCodes = [];
+				this.refsetData = [];
+				for (const item of data.items) {
+					let mapping = {
+						modified: item.modified,
+						refSetCode: item.mapSet?.refSetCode,
+						refSetName: item.mapSet?.refSetName,
+						conceptCode: item.sourceConceptCode,
+						conceptName: item.sourceConceptName,
+						workflowStatus: item.workflowStatus.split('_').join(' '),
+					};
+					conceptCodes.push(item.sourceConceptCode);
+					this.refsetData.push(mapping);
+				}
+				this.numOfMembers = results.total;
 				this.numOfResults = results.total;
+				results.items = this.refsetData;
 
 				const lastIndex = document.getElementsByClassName('ag-header').length - 1;
 				const child = document.getElementsByClassName('ag-header')[lastIndex];
 				document.getElementById('directoryHeader').appendChild(child);
 
-				if (results.length == 0) {
+				if (results.total == 0) {
 					this.refsetGridPaging.totalKnown = true;
 					this.refsetGridApi.showNoRowsOverlay();
 					this.refsetGridApi.setGridOption('rowData', []);
-
 					if (pageNumber > 1) {
 						this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
 						this.refsetGridPaging.totalKnown = true;

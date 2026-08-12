@@ -83,6 +83,7 @@ export class MapsetRecordsComponent implements OnInit {
 	workFlowModalRef!: NgbModalRef;
 	downloadModalRef!: NgbModalRef;
 	batchListModalRef!: NgbModalRef;
+	reportModalRef!: NgbModalRef;
 	isModalOpen = false;
 	mapsetInfo: any = {};
 	mapsetVersions: any[] = [];
@@ -137,6 +138,7 @@ export class MapsetRecordsComponent implements OnInit {
 	currentRowColor = 0;
 	downloadTitle = 'Download';
 	downloadType = 'all';
+	report = null;
 	waitingForResponse = false;
 	workFlowStatus = { label: '', value: '', message: '', notes: '' };
 	workFlowNotesFC = new FormControl('');
@@ -189,6 +191,7 @@ export class MapsetRecordsComponent implements OnInit {
 	@ViewChild('toBeDevelopedModal') tbdModal!: TemplateRef<any>;
 	@ViewChild('workFlowModal') workflowModal!: TemplateRef<any>;
 	@ViewChild('batchListModal') batchListModal!: TemplateRef<any>;
+	@ViewChild('reportModal') reportModal!: TemplateRef<any>;
 	@ViewChild('workFlowModalNotes') private workflowModalNotes!: ElementRef;
 	@ViewChild('batchModalList') private batchModalList!: ElementRef;
 	@ViewChild('directoryCheckSection') checkSection!: TemplateRef<any>;
@@ -1295,6 +1298,12 @@ export class MapsetRecordsComponent implements OnInit {
 				this.downloadType = 'all';
 				this.downloadMapsets();
 				break;
+			case 'report_nrmr':
+				this.openReportModal('nrmr', this.reportModal);
+				break;
+			case 'report_nrtr':
+				this.openReportModal('nrtr', this.reportModal);
+				break;
 		}
 	}
 
@@ -1633,6 +1642,70 @@ export class MapsetRecordsComponent implements OnInit {
 		this.closeWorkFlowModal();
 	}
 
+	/* Reports */
+
+	openReportModal(report: string, content: any) {
+		switch (report) {
+			case 'nrmr':
+				this.report = { type: report, title: 'Norway Replacement Map Report' };
+				break;
+			case 'nrtr':
+				this.report = { type: report, title: 'Norway Replacement Translation Report' };
+				break;
+		}
+		this.reportModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+	}
+
+	closeReportModal() {
+		this.report = null;
+		this.reportModalRef.close();
+		this.isModalOpen = false;
+	}
+
+	requestReport() {
+		switch (this.report?.type) {
+			case 'nrmr':
+				this.refsetService.requestReport_NRMR().subscribe(
+					(data) => {
+						console.log(' data ', data);
+						this.notificationService.show('Report request successful, email will be sent shortly.', 'Success', 'success', {
+							timeOut: 0,
+							extendedTimeOut: 0,
+						});
+						this.closeReportModal();
+					},
+					(err) => {
+						console.error(' Error: ', err);
+						this.notificationService.show('Error requesting report, please try again.', 'Error', 'error', {
+							timeOut: 2500,
+							extendedTimeOut: 0,
+						});
+					},
+				);
+				break;
+			case 'nrtr':
+				this.refsetService.requestReport_NRTR().subscribe(
+					(data) => {
+						console.log(' data ', data);
+						this.notificationService.show('Report request successful, email will be sent shortly.', 'Success', 'success', {
+							timeOut: 0,
+							extendedTimeOut: 0,
+						});
+						this.closeReportModal();
+					},
+					(err) => {
+						console.error(' Error: ', err);
+						this.notificationService.show('Error requesting report, please try again.', 'Error', 'error', {
+							timeOut: 2500,
+							extendedTimeOut: 0,
+						});
+					},
+				);
+				break;
+		}
+	}
+
 	//***** General Functions *****/
 
 	openEclBuilder(fieldId: any) {
@@ -1721,7 +1794,7 @@ export class MapsetRecordsComponent implements OnInit {
 					},
 					(err: any) => {
 						this.notificationService.show('Error downloading, please try again.', 'Error', 'error', {
-							timeOut: 1500,
+							timeOut: 2500,
 							extendedTimeOut: 0,
 						});
 						console.log(' Error: ', err);
@@ -1752,7 +1825,7 @@ export class MapsetRecordsComponent implements OnInit {
 					(err: any) => {
 						this.downloading = false;
 						this.notificationService.show('Error downloading, please try again.', 'Error', 'error', {
-							timeOut: 1500,
+							timeOut: 2500,
 							extendedTimeOut: 0,
 						});
 						console.log(' Error: ', err);
@@ -1791,7 +1864,7 @@ export class MapsetRecordsComponent implements OnInit {
 			},
 			(err: any) => {
 				this.downloading = false;
-				this.notificationService.show('Error downloading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				this.notificationService.show('Error downloading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 				console.log(' Error: ', err);
 			},
 		);

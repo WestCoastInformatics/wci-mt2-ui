@@ -275,11 +275,19 @@
 					<button *ngIf="!libraryOnly" mat-menu-item (click)="selectAction('list')" [disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'">
 						<span>Batch Edit Maps By List</span>
 					</button>
+					<div class="dropdown-divider"></div>
 					<button mat-menu-item (click)="selectAction('selected')" [disabled]="checkedNum < 1">
 						<span>Download Selected Mappings</span>
 					</button>
 					<button mat-menu-item (click)="selectAction('all')">
 						<span>Download Entire Map Set</span>
+					</button>
+					<div class="dropdown-divider"></div>
+					<button mat-menu-item (click)="selectAction('report_nrmr')">
+						<span>Norway Replacement Map Report</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('report_nrtr')">
+						<span>Norway Replacement Translation Report</span>
 					</button>
 				</mat-menu>
 			</div>
@@ -795,6 +803,22 @@
 		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
 			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeBatchListModal()">Cancel</button>
 			<button type="button" title="Edit" class="rt2-btn rt2-action-btn" (click)="submitBatchList()">Edit</button>
+		</div>
+	</ng-template>
+
+	<ng-template #reportModal let-modal>
+		<div class="modal-header rt2-modal-header">
+			<div class="modal-title">{{ report?.title }}</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeReportModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body m-t-10">
+			<p class="p-l-30 p-t-10 p-b-0">Are you sure you want to request this report?</p>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeReportModal()">Cancel</button>
+			<button type="button" title="Edit" class="rt2-btn rt2-action-btn" (click)="requestReport()">Submit</button>
 		</div>
 	</ng-template>
 

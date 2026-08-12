@@ -272,7 +272,7 @@ export class EditMappingComponent implements OnInit {
 					this.mapsetName = results[0]?.refSetName;
 					this.selectedMapset = results[0];
 				} else {
-					this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+					this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 					console.error('no mapset found');
 				}
 			},
@@ -328,7 +328,7 @@ export class EditMappingComponent implements OnInit {
 			error: (err: any) => {
 				this.loadError = true;
 				console.log(' project loading error', err);
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 			},
 		});
 	}
@@ -517,7 +517,7 @@ export class EditMappingComponent implements OnInit {
 			},
 			error: (error: any) => {
 				console.log(' Error: ', error);
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 			},
 		});
 	}
@@ -612,7 +612,7 @@ export class EditMappingComponent implements OnInit {
 				]);
 			},
 			error: (error) => {
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 			},
 		});
 	}
@@ -910,11 +910,11 @@ export class EditMappingComponent implements OnInit {
 					},
 					(error: any) => {
 						console.log(' Error: ', error);
-						this.notificationService.show('Error saving, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+						this.notificationService.show('Error saving, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 					},
 				);
 			} else {
-				this.notificationService.show('Mapset workflow status is not in Edit mode.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				this.notificationService.show('Mapset workflow status is not in Edit mode.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 			}
 		});
 	}
@@ -1386,7 +1386,7 @@ export class EditMappingComponent implements OnInit {
 				this.conceptDetail = true;
 			},
 			error: (error) => {
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 			},
 		});
 	}
