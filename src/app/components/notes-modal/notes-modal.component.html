@@ -17,20 +17,20 @@
 	<div class="modal-body m-t-20">
 		<div *ngIf="!showAddNotes">
 			<div class="row header-row">
-				<div class="col-1">Date</div>
+				<div class="col-2">Date</div>
 				<div class="col-1">|</div>
-				<div class="col-1">User</div>
+				<div class="col-2">User</div>
 				<div class="col-1">|</div>
-				<div class="col-7">Notes</div>
+				<div class="col-5">Notes</div>
 				<div class="col-1"></div>
 			</div>
 			<div class="scroll">
 				<div class="row border-top" *ngFor="let note of notesList">
-					<div class="col-1 cell">{{ note.date }}</div>
+					<div class="col-2 cell">{{ dateFormatter(note.date) }}</div>
 					<div class="col-1 cell"></div>
-					<div class="col-1 cell">{{ note.user }}</div>
+					<div class="col-2 cell">{{ note.user }}</div>
 					<div class="col-1 cell"></div>
-					<div class="col-7 cell">{{ note.notes }}</div>
+					<div class="col-5 cell">{{ note.notes }}</div>
 					<div class="col-1 cell">
 						<button *ngIf="!libraryOnly" title="Remove Note" class="remove-btn no-padding" (click)="removeNote(note.id)">&#10005;</button>
 					</div>

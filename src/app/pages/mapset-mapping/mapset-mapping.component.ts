@@ -201,12 +201,6 @@ export class MapsetMappingComponent implements OnInit {
 			this.getMapsetInfo();
 			this.getModuleMetadata();
 		});
-		// if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
-		// 	this.formats.splice(1, 0, { value: 'rf2_with_names', display: 'RF2 With Names' });
-		// }
-		// if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
-		// 	this.formats.splice(-1, 0, { value: 'freeset', display: 'Free Set' });
-		// }
 		this.disableChannel.postMessage(false);
 	}
 
