@@ -15,10 +15,9 @@ export class AuthenticationService {
 	public apiCalled: EventEmitter<null>;
 
 	GUEST_USER = 'Guest';
-	LOCAL_DEV = 'dev-rt2';
-	IMS_COOKIE_NAME = 'ims-ihtsdo';
+	LOCAL_DEV = 'dev-mt2';
 	userSubject = new Subject<User>();
-	authCookie = { name: 'rt2-auth', path: '/' };
+	authCookie = { name: 'mt2-auth', path: '/' };
 	referralUrl = null;
 	sessionTimeoutReference: any;
 	sessionTimeout = 86400000; // 1 day
@@ -192,13 +191,13 @@ export class AuthenticationService {
 		let url = window.location.origin + '/login';
 		let hostname = window.location.hostname;
 
-		if (hostname.indexOf('rt2') < 0) {
+		if (hostname.indexOf('mt2') < 0) {
 			if (hostname.indexOf('local') > -1) {
 				hostname = hostname.replace('local', this.LOCAL_DEV);
 			}
 		}
 
-		url = 'https://' + hostname.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + url;
+		url = 'https://' + hostname.replace('mt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + url;
 
 		return url;
 	}
@@ -303,7 +302,7 @@ export class AuthenticationService {
 		this.completeLoginIfNeeded();
 	}
 
-	getUser() {
+	getUser(): any {
 		let user;
 
 		try {
@@ -314,6 +313,29 @@ export class AuthenticationService {
 		}
 
 		return user;
+	}
+
+	getUserPrimaryRole(): string {
+		let role = '';
+		try {
+			const currentUser = JSON.parse(sessionStorage.getItem('mapset_user'));
+
+			if (currentUser.roles && currentUser.roles.length > 0) {
+				switch (currentUser.roles[0]) {
+					case 'all-all-all-admin':
+						role = 'admin';
+						break;
+					case 'all-all-all-lead':
+						role = 'lead';
+						break;
+					case 'all-all-all-specialist':
+						role = 'specialist';
+				}
+			}
+		} catch (ex) {
+			this.noCookieAccess();
+		}
+		return role;
 	}
 
 	updateUser(updatedUser: User) {

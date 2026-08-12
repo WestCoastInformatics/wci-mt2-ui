@@ -5,7 +5,7 @@
 	<div class="d-flex">
 		<div class="row">
 			<div class="col-md-9 page-title" *ngIf="loaded">
-				<div class="rt2-wrap" *ngIf="loaded" title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}">
+				<div class="mt2-wrap" *ngIf="loaded" title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}">
 					<span>{{ mapsetData[0].code + ' ' + mapsetData[0].name }} </span>
 				</div>
 			</div>
@@ -19,7 +19,7 @@
 	</div>
 </div>
 <div [hidden]="loaded" class="section-loading">Loading...</div>
-<div class="rt2-container">
+<div class="mt2-container">
 	<div class="metadata-collapsible-container" [ngClass]="{ 'm-t-20': loaded }">
 		<div class="metadata-collapsible-container-group-header row">
 			<div class="metadata-collapsible-container-title page-header-font" *ngIf="mapsetData.length > 0">
@@ -28,7 +28,7 @@
 
 			<div class="row d-flex dropdown-group m-t-10" *ngIf="loaded">
 				<div class="col-md-10 row p-l-30 p-t-10">
-					<div class="col-md-auto rt2-directory-chooser-column">
+					<div class="col-md-auto mt2-directory-chooser-column">
 						<div class="menu-inline">
 							<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="mapset-download-icon menu-button">
 								<mat-icon class="menu-icon">more_vert</mat-icon>
@@ -163,7 +163,7 @@
 		</ng-template>
 
 		<ng-template #toBeDevelopedModal let-modal>
-			<div class="modal-header rt2-modal-header">
+			<div class="modal-header mt2-modal-header">
 				<div class="modal-title">Coming Soon</div>
 				<button
 					type="button"
@@ -178,13 +178,13 @@
 			<div class="modal-body">
 				<p>This feature is not yet available. Please check back later.</p>
 			</div>
-			<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-				<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+			<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+				<button type="button" class="mt2-btn mt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
 			</div>
 		</ng-template>
 
 		<ng-template #downloadModal let-modal>
-			<div class="modal-header rt2-modal-header">
+			<div class="modal-header mt2-modal-header">
 				<div class="modal-title">Download Map Set</div>
 				<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeDownloadModal()">
 					<span aria-hidden="true">&times;</span>
@@ -198,7 +198,7 @@
 				<div class="modal-select">
 					<label class="modal-label">File Format: <span class="mandatory-field">*</span></label>
 					<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
-						<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="rt2-column-chooser-select">
+						<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="mt2-column-chooser-select">
 							<mat-select-trigger class="trigger"
 								><span *ngIf="!selectedFormat"> Select a format </span
 								><span *ngIf="selectedFormat">{{ selectedFormat.display }}</span></mat-select-trigger
@@ -214,14 +214,14 @@
 			<div class="modal-body" *ngIf="downloading">
 				<p>Please wait, downloading...</p>
 			</div>
-			<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group" *ngIf="!downloading">
-				<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
-				<button type="button" title="Download" class="rt2-btn rt2-action-btn" (click)="startDownload()">Download</button>
+			<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group" *ngIf="!downloading">
+				<button type="button" title="Cancel" class="mt2-btn mt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
+				<button type="button" title="Download" class="mt2-btn mt2-action-btn" (click)="startDownload()">Download</button>
 			</div>
 		</ng-template>
 
 		<ng-template #workFlowModal let-modal>
-			<div class="modal-header rt2-modal-header">
+			<div class="modal-header mt2-modal-header">
 				<div class="modal-title">{{ workFlowStatus.label }}</div>
 				<button
 					type="button"
@@ -256,12 +256,12 @@
 				</div>
 				<span class="mappings-section m-l-20" *ngIf="userList.length === 0">No users to assign.</span>
 			</div>
-			<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-				<button type="button" class="rt2-btn rt2-action-btn" (click)="!waitingForResponse ? closeWorkFlowModal() : null">Cancel</button>
+			<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+				<button type="button" class="mt2-btn mt2-action-btn" (click)="!waitingForResponse ? closeWorkFlowModal() : null">Cancel</button>
 				<button
 					type="button"
 					title="Confirm {{ workFlowStatus.label }}"
-					class="rt2-btn rt2-action-btn"
+					class="mt2-btn mt2-action-btn"
 					(click)="!waitingForResponse ? changeWorkFlowStatus() : null"
 				>
 					Confirm

@@ -5,7 +5,7 @@
 	<div class="d-flex">
 		<div class="row">
 			<div class="col-md-9 page-title" *ngIf="loaded && !loadError" title="Batch Edit ({{ mapsetData.length }})">
-				<div class="rt2-wrap">Batch Edit ({{ mapsetData.length }})</div>
+				<div class="mt2-wrap">Batch Edit ({{ mapsetData.length }})</div>
 			</div>
 		</div>
 		<div *ngIf="loaded" class="col-md-3 d-flex header-menu">
@@ -23,7 +23,7 @@
 			<button
 				type="button"
 				title="Undo Changes"
-				class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+				class="mt2-btn mt2-action-btn col-md-6 no-margin-top"
 				(click)="reloadMapping()"
 				[disabled]="!userChanged || mapsetInfo.workflowStatus !== 'IN_EDIT'"
 				(ngClass)="({ disabled: !userChanged || mapsetInfo.workflowStatus !== 'IN_EDIT' })"
@@ -33,7 +33,7 @@
 			<button
 				type="button"
 				title="Save Mapping"
-				class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+				class="mt2-btn mt2-action-btn col-md-6 no-margin-top"
 				(click)="saveMappings()"
 				[disabled]="!userChanged || mapsetInfo.workflowStatus !== 'IN_EDIT'"
 				(ngClass)="({ disabled: !userChanged || mapsetInfo.workflowStatus !== 'IN_EDIT' })"
@@ -43,7 +43,7 @@
 		</span>
 	</div>
 </div>
-<div class="rt2-container">
+<div class="mt2-container">
 	<div class="metadata-collapsible-container col-md-12 config-scrolling-section" *ngIf="loaded && !loadError">
 		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showConfigSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
@@ -70,7 +70,7 @@
 			/>
 		</div>
 		<div class="row d-flex dropdown-group" *ngIf="showConfigSection && loaded && !saving && !loadError">
-			<div class="col-md-auto rt2-directory-chooser-column m-l-20">
+			<div class="col-md-auto mt2-directory-chooser-column m-l-20">
 				<app-column-chooser
 					title="Select Columns to Display"
 					[gridColumnApi]="gridApi"
@@ -79,7 +79,7 @@
 				>
 				</app-column-chooser>
 			</div>
-			<div class="col-md-auto rt2-directory-chooser-column">
+			<div class="col-md-auto mt2-directory-chooser-column">
 				<mat-menu #searchMenu="matMenu" class="search-box">
 					<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
 						<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
@@ -124,7 +124,7 @@
 					</button>
 				</div>
 			</div>
-			<div class="col-md-auto rt2-directory-chooser-column">
+			<div class="col-md-auto mt2-directory-chooser-column">
 				<div class="menu-inline">
 					<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="mapset-download-icon menu-button">
 						<mat-icon class="menu-icon">more_vert</mat-icon>
@@ -172,7 +172,7 @@
 						[rowData]="mapsetData"
 						(gridReady)="onGridReady($event)"
 						[gridOptions]="gridOptions"
-						class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter"
+						class="ag-theme-alpine mt2-ag-grid mt2-ag-grid-no-filter"
 						[suppressScrollOnNewData]="true"
 					>
 					</ag-grid-angular>
@@ -231,11 +231,11 @@
 								</div>
 							</div>
 						</div>
-						<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
+						<div class="modal-footer mt-10 mt2-lockable mt2-btn-group">
 							<button
 								type="button"
 								title="Save"
-								class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
+								class="mt2-btn mt2-action-btn sm-inline-btn no-margin-top form-btn"
 								[disabled]="!groupFC.value || groupFC.value === '0' || !priorityFC.value || priorityFC.value === '0'"
 								(click)="setGroup()"
 							>
@@ -290,7 +290,7 @@
 							<span class="mappings-section m-b-10">{{ targetToName }}</span>
 						</div>
 
-						<div class="modal-footer mt-20 mb-10 rt2-lockable rt2-btn-group align-items-center">
+						<div class="modal-footer mt-20 mb-10 mt2-lockable mt2-btn-group align-items-center">
 							<div class="mappings-section code-link no-wrap" title="Search Browser" (click)="searchBrowser()">
 								<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#2269e8">
 									<path
@@ -302,7 +302,7 @@
 							<button
 								type="button"
 								title="Set as Target"
-								class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
+								class="mt2-btn mt2-action-btn sm-inline-btn no-margin-top form-btn"
 								(click)="setTarget(targetFC.value, targetToName)"
 								[disabled]="!foundConceptCode || !selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT'"
 								(ngClass)="({ disabled: !foundConceptCode || !selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT' })"
@@ -312,7 +312,7 @@
 							<button
 								type="button"
 								title="Set Empty Target"
-								class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
+								class="mt2-btn mt2-action-btn sm-inline-btn no-margin-top form-btn"
 								[disabled]="!selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT'"
 								(ngClass)="({ disabled: !selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT' })"
 								(click)="setEmptyTarget()"
@@ -371,11 +371,11 @@
 						<span class="mappings-section m-l-20" *ngIf="popover_addAdviceList.length === 0 && mapAdvices.length > 0"
 							>No advice to add.</span
 						>
-						<div class="modal-footer mt-10 rt2-lockable rt2-btn-group">
+						<div class="modal-footer mt-10 mt2-lockable mt2-btn-group">
 							<button
 								type="button"
 								title="Save"
-								class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
+								class="mt2-btn mt2-action-btn sm-inline-btn no-margin-top form-btn"
 								(click)="setAdvice()"
 							>
 								Save
@@ -410,10 +410,10 @@
 			/>
 		</div>
 		<div class="row d-flex dropdown-group" *ngIf="showBrowserSection && !saving">
-			<div class="col-md-auto rt2-directory-chooser-column m-l-20">
+			<div class="col-md-auto mt2-directory-chooser-column m-l-20">
 				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="browserApi" [useDialog]="useDialog"> </app-column-chooser>
 			</div>
-			<div class="col-md-auto rt2-directory-chooser-column">
+			<div class="col-md-auto mt2-directory-chooser-column">
 				<mat-menu #browserSearchMenu="matMenu" class="search-box">
 					<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
 						<mat-form-field floatLabel="never" id="browserSearchInputField" title="Enter Search Criteria">
@@ -474,15 +474,15 @@
 								style="width: 100%; height: 100%"
 								(gridReady)="onBrowserReady($event)"
 								[gridOptions]="browserOptions"
-								class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter"
+								class="ag-theme-alpine mt2-ag-grid mt2-ag-grid-no-filter"
 							>
 							</ag-grid-angular>
 						</div>
 
 						<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
-						<div class="rt2-pagination-container" [hidden]="!browserLoaded" *ngIf="showBrowserSection && !saving">
-							<div class="rt2-pagination-top-row" *ngIf="showPaging">
-								<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons no-wrap">
+						<div class="mt2-pagination-container" [hidden]="!browserLoaded" *ngIf="showBrowserSection && !saving">
+							<div class="mt2-pagination-top-row" *ngIf="showPaging">
+								<div *ngIf="paginationPages.totalPages > 1" class="mt2-pagination-buttons no-wrap">
 									<button
 										#paginationFirstPage
 										mat-raised-button
@@ -569,7 +569,7 @@
 									</button>
 								</div>
 
-								<div class="rt2-pagination-bottom-row" *ngIf="showPaging">
+								<div class="mt2-pagination-bottom-row" *ngIf="showPaging">
 									<span *ngFor="let sizeOption of browserPaging.pageSizeOptions">
 										<button
 											mat-raised-button
@@ -584,7 +584,7 @@
 									</span>
 								</div>
 							</div>
-							<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
+							<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
 								Showing
 								<span class="fw-bold p-l-5 p-r-5">
 									{{ (getCurrentPage() + 1) * browserPaging.pageSize - browserPaging.pageSize + 1 }}
@@ -599,7 +599,7 @@
 								</span>
 								of <span class="fw-bold p-l-5"> {{ numOfMembers }} </span> results
 							</div>
-							<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine text-center" [hidden]="showPaging">
+							<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine text-center" [hidden]="showPaging">
 								No results to show
 							</div>
 						</div>
@@ -609,7 +609,7 @@
 							<div class="row align-items-center no-gutters m-b-20">
 								<div class="col col-header-font">Concept Details</div>
 								<div class="col-md-auto">
-									<div class="text-right close-button rt2-concept-details-close-btn">
+									<div class="text-right close-button mt2-concept-details-close-btn">
 										<button
 											type="button"
 											class="close dialog-close-x-dark"
@@ -625,16 +625,16 @@
 							</div>
 
 							<!-- Parents Section -->
-							<div class="rt2-concept-details-taxonomy-section">
+							<div class="mt2-concept-details-taxonomy-section">
 								<div class="d-flex">
-									<div class="rt2-concept-details-section-title p-l-10">
+									<div class="mt2-concept-details-section-title p-l-10">
 										Parents
 										<span [hidden]="!currentConcept?.parentRefs.length">{{ '(' + currentConcept?.parentRefs.length + ')' }}</span>
 									</div>
 								</div>
 
 								<div class="d-flex p-20" *ngIf="currentConcept?.parentRefs.length === 0">
-									<div class="rt2-concept-details-no-relationships p-l-20">No Parents</div>
+									<div class="mt2-concept-details-no-relationships p-l-20">No Parents</div>
 								</div>
 								<div class="p-20" *ngIf="currentConcept?.parentRefs.length > 0" class="overflow details-scrolling">
 									<div *ngFor="let parent of currentConcept?.parentRefs" class="concept-details-refs m-l-15 d-flex">
@@ -671,13 +671,13 @@
 							</div>
 
 							<!-- Details Section -->
-							<div class="container-fluid rt2-concept-details-concept-section">
+							<div class="container-fluid mt2-concept-details-concept-section">
 								<div class="row no-margin">
-									<div class="col rt2-concept-details-concept-info-column default-font p-t-20">
+									<div class="col mt2-concept-details-concept-info-column default-font p-t-20">
 										<div>
-											<div class="row rt2-concept-details-concept-row m-l-40">
+											<div class="row mt2-concept-details-concept-row m-l-40">
 												<div
-													class="col-md-9 rt2-concept-details-concept-id-label m-b-20"
+													class="col-md-9 mt2-concept-details-concept-id-label m-b-20"
 													title="{{ currentConcept?.name }}"
 													aria-label="{{ currentConcept?.name }}"
 												>
@@ -687,7 +687,7 @@
 													<button
 														type="button"
 														title="Set as Target"
-														class="rt2-btn rt2-action-btn sm-inline-btn no-margin-top form-btn"
+														class="mt2-btn mt2-action-btn sm-inline-btn no-margin-top form-btn"
 														(click)="setTarget(currentConcept, currentConcept.name)"
 														[disabled]="!selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT'"
 														[ngClass]="{ disabled: !selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT' }"
@@ -697,7 +697,7 @@
 												</div>
 
 												<div
-													class="col-md-12 rt2-concept-details-concept-id-text fw-bold m-b-20"
+													class="col-md-12 mt2-concept-details-concept-id-text fw-bold m-b-20"
 													title="{{ currentConcept?.code }}"
 													aria-label="{{ currentConcept?.code }}"
 												>
@@ -710,15 +710,15 @@
 							</div>
 
 							<!-- Children Section -->
-							<div class="rt2-concept-details-taxonomy-section">
+							<div class="mt2-concept-details-taxonomy-section">
 								<div class="d-flex">
-									<div class="rt2-concept-details-section-title p-l-10">
+									<div class="mt2-concept-details-section-title p-l-10">
 										Children
 										<span [hidden]="!currentConcept?.childRefs.length">{{ '(' + currentConcept?.childRefs.length + ')' }}</span>
 									</div>
 								</div>
 								<div class="d-flex p-20" *ngIf="currentConcept?.childRefs.length === 0">
-									<div class="rt2-concept-details-no-relationships p-l-20">No Children</div>
+									<div class="mt2-concept-details-no-relationships p-l-20">No Children</div>
 								</div>
 								<div class="p-10 overflow details-scrolling" *ngIf="currentConcept?.childRefs.length > 0">
 									<div *ngFor="let child of currentConcept?.childRefs" class="concept-details-refs m-l-20 d-flex">
@@ -768,8 +768,8 @@
 	</ng-template>
 
 	<ng-template #directoryInfoDialog let-data>
-		<div class="container-fluid w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
-			<div class="row rt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
+		<div class="container-fluid w-min-350 mt2-refset-metadata-column" id="directoryInformationSection">
+			<div class="row mt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
 				<p class="fs-18 mb-0 ml-10">{{ data.name }}</p>
 				<p class="fs-16 ml-10">
 					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span
@@ -785,8 +785,8 @@
 		<workflow-status-badge [status]="params?.value"> </workflow-status-badge>
 	</ng-template>
 	<ng-template #directoryInfoDialog let-data>
-		<div class="container-fluid w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
-			<div class="row rt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
+		<div class="container-fluid w-min-350 mt2-refset-metadata-column" id="directoryInformationSection">
+			<div class="row mt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
 				<p class="fs-18 mb-0 ml-10">{{ data.name }}</p>
 				<p class="fs-16 ml-10">
 					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span
@@ -941,7 +941,7 @@
 	</ng-template>
 
 	<ng-template #toBeDevelopedModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<div class="modal-title">Coming Soon</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
 				<span aria-hidden="true">&times;</span>
@@ -950,13 +950,13 @@
 		<div class="modal-body">
 			<p>This feature is not yet available. Please check back later.</p>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
 		</div>
 	</ng-template>
 
 	<ng-template #confirmationModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<div class="modal-title">Confirm Remove</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeConfirmDialog()">
 				<span aria-hidden="true">&times;</span>
@@ -965,14 +965,14 @@
 		<div class="modal-body">
 			<p>Are you sure you want to remove this entry?</p>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeConfirmDialog()">Cancel</button>
-			<button type="button" title="Confirm" class="rt2-btn rt2-action-btn" (click)="confirmRemoveItem()">Confirm</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" title="Cancel" class="mt2-btn mt2-action-btn" (click)="closeConfirmDialog()">Cancel</button>
+			<button type="button" title="Confirm" class="mt2-btn mt2-action-btn" (click)="confirmRemoveItem()">Confirm</button>
 		</div>
 	</ng-template>
 
 	<ng-template #headerGroupModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<div class="modal-title">Change Group</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeHeaderGroupModal()">
 				<span aria-hidden="true">&times;</span>
@@ -996,13 +996,13 @@
 				<span class="clear-search-header" title="Clear Group" (click)="clearHeaderGroupInput()">&#10005;</span>
 			</div>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" class="rt2-btn rt2-action-btn" (click)="setHeaderGroup()">Save</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="setHeaderGroup()">Save</button>
 		</div>
 	</ng-template>
 
 	<ng-template #workFlowModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<div class="modal-title">{{ workFlowStatus.label }}</div>
 			<button
 				type="button"
@@ -1037,12 +1037,12 @@
 			</div>
 			<span class="mappings-section m-l-20" *ngIf="userList.length === 0">No users to assign.</span>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" class="rt2-btn rt2-action-btn" (click)="!waitingForResponse ? closeWorkFlowModal() : null">Cancel</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="!waitingForResponse ? closeWorkFlowModal() : null">Cancel</button>
 			<button
 				type="button"
 				title="Confirm {{ workFlowStatus.label }}"
-				class="rt2-btn rt2-action-btn"
+				class="mt2-btn mt2-action-btn"
 				(click)="!waitingForResponse ? changeWorkFlowStatus() : null"
 			>
 				Confirm

@@ -3,6 +3,7 @@ export class User {
 	firstName?: string;
 	lastName?: string;
 	userName?: string;
+	name?: string;
 	langKey?: string;
 	roles?: string[];
 	iconUri?: string;

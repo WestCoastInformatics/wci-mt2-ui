@@ -186,7 +186,7 @@ export class InboxComponent implements OnInit {
 				field: 'mapSetCode',
 				tooltipField: 'mapSetCode',
 				headerName: 'Map Set ID',
-				cellClass: 'rt2-directory-column-id',
+				cellClass: 'mt2-directory-column-id',
 				minWidth: 65,
 				resizable: true,
 				sortable: false,
@@ -197,7 +197,7 @@ export class InboxComponent implements OnInit {
 				field: 'mapSetName',
 				tooltipField: 'mapSetName',
 				headerName: 'Map Set Name',
-				cellClass: 'rt2-directory-column-name',
+				cellClass: 'mt2-directory-column-name',
 				flex: 2,
 				resizable: true,
 				minWidth: 65,
@@ -236,7 +236,7 @@ export class InboxComponent implements OnInit {
 				field: 'versionStatus',
 				tooltipField: 'versionStatus',
 				headerName: 'Workflow Status',
-				cellClass: 'rt2-directory-column-version-status',
+				cellClass: 'mt2-directory-column-version-status',
 				minWidth: 165,
 				width: 200,
 				resizable: true,
@@ -250,7 +250,7 @@ export class InboxComponent implements OnInit {
 				field: 'modified',
 				tooltipValueGetter: UiUtility.gridDateValueGetter,
 				headerName: 'Last Modified',
-				cellClass: 'rt2-directory-column-modified-date',
+				cellClass: 'mt2-directory-column-modified-date',
 				minWidth: 65,
 				width: 170,
 				resizable: true,
@@ -752,7 +752,7 @@ export class InboxComponent implements OnInit {
 	}
 
 	onResize(event: any) {
-		const gridWidth = document.getElementsByClassName('rt2-ag-grid')[0]?.clientWidth;
+		const gridWidth = document.getElementsByClassName('mt2-ag-grid')[0]?.clientWidth;
 		document.getElementsByClassName('ag-header')[0]?.setAttribute('style', `width: ${gridWidth}px;`);
 	}
 

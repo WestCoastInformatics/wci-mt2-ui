@@ -1,16 +1,18 @@
-<button title="Import List of SctIds" aria-label="Import list" class="rt2-link-btn" (click)="openImportFromListModal(importFromListDialog)">Add/Remove by List</button>
+<button title="Import List of SctIds" aria-label="Import list" class="mt2-link-btn" (click)="openImportFromListModal(importFromListDialog)">
+	Add/Remove by List
+</button>
 
 <ng-template #importFromListDialog let-modal>
-	<div class="modal-header rt2-modal-header">
+	<div class="modal-header mt2-modal-header">
 		<button class="unfocus-btn"></button>
-		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Add or Remove Members By List</h3>
+		<h3 class="modal-title mt2-modal-title modal-header-font" id="modal-basic-title">Add or Remove Members By List</h3>
 
 		<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
 			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
 		</button>
 	</div>
 
-	<div class="modal-body rt2-lockable default-font">
+	<div class="modal-body mt2-lockable default-font">
 		<div class="import-from-label form-field-header">Enter a list of SCTIDs. Use a comma, whitespace, or newline delimited Concept Ids.</div>
 
 		<mat-form-field floatLabel="never" class="import-from-list-field" appearance="fill">
@@ -18,16 +20,17 @@
 		</mat-form-field>
 	</div>
 
-	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+	<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
 		<button
 			type="button"
 			(click)="callMemberOperation('add')"
 			color="green"
 			aria-hidden="false"
-			class="rt2-btn rt2-next-back-btn"
+			class="mt2-btn mt2-next-back-btn"
 			aria-label="Add Members"
 			title="Add Members"
-			[disabled]="!(listOfIds?.length && listOfIds?.length > 0)">
+			[disabled]="!(listOfIds?.length && listOfIds?.length > 0)"
+		>
 			Add Members
 		</button>
 
@@ -37,13 +40,16 @@
 			(click)="callMemberOperation('remove')"
 			color="red"
 			aria-hidden="false"
-			class="rt2-btn rt2-remove-btn"
+			class="mt2-btn mt2-remove-btn"
 			aria-label="Remove Members"
 			title="Remove Members"
-			[disabled]="!(listOfIds?.length && listOfIds?.length > 0)">
+			[disabled]="!(listOfIds?.length && listOfIds?.length > 0)"
+		>
 			Remove Members
 		</button>
 
-		<button type="button" (click)="modal.dismiss('Cross click')" aria-hidden="false" class="rt2-btn rt2-close-btn" aria-label="Close">Close</button>
+		<button type="button" (click)="modal.dismiss('Cross click')" aria-hidden="false" class="mt2-btn mt2-close-btn" aria-label="Close">
+			Close
+		</button>
 	</div>
 </ng-template>

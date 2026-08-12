@@ -532,7 +532,7 @@ export class BatchMappingComponent implements OnInit {
 				field: 'mapEntries',
 				headerName: 'Advices',
 				headerTooltip: 'Advices',
-				cellClass: 'rt2-directory-column-advices',
+				cellClass: 'mt2-directory-column-advices',
 				minWidth: 85,
 				width: 135,
 				resizable: true,
@@ -547,7 +547,7 @@ export class BatchMappingComponent implements OnInit {
 				field: 'workflowStatus',
 				tooltipField: 'workflowStatus',
 				headerName: 'Workflow Status',
-				cellClass: 'rt2-directory-column-version-status',
+				cellClass: 'mt2-directory-column-version-status',
 				minWidth: 165,
 				width: 200,
 				resizable: true,
@@ -562,7 +562,7 @@ export class BatchMappingComponent implements OnInit {
 				tooltipField: 'modifiedBy',
 				headerName: 'Modified By',
 				headerTooltip: 'Modified By',
-				cellClass: 'rt2-directory-column-id',
+				cellClass: 'mt2-directory-column-id',
 				width: 145,
 				resizable: true,
 				unSortIcon: true,
@@ -575,7 +575,7 @@ export class BatchMappingComponent implements OnInit {
 				tooltipValueGetter: UiUtility.gridDateValueGetter,
 				headerName: 'Last Modified',
 				headerTooltip: 'Last Modified',
-				cellClass: 'rt2-directory-column-modified-date',
+				cellClass: 'mt2-directory-column-modified-date',
 				minWidth: 65,
 				width: 155,
 				resizable: true,
@@ -591,7 +591,7 @@ export class BatchMappingComponent implements OnInit {
 				colId: 'action-btns',
 				headerName: '',
 				width: 90,
-				cellClass: 'rt2-directory-column-actions',
+				cellClass: 'mt2-directory-column-actions',
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.actionSection },
 				sortable: false,
@@ -1437,7 +1437,7 @@ export class BatchMappingComponent implements OnInit {
 			this.showAdvicePopover = false;
 			this.showTargetPopover = false;
 			setTimeout(() => {
-				this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+				this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('mt2-container')[0].scrollTop;
 				this.popoverLocationX = event.x - 190;
 				this.groupInput.nativeElement.focus();
 			}, 5);
@@ -1505,7 +1505,7 @@ export class BatchMappingComponent implements OnInit {
 			this.showAdvicePopover = false;
 			this.showGroupPopover = false;
 			setTimeout(() => {
-				this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+				this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('mt2-container')[0].scrollTop;
 				this.popoverLocationX = event.x - 210;
 				this.targetInput.nativeElement.focus();
 			}, 5);
@@ -1623,7 +1623,7 @@ export class BatchMappingComponent implements OnInit {
 		this.showAdvicePopover = true;
 		this.showGroupPopover = false;
 		this.showTargetPopover = false;
-		this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+		this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('mt2-container')[0].scrollTop;
 		this.popoverLocationX = event.x - 190;
 		this.popover_uuid = params.data.uuid;
 		this.popover_adviceToAdd = '';

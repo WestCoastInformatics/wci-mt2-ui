@@ -1,12 +1,12 @@
 <nav *ngIf="isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row jc-center p-b-5-imp">
-	<div class="rt2-nav-item-row">
-		<a class="rt2-nav-logo-section" routerLink="" (click)="landing()" title="Mapping Tool 2.0 Home" aria-label="Mapping Tool 2.0 home">
+	<div class="mt2-nav-item-row">
+		<a class="mt2-nav-logo-section" routerLink="" (click)="landing()" title="Mapping Tool 2.0 Home" aria-label="Mapping Tool 2.0 home">
 			<img class="mt2-logo mr-2 p-0" src="/assets/u316.png" />
-			<span class="text-ghost-grey rt2-nav-header-title">Mapping Tool 2.0</span>
+			<span class="text-ghost-grey mt2-nav-header-title">Mapping Tool 2.0</span>
 		</a>
 
 		<div
-			class="rt2-breadcrumb-bar text-ghost-grey"
+			class="mt2-breadcrumb-bar text-ghost-grey"
 			[class]="
 				breadcrumbs.length > 1 && projectRole.length > 8
 					? 'extended-breadcrumb-and-roles'
@@ -105,7 +105,7 @@
 							<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri || '')" class="medium-icon-image mr-2" />
 
 							<div class="profile-block">
-								<strong>{{ user?.userName }}</strong>
+								<strong [title]="user?.userName">{{ user?.name }}</strong>
 								<div class="text-sm-left">{{ user?.company }}</div>
 								<div *ngIf="user?.roles">({{ user?.roles[0] }})</div>
 							</div>
@@ -121,10 +121,10 @@
 	</div>
 </nav>
 <nav *ngIf="!isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row jc-center p-b-5-imp" id="bg-landing-header">
-	<div class="rt2-nav-item-row">
-		<a class="rt2-nav-logo-section" routerLink="" (click)="landing()" title="Mapping Tool Home" aria-label="Reference set tool home">
+	<div class="mt2-nav-item-row">
+		<a class="mt2-nav-logo-section" routerLink="" (click)="landing()" title="Mapping Tool Home" aria-label="Reference set tool home">
 			<img class="mt2-logo mr-2 p-0" src="/assets/u316.png" />
-			<span class="text-ghost-grey rt2-nav-header-title">Mapping Tool 2.0</span>
+			<span class="text-ghost-grey mt2-nav-header-title">Mapping Tool 2.0</span>
 		</a>
 
 		<ng-container [ngSwitch]="environment">
@@ -137,7 +137,7 @@
 	</div>
 	<div class="left-title-buttons">
 		<div class="navbar-divider">
-			<div class="navbar-menu-link p-l-10"><a class="btn text-white m-r-10 rt2-nav-title" (click)="login()">Log In</a></div>
+			<div class="navbar-menu-link p-l-10"><a class="btn text-white m-r-10 mt2-nav-title" (click)="login()">Log In</a></div>
 		</div>
 	</div>
 </nav>

@@ -85,7 +85,7 @@ export class NotesModalComponent {
 
 	saveNotes() {
 		if (this.notesFC.dirty) {
-			this.refsetService.saveNotes(this.mapSetId, this.conceptCode, this.notesFC.value).subscribe(
+			this.refsetService.saveNotes(this.mapSetId, this.conceptCode, JSON.stringify(this.notesFC.value)).subscribe(
 				(response) => {
 					if (response) {
 						console.log(' notes Info: ', response);

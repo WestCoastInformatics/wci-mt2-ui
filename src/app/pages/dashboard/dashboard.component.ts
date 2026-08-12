@@ -169,7 +169,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				field: 'mapSetCode',
 				tooltipField: 'mapSetCode',
 				headerName: 'Map Set ID',
-				cellClass: 'rt2-directory-column-id',
+				cellClass: 'mt2-directory-column-id',
 				minWidth: 65,
 				resizable: true,
 				sortable: false,
@@ -180,7 +180,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				field: 'mapSetName',
 				tooltipField: 'mapSetName',
 				headerName: 'Map Set Name',
-				cellClass: 'rt2-directory-column-name',
+				cellClass: 'mt2-directory-column-name',
 				flex: 2,
 				resizable: true,
 				minWidth: 65,
@@ -205,7 +205,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				field: 'conceptName',
 				tooltipField: 'conceptName',
 				headerName: 'Source PT',
-				cellClass: 'rt2-directory-column-name',
+				cellClass: 'mt2-directory-column-name',
 				flex: 2,
 				resizable: true,
 				minWidth: 65,
@@ -218,7 +218,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				field: 'workflowStatus',
 				tooltipField: 'workflowStatus',
 				headerName: 'Workflow Status',
-				cellClass: 'rt2-directory-column-version-status',
+				cellClass: 'mt2-directory-column-version-status',
 				minWidth: 165,
 				width: 200,
 				resizable: true,
@@ -231,7 +231,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				field: 'modified',
 				tooltipValueGetter: UiUtility.gridDateValueGetter,
 				headerName: 'Last Modified',
-				cellClass: 'rt2-directory-column-modified-date',
+				cellClass: 'mt2-directory-column-modified-date',
 				minWidth: 65,
 				width: 170,
 				resizable: true,
@@ -570,7 +570,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	}
 
 	onResize(event: any) {
-		const gridWidth = document.getElementsByClassName('rt2-ag-grid')[0]?.clientWidth;
+		const gridWidth = document.getElementsByClassName('mt2-ag-grid')[0]?.clientWidth;
 		document.getElementsByClassName('ag-header')[0]?.setAttribute('style', `width: ${gridWidth}px;`);
 	}
 

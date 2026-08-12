@@ -130,15 +130,15 @@
 	text-transform: capitalize;
 }
 
-.rt2-directory-column-workflow-status .ag-cell-value {
+.mt2-directory-column-workflow-status .ag-cell-value {
 	text-transform: capitalize;
 }
 
-.rt2-directory-column-version-status .ag-cell-value {
+.mt2-directory-column-version-status .ag-cell-value {
 	text-transform: capitalize;
 }
 
-.rt2-directory-column-advices {
+.mt2-directory-column-advices {
 	align-content: center;
 }
 

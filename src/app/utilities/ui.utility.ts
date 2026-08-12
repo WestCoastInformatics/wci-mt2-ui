@@ -67,7 +67,8 @@ export class UiUtility {
 	 */
 	static focusNextFormElement() {
 		//add all elements we want to include in our selection
-		const focusableElements = 'a:not([disabled]), button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
+		const focusableElements =
+			'a:not([disabled]), button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
 		const activeElement: any = document.activeElement;
 
 		if (activeElement && activeElement.form) {
@@ -165,7 +166,14 @@ export class UiUtility {
 
 							const message = 'Your ' + description + ' is complete. Click this message to download your file';
 
-							notificationService.update(downloadNotification, message, null, null, { url: sanatizedDownloadUrl, download: fileName, urlId: id }, 100);
+							notificationService.update(
+								downloadNotification,
+								message,
+								null,
+								null,
+								{ url: sanatizedDownloadUrl, download: fileName, urlId: id },
+								100,
+							);
 
 							setTimeout(function () {
 								$('#' + id).click(function () {
@@ -198,7 +206,14 @@ export class UiUtility {
 					if (downloadNotification == null) {
 						downloadNotification = notificationService.showProgress('Your ' + description + ' file is now being saved.', '', null, null);
 					} else {
-						notificationService.update(downloadNotification, 'Your ' + description + ' file is now being saved.', null, null, null, percent_complete);
+						notificationService.update(
+							downloadNotification,
+							'Your ' + description + ' file is now being saved.',
+							null,
+							null,
+							null,
+							percent_complete,
+						);
 					}
 				});
 
@@ -227,7 +242,9 @@ export class UiUtility {
 			eclString = '';
 		}
 
-		$('body').append('<ecl-builder id="ecl-builder" branch=' + branch + ' api-url="' + snowstormApiUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
+		$('body').append(
+			'<ecl-builder id="ecl-builder" branch=' + branch + ' api-url="' + snowstormApiUrl + '" ecl-string="' + eclString + '"></ecl-builder>',
+		);
 
 		const eclBuilder = document.querySelector('ecl-builder');
 		//eclBuilder.querySelector('input').focus();
@@ -250,7 +267,7 @@ export class UiUtility {
 		callbackFunction: Function,
 		notificationService: NotificationService,
 		refsetService: RefsetService,
-		router: Router
+		router: Router,
 	) {
 		// set a small delay so the original call has some time to process
 		CodeUtility.delay(500);
@@ -330,7 +347,11 @@ export class UiUtility {
 
 						for (const conceptId of conceptIdArray) {
 							const conceptStatus: any = data[conceptId];
-							this.memberChangeData[refsetId].statuses.push({ Concept: conceptId, Operation: conceptStatus.operation, Status: conceptStatus.status });
+							this.memberChangeData[refsetId].statuses.push({
+								Concept: conceptId,
+								Operation: conceptStatus.operation,
+								Status: conceptStatus.status,
+							});
 							conceptStatusArray.push({
 								code: conceptId,
 								added: conceptStatus.operation == 'Added',
@@ -364,7 +385,8 @@ export class UiUtility {
 								message = messagePrefix + 'Some members were not able to be ' + messageEnd;
 							}
 						} else if (description.includes('changed')) {
-							const noContentMessage = 'There were no concepts changed for Reference Set ' + refsetId + '. You may continue editing the Reference Set.';
+							const noContentMessage =
+								'There were no concepts changed for Reference Set ' + refsetId + '. You may continue editing the Reference Set.';
 
 							notificationType = 'success';
 
@@ -376,7 +398,11 @@ export class UiUtility {
 								if (previousNotifications[0].message == noContentMessage) {
 									message = previousNotifications[0].message;
 								} else {
-									message = 'There were no concepts changed in the last request for Reference Set ' + refsetId + '. Previous requests had: ' + previousNotifications[0].message;
+									message =
+										'There were no concepts changed in the last request for Reference Set ' +
+										refsetId +
+										'. Previous requests had: ' +
+										previousNotifications[0].message;
 								}
 							} else {
 								message = noContentMessage;
@@ -414,7 +440,14 @@ export class UiUtility {
 							notificationService.close(previousNotifications[0]);
 						}
 
-						notification = notificationService.show(message, title, notificationType, { timeOut: 0, extendedTimeOut: 0 }, refsetId, buttons);
+						notification = notificationService.show(
+							message,
+							title,
+							notificationType,
+							{ timeOut: 0, extendedTimeOut: 0 },
+							refsetId,
+							buttons,
+						);
 
 						notification.onAction.subscribe((button) => {
 							if (button.id == 'download') {
@@ -433,9 +466,14 @@ export class UiUtility {
 				},
 				(error) => {
 					console.log(error);
-					message = 'There has been a problem  ' + description + ' Reference Set ' + refsetId + '. View the Reference Set to determine changes or contact an administrator.';
+					message =
+						'There has been a problem  ' +
+						description +
+						' Reference Set ' +
+						refsetId +
+						'. View the Reference Set to determine changes or contact an administrator.';
 					notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-				}
+				},
 			);
 		};
 
@@ -451,7 +489,7 @@ export class UiUtility {
 		notificationService: NotificationService,
 		refsetService: RefsetService,
 		router: Router,
-		processType: string
+		processType: string,
 	) {
 		// set a small delay so the original call has some time to process
 		CodeUtility.delay();
@@ -522,14 +560,25 @@ export class UiUtility {
 							// message = 'Reference Set ' + refsetId + ' has successfully completed the ' + processType + ' process. It is no longer locked.';
 							message = `Reference Set ${refsetId} ${processType} analysis successfully completed. The reference set is now ready to continue the ${processType} process.`;
 						} else {
-							message = 'The following Reference Sets have successfully completed the ' + processType + ' process. They are no longer locked. <br>' + refsetId;
+							message =
+								'The following Reference Sets have successfully completed the ' +
+								processType +
+								' process. They are no longer locked. <br>' +
+								refsetId;
 						}
 
 						if (previousNotifications.length > 0) {
 							notificationService.close(previousNotifications[0]);
 						}
 
-						notification = notificationService.show(message, title, notificationType, { timeOut: 0, extendedTimeOut: 0 }, refsetId, buttons);
+						notification = notificationService.show(
+							message,
+							title,
+							notificationType,
+							{ timeOut: 0, extendedTimeOut: 0 },
+							refsetId,
+							buttons,
+						);
 
 						notification.onAction.subscribe((button) => {
 							if (button.id == 'view') {
@@ -551,9 +600,14 @@ export class UiUtility {
 				},
 				(error) => {
 					console.log(error);
-					message = 'There has been a problem with Reference Set ' + refsetId + ' during the ' + processType + ' process. Please contact an administrator.';
+					message =
+						'There has been a problem with Reference Set ' +
+						refsetId +
+						' during the ' +
+						processType +
+						' process. Please contact an administrator.';
 					notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-				}
+				},
 			);
 		};
 
@@ -584,11 +638,18 @@ export class UiUtility {
 
 		this.downloadFile(
 			data,
-			['Inactivation Reason', 'Inactive ID', 'Inactive Concept', 'Suggested Replacement Association', 'Suggested Replacement ID', 'Suggested Replacement Concept'],
+			[
+				'Inactivation Reason',
+				'Inactive ID',
+				'Inactive Concept',
+				'Suggested Replacement Association',
+				'Suggested Replacement ID',
+				'Suggested Replacement Concept',
+			],
 			fileName,
 			false,
 			false,
-			false
+			false,
 		);
 	}
 
@@ -596,12 +657,12 @@ export class UiUtility {
 		const fileName = 'Refset_' + refsetId + '__Change_Report_' + CodeUtility.getReverseDate();
 
 		const headerObject = {
-			'newMemberTitle': ['New Members'],
-			'newMemberHeader': ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId', 'referencedComponentId'],
-			'oldMemberTitle': ['Old Members'],
-			'oldMemberHeader': ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId', 'referencedComponentId'],
-			'totalInactiveConceptsTitle': ['Inactive Concepts with their suggested Replacement Concepts'],
-			'totalInactiveConceptsHeader': [
+			newMemberTitle: ['New Members'],
+			newMemberHeader: ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId', 'referencedComponentId'],
+			oldMemberTitle: ['Old Members'],
+			oldMemberHeader: ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId', 'referencedComponentId'],
+			totalInactiveConceptsTitle: ['Inactive Concepts with their suggested Replacement Concepts'],
+			totalInactiveConceptsHeader: [
 				'Inactive Concept ID',
 				'Inactive Concept Name',
 				'Reason',
@@ -609,8 +670,8 @@ export class UiUtility {
 				'Suggested Replacement ConceptID(s)',
 				'Suggested Replacement Name',
 			],
-			'membersInCommonTitle': ['Members in Common'],
-			'membersInCommonHeader': ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId', 'referencedComponentId'],
+			membersInCommonTitle: ['Members in Common'],
+			membersInCommonHeader: ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId', 'referencedComponentId'],
 		};
 
 		this.downloadFile(data, headerObject, fileName, true, true, false);
@@ -620,7 +681,7 @@ export class UiUtility {
 		const fileName = 'Refset_' + refsetId + '__Audit_Report_' + CodeUtility.getReverseDate();
 
 		const headerObject = {
-			'auditHeader': ['Date', 'Modified By', 'Message', 'Details'],
+			auditHeader: ['Date', 'Modified By', 'Message', 'Details'],
 		};
 
 		this.downloadFile(data, headerObject, fileName, true, false, true);
@@ -629,13 +690,21 @@ export class UiUtility {
 	static createMapsetReport(refsetId: string, data): void {
 		const fileName = 'Mapset_' + refsetId + '_download_' + CodeUtility.getReverseDate();
 		const headerObject = {
-			'mapsetHeader': ['Source', 'Source PT', 'Target', 'Target PT', 'Group', 'Priority', 'Relationship', 'Rule', 'Advices', 'Last Modified'],
+			mapsetHeader: ['Source', 'Source PT', 'Target', 'Target PT', 'Group', 'Priority', 'Relationship', 'Rule', 'Advices', 'Last Modified'],
 		};
 
 		this.downloadFile(data, headerObject, fileName, false, false, false, true);
 	}
 
-	static downloadFile(data, headerlist, fileName = 'download' + '_' + CodeUtility.getReverseDate(), merge = false, isFinishedChangeReport = false, isAuditReport = false, isMapsetReport = false) {
+	static downloadFile(
+		data,
+		headerlist,
+		fileName = 'download' + '_' + CodeUtility.getReverseDate(),
+		merge = false,
+		isFinishedChangeReport = false,
+		isAuditReport = false,
+		isMapsetReport = false,
+	) {
 		let csvData;
 		if (!merge && !isMapsetReport) {
 			csvData = this.convertToCsv(data, headerlist);
@@ -719,12 +788,12 @@ export class UiUtility {
 	}
 
 	static toggleLockedSections(lock: boolean) {
-		const containingDiv = $('.rt2-lockable');
+		const containingDiv = $('.mt2-lockable');
 
 		if (lock) {
-			containingDiv.addClass('rt2-disable-section');
+			containingDiv.addClass('mt2-disable-section');
 		} else {
-			containingDiv.removeClass('rt2-disable-section');
+			containingDiv.removeClass('mt2-disable-section');
 		}
 
 		containingDiv.find('input, select, button').each(function () {

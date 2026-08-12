@@ -8,7 +8,7 @@
 </button>
 
 <ng-template #notesModal let-modal>
-	<div class="modal-header rt2-modal-header">
+	<div class="modal-header mt2-modal-header">
 		<div class="modal-title">{{ showAddNotes ? 'Add Notes' : 'Notes' }}</div>
 		<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeNotesModal()">
 			<span aria-hidden="true">&times;</span>
@@ -48,10 +48,10 @@
 			[formControl]="notesFC"
 		></textarea>
 	</div>
-	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-		<button *ngIf="!showAddNotes" type="button" class="rt2-btn rt2-action-btn" (click)="closeNotesModal()">Close</button>
-		<button *ngIf="!showAddNotes && !libraryOnly" type="button" class="rt2-btn rt2-action-btn" (click)="addNotes()">Add Notes</button>
-		<button *ngIf="showAddNotes" type="button" class="rt2-btn rt2-action-btn" (click)="showAddNotes = false; notesFC.reset()">Cancel</button>
-		<button *ngIf="showAddNotes" type="button" title="Save Notes" class="rt2-btn rt2-action-btn" (click)="saveNotes()">Save</button>
+	<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+		<button *ngIf="!showAddNotes" type="button" class="mt2-btn mt2-action-btn" (click)="closeNotesModal()">Close</button>
+		<button *ngIf="!showAddNotes && !libraryOnly" type="button" class="mt2-btn mt2-action-btn" (click)="addNotes()">Add Notes</button>
+		<button *ngIf="showAddNotes" type="button" class="mt2-btn mt2-action-btn" (click)="showAddNotes = false; notesFC.reset()">Cancel</button>
+		<button *ngIf="showAddNotes" type="button" title="Save Notes" class="mt2-btn mt2-action-btn" (click)="saveNotes()">Save</button>
 	</div>
 </ng-template>

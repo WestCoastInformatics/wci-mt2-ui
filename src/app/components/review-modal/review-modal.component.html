@@ -1,10 +1,18 @@
-<button #rejectRefsetButton color="primary" aria-hidden="false" (click)="openReviewModal(reviewDialog)" class="rt2-btn rt2-action-btn" aria-label="Reject Reference Set" title="Reject Reference Set">
+<button
+	#rejectRefsetButton
+	color="primary"
+	aria-hidden="false"
+	(click)="openReviewModal(reviewDialog)"
+	class="mt2-btn mt2-action-btn"
+	aria-label="Reject Reference Set"
+	title="Reject Reference Set"
+>
 	Reject Reference Set
 </button>
 
 <ng-template #reviewDialog let-modal>
-	<div class="modal-header rt2-modal-header">
-		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Finish Review</h3>
+	<div class="modal-header mt2-modal-header">
+		<h3 class="modal-title mt2-modal-title modal-header-font" id="modal-basic-title">Finish Review</h3>
 		<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
 			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
 		</button>
@@ -23,18 +31,28 @@
 			<editor [(ngModel)]="reviewNotes" [init]="editorConfig" id="reviewNotes"></editor>
 		</div>
 	</div>
-	<div class="modal-footer rt2-modal-footer rt2-btn-group">
+	<div class="modal-footer mt2-modal-footer mt2-btn-group">
 		<button
 			#rejectRefsetNotesButton
 			color="green"
 			aria-hidden="false"
-			class="rt2-btn rt2-next-back-btn"
+			class="mt2-btn mt2-next-back-btn"
 			aria-label="Reject Reference Set"
 			title="Reject Reference Set"
 			[disabled]="!checkIfNoteAdded()"
-			(click)="modal.dismiss('Cross click'); addNoteAndSetWorkflowStatus()">
+			(click)="modal.dismiss('Cross click'); addNoteAndSetWorkflowStatus()"
+		>
 			Save & Finish
 		</button>
-		<button type="button" (click)="modal.dismiss('Cross click')" aria-hidden="false" class="rt2-btn rt2-cancel-btn" aria-label="Cancel" title="Cancel">Cancel</button>
+		<button
+			type="button"
+			(click)="modal.dismiss('Cross click')"
+			aria-hidden="false"
+			class="mt2-btn mt2-cancel-btn"
+			aria-label="Cancel"
+			title="Cancel"
+		>
+			Cancel
+		</button>
 	</div>
 </ng-template>

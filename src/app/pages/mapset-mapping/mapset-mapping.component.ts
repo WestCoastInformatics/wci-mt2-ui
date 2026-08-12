@@ -7,6 +7,7 @@ import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { CodeUtility } from 'src/app/utilities/code.utility';
@@ -15,7 +16,6 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
 import { FormControl } from '@angular/forms';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
 	standalone: false,
@@ -25,6 +25,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 })
 export class MapsetMappingComponent implements OnInit {
 	user!: User;
+	userRole: string;
 	libraryOnly: any;
 	searchInput = '';
 	viewOptions = [
@@ -81,12 +82,73 @@ export class MapsetMappingComponent implements OnInit {
 	workFlowNotesFC = new FormControl('');
 	mappingStatus = { current: '', next: '' };
 	reviewWF = [
-		{ label: 'Assign', value: 'ASSIGN', message: 'Are you sure you want to assign this mapping?', notes: '' },
-		{ label: 'Edit', value: 'EDITING_IN_PROGRESS', message: 'Are you sure you want to edit this mapping?', notes: '' },
-		{ label: 'Request Review', value: 'FINISH_EDITING', message: 'Are you sure you want to finish editing this Mapping?', notes: '' },
-		{ label: 'Start Review', value: 'START_REVIEW', message: 'Are you sure you want to start reviewing this Mapping?', notes: '' },
-		{ label: 'Accept Review', value: 'ACCEPT_REVIEW', message: 'Are you sure you want to accept the review for this Mapping?', notes: '' },
-		{ label: 'Reject Review', value: 'REJECT_REVIEW', message: 'Are you sure you want to reject the review for this Mapping?', notes: '' },
+		{ label: 'Assign', value: 'ASSIGN', roles: ['specialist'], message: 'Are you sure you want to assign this mapping?', notes: '' },
+		{ label: 'Unassign', value: 'RELEASE', roles: ['specialist'], message: 'Are you sure you want to unassign this mapping?', notes: '' },
+		{ label: 'Unassign', value: 'FORCE_RELEASE', roles: ['admin'], message: 'Are you sure you want to unassign this mapping?', notes: '' },
+		{ label: 'Reassign', value: 'REASSIGN', roles: ['admin', 'lead'], message: 'Are you sure you want to reassign this mapping?', notes: '' },
+		{
+			label: 'Finish Editing',
+			value: 'FINISH_EDITING',
+			roles: ['specialist'],
+			message: 'Are you sure you want to finish editing this Mapping?',
+			notes: '',
+		},
+		{
+			label: 'Approve',
+			value: 'APPROVE_FOR_PUBLICATION',
+			roles: ['lead'],
+			message: 'Are you sure you want to approve for publication this mapping?',
+			notes: '',
+		},
+		{
+			label: 'Start Review',
+			value: 'START_REVIEW',
+			roles: ['lead'],
+			message: 'Are you sure you want to start reviewing this Mapping?',
+			notes: '',
+		},
+		{
+			label: 'Accept Review',
+			value: 'ACCEPT_REVIEW',
+			roles: ['lead'],
+			message: 'Are you sure you want to accept the review for this Mapping?',
+			notes: '',
+		},
+		{
+			label: 'Reject Review',
+			value: 'REJECT_REVIEW',
+			roles: ['lead'],
+			message: 'Are you sure you want to reject the review for this Mapping?',
+			notes: '',
+		},
+		{
+			label: 'Request Revision',
+			value: 'REQUEST_REVISION',
+			roles: ['lead'],
+			message: 'Are you sure you want to request revision this mapping?',
+			notes: '',
+		},
+		{
+			label: 'Approve',
+			value: 'APPROVE_FOR_PUBLICATION',
+			roles: ['lead'],
+			message: 'Are you sure you want to approve for publication this mapping?',
+			notes: '',
+		},
+		{
+			label: 'Start Resolution',
+			value: 'START_CONFLICT_RESOLUTION',
+			roles: ['lead'],
+			message: 'Are you sure you want to start resolving conflicts for this mapping?',
+			notes: '',
+		},
+		{
+			label: 'Resolve Conflict',
+			value: 'RESOLVE_CONFLICT',
+			roles: ['lead'],
+			message: 'Are you sure you want to finish resolving conflicts for this mapping?',
+			notes: '',
+		},
 	];
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
@@ -118,6 +180,8 @@ export class MapsetMappingComponent implements OnInit {
 	//***** Framework Functions *****/
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
+		this.userRole = this.authenticationService.getUserPrimaryRole();
+		console.log(' this userRole', this.userRole);
 		this.titleService.setTitle('Mapping Tool - Map');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.route.url.forEach((part) => {

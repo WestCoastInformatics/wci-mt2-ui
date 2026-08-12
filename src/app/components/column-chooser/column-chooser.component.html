@@ -1,9 +1,9 @@
 <!-- 
-<button *ngIf="useDialog" (click)="openColumnChooser()" aria-hidden="false" class="rt2-btn rt2-action-btn outer-table-button" aria-label="Open Column Chooser" title="Open Column Chooser">
+<button *ngIf="useDialog" (click)="openColumnChooser()" aria-hidden="false" class="mt2-btn mt2-action-btn outer-table-button" aria-label="Open Column Chooser" title="Open Column Chooser">
 	Choose Columns
 </button>
 
-<mat-form-field floatLabel="never" *ngIf="!useDialog" appearance="fill" class="rt2-column-chooser-select-field form-field-header">
+<mat-form-field floatLabel="never" *ngIf="!useDialog" appearance="fill" class="mt2-column-chooser-select-field form-field-header">
 	<mat-select
 		#detailsLanguageSelect
 		placeholder="Select Columns"
@@ -13,8 +13,8 @@
 		[compareWith]="valueCompare"
 		[disabled]="disabled"
 		(selectionChange)="applyColumns()"
-		class="rt2-column-chooser-select"
-		panelClass="rt2-column-chooser-select-panel">
+		class="mt2-column-chooser-select"
+		panelClass="mt2-column-chooser-select-panel">
 		<mat-select-trigger class="trigger"> Select Columns </mat-select-trigger>
 
 		<mat-option *ngFor="let column of columns" [value]="column">
@@ -25,8 +25,8 @@
 
 
 <ng-template #columnChooserSection let-data>
-	<div class="rt2-column-chooser-dialog-container" *ngFor="let column of data">
-		<mat-checkbox class="rt2-column-chooser-dialog-checkbox" [(ngModel)]="column.show">
+	<div class="mt2-column-chooser-dialog-container" *ngFor="let column of data">
+		<mat-checkbox class="mt2-column-chooser-dialog-checkbox" [(ngModel)]="column.show">
 			{{ column.name }}
 		</mat-checkbox>
 	</div>
@@ -41,7 +41,8 @@
 		[(ngModel)]="column.show"
 		(click)="$event.stopPropagation()"
 		(change)="selectColumns()"
-		[disabled]="selectedColumns.length === 1 && column.show">
+		[disabled]="selectedColumns.length === 1 && column.show"
+	>
 		{{ column.name }}
 	</mat-checkbox>
 </mat-menu>
