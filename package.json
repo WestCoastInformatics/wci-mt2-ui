@@ -115,7 +115,8 @@
 			"esbuild": "^0.28.1",
 			"piscina": "^5.2.0",
 			"http-proxy-middleware": "^3.0.7",
-			"vite": "^8.0.16"
+			"vite": "^8.0.16",
+			"less": "^4.8.1"
 		},
 		"vite": {
 			"esbuild": "^0.28.1"
