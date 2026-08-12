@@ -275,12 +275,14 @@
 					<button *ngIf="!libraryOnly" mat-menu-item (click)="selectAction('list')" [disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'">
 						<span>Batch Edit Maps By List</span>
 					</button>
+					<div class="dropdown-divider"></div>
 					<button mat-menu-item (click)="selectAction('selected')" [disabled]="checkedNum < 1">
 						<span>Download Selected Mappings</span>
 					</button>
 					<button mat-menu-item (click)="selectAction('all')">
 						<span>Download Entire Map Set</span>
 					</button>
+					<div class="dropdown-divider"></div>
 					<button mat-menu-item (click)="selectAction('report_nrmr')">
 						<span>Norway Replacement Map Report</span>
 					</button>

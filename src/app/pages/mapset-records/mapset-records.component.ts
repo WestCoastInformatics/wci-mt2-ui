@@ -1670,7 +1670,7 @@ export class MapsetRecordsComponent implements OnInit {
 					(data) => {
 						console.log(' data ', data);
 						this.notificationService.show('Report request successful, email will be sent shortly.', 'Success', 'success', {
-							timeOut: 1500,
+							timeOut: 0,
 							extendedTimeOut: 0,
 						});
 						this.closeReportModal();
@@ -1678,7 +1678,7 @@ export class MapsetRecordsComponent implements OnInit {
 					(err) => {
 						console.error(' Error: ', err);
 						this.notificationService.show('Error requesting report, please try again.', 'Error', 'error', {
-							timeOut: 1500,
+							timeOut: 2500,
 							extendedTimeOut: 0,
 						});
 					},
@@ -1689,7 +1689,7 @@ export class MapsetRecordsComponent implements OnInit {
 					(data) => {
 						console.log(' data ', data);
 						this.notificationService.show('Report request successful, email will be sent shortly.', 'Success', 'success', {
-							timeOut: 1500,
+							timeOut: 0,
 							extendedTimeOut: 0,
 						});
 						this.closeReportModal();
@@ -1697,7 +1697,7 @@ export class MapsetRecordsComponent implements OnInit {
 					(err) => {
 						console.error(' Error: ', err);
 						this.notificationService.show('Error requesting report, please try again.', 'Error', 'error', {
-							timeOut: 1500,
+							timeOut: 2500,
 							extendedTimeOut: 0,
 						});
 					},
@@ -1794,7 +1794,7 @@ export class MapsetRecordsComponent implements OnInit {
 					},
 					(err: any) => {
 						this.notificationService.show('Error downloading, please try again.', 'Error', 'error', {
-							timeOut: 1500,
+							timeOut: 2500,
 							extendedTimeOut: 0,
 						});
 						console.log(' Error: ', err);
@@ -1825,7 +1825,7 @@ export class MapsetRecordsComponent implements OnInit {
 					(err: any) => {
 						this.downloading = false;
 						this.notificationService.show('Error downloading, please try again.', 'Error', 'error', {
-							timeOut: 1500,
+							timeOut: 2500,
 							extendedTimeOut: 0,
 						});
 						console.log(' Error: ', err);
@@ -1864,7 +1864,7 @@ export class MapsetRecordsComponent implements OnInit {
 			},
 			(err: any) => {
 				this.downloading = false;
-				this.notificationService.show('Error downloading, please try again.', 'Error', 'error', { timeOut: 1500, extendedTimeOut: 0 });
+				this.notificationService.show('Error downloading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 				console.log(' Error: ', err);
 			},
 		);
