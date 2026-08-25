@@ -1304,6 +1304,9 @@ export class MapsetRecordsComponent implements OnInit {
 			case 'report_nrtr':
 				this.openReportModal('nrtr', this.reportModal);
 				break;
+			case 'report_hur':
+				this.openReportModal('hur', this.reportModal);
+				break;
 		}
 	}
 
@@ -1652,6 +1655,9 @@ export class MapsetRecordsComponent implements OnInit {
 			case 'nrtr':
 				this.report = { type: report, title: 'Norway Replacement Translation Report' };
 				break;
+			case 'hur':
+				this.report = { type: report, title: 'Helsedirektoratet Untranslated Report' };
+				break;
 		}
 		this.reportModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
@@ -1668,7 +1674,7 @@ export class MapsetRecordsComponent implements OnInit {
 			case 'nrmr':
 				this.refsetService.requestReport_NRMR().subscribe(
 					(data) => {
-						console.log(' data ', data);
+						// console.log(' data ', data);
 						this.notificationService.show('Report request successful, email will be sent shortly.', 'Success', 'success', {
 							timeOut: 0,
 							extendedTimeOut: 0,
@@ -1687,7 +1693,26 @@ export class MapsetRecordsComponent implements OnInit {
 			case 'nrtr':
 				this.refsetService.requestReport_NRTR().subscribe(
 					(data) => {
-						console.log(' data ', data);
+						// console.log(' data ', data);
+						this.notificationService.show('Report request successful, email will be sent shortly.', 'Success', 'success', {
+							timeOut: 0,
+							extendedTimeOut: 0,
+						});
+						this.closeReportModal();
+					},
+					(err) => {
+						console.error(' Error: ', err);
+						this.notificationService.show('Error requesting report, please try again.', 'Error', 'error', {
+							timeOut: 2500,
+							extendedTimeOut: 0,
+						});
+					},
+				);
+				break;
+			case 'hur':
+				this.refsetService.requestReport_HUR().subscribe(
+					(data) => {
+						// console.log(' data ', data);
 						this.notificationService.show('Report request successful, email will be sent shortly.', 'Success', 'success', {
 							timeOut: 0,
 							extendedTimeOut: 0,
