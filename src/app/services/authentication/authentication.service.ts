@@ -319,7 +319,7 @@ export class AuthenticationService {
 		let role = '';
 		try {
 			const currentUser = JSON.parse(sessionStorage.getItem('mapset_user'));
-
+			console.log(' current us', currentUser);
 			if (currentUser.roles && currentUser.roles.length > 0) {
 				switch (currentUser.roles[0]) {
 					case 'all-all-all-admin':
@@ -335,6 +335,7 @@ export class AuthenticationService {
 		} catch (ex) {
 			this.noCookieAccess();
 		}
+		console.log(' role', role);
 		return role;
 	}
 

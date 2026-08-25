@@ -405,7 +405,7 @@ export class RefsetService extends RestService {
 		return this.post(url, notes);
 	}
 
-	updateNots(mapsetId: string, conceptCode: any, noteId: string, notes: string): Observable<any> {
+	updateNotes(mapsetId: string, conceptCode: any, noteId: string, notes: string): Observable<any> {
 		const url = this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/notes/${noteId}`;
 		return this.put(url, notes);
 	}

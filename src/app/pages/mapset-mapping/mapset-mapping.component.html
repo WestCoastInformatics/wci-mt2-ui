@@ -45,16 +45,18 @@
 								<span>Edit Maps</span>
 							</button>
 							<ng-container *ngIf="!libraryOnly">
-								<span *ngFor="let review of reviewWF"
-									><button
-										*ngIf="mappingStatus.next === review.value"
-										type="button"
-										[title]="review.label"
-										mat-menu-item
-										(click)="reviewWorkflow(review.value)"
-									>
-										<span> {{ review.label }}</span>
-									</button></span
+								<span *ngFor="let review of reviewWF">
+									<span *ngFor="let next of mappingStatus.next">
+										<button
+											*ngIf="next === review.value"
+											type="button"
+											[title]="review.label"
+											mat-menu-item
+											(click)="reviewWorkflow(review.value)"
+										>
+											<span> {{ review.label }}</span>
+										</button></span
+									></span
 								>
 							</ng-container>
 							<button mat-menu-item (click)="downloadMapsets()">
@@ -64,7 +66,7 @@
 					</div>
 				</div>
 				<div class="action-column align-self-center col-2">
-					<div class="workflow-container justify-content-end" *ngIf="!libraryOnly && loaded">
+					<div class="workflow-container d-flex" *ngIf="!libraryOnly && loaded">
 						<workflow-status-badge [status]="mappingStatus.current"></workflow-status-badge>
 					</div>
 				</div>
@@ -243,7 +245,12 @@
 					placeholder="enter status change notes..."
 					[formControl]="workFlowNotesFC"
 				></textarea>
-				<div class="user-selection" [hidden]="userList.length === 0">
+				<div
+					class="user-selection"
+					[hidden]="
+						userList.length === 0 && workFlowStatus.label.toLowerCase() !== 'assign' && workFlowStatus.label.toLowerCase() !== 'reassign'
+					"
+				>
 					<mat-form-field appearance="fill" floatLabel="never" class="advice-selection-box target-selection-box-advice">
 						<mat-select #selectAdvice title="Select user to assign" placeholder="Select user to assign" [(value)]="selectedUser">
 							<mat-option *ngFor="let user of userList" value="{{ user }}" title="{{ user }}" class="no-checkbox border-bottom"

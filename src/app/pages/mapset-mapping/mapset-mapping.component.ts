@@ -78,24 +78,54 @@ export class MapsetMappingComponent implements OnInit {
 	userList: string[] = [];
 	selectedUser = '';
 	waitingForResponse = false;
-	workFlowStatus = { label: '', value: '', message: '', notes: '' };
+	workFlowStatus = { label: '', value: '', status: '', roles: [], message: '', notes: '' };
 	workFlowNotesFC = new FormControl('');
-	mappingStatus = { current: '', next: '' };
+	mappingStatus = { current: '', next: [] as string[] };
 	reviewWF = [
-		{ label: 'Assign', value: 'ASSIGN', roles: ['specialist'], message: 'Are you sure you want to assign this mapping?', notes: '' },
-		{ label: 'Unassign', value: 'RELEASE', roles: ['specialist'], message: 'Are you sure you want to unassign this mapping?', notes: '' },
-		{ label: 'Unassign', value: 'FORCE_RELEASE', roles: ['admin'], message: 'Are you sure you want to unassign this mapping?', notes: '' },
-		{ label: 'Reassign', value: 'REASSIGN', roles: ['admin', 'lead'], message: 'Are you sure you want to reassign this mapping?', notes: '' },
+		{
+			label: 'Assign',
+			value: 'ASSIGN',
+			status: 'NEW',
+			roles: ['specialist'],
+			message: 'Are you sure you want to assign this mapping?',
+			notes: '',
+		},
+		{
+			label: 'Unassign',
+			value: 'RELEASE',
+			status: 'EDITING_IN_PROGRESS',
+			roles: ['specialist'],
+			message: 'Are you sure you want to unassign this mapping?',
+			notes: '',
+		},
 		{
 			label: 'Finish Editing',
 			value: 'FINISH_EDITING',
+			status: 'EDITING_IN_PROGRESS',
 			roles: ['specialist'],
 			message: 'Are you sure you want to finish editing this Mapping?',
 			notes: '',
 		},
 		{
+			label: 'Unassign',
+			value: 'FORCE_RELEASE',
+			status: 'EDITING_IN_PROGRESS',
+			roles: ['admin'],
+			message: 'Are you sure you want to unassign this mapping?',
+			notes: '',
+		},
+		{
+			label: 'Reassign',
+			value: 'REASSIGN',
+			status: 'EDITING_IN_PROGRESS',
+			roles: ['admin', 'lead'],
+			message: 'Are you sure you want to reassign this mapping?',
+			notes: '',
+		},
+		{
 			label: 'Approve',
 			value: 'APPROVE_FOR_PUBLICATION',
+			status: 'EDITING_DONE',
 			roles: ['lead'],
 			message: 'Are you sure you want to approve for publication this mapping?',
 			notes: '',
@@ -103,6 +133,7 @@ export class MapsetMappingComponent implements OnInit {
 		{
 			label: 'Start Review',
 			value: 'START_REVIEW',
+			status: 'REVIEW_NEEDED',
 			roles: ['lead'],
 			message: 'Are you sure you want to start reviewing this Mapping?',
 			notes: '',
@@ -110,6 +141,7 @@ export class MapsetMappingComponent implements OnInit {
 		{
 			label: 'Accept Review',
 			value: 'ACCEPT_REVIEW',
+			status: 'REVIEW_IN_PROGRESS',
 			roles: ['lead'],
 			message: 'Are you sure you want to accept the review for this Mapping?',
 			notes: '',
@@ -117,6 +149,7 @@ export class MapsetMappingComponent implements OnInit {
 		{
 			label: 'Reject Review',
 			value: 'REJECT_REVIEW',
+			status: 'REVIEW_IN_PROGRESS',
 			roles: ['lead'],
 			message: 'Are you sure you want to reject the review for this Mapping?',
 			notes: '',
@@ -124,6 +157,7 @@ export class MapsetMappingComponent implements OnInit {
 		{
 			label: 'Request Revision',
 			value: 'REQUEST_REVISION',
+			status: 'REVIEW_IN_PROGRESS',
 			roles: ['lead'],
 			message: 'Are you sure you want to request revision this mapping?',
 			notes: '',
@@ -131,6 +165,7 @@ export class MapsetMappingComponent implements OnInit {
 		{
 			label: 'Approve',
 			value: 'APPROVE_FOR_PUBLICATION',
+			status: 'REVIEW_RESOLVED',
 			roles: ['lead'],
 			message: 'Are you sure you want to approve for publication this mapping?',
 			notes: '',
@@ -138,6 +173,7 @@ export class MapsetMappingComponent implements OnInit {
 		{
 			label: 'Start Resolution',
 			value: 'START_CONFLICT_RESOLUTION',
+			status: 'CONFLICT_DETECTED',
 			roles: ['lead'],
 			message: 'Are you sure you want to start resolving conflicts for this mapping?',
 			notes: '',
@@ -145,6 +181,7 @@ export class MapsetMappingComponent implements OnInit {
 		{
 			label: 'Resolve Conflict',
 			value: 'RESOLVE_CONFLICT',
+			status: 'CONFLICT_IN_PROGRESS',
 			roles: ['lead'],
 			message: 'Are you sure you want to finish resolving conflicts for this mapping?',
 			notes: '',
@@ -182,6 +219,7 @@ export class MapsetMappingComponent implements OnInit {
 		this.user = this.authenticationService.getUser();
 		this.userRole = this.authenticationService.getUserPrimaryRole();
 		console.log(' this userRole', this.userRole);
+		//current status, user role, action
 		this.titleService.setTitle('Mapping Tool - Map');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.route.url.forEach((part) => {
@@ -210,27 +248,46 @@ export class MapsetMappingComponent implements OnInit {
 				console.log(' status results', results);
 				this.userList = ['devUser'];
 				this.selectedUser = '';
-				this.mappingStatus.current = results.workflowStatus.replaceAll('_', ' ').trim();
-				switch (this.mappingStatus.current) {
-					case 'NEW':
-						this.mappingStatus.next = 'ASSIGN';
-						break;
-					case 'ASSIGN':
-						this.mappingStatus.next = 'EDITING_IN_PROGRESS';
-						break;
-					case 'EDITING IN_PROGRESS':
-						this.mappingStatus.next = 'FINISH_EDITING';
-						break;
-					case 'EDITING DONE':
-						this.mappingStatus.next = 'START_REVIEW';
-						break;
-					case 'IN REVIEW':
-						this.mappingStatus.next = 'ACCEPT_REVIEW';
-						break;
-					default:
-						this.mappingStatus.next = '';
+				this.mappingStatus.current = results.workflowStatus;
+				// this.mappingStatus.next =
+				// 	this.reviewWF
+				// 		.filter((wf: any) => {
+				// 			if (this.mappingStatus.current !== wf.status) {
+				// 				return false;
+				// 			}
+				// 			return Array.isArray(wf.roles) && wf.roles.includes(this.userRole);
+				// 		})
+				// 		.map((wf: any) => wf.value)[0] ?? '';
+				this.mappingStatus.next = [];
+				for (const wf of this.reviewWF) {
+					if (this.mappingStatus.current === wf.status) {
+						if (Array.isArray(wf.roles) && wf.roles.includes(this.userRole)) {
+							this.mappingStatus.next.push(wf.value);
+						}
+					}
 				}
-				console.log(' this.mappingStatus.current', this.mappingStatus.current);
+				// switch (this.mappingStatus.current) {
+				// 	case 'NEW':
+				// 		this.mappingStatus.next = 'ASSIGN';
+				// 		break;
+				// 	case 'ASSIGN':
+				// 		this.mappingStatus.next = 'EDITING_IN_PROGRESS';
+				// 		break;
+				// 	case 'EDITING IN_PROGRESS':
+				// 		this.mappingStatus.next = 'FINISH_EDITING';
+				// 		break;
+				// 	case 'EDITING DONE':
+				// 		this.mappingStatus.next = 'START_REVIEW';
+				// 		break;
+				// 	case 'IN REVIEW':
+				// 		this.mappingStatus.next = 'ACCEPT_REVIEW';
+				// 		break;
+				// 	default:
+				// 		this.mappingStatus.next = '';
+
+				// }
+				this.mappingStatus.current = this.mappingStatus.current.replace(/_/g, ' ').trim();
+				console.log(' this.mappingStatus.', this.mappingStatus);
 			},
 		});
 
@@ -481,14 +538,14 @@ export class MapsetMappingComponent implements OnInit {
 	closeWorkFlowModal() {
 		this.workFlowModalRef.close();
 		this.isModalOpen = false;
-		this.workFlowStatus = { label: '', value: '', message: '', notes: '' };
+		this.workFlowStatus = { label: '', value: '', status: '', roles: [], message: '', notes: '' };
 		this.workFlowNotesFC.setValue('');
 		this.workFlowNotesFC.reset();
 		this.waitingForResponse = false;
 	}
 
 	changeWorkFlowStatus() {
-		if (this.workFlowNotesFC.dirty) {
+		if (this.workFlowNotesFC.dirty && this.workFlowNotesFC.value) {
 			this.workFlowStatus.notes = this.workFlowNotesFC.value;
 		}
 		this.waitingForResponse = true;
@@ -506,24 +563,10 @@ export class MapsetMappingComponent implements OnInit {
 	}
 
 	reviewWorkflow(status: any) {
-		switch (status) {
-			case this.reviewWF[0].value: //FINISH_EDIT
-				this.workFlowStatus = this.reviewWF[0];
-				this.openWorkFlowModal(this.workflowModal);
-				break;
-			case this.reviewWF[1].value: //START_REVIEW
-				this.workFlowStatus = this.reviewWF[1];
-				this.openWorkFlowModal(this.workflowModal);
-				break;
-			case this.reviewWF[2].value: //ACCEPT_REVIEW
-				this.workFlowStatus = this.reviewWF[2];
-				this.openWorkFlowModal(this.workflowModal);
-				break;
-			case this.reviewWF[3].value: //REJECT_REVIEW
-				this.workFlowStatus = this.reviewWF[3];
-				this.openWorkFlowModal(this.workflowModal);
-				break;
-		}
+		this.workFlowStatus = this.reviewWF.filter((review) => {
+			return status === review.value;
+		})[0];
+		this.openWorkFlowModal(this.workflowModal);
 	}
 
 	//***** General Functions *****/
