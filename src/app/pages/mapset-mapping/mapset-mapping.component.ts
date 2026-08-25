@@ -25,7 +25,7 @@ import { FormControl } from '@angular/forms';
 })
 export class MapsetMappingComponent implements OnInit {
 	user!: User;
-	userRole: string;
+	userRole: any;
 	libraryOnly: any;
 	searchInput = '';
 	viewOptions = [
@@ -240,6 +240,10 @@ export class MapsetMappingComponent implements OnInit {
 			this.getModuleMetadata();
 		});
 		this.disableChannel.postMessage(false);
+	}
+
+	hasUserRoles(roles: any): boolean {
+		return Array.isArray(roles) && roles.includes(this.userRole);
 	}
 
 	getMapsetInfo() {

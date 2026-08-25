@@ -44,6 +44,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 })
 export class BatchMappingComponent implements OnInit {
 	user!: User;
+	userRole: any;
 	searchInput = '';
 	searchBrowserInput = '';
 	targetCodeInput = '';
@@ -241,6 +242,7 @@ export class BatchMappingComponent implements OnInit {
 	//***** Framework Functions *****/
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
+		this.userRole = this.authenticationService.getUserPrimaryRole();
 		this.titleService.setTitle('Mapping Tool - Batch Edit Mappings');
 
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {

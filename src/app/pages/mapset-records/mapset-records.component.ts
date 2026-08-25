@@ -33,6 +33,7 @@ import { FormControl } from '@angular/forms';
 })
 export class MapsetRecordsComponent implements OnInit {
 	user!: User;
+	userRole: any;
 	libraryOnly: any;
 	searchInput = '';
 	viewOptions = [
@@ -230,6 +231,7 @@ export class MapsetRecordsComponent implements OnInit {
 	//***** Framework Functions *****/
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
+		this.userRole = this.authenticationService.getUserPrimaryRole();
 		this.titleService.setTitle('Mapping Tool - Mappings');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.route.url.forEach((part) => {

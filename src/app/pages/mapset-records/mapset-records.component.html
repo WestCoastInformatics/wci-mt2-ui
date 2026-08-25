@@ -257,7 +257,7 @@
 						<span>View Selected Mapping</span>
 					</button>
 					<button
-						*ngIf="!libraryOnly"
+						*ngIf="!libraryOnly && userRole === 'specialist'"
 						mat-menu-item
 						(click)="selectAction('edit')"
 						[disabled]="checkedNum !== 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
@@ -265,14 +265,19 @@
 						<span>Edit Selected Mapping</span>
 					</button>
 					<button
-						*ngIf="!libraryOnly"
+						*ngIf="!libraryOnly && userRole === 'specialist'"
 						mat-menu-item
 						(click)="selectAction('batch')"
 						[disabled]="checkedNum < 2 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
 					>
 						<span>Batch Edit Selected Mappings</span>
 					</button>
-					<button *ngIf="!libraryOnly" mat-menu-item (click)="selectAction('list')" [disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'">
+					<button
+						*ngIf="!libraryOnly && userRole === 'specialist'"
+						mat-menu-item
+						(click)="selectAction('list')"
+						[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
+					>
 						<span>Batch Edit Maps By List</span>
 					</button>
 					<div class="dropdown-divider"></div>
