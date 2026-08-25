@@ -406,6 +406,10 @@ export class RefsetService extends RestService {
 		return this.post(`${this.contextPath}report/norway/replacement-translation`, '');
 	}
 
+	requestReport_HUR() {
+		return this.post(`${this.contextPath}report/norway/helsedirektoratet-untranslated`, '');
+	}
+
 	exportMapset(params: any): Observable<any> {
 		return this.post(this.contextPath + 'mapset/export', params);
 	}
