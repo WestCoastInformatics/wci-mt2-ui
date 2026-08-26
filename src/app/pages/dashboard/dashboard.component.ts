@@ -86,6 +86,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	downloadTitle = 'Download';
 	mapsetInfo: any = {};
 	selectedVersion: any;
+	allMapsets: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -120,7 +121,16 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 	ngAfterViewInit() {
 		if (this.workflowStatusSection) {
-			this.getMapsetData();
+			this.refsetService.getMapsets().subscribe({
+				next: (results) => {
+					if (results?.length > 0) {
+						this.allMapsets = results;
+						this.getMapsetData();
+					} else {
+						console.error('no mapset found');
+					}
+				},
+			});
 		}
 	}
 
@@ -156,8 +166,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	getMapsetData() {
 		this.columnDefs = [
 			{
-				field: 'refSetCode',
-				tooltipField: 'refSetCode',
+				field: 'mapSetCode',
+				tooltipField: 'mapSetCode',
 				headerName: 'Map Set ID',
 				cellClass: 'rt2-directory-column-id',
 				minWidth: 65,
@@ -167,8 +177,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				suppressSorting: true,
 			},
 			{
-				field: 'refSetName',
-				tooltipField: 'refSetName',
+				field: 'mapSetName',
+				tooltipField: 'mapSetName',
 				headerName: 'Map Set Name',
 				cellClass: 'rt2-directory-column-name',
 				flex: 2,
@@ -318,20 +328,54 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 			next: (results) => {
 				this.showLoadingSearch = false;
 				const data = results;
-				let conceptCodes = [];
+				let mappings = [];
 				this.refsetData = [];
+
 				for (const item of data.items) {
 					let mapping = {
 						modified: item.modified,
-						refSetCode: item.mapSet.refSetCode,
-						refSetName: item.mapSet.refSetName,
+						mapSetId: item.mapSetId,
+						mapSetName: '',
+						mapSetCode: '',
 						conceptCode: item.sourceConceptCode,
-						conceptName: item.sourceConceptName,
-						workflowStatus: item.workflowStatus.split('_').join(' '),
+						conceptName: '',
+						workflowStatus: item.workflowStatus,
 					};
-					conceptCodes.push(item.sourceConceptCode);
-					this.refsetData.push(mapping);
+					mappings.push(mapping);
 				}
+				for (let map of mappings) {
+					for (const all of this.allMapsets) {
+						if (map.mapSetId === all.id) {
+							map.mapSetName = all.refSetName;
+							map.mapSetCode = all.refSetCode;
+
+							this.refsetService.getMappingByMapsetConceptList(map.mapSetCode, map.conceptCode).subscribe({
+								next: (results) => {
+									if (results?.items.length > 0) {
+										for (let amp of mappings) {
+											if (amp.conceptCode === results.items[0].code) {
+												amp.conceptName = results.items[0].name;
+											}
+										}
+										this.refsetData = mappings;
+										results.items = this.refsetData;
+										UiUtility.applyServerPagedGridResults(
+											results,
+											this.refsetGridApi,
+											this.refsetGridPaging,
+											pageNumber,
+											null,
+											false,
+										);
+									} else {
+										console.error('no mapset found');
+									}
+								},
+							});
+						}
+					}
+				}
+				this.refsetData = mappings;
 				this.numOfMembers = results.total;
 				this.numOfResults = results.total;
 				results.items = this.refsetData;
@@ -404,15 +448,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		if (event.column.colId === 'information' || event.column.colId === 'actions') {
 			//
 		} else {
-			const selectedRows = this.refsetGridApi.getSelectedRows();
-			let mappingCode: string;
-			let selectedCode: string;
-
-			selectedRows.forEach(function (selectedRow: any, index: any) {
-				selectedCode = selectedRow.refSetCode;
-				mappingCode = selectedRow.conceptCode;
-			});
-			this.goToMappingPage(selectedCode, mappingCode);
+			const selectedRow = this.refsetGridApi.getSelectedRows()[0];
+			if (selectedRow) {
+				this.goToMappingPage(selectedRow.mapSetId, selectedRow.conceptCode);
+			}
 		}
 	};
 
