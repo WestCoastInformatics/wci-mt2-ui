@@ -75,12 +75,13 @@ export class MapsetMappingComponent implements OnInit {
 	currentRowColor = 0;
 	moduleMetadata: any;
 	refsetData: any;
-	userList: string[] = [];
-	selectedUser = '';
+	userList: any;
+	selectedUser: any;
 	waitingForResponse = false;
-	workFlowStatus = { label: '', value: '', status: '', roles: [], message: '', notes: '' };
+	workFlowStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '' };
 	workFlowNotesFC = new FormControl('');
-	mappingStatus = { current: '', next: [] as string[] };
+	workFlowActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '' }];
+	currentStatus = '';
 	reviewWF = [
 		{
 			label: 'Assign',
@@ -250,48 +251,14 @@ export class MapsetMappingComponent implements OnInit {
 		this.refsetService.getMappingWorkflowStatus(this.mapsetCode!, this.conceptCode).subscribe({
 			next: (results) => {
 				console.log(' status results', results);
-				this.userList = ['devUser'];
-				this.selectedUser = '';
-				this.mappingStatus.current = results.workflowStatus;
-				// this.mappingStatus.next =
-				// 	this.reviewWF
-				// 		.filter((wf: any) => {
-				// 			if (this.mappingStatus.current !== wf.status) {
-				// 				return false;
-				// 			}
-				// 			return Array.isArray(wf.roles) && wf.roles.includes(this.userRole);
-				// 		})
-				// 		.map((wf: any) => wf.value)[0] ?? '';
-				this.mappingStatus.next = [];
-				for (const wf of this.reviewWF) {
-					if (this.mappingStatus.current === wf.status) {
-						if (Array.isArray(wf.roles) && wf.roles.includes(this.userRole)) {
-							this.mappingStatus.next.push(wf.value);
-						}
+				this.selectedUser = null;
+				this.currentStatus = results.workflowStatus;
+				this.workFlowActions = this.reviewWF.filter((wf: any) => {
+					if (results.workflowStatus !== wf.status) {
+						return false;
 					}
-				}
-				// switch (this.mappingStatus.current) {
-				// 	case 'NEW':
-				// 		this.mappingStatus.next = 'ASSIGN';
-				// 		break;
-				// 	case 'ASSIGN':
-				// 		this.mappingStatus.next = 'EDITING_IN_PROGRESS';
-				// 		break;
-				// 	case 'EDITING IN_PROGRESS':
-				// 		this.mappingStatus.next = 'FINISH_EDITING';
-				// 		break;
-				// 	case 'EDITING DONE':
-				// 		this.mappingStatus.next = 'START_REVIEW';
-				// 		break;
-				// 	case 'IN REVIEW':
-				// 		this.mappingStatus.next = 'ACCEPT_REVIEW';
-				// 		break;
-				// 	default:
-				// 		this.mappingStatus.next = '';
-
-				// }
-				this.mappingStatus.current = this.mappingStatus.current.replace(/_/g, ' ').trim();
-				console.log(' this.mappingStatus.', this.mappingStatus);
+					return Array.isArray(wf.roles) && wf.roles.includes(this.userRole);
+				});
 			},
 		});
 
@@ -542,19 +509,26 @@ export class MapsetMappingComponent implements OnInit {
 	closeWorkFlowModal() {
 		this.workFlowModalRef.close();
 		this.isModalOpen = false;
-		this.workFlowStatus = { label: '', value: '', status: '', roles: [], message: '', notes: '' };
+		this.workFlowStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '' };
 		this.workFlowNotesFC.setValue('');
 		this.workFlowNotesFC.reset();
 		this.waitingForResponse = false;
 	}
 
 	changeWorkFlowStatus() {
+		console.log(' this. selected user', this.selectedUser);
 		if (this.workFlowNotesFC.dirty && this.workFlowNotesFC.value) {
 			this.workFlowStatus.notes = this.workFlowNotesFC.value;
 		}
 		this.waitingForResponse = true;
 		this.refsetService
-			.setMappingWorkflowStatus(this.mapsetInfo.id, this.conceptCode, this.workFlowStatus.value, this.workFlowStatus.notes, this.selectedUser)
+			.setMappingWorkflowStatus(
+				this.mapsetInfo.id,
+				this.conceptCode,
+				this.workFlowStatus.value,
+				this.workFlowStatus.notes,
+				this.selectedUser ? this.selectedUser.id : '',
+			)
 			.subscribe((response) => {
 				if (response) {
 					//this.mapsetInfo = response;
@@ -570,6 +544,24 @@ export class MapsetMappingComponent implements OnInit {
 		this.workFlowStatus = this.reviewWF.filter((review) => {
 			return status === review.value;
 		})[0];
+		this.userList = [];
+		const roles = this.workFlowStatus.roles as string[];
+		// if (Array.isArray(roles) && roles.includes('admin')) {
+		// 	this.userList = this.mapsetInfo.mapProject.mapLeads.filter((users: any) => {
+		// 		users.applicationRole.ADMINISTRATOR;
+		// 	});
+		// }
+		// if (Array.isArray(roles) && roles.includes('lead')) {
+		// 	this.userList = this.mapsetInfo.mapProject.mapLeads.filter((users: any) => {
+		// 		users.applicationRole.LEAD;
+		// 	});
+		// }
+		//user list is only shown for ASSIGN or REASSIGN workflow status so only specialists can do the edit functions
+		if (Array.isArray(roles) && roles.includes('specialist')) {
+			this.userList = this.mapsetInfo.mapProject.mapSpecialists.filter((users: any) => {
+				users.applicationRole.SPECIALIST;
+			});
+		}
 		this.openWorkFlowModal(this.workflowModal);
 	}
 

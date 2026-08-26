@@ -37,7 +37,7 @@
 						</div>
 						<mat-menu #actionMenu="matMenu">
 							<button
-								*ngIf="!libraryOnly && mappingStatus.current === 'EDITING_IN_PROGRESS' && userRole === 'specialist'"
+								*ngIf="!libraryOnly && currentStatus === 'EDITING_IN_PROGRESS' && userRole === 'specialist'"
 								mat-menu-item
 								(click)="selectAction('edit')"
 								[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
@@ -45,18 +45,12 @@
 								<span>Edit Maps</span>
 							</button>
 							<ng-container *ngIf="!libraryOnly">
-								<span *ngFor="let review of reviewWF">
-									<span *ngFor="let next of mappingStatus.next">
-										<button
-											*ngIf="next === review.value"
-											type="button"
-											[title]="review.label"
-											mat-menu-item
-											(click)="reviewWorkflow(review.value)"
-										>
-											<span> {{ review.label }}</span>
-										</button></span
-									></span
+								<!-- <span *ngFor="let review of reviewWF"></span 
+								>-->
+								<span *ngFor="let action of workFlowActions">
+									<button type="button" [title]="action.label" mat-menu-item (click)="reviewWorkflow(action.value)">
+										<span> {{ action.label }}</span>
+									</button></span
 								>
 							</ng-container>
 							<button mat-menu-item (click)="downloadMapsets()">
@@ -67,7 +61,7 @@
 				</div>
 				<div class="action-column align-self-center col-2">
 					<div class="workflow-container d-flex" *ngIf="!libraryOnly && loaded">
-						<workflow-status-badge [status]="mappingStatus.current"></workflow-status-badge>
+						<workflow-status-badge [status]="currentStatus"></workflow-status-badge>
 					</div>
 				</div>
 			</div>
@@ -131,7 +125,7 @@
 		<!-- Action Templates -->
 		<ng-template #directoryActionSection let-params>
 			<div class="d-flex">
-				<div class="col" *ngIf="!libraryOnly && mappingStatus.current === 'EDITING_IN_PROGRESS' && userRole === 'specialist'">
+				<div class="col" *ngIf="!libraryOnly && currentStatus === 'EDITING_IN_PROGRESS' && userRole === 'specialist'">
 					<button
 						class="library-app-refset-notes m-r-15 no-padding"
 						(click)="selectAction('edit')"
@@ -254,15 +248,22 @@
 				>
 					<mat-form-field appearance="fill" floatLabel="never" class="advice-selection-box target-selection-box-advice">
 						<mat-select #selectAdvice title="Select user to assign" placeholder="Select user to assign" [(value)]="selectedUser">
-							<mat-option *ngFor="let user of userList" value="{{ user }}" title="{{ user }}" class="no-checkbox border-bottom"
+							<mat-option *ngFor="let user of userList" value="{{ user.id }}" title="{{ user.name }}" class="no-checkbox border-bottom"
 								><span class="advice-item">
-									<div class="line-clamp-2">{{ user }}</div></span
+									<div class="line-clamp-2">{{ user.name }}</div></span
 								></mat-option
 							>
 						</mat-select>
 					</mat-form-field>
 				</div>
-				<span class="mappings-section m-l-20" *ngIf="userList.length === 0">No users to assign.</span>
+				<span
+					[hidden]="
+						(workFlowStatus.status !== 'ASSIGN' && workFlowStatus.status !== 'REASSIGN') || hasUserRoles(workFlowStatus.roles) === false
+					"
+					class="mappings-section m-l-20"
+					*ngIf="userList.length === 0"
+					>No users to assign.</span
+				>
 			</div>
 			<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
 				<button type="button" class="mt2-btn mt2-action-btn" (click)="!waitingForResponse ? closeWorkFlowModal() : null">Cancel</button>
