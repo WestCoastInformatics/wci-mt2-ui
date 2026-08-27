@@ -61,7 +61,7 @@
 	padding-left: 10px;
 	padding-right: 10px;
 	color: var(--standard-font-color);
-	/* background-color: var(--ghost-grey); */
+	background-color: var(--ghost-grey);
 }
 
 .in-review-projects-button {

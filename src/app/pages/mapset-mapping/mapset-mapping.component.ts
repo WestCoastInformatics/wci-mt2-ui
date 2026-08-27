@@ -15,6 +15,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
+import { Workflow } from 'src/app/models/workflow';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -82,112 +83,7 @@ export class MapsetMappingComponent implements OnInit {
 	workFlowNotesFC = new FormControl('');
 	workFlowActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '' }];
 	currentStatus = '';
-	reviewWF = [
-		{
-			label: 'Assign',
-			value: 'ASSIGN',
-			status: 'NEW',
-			roles: ['specialist'],
-			message: 'Are you sure you want to assign this mapping?',
-			notes: '',
-		},
-		{
-			label: 'Unassign',
-			value: 'RELEASE',
-			status: 'EDITING_IN_PROGRESS',
-			roles: ['specialist'],
-			message: 'Are you sure you want to unassign this mapping?',
-			notes: '',
-		},
-		{
-			label: 'Finish Editing',
-			value: 'FINISH_EDITING',
-			status: 'EDITING_IN_PROGRESS',
-			roles: ['specialist'],
-			message: 'Are you sure you want to finish editing this Mapping?',
-			notes: '',
-		},
-		{
-			label: 'Unassign',
-			value: 'FORCE_RELEASE',
-			status: 'EDITING_IN_PROGRESS',
-			roles: ['admin'],
-			message: 'Are you sure you want to unassign this mapping?',
-			notes: '',
-		},
-		{
-			label: 'Reassign',
-			value: 'REASSIGN',
-			status: 'EDITING_IN_PROGRESS',
-			roles: ['admin', 'lead'],
-			message: 'Are you sure you want to reassign this mapping?',
-			notes: '',
-		},
-		{
-			label: 'Approve',
-			value: 'APPROVE_FOR_PUBLICATION',
-			status: 'EDITING_DONE',
-			roles: ['lead'],
-			message: 'Are you sure you want to approve for publication this mapping?',
-			notes: '',
-		},
-		{
-			label: 'Start Review',
-			value: 'START_REVIEW',
-			status: 'REVIEW_NEEDED',
-			roles: ['lead'],
-			message: 'Are you sure you want to start reviewing this Mapping?',
-			notes: '',
-		},
-		{
-			label: 'Accept Review',
-			value: 'ACCEPT_REVIEW',
-			status: 'REVIEW_IN_PROGRESS',
-			roles: ['lead'],
-			message: 'Are you sure you want to accept the review for this Mapping?',
-			notes: '',
-		},
-		{
-			label: 'Reject Review',
-			value: 'REJECT_REVIEW',
-			status: 'REVIEW_IN_PROGRESS',
-			roles: ['lead'],
-			message: 'Are you sure you want to reject the review for this Mapping?',
-			notes: '',
-		},
-		{
-			label: 'Request Revision',
-			value: 'REQUEST_REVISION',
-			status: 'REVIEW_IN_PROGRESS',
-			roles: ['lead'],
-			message: 'Are you sure you want to request revision this mapping?',
-			notes: '',
-		},
-		{
-			label: 'Approve',
-			value: 'APPROVE_FOR_PUBLICATION',
-			status: 'REVIEW_RESOLVED',
-			roles: ['lead'],
-			message: 'Are you sure you want to approve for publication this mapping?',
-			notes: '',
-		},
-		{
-			label: 'Start Resolution',
-			value: 'START_CONFLICT_RESOLUTION',
-			status: 'CONFLICT_DETECTED',
-			roles: ['lead'],
-			message: 'Are you sure you want to start resolving conflicts for this mapping?',
-			notes: '',
-		},
-		{
-			label: 'Resolve Conflict',
-			value: 'RESOLVE_CONFLICT',
-			status: 'CONFLICT_IN_PROGRESS',
-			roles: ['lead'],
-			message: 'Are you sure you want to finish resolving conflicts for this mapping?',
-			notes: '',
-		},
-	];
+	reviewWF: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -213,6 +109,7 @@ export class MapsetMappingComponent implements OnInit {
 		private modalService: NgbModal,
 	) {
 		document.body.scrollTop = 0;
+		this.reviewWF = Workflow.getWorkFlow();
 	}
 
 	//***** Framework Functions *****/

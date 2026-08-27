@@ -1030,7 +1030,7 @@ export class MapsetRecordsComponent implements OnInit {
 										moduleId: results[a].mapEntries[b].moduleId,
 										modFlag: this.getModuleLanguageIcon(results[a].mapEntries[b].moduleId),
 										modLang: this.getModuleLanguageName(results[a].mapEntries[b].moduleId),
-										workflowStatus: results[a].mappingWorkflow?.workflowStatus.replaceAll('_', ' ').trim(),
+										workflowStatus: results[a].mappingWorkflow?.workflowStatus,
 										modifiedBy: results[a].mappingWorkflow?.modifiedBy,
 									});
 									count++;
