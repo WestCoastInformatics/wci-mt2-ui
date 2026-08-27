@@ -389,7 +389,9 @@
 											[ngTemplateOutletContext]="{ $implicit: record }"
 										></ng-container>
 									</div>
-									<span class="date-column second-row">Last Updated: {{ dateFormatter(record.modified) }}</span>
+									<span class="date-column second-row" *ngIf="record?.modified"
+										>Last Modified: {{ dateFormatter(record.modified) }}</span
+									>
 								</div>
 							</div>
 						</div>
