@@ -41,7 +41,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 })
 export class EditMappingComponent implements OnInit {
 	user!: User;
-	userRole: any;
+	userRoles: any[] = [];
 	targetCodeInput = '';
 	targetNameInput = '';
 	ruleBased = false;
@@ -215,7 +215,7 @@ export class EditMappingComponent implements OnInit {
 	//***** Framework Functions *****/
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
-		this.userRole = this.authenticationService.getUserPrimaryRole();
+		this.userRoles = this.authenticationService.getUserPrimaryRoles();
 		this.titleService.setTitle('Mapping Tool - Edit Map');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
@@ -247,6 +247,10 @@ export class EditMappingComponent implements OnInit {
 	}
 
 	//*ngIf="!libraryOnly && workFlowStatus.status === 'EDITING_IN_PROGRESS' && userRole === 'specialist'" return to dashboard if not edit permissions
+	hasUserRoles(roles: any): boolean {
+		return Array.isArray(roles) && roles.includes(this.userRoles);
+	}
+
 	getMapsetInfo() {
 		this.refsetService.getMappingWorkflowStatus(this.mapsetCode!, this.conceptCode).subscribe({
 			next: (results) => {

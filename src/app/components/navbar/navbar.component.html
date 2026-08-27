@@ -107,7 +107,7 @@
 							<div class="profile-block">
 								<strong [title]="user?.userName">{{ user?.name }}</strong>
 								<div class="text-sm-left">{{ user?.company }}</div>
-								<div *ngIf="user?.roles">({{ user?.roles[0] }})</div>
+								<div *ngIf="userRoles.length > 0">({{ formatedRoles }})</div>
 							</div>
 						</div>
 					</div>

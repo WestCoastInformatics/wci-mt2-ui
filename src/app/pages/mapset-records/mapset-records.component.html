@@ -257,7 +257,7 @@
 						<span>View Selected Mapping</span>
 					</button>
 					<button
-						*ngIf="!libraryOnly && userRole === 'specialist'"
+						*ngIf="!libraryOnly && hasUserRoles('specialist') === true"
 						mat-menu-item
 						(click)="selectAction('edit')"
 						[disabled]="checkedNum !== 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'"

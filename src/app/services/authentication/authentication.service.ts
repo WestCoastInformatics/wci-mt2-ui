@@ -315,28 +315,29 @@ export class AuthenticationService {
 		return user;
 	}
 
-	getUserPrimaryRole(): string {
-		let role = '';
+	getUserPrimaryRoles(): any[] {
+		let roles = [];
 		try {
 			const currentUser = JSON.parse(sessionStorage.getItem('mapset_user'));
 			console.log(' current us', currentUser);
 			if (currentUser.roles && currentUser.roles.length > 0) {
-				switch (currentUser.roles[0]) {
-					case 'all-all-all-admin':
-						role = 'admin';
-						break;
-					case 'all-all-all-lead':
-						role = 'lead';
-						break;
-					case 'all-all-all-specialist':
-						role = 'specialist';
+				for (const role of currentUser.roles) {
+					if (role === 'all-all-all-admin') {
+						roles.push('ADMIN');
+					}
+					if (role === 'all-all-all-lead') {
+						roles.push('LEAD');
+					}
+					if (role === 'all-all-all-specialist') {
+						roles.push('specialist');
+					}
 				}
 			}
 		} catch (ex) {
 			this.noCookieAccess();
 		}
-		console.log(' role', role);
-		return role;
+		console.log(' roles', roles);
+		return roles;
 	}
 
 	updateUser(updatedUser: User) {

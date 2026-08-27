@@ -37,7 +37,7 @@
 						</div>
 						<mat-menu #actionMenu="matMenu">
 							<button
-								*ngIf="!libraryOnly && currentStatus === 'EDITING_IN_PROGRESS' && userRole === 'specialist'"
+								*ngIf="!libraryOnly && currentStatus === 'EDITING_IN_PROGRESS' && hasUserRoles('specialist') === true"
 								mat-menu-item
 								(click)="selectAction('edit')"
 								[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
@@ -125,7 +125,7 @@
 		<!-- Action Templates -->
 		<ng-template #directoryActionSection let-params>
 			<div class="d-flex">
-				<div class="col" *ngIf="!libraryOnly && currentStatus === 'EDITING_IN_PROGRESS' && userRole === 'specialist'">
+				<div class="col" *ngIf="!libraryOnly && currentStatus === 'EDITING_IN_PROGRESS' && hasUserRoles('specialist') === true">
 					<button
 						class="library-app-refset-notes m-r-15 no-padding"
 						(click)="selectAction('edit')"

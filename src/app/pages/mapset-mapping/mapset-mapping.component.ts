@@ -26,7 +26,7 @@ import { FormControl } from '@angular/forms';
 })
 export class MapsetMappingComponent implements OnInit {
 	user!: User;
-	userRole: any;
+	userRoles: any[] = [];
 	libraryOnly: any;
 	searchInput = '';
 	viewOptions = [
@@ -115,8 +115,8 @@ export class MapsetMappingComponent implements OnInit {
 	//***** Framework Functions *****/
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
-		this.userRole = this.authenticationService.getUserPrimaryRole();
-		console.log(' this userRole', this.userRole);
+		this.userRoles = this.authenticationService.getUserPrimaryRoles();
+		console.log(' this userRoles', this.userRoles);
 		//current status, user role, action
 		this.titleService.setTitle('Mapping Tool - Map');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
@@ -141,7 +141,7 @@ export class MapsetMappingComponent implements OnInit {
 	}
 
 	hasUserRoles(roles: any): boolean {
-		return Array.isArray(roles) && roles.includes(this.userRole);
+		return Array.isArray(roles) && roles.includes(this.userRoles);
 	}
 
 	getMapsetInfo() {
@@ -154,7 +154,7 @@ export class MapsetMappingComponent implements OnInit {
 					if (results.workflowStatus !== wf.status) {
 						return false;
 					}
-					return Array.isArray(wf.roles) && wf.roles.includes(this.userRole);
+					return Array.isArray(wf.roles) && wf.roles.includes(this.userRoles);
 				});
 			},
 		});
