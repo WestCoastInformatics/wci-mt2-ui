@@ -450,7 +450,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		} else {
 			const selectedRow = this.refsetGridApi.getSelectedRows()[0];
 			if (selectedRow) {
-				this.goToMappingPage(selectedRow.mapSetId, selectedRow.conceptCode);
+				this.goToMappingPage(selectedRow.mapSetCode, selectedRow.conceptCode);
 			}
 		}
 	};

@@ -1,39 +1,50 @@
 <!--<object  [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)"> {{ params?.value}}</object>-->
-<ng-container *ngIf="status === 'PUBLISHED'"><div class="published-projects-button">Published</div> </ng-container>
+<ng-container *ngIf="status === 'PUBLISHED'"><div class="published-projects-button" title="Published">Published</div> </ng-container>
 <ng-container *ngIf="status === 'READY_FOR_EDIT'">
-	<div class="ready-for-edit-projects-button">Ready For Edit</div>
+	<div class="ready-for-edit-projects-button" title="Ready For Edit">Ready For Edit</div>
 </ng-container>
-<ng-container *ngIf="status === 'IN DEVELOPMENT'">
-	<div class="in-edit-projects-button">In Development</div>
+<ng-container *ngIf="status === 'IN_DEVELOPMENT' || status === 'IN DEVELOPMENT'">
+	<div class="in-edit-projects-button" title="In Development">In Development</div>
 </ng-container>
-<ng-container *ngIf="status === 'IN_EDIT'">
-	<div class="in-edit-projects-button">In Edit</div>
+<ng-container *ngIf="status === 'IN_EDIT' || status === 'IN EDIT'">
+	<div class="in-edit-projects-button" title="In Edit">In Edit</div>
 </ng-container>
-<ng-container *ngIf="status === 'EDITING IN PROGRESS'">
-	<div class="in-edit-projects-button">In Edit</div>
+<ng-container *ngIf="status === 'EDITING_IN_PROGRESS' || status === 'EDITING IN PROGRESS'">
+	<div class="in-edit-projects-button" title="In Edit">In Edit</div>
 </ng-container>
 <ng-container *ngIf="status === 'NEW'">
-	<div class="in-edit-projects-button">New</div>
+	<div class="in-edit-projects-button" title="New">New</div>
 </ng-container>
-<ng-container *ngIf="status === 'IN_UPGRADE'">
-	<div class="in-upgrade-projects-button">In Upgrade</div>
+<ng-container *ngIf="status === 'IN_UPGRADE' || status === 'IN UPGRADE'">
+	<div class="in-upgrade-projects-button" title="In Upgrade">In Upgrade</div>
 </ng-container>
-<ng-container *ngIf="status === 'READY_FOR_REVIEW'">
-	<div class="ready-for-review-projects-button">Ready For Review</div>
+<ng-container *ngIf="status === 'CONFLICT_DETECTED' || status === 'CONFLICT DETECTED'">
+	<div class="in-upgrade-projects-button" title="In Conflict">In Conflict</div>
 </ng-container>
-<ng-container *ngIf="status === 'EDITING DONE'">
-	<div class="ready-for-review-projects-button">Ready For Review</div>
+<ng-container *ngIf="status === 'CONFLICT_IN_PROGRESS' || status === 'CONFLICT IN PROGRESS'">
+	<div class="in-upgrade-projects-button" title="Ready for Resolution">Ready for Resolution</div>
 </ng-container>
-<ng-container *ngIf="status === 'IN_REVIEW'">
-	<div class="in-review-projects-button">In Review</div>
+<ng-container *ngIf="status === 'READY_FOR_REVIEW' || status === 'READY FOR REVIEW'">
+	<div class="ready-for-review-projects-button" title="Ready For Review">Ready For Review</div>
 </ng-container>
-<ng-container *ngIf="status === 'REVIEW_COMPLETED'">
-	<div class="review-completed-projects-button">Review Completed</div>
+<ng-container *ngIf="status === 'REVIEW_NEEDED'">
+	<div class="ready-for-review-projects-button" title="Ready For Review">Ready For Review</div>
 </ng-container>
-<ng-container *ngIf="status === 'READY_FOR_PUBLICATION'">
-	<div class="ready-for-publication-projects-button">Ready For Publication</div>
+<ng-container *ngIf="status === 'EDITING_DONE' || status === 'EDITING DONE'">
+	<div class="ready-for-review-projects-button" title="Edit Completed">Edit Completed</div>
 </ng-container>
-<!-- FINISH_EDITING   Specialist submits for review → REVIEW_NEEDED
-  START_REVIEW     Lead starts review            → REVIEW_IN_PROGRESS
-  ACCEPT_REVIEW    Lead accepts review           → REVIEW_RESOLVED
-  REJECT_REVIEW    Lead rejects review           → NEW -->
+<ng-container *ngIf="status === 'IN_REVIEW' || status === 'IN REVIEW'">
+	<div class="in-review-projects-button" title="In Review">In Review</div>
+</ng-container>
+<ng-container *ngIf="status === 'REVIEW_IN_PROGRESS' || status === 'REVIEW IN PROGRESS'">
+	<div class="in-review-projects-button" title="In Review">In Review</div>
+</ng-container>
+<ng-container *ngIf="status === 'REVIEW_COMPLETED' || status === 'REVIEW COMPLETED'">
+	<div class="review-completed-projects-button" title="Review Completed">Review Completed</div>
+</ng-container>
+<ng-container *ngIf="status === 'REVIEW_RESOLVED' || status === 'REVIEW RESOLVED'">
+	<div class="review-completed-projects-button" title="Review Completed">Review Completed</div>
+</ng-container>
+<ng-container *ngIf="status === 'READY_FOR_PUBLICATION' || status === 'READY FOR PUBLICATION'">
+	<div class="ready-for-publication-projects-button" title="Ready For Publication">Ready For Publication</div>
+</ng-container>
