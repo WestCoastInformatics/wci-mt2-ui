@@ -37,7 +37,7 @@
 						</div>
 						<mat-menu #actionMenu="matMenu">
 							<button
-								*ngIf="!libraryOnly && currentStatus === 'EDITING_IN_PROGRESS' && hasUserRoles('specialist') === true"
+								*ngIf="!libraryOnly && currentStatus === 'EDITING_IN_PROGRESS' && hasUserRoles('SPECIALIST') === true"
 								mat-menu-item
 								(click)="selectAction('edit')"
 								[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
@@ -45,10 +45,8 @@
 								<span>Edit Maps</span>
 							</button>
 							<ng-container *ngIf="!libraryOnly">
-								<!-- <span *ngFor="let review of reviewWF"></span 
-								>-->
-								<span *ngFor="let action of workFlowActions">
-									<button type="button" [title]="action.label" mat-menu-item (click)="reviewWorkflow(action.value)">
+								<span *ngFor="let action of workFlowMapActions">
+									<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value)">
 										<span> {{ action.label }}</span>
 									</button></span
 								>
@@ -125,7 +123,7 @@
 		<!-- Action Templates -->
 		<ng-template #directoryActionSection let-params>
 			<div class="d-flex">
-				<div class="col" *ngIf="!libraryOnly && currentStatus === 'EDITING_IN_PROGRESS' && hasUserRoles('specialist') === true">
+				<div class="col" *ngIf="!libraryOnly && currentStatus === 'EDITING_IN_PROGRESS' && hasUserRoles('SPECIALIST') === true">
 					<button
 						class="library-app-refset-notes m-r-15 no-padding"
 						(click)="selectAction('edit')"
@@ -216,38 +214,32 @@
 			</div>
 		</ng-template>
 
-		<ng-template #workFlowModal let-modal>
+		<ng-template #workFlowMapModal let-modal>
 			<div class="modal-header mt2-modal-header">
-				<div class="modal-title">{{ workFlowStatus.label }}</div>
+				<div class="modal-title">{{ workFlowMapStatus.label }}</div>
 				<button
 					type="button"
 					class="close dialog-close-x close-icon-font"
 					title="Close"
 					aria-label="Close"
-					(click)="!waitingForResponse ? closeWorkFlowModal() : null"
+					(click)="!waitingForMapResponse ? closeWorkFlowMapModal() : null"
 				>
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<p class="p-l-30 p-t-10 p-b-0">{{ workFlowStatus.message }}</p>
+			<p class="p-l-30 p-t-10 p-b-0">{{ workFlowMapStatus.message }}</p>
 			<div class="modal-body m-t-5">
 				<textarea
-					#workFlowModalNotes
+					#workFlowMapModalNotes
 					class="form-field-value notes-text"
 					type="text"
 					name="notes"
 					placeholder="enter status change notes..."
-					[formControl]="workFlowNotesFC"
+					[formControl]="workFlowMapNotesFC"
 				></textarea>
-				<div
-					class="user-selection"
-					[hidden]="
-						(userList.length === 0 && workFlowStatus.status !== 'ASSIGN' && workFlowStatus.status !== 'REASSIGN') ||
-						hasUserRoles(workFlowStatus.roles) === false
-					"
-				>
+				<div class="user-selection" [hidden]="userList.length === 0 || hasWorkflowAction('assign') === false">
 					<mat-form-field appearance="fill" floatLabel="never" class="advice-selection-box target-selection-box-advice">
-						<mat-select #selectAdvice title="Select user to assign" placeholder="Select user to assign" [(value)]="selectedUser">
+						<mat-select #selectUser title="Select user to assign" placeholder="Select user to assign" [(value)]="selectedUser">
 							<mat-option *ngFor="let user of userList" value="{{ user.id }}" title="{{ user.name }}" class="no-checkbox border-bottom"
 								><span class="advice-item">
 									<div class="line-clamp-2">{{ user.name }}</div></span
@@ -256,22 +248,17 @@
 						</mat-select>
 					</mat-form-field>
 				</div>
-				<span
-					[hidden]="
-						(workFlowStatus.status !== 'ASSIGN' && workFlowStatus.status !== 'REASSIGN') || hasUserRoles(workFlowStatus.roles) === false
-					"
-					class="mappings-section m-l-20"
-					*ngIf="userList.length === 0"
+				<span [hidden]="hasWorkflowAction('assign') === false" class="mappings-section m-l-10" *ngIf="userList.length === 0"
 					>No users to assign.</span
 				>
 			</div>
 			<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
-				<button type="button" class="mt2-btn mt2-action-btn" (click)="!waitingForResponse ? closeWorkFlowModal() : null">Cancel</button>
+				<button type="button" class="mt2-btn mt2-action-btn" (click)="!waitingForMapResponse ? closeWorkFlowMapModal() : null">Cancel</button>
 				<button
 					type="button"
-					title="Confirm {{ workFlowStatus.label }}"
+					title="Confirm {{ workFlowMapStatus.label }}"
 					class="mt2-btn mt2-action-btn"
-					(click)="!waitingForResponse ? changeWorkFlowStatus() : null"
+					(click)="!waitingForMapResponse ? changeWorkFlowMapStatus() : null"
 				>
 					Confirm
 				</button>

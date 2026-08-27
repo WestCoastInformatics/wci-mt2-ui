@@ -319,7 +319,6 @@ export class AuthenticationService {
 		let roles = [];
 		try {
 			const currentUser = JSON.parse(sessionStorage.getItem('mapset_user'));
-			console.log(' current us', currentUser);
 			if (currentUser.roles && currentUser.roles.length > 0) {
 				for (const role of currentUser.roles) {
 					if (role === 'all-all-all-admin') {
@@ -329,14 +328,13 @@ export class AuthenticationService {
 						roles.push('LEAD');
 					}
 					if (role === 'all-all-all-specialist') {
-						roles.push('specialist');
+						roles.push('SPECIALIST');
 					}
 				}
 			}
 		} catch (ex) {
 			this.noCookieAccess();
 		}
-		console.log(' roles', roles);
 		return roles;
 	}
 

@@ -257,7 +257,7 @@
 						<span>View Selected Mapping</span>
 					</button>
 					<button
-						*ngIf="!libraryOnly && hasUserRoles('specialist') === true"
+						*ngIf="!libraryOnly && hasUserRoles('SPECIALIST') === true"
 						mat-menu-item
 						(click)="selectAction('edit')"
 						[disabled]="checkedNum !== 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
@@ -265,7 +265,7 @@
 						<span>Edit Selected Mapping</span>
 					</button>
 					<button
-						*ngIf="!libraryOnly && userRole === 'specialist'"
+						*ngIf="!libraryOnly && hasUserRoles('SPECIALIST') === true"
 						mat-menu-item
 						(click)="selectAction('batch')"
 						[disabled]="checkedNum < 2 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
@@ -273,13 +273,20 @@
 						<span>Batch Edit Selected Mappings</span>
 					</button>
 					<button
-						*ngIf="!libraryOnly && userRole === 'specialist'"
+						*ngIf="!libraryOnly && hasUserRoles('SPECIALIST')"
 						mat-menu-item
 						(click)="selectAction('list')"
 						[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
 					>
 						<span>Batch Edit Maps By List</span>
 					</button>
+					<ng-container *ngIf="!libraryOnly && workFlowMapActions[0].status !== ''">
+						<span *ngFor="let action of workFlowMapActions">
+							<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value)">
+								<span> {{ action.label }}</span>
+							</button></span
+						>
+					</ng-container>
 					<div class="dropdown-divider"></div>
 					<button mat-menu-item (click)="selectAction('selected')" [disabled]="checkedNum < 1">
 						<span>Download Selected Mappings</span>
@@ -913,6 +920,57 @@
 		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group" *ngIf="!downloading">
 			<button type="button" title="Cancel" class="mt2-btn mt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
 			<button type="button" title="Download" class="mt2-btn mt2-action-btn" (click)="startDownload()">Download</button>
+		</div>
+	</ng-template>
+
+	<ng-template #workFlowMapModal let-modal>
+		<div class="modal-header mt2-modal-header">
+			<div class="modal-title">{{ workFlowMapStatus.label }}</div>
+			<button
+				type="button"
+				class="close dialog-close-x close-icon-font"
+				title="Close"
+				aria-label="Close"
+				(click)="!waitingForMapResponse ? closeWorkFlowMapModal() : null"
+			>
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<p class="p-l-30 p-t-10 p-b-0">{{ workFlowMapStatus.message }}</p>
+		<div class="modal-body m-t-5">
+			<textarea
+				#workFlowMapModalNotes
+				class="form-field-value notes-text"
+				type="text"
+				name="notes"
+				placeholder="enter status change notes..."
+				[formControl]="workFlowMapNotesFC"
+			></textarea>
+			<div class="user-selection" [hidden]="userList.length === 0 || hasWorkflowAction('assign') === false">
+				<mat-form-field appearance="fill" floatLabel="never" class="advice-selection-box target-selection-box-advice">
+					<mat-select #selectUser title="Select user to assign" placeholder="Select user to assign" [(value)]="selectedUser">
+						<mat-option *ngFor="let user of userList" value="{{ user.id }}" title="{{ user.name }}" class="no-checkbox border-bottom"
+							><span class="advice-item">
+								<div class="line-clamp-2">{{ user.name }}</div></span
+							></mat-option
+						>
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<span [hidden]="hasWorkflowAction('assign') === false" class="mappings-section m-l-10" *ngIf="userList.length === 0"
+				>No users to assign.</span
+			>
+		</div>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="!waitingForMapResponse ? closeWorkFlowMapModal() : null">Cancel</button>
+			<button
+				type="button"
+				title="Confirm {{ workFlowMapStatus.label }}"
+				class="mt2-btn mt2-action-btn"
+				(click)="!waitingForMapResponse ? changeWorkFlowMapStatus() : null"
+			>
+				Confirm
+			</button>
 		</div>
 	</ng-template>
 </div>

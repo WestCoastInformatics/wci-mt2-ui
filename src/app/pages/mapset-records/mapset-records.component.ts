@@ -23,6 +23,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { NotificationService } from 'src/app/services/notification.service';
 import { formatDate } from '@angular/common';
 import { PaginationService } from 'src/app/services/pagination.service';
+import { MapWorkflow } from 'src/app/models/map-workflow.model';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -145,7 +146,7 @@ export class MapsetRecordsComponent implements OnInit {
 	workFlowStatus = { label: '', value: '', message: '', notes: '' };
 	workFlowNotesFC = new FormControl('');
 	batchListFC = new FormControl('');
-	showEdit = true;
+	showEdit = true; //? fix this permissions??
 	editStatus = true;
 	// { label: 'Cancel Edit', value: 'CANCEL_EDIT', message: 'Are you sure you want to cancel editing this Map Set?', notes: '' },
 	editWF = [
@@ -184,6 +185,13 @@ export class MapsetRecordsComponent implements OnInit {
 		// { label: 'Start Publish', value: 'START_PUBLISH', message: 'Are you sure you want to start publishing of this Map Set?', notes: '' },
 		// { label: 'Finish Publish', value: 'PUBLISH_REFSET', message: 'Are you sure you want to finish publishing this Map Set?', notes: '' },
 	];
+	userList: any;
+	selectedUser: any;
+	waitingForMapResponse = false;
+	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
+	workFlowMapNotesFC = new FormControl('');
+	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
+	reviewMapWF: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 	@ViewChild('workflowStatusSection')
@@ -192,6 +200,8 @@ export class MapsetRecordsComponent implements OnInit {
 	@ViewChild('directoryFeedbackDialog') feedbackDialog!: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal!: TemplateRef<any>;
 	@ViewChild('workFlowModal') workflowModal!: TemplateRef<any>;
+	@ViewChild('workFlowMapModal') workflowMapModal!: TemplateRef<any>;
+	@ViewChild('workFlowMapModalNotes') private workflowMapModalNotes!: ElementRef;
 	@ViewChild('batchListModal') batchListModal!: TemplateRef<any>;
 	@ViewChild('reportModal') reportModal!: TemplateRef<any>;
 	@ViewChild('workFlowModalNotes') private workflowModalNotes!: ElementRef;
@@ -226,6 +236,7 @@ export class MapsetRecordsComponent implements OnInit {
 		private notificationService: NotificationService,
 	) {
 		document.body.scrollTop = 0;
+		this.reviewMapWF = MapWorkflow.getWorkFlowForMap();
 	}
 
 	//***** Framework Functions *****/
@@ -292,6 +303,24 @@ export class MapsetRecordsComponent implements OnInit {
 
 	hasUserRoles(roles: any): boolean {
 		return Array.isArray(roles) && roles.includes(this.userRoles);
+	}
+
+	hasWorkflowAction(action: string): boolean {
+		const foundActions = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+			return wfAction[action] === true;
+		});
+		return foundActions.length > 0;
+	}
+
+	//here
+	selectedMapUserActions(status: string) {
+		this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
+			if (status !== wf.status) {
+				return false;
+			}
+			return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
+		});
+		console.log(' this wf ma', this.workFlowMapActions);
 	}
 
 	getMapsetInfo() {
@@ -1137,10 +1166,15 @@ export class MapsetRecordsComponent implements OnInit {
 			}
 		}
 		this.checkedNum = 0;
+		let oneStatus = '';
 		for (let c = 0; c < this.mapsetData.length; c++) {
 			if (this.mapsetData[c].checked === true) {
 				this.checkedNum++;
+				oneStatus = this.mapsetData[c].workflowStatus;
 			}
+		}
+		if (this.checkedNum === 1 && oneStatus !== '') {
+			this.selectedMapUserActions(oneStatus);
 		}
 	}
 
@@ -1666,6 +1700,134 @@ export class MapsetRecordsComponent implements OnInit {
 				break;
 		}
 		this.closeWorkFlowModal();
+	}
+
+	/* Map Workflow */
+
+	openWorkFlowMapModal(content: any) {
+		this.workFlowModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+		setTimeout(() => {
+			this.workflowMapModalNotes.nativeElement.focus();
+		}, 50);
+	}
+
+	closeWorkFlowMapModal() {
+		this.selectedUser = null;
+		this.workFlowModalRef.close();
+		this.isModalOpen = false;
+		this.workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
+		this.workFlowMapNotesFC.setValue('');
+		this.workFlowMapNotesFC.reset();
+		this.waitingForMapResponse = false;
+	}
+
+	changeWorkFlowMapStatus() {
+		if (this.workFlowMapNotesFC.dirty && this.workFlowMapNotesFC.value) {
+			this.workFlowMapStatus.notes = this.workFlowMapNotesFC.value;
+		}
+		let conceptCode = '';
+		if (this.checkedNum === 1) {
+			for (let c = 0; c < this.mapsetData.length; c++) {
+				if (this.mapsetData[c].checked === true) {
+					conceptCode = this.mapsetData[c].code;
+				}
+			}
+		}
+		this.waitingForMapResponse = true;
+		this.refsetService
+			.setMappingWorkflowStatus(
+				this.mapsetInfo.id,
+				conceptCode,
+				this.workFlowMapStatus.value,
+				this.workFlowMapStatus.notes,
+				this.selectedUser ? this.selectedUser : '',
+			)
+			.subscribe((response) => {
+				if (response) {
+					//this.mapsetInfo = response;
+					console.log(' Mapset Map Info: ', response);
+					for (let c = 0; c < this.mapsetData.length; c++) {
+						if (this.mapsetData[c].checked === true) {
+							this.mapsetData[c].workflowStatus = response.workflowStatus;
+							this.mapsetData[c].modified = response.modified;
+							this.mapsetData[c].modifiedBy = response.modifiedBy;
+							this.mapsetData[c].checked = false;
+						}
+					}
+					this.refsetGridApi.redrawRows();
+					// 					active
+					// :
+					// true
+					// assignedAt
+					// :
+					// 1787807881712
+					// assignedUser
+					// :
+					// "mt2-specialist@marquesnunohotmail.onmicrosoft.com"
+					// created
+					// :
+					// 1787807881575
+					// id
+					// :
+					// "2853dd86-e3fd-400e-9a00-fb82724754b8"
+					// leaseExpiresAt
+					// :
+					// 1787836681712
+					// mapProjectId
+					// :
+					// "map-project-mt2-dev-icd10"
+					// mapSetId
+					// :
+					// "a4b762a9-9186-4e45-b116-1706d9253e8e"
+					// modified
+					// :
+					// 1787807881712
+					// modifiedBy
+					// :
+					// "mt2-specialist@marquesnunohotmail.onmicrosoft.com"
+					// sourceConceptCode
+					// :
+					// "10001005"
+					// specialistSlot
+					// :
+					// 1
+					// workflowStatus
+					// :
+					// "EDITING_IN_PROGRESS"
+					//this.getMapsetInfo();
+
+					//sett updated data to selected row, uncheck row, refresh grid see batch class
+					this.closeWorkFlowMapModal();
+				}
+			});
+	}
+
+	reviewMapWorkflow(status: any) {
+		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
+			return status === review.value;
+		})[0];
+		this.selectedUser = null;
+		this.userList = [];
+		if (this.hasWorkflowAction('assign') === true) {
+			const roles = this.workFlowMapStatus.roles as string[];
+			if (Array.isArray(roles) && roles.includes('ADMIN')) {
+				this.userList = this.mapsetInfo.mapProject.mapLeads.filter((users: any) => {
+					users.applicationRole === 'ADMINISTRATOR';
+				});
+			}
+			if (Array.isArray(roles) && roles.includes('LEAD')) {
+				this.userList = this.mapsetInfo.mapProject.mapLeads.filter((users: any) => {
+					users.applicationRole === 'LEAD';
+				});
+			}
+			if (Array.isArray(roles) && roles.includes('SPECIALIST')) {
+				this.userList = this.mapsetInfo.mapProject.mapSpecialists.filter((users: any) => {
+					return users.applicationRole === 'SPECIALIST';
+				});
+			}
+		}
+		this.openWorkFlowMapModal(this.workflowMapModal);
 	}
 
 	/* Reports */

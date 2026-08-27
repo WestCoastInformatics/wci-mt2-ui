@@ -1,6 +1,6 @@
-export class Workflow {
+export class MapWorkflow {
 	constructor() {}
-	static getWorkFlow(): any {
+	static getWorkFlowForMap(): any {
 		return [
 			{
 				label: 'Assign',

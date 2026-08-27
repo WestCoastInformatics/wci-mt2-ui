@@ -246,7 +246,7 @@ export class EditMappingComponent implements OnInit {
 		this.targetFC.disable();
 	}
 
-	//*ngIf="!libraryOnly && workFlowStatus.status === 'EDITING_IN_PROGRESS' && userRole === 'specialist'" return to dashboard if not edit permissions
+	//*ngIf="!libraryOnly && workFlowStatus.status === 'EDITING_IN_PROGRESS' && userRole === 'SPECIALIST'" return to dashboard if not edit permissions
 	hasUserRoles(roles: any): boolean {
 		return Array.isArray(roles) && roles.includes(this.userRoles);
 	}

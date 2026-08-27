@@ -15,8 +15,9 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
-import { Workflow } from 'src/app/models/workflow';
+import { MapWorkflow } from 'src/app/models/map-workflow.model';
 import { FormControl } from '@angular/forms';
+import { assign } from 'node_modules/cypress/types/lodash';
 
 @Component({
 	standalone: false,
@@ -76,22 +77,22 @@ export class MapsetMappingComponent implements OnInit {
 	currentRowColor = 0;
 	moduleMetadata: any;
 	refsetData: any;
+	currentStatus = '';
 	userList: any;
 	selectedUser: any;
-	waitingForResponse = false;
-	workFlowStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '' };
-	workFlowNotesFC = new FormControl('');
-	workFlowActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '' }];
-	currentStatus = '';
-	reviewWF: any;
+	waitingForMapResponse = false;
+	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
+	workFlowMapNotesFC = new FormControl('');
+	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
+	reviewMapWF: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
 	@ViewChild('directoryInfoDialog') infoDialog!: TemplateRef<any>;
 	@ViewChild('directoryFeedbackDialog') feedbackDialog!: TemplateRef<any>;
 	@ViewChild('directoryActionSection') actionSection!: TemplateRef<any>;
-	@ViewChild('workFlowModalNotes') private workflowModalNotes!: ElementRef;
-	@ViewChild('workFlowModal') workflowModal!: TemplateRef<any>;
+	@ViewChild('workFlowMapModalNotes') private workflowMapModalNotes!: ElementRef;
+	@ViewChild('workFlowMapModal') workflowMapModal!: TemplateRef<any>;
 	@ViewChild('downloadModal') downloadModal!: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal!: TemplateRef<any>;
 	@ViewChild('actions') private actions!: MatSelect;
@@ -109,13 +110,14 @@ export class MapsetMappingComponent implements OnInit {
 		private modalService: NgbModal,
 	) {
 		document.body.scrollTop = 0;
-		this.reviewWF = Workflow.getWorkFlow();
+		this.reviewMapWF = MapWorkflow.getWorkFlowForMap();
 	}
 
 	//***** Framework Functions *****/
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
 		this.userRoles = this.authenticationService.getUserPrimaryRoles();
+		this.userRoles = Array.isArray(this.userRoles) ? this.userRoles : [this.userRoles];
 		console.log(' this userRoles', this.userRoles);
 		//current status, user role, action
 		this.titleService.setTitle('Mapping Tool - Map');
@@ -141,21 +143,28 @@ export class MapsetMappingComponent implements OnInit {
 	}
 
 	hasUserRoles(roles: any): boolean {
-		return Array.isArray(roles) && roles.includes(this.userRoles);
+		return Array.isArray(roles) && roles.some((role: string) => this.userRoles.includes(role));
+	}
+
+	hasWorkflowAction(action: string): boolean {
+		const foundActions = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+			return wfAction[action] === true;
+		});
+		return foundActions.length > 0;
 	}
 
 	getMapsetInfo() {
 		this.refsetService.getMappingWorkflowStatus(this.mapsetCode!, this.conceptCode).subscribe({
 			next: (results) => {
-				console.log(' status results', results);
 				this.selectedUser = null;
 				this.currentStatus = results.workflowStatus;
-				this.workFlowActions = this.reviewWF.filter((wf: any) => {
+				this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
 					if (results.workflowStatus !== wf.status) {
 						return false;
 					}
-					return Array.isArray(wf.roles) && wf.roles.includes(this.userRoles);
+					return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 				});
+				console.log('current map workflow actions *** ', this.workFlowMapActions);
 			},
 		});
 
@@ -395,71 +404,72 @@ export class MapsetMappingComponent implements OnInit {
 		this.isModalOpen = false;
 	}
 
-	openWorkFlowModal(content: any) {
+	openWorkFlowMapModal(content: any) {
 		this.workFlowModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
 		setTimeout(() => {
-			this.workflowModalNotes.nativeElement.focus();
+			this.workflowMapModalNotes.nativeElement.focus();
 		}, 50);
 	}
 
-	closeWorkFlowModal() {
+	closeWorkFlowMapModal() {
+		this.selectedUser = null;
 		this.workFlowModalRef.close();
 		this.isModalOpen = false;
-		this.workFlowStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '' };
-		this.workFlowNotesFC.setValue('');
-		this.workFlowNotesFC.reset();
-		this.waitingForResponse = false;
+		this.workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
+		this.workFlowMapNotesFC.setValue('');
+		this.workFlowMapNotesFC.reset();
+		this.waitingForMapResponse = false;
 	}
 
-	changeWorkFlowStatus() {
-		console.log(' this. selected user', this.selectedUser);
-		if (this.workFlowNotesFC.dirty && this.workFlowNotesFC.value) {
-			this.workFlowStatus.notes = this.workFlowNotesFC.value;
+	changeWorkFlowMapStatus() {
+		if (this.workFlowMapNotesFC.dirty && this.workFlowMapNotesFC.value) {
+			this.workFlowMapStatus.notes = this.workFlowMapNotesFC.value;
 		}
-		this.waitingForResponse = true;
+		this.waitingForMapResponse = true;
 		this.refsetService
 			.setMappingWorkflowStatus(
 				this.mapsetInfo.id,
 				this.conceptCode,
-				this.workFlowStatus.value,
-				this.workFlowStatus.notes,
-				this.selectedUser ? this.selectedUser.id : '',
+				this.workFlowMapStatus.value,
+				this.workFlowMapStatus.notes,
+				this.selectedUser ? this.selectedUser : '',
 			)
 			.subscribe((response) => {
 				if (response) {
 					//this.mapsetInfo = response;
 					console.log(' Mapset Info: ', response);
-					//this.setWorkflowStatus();
 					this.getMapsetInfo();
-					this.closeWorkFlowModal();
+					this.closeWorkFlowMapModal();
 				}
 			});
 	}
 
-	reviewWorkflow(status: any) {
-		this.workFlowStatus = this.reviewWF.filter((review) => {
+	reviewMapWorkflow(status: any) {
+		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
 			return status === review.value;
 		})[0];
+		this.selectedUser = null;
 		this.userList = [];
-		const roles = this.workFlowStatus.roles as string[];
-		// if (Array.isArray(roles) && roles.includes('admin')) {
-		// 	this.userList = this.mapsetInfo.mapProject.mapLeads.filter((users: any) => {
-		// 		users.applicationRole.ADMINISTRATOR;
-		// 	});
-		// }
-		// if (Array.isArray(roles) && roles.includes('lead')) {
-		// 	this.userList = this.mapsetInfo.mapProject.mapLeads.filter((users: any) => {
-		// 		users.applicationRole.LEAD;
-		// 	});
-		// }
-		//user list is only shown for ASSIGN or REASSIGN workflow status so only specialists can do the edit functions
-		if (Array.isArray(roles) && roles.includes('specialist')) {
-			this.userList = this.mapsetInfo.mapProject.mapSpecialists.filter((users: any) => {
-				users.applicationRole.SPECIALIST;
-			});
+		if (this.hasWorkflowAction('assign') === true) {
+			const roles = this.workFlowMapStatus.roles as string[];
+			if (Array.isArray(roles) && roles.includes('ADMIN')) {
+				this.userList = this.mapsetInfo.mapProject.mapLeads.filter((users: any) => {
+					users.applicationRole === 'ADMINISTRATOR';
+				});
+			}
+			if (Array.isArray(roles) && roles.includes('LEAD')) {
+				this.userList = this.mapsetInfo.mapProject.mapLeads.filter((users: any) => {
+					users.applicationRole === 'LEAD';
+				});
+			}
+			if (Array.isArray(roles) && roles.includes('SPECIALIST')) {
+				this.userList = this.mapsetInfo.mapProject.mapSpecialists.filter((users: any) => {
+					return users.applicationRole === 'SPECIALIST';
+				});
+			}
 		}
-		this.openWorkFlowModal(this.workflowModal);
+		this.openWorkFlowMapModal(this.workflowMapModal);
 	}
 
 	//***** General Functions *****/
