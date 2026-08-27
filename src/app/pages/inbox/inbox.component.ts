@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
@@ -27,7 +27,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 	templateUrl: './inbox.component.html',
 	styleUrls: ['./inbox.component.css'],
 })
-export class InboxComponent implements OnInit {
+export class InboxComponent implements OnInit, AfterViewInit {
 	user!: User;
 	searchInput = '';
 	viewOptions = [
@@ -93,7 +93,7 @@ export class InboxComponent implements OnInit {
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
-	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
+	@ViewChild('workflowStatusSection') workflowStatusSection!: TemplateRef<any>;
 	@ViewChild('directoryInfoDialog') infoDialog!: TemplateRef<any>;
 	@ViewChild('directoryFeedbackDialog') feedbackDialog!: TemplateRef<any>;
 	@ViewChild('directoryInfoSection') infoSection!: TemplateRef<any>;
@@ -129,7 +129,6 @@ export class InboxComponent implements OnInit {
 		this.titleService.setTitle('Mapping Tool - Inbox');
 		this.breadcrumbService.setBreadcrumbs([{ label: 'Inbox' }]);
 		this.clearSavedSelections();
-		this.getMapsetData();
 		this.getModuleMetadata();
 		this.disableChannel.postMessage(false);
 	}
@@ -186,7 +185,7 @@ export class InboxComponent implements OnInit {
 				field: 'mapSetCode',
 				tooltipField: 'mapSetCode',
 				headerName: 'Map Set ID',
-				cellClass: 'mt2-directory-column-id',
+				cellClass: 'rt2-directory-column-id',
 				minWidth: 65,
 				resizable: true,
 				sortable: false,
@@ -197,7 +196,7 @@ export class InboxComponent implements OnInit {
 				field: 'mapSetName',
 				tooltipField: 'mapSetName',
 				headerName: 'Map Set Name',
-				cellClass: 'mt2-directory-column-name',
+				cellClass: 'rt2-directory-column-name',
 				flex: 2,
 				resizable: true,
 				minWidth: 65,
@@ -207,8 +206,8 @@ export class InboxComponent implements OnInit {
 				suppressSorting: true,
 			},
 			{
-				field: 'code',
-				tooltipField: 'code',
+				field: 'conceptCode',
+				tooltipField: 'conceptCode',
 				headerName: 'Source',
 				headerTooltip: 'Source',
 				flex: 1,
@@ -219,38 +218,36 @@ export class InboxComponent implements OnInit {
 				suppressSorting: true,
 			},
 			{
-				field: 'name',
-				tooltipField: 'name',
+				field: 'conceptName',
+				tooltipField: 'conceptName',
 				headerName: 'Source PT',
-				headerTooltip: 'Source PT',
+				cellClass: 'rt2-directory-column-name',
 				flex: 2,
 				resizable: true,
-				minWidth: 165,
-				cellRenderer: TemplateRendererComponent,
-				cellRendererParams: { template: this.nameSection },
+				minWidth: 65,
+				sort: 'asc',
 				sortable: false,
 				unSortIcon: false,
 				suppressSorting: true,
 			},
 			{
-				field: 'versionStatus',
-				tooltipField: 'versionStatus',
+				field: 'workflowStatus',
+				tooltipField: 'workflowStatus',
 				headerName: 'Workflow Status',
-				cellClass: 'mt2-directory-column-version-status',
+				cellClass: 'rt2-directory-column-version-status',
 				minWidth: 165,
 				width: 200,
 				resizable: true,
 				cellRenderer: TemplateRendererComponent,
-				cellRendererParams: { template: this.workflowStatus },
-				sortable: false,
+				cellRendererParams: { template: this.workflowStatusSection },
 				unSortIcon: false,
-				suppressSorting: true,
+				sortable: false,
 			},
 			{
 				field: 'modified',
 				tooltipValueGetter: UiUtility.gridDateValueGetter,
 				headerName: 'Last Modified',
-				cellClass: 'mt2-directory-column-modified-date',
+				cellClass: 'rt2-directory-column-modified-date',
 				minWidth: 65,
 				width: 170,
 				resizable: true,
@@ -408,6 +405,7 @@ export class InboxComponent implements OnInit {
 				this.refsetData = mappings;
 				this.numOfMembers = results.total;
 				this.numOfResults = results.total;
+				results.items = this.refsetData;
 
 				const lastIndex = document.getElementsByClassName('ag-header').length - 1;
 				const child = document.getElementsByClassName('ag-header')[lastIndex];
@@ -752,7 +750,7 @@ export class InboxComponent implements OnInit {
 	}
 
 	onResize(event: any) {
-		const gridWidth = document.getElementsByClassName('mt2-ag-grid')[0]?.clientWidth;
+		const gridWidth = document.getElementsByClassName('rt2-ag-grid')[0]?.clientWidth;
 		document.getElementsByClassName('ag-header')[0]?.setAttribute('style', `width: ${gridWidth}px;`);
 	}
 
