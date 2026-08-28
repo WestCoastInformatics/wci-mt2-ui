@@ -111,7 +111,6 @@ export class MapsetMappingComponent implements OnInit {
 		this.user = this.authenticationService.getUser();
 		this.userRoles = this.authenticationService.getUserPrimaryRoles();
 		this.userRoles = Array.isArray(this.userRoles) ? this.userRoles : [this.userRoles];
-		console.log(' this userRoles', this.userRoles);
 		//current status, user role, action
 		this.titleService.setTitle('Mapping Tool - Map');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
@@ -157,7 +156,6 @@ export class MapsetMappingComponent implements OnInit {
 					}
 					return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 				});
-				console.log('current map workflow actions *** ', this.workFlowMapActions);
 			},
 		});
 
@@ -402,15 +400,12 @@ export class MapsetMappingComponent implements OnInit {
 		this.isModalOpen = false;
 	}
 
-	updateWorkFlowMapStatus() {
-		//this.isWFMapModalOpen = false;
-		console.log('update wf stan map modal ');
+	updateWorkFlowMapStatus(response: any) {
 		this.getMapsetInfo();
 	}
 
 	closeWorkflowMapModal() {
 		this.isWFMapModalOpen = false;
-		console.log('close wf stan modal ');
 	}
 
 	reviewMapWorkflow(status: any) {

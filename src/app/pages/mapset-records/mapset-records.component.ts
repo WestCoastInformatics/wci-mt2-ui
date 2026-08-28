@@ -88,6 +88,8 @@ export class MapsetRecordsComponent implements OnInit {
 	batchListModalRef!: NgbModalRef;
 	reportModalRef!: NgbModalRef;
 	isModalOpen = false;
+	isWFMapModalOpen = false;
+	conceptCode = '';
 	mapsetInfo: any = {};
 	mapsetVersions: any[] = [];
 	mapsetCode: string | undefined;
@@ -312,7 +314,6 @@ export class MapsetRecordsComponent implements OnInit {
 		return foundActions.length > 0;
 	}
 
-	//here
 	selectedMapUserActions(status: string) {
 		this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
 			if (status !== wf.status) {
@@ -320,7 +321,6 @@ export class MapsetRecordsComponent implements OnInit {
 			}
 			return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 		});
-		console.log(' this wf ma', this.workFlowMapActions);
 	}
 
 	getMapsetInfo() {
@@ -1706,86 +1706,34 @@ export class MapsetRecordsComponent implements OnInit {
 
 	/* Map Workflow */
 
-	openWorkFlowMapModal(content: any) {
-		this.workFlowModalRef = this.modalService.open(content, { centered: true });
-		this.isModalOpen = true;
-		setTimeout(() => {
-			this.workflowMapModalNotes.nativeElement.focus();
-		}, 50);
-	}
-
-	closeWorkFlowMapModal() {
-		this.selectedUser = null;
-		this.workFlowModalRef.close();
-		this.isModalOpen = false;
-		this.workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
-		this.workFlowMapNotesFC.setValue('');
-		this.workFlowMapNotesFC.reset();
-		this.waitingForMapResponse = false;
-	}
-
-	changeWorkFlowMapStatus() {
-		if (this.workFlowMapNotesFC.dirty && this.workFlowMapNotesFC.value) {
-			this.workFlowMapStatus.notes = this.workFlowMapNotesFC.value;
-		}
-		let conceptCode = '';
-		if (this.checkedNum === 1) {
-			for (let c = 0; c < this.mapsetData.length; c++) {
-				if (this.mapsetData[c].checked === true) {
-					conceptCode = this.mapsetData[c].code;
-				}
+	updateWorkFlowMapStatus(response: any) {
+		for (let c = 0; c < this.mapsetData.length; c++) {
+			if (this.mapsetData[c].checked === true) {
+				this.mapsetData[c].workflowStatus = response.workflowStatus;
+				this.mapsetData[c].modified = response.modified;
+				this.mapsetData[c].assignedUser = response.assignedUser;
+				this.mapsetData[c].checked = false;
 			}
 		}
-		this.waitingForMapResponse = true;
-		this.refsetService
-			.setMappingWorkflowStatus(
-				this.mapsetInfo.id,
-				conceptCode,
-				this.workFlowMapStatus.value,
-				this.workFlowMapStatus.notes,
-				this.selectedUser ? this.selectedUser : '',
-			)
-			.subscribe((response) => {
-				if (response) {
-					for (let c = 0; c < this.mapsetData.length; c++) {
-						if (this.mapsetData[c].checked === true) {
-							this.mapsetData[c].workflowStatus = response.workflowStatus;
-							this.mapsetData[c].modified = response.modified;
-							this.mapsetData[c].assignedUser = response.assignedUser;
-							this.mapsetData[c].checked = false;
-						}
-					}
-					this.refsetGridApi.redrawRows();
-					this.closeWorkFlowMapModal();
-				}
-			});
+		this.refsetGridApi.redrawRows();
+	}
+
+	closeWorkflowMapModal() {
+		this.isWFMapModalOpen = false;
 	}
 
 	reviewMapWorkflow(status: any) {
 		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
 			return status === review.value;
 		})[0];
-		this.selectedUser = null;
-		this.userList = [];
-		if (this.hasWorkflowAction('assign') === true) {
-			const roles = this.workFlowMapStatus.roles as string[];
-			if (Array.isArray(roles) && roles.includes('ADMIN')) {
-				this.userList = this.mapsetInfo.mapProject.mapLeads.filter((users: any) => {
-					return users.applicationRole === 'ADMINISTRATOR';
-				});
-			}
-			if (Array.isArray(roles) && roles.includes('LEAD')) {
-				this.userList = this.mapsetInfo.mapProject.mapLeads.filter((users: any) => {
-					return users.applicationRole === 'LEAD';
-				});
-			}
-			if (Array.isArray(roles) && roles.includes('SPECIALIST')) {
-				this.userList = this.mapsetInfo.mapProject.mapSpecialists.filter((users: any) => {
-					return users.applicationRole === 'SPECIALIST';
-				});
+		if (this.checkedNum === 1) {
+			for (let c = 0; c < this.mapsetData.length; c++) {
+				if (this.mapsetData[c].checked === true) {
+					this.conceptCode = this.mapsetData[c].code;
+				}
 			}
 		}
-		this.openWorkFlowMapModal(this.workflowMapModal);
+		this.isWFMapModalOpen = true;
 	}
 
 	/* Reports */

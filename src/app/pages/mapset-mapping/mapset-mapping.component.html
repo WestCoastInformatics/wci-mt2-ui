@@ -217,13 +217,12 @@
 		</ng-template>
 	</div>
 	<workflow-map-modal
-		(updateWorkFlowMapStatus)="updateWorkFlowMapStatus()"
+		(updateWorkFlowMapStatus)="updateWorkFlowMapStatus($event)"
 		(closeWorkflowMapModal)="closeWorkflowMapModal()"
 		[workFlowMapStatus]="workFlowMapStatus"
 		[mapsetInfo]="mapsetInfo"
 		[isWFMapModalOpen]="isWFMapModalOpen"
 		[conceptCode]="conceptCode"
-		[mapsetId]="mapsetInfo.id"
 		[workFlowMapActions]="workFlowMapActions"
 	></workflow-map-modal>
 </div>

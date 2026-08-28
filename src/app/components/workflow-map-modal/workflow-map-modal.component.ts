@@ -19,12 +19,11 @@ export class WorkflowMapModalComponent {
 
 	@Input() workFlowMapStatus: any;
 	@Input() mapsetInfo: any;
-	@Input() mapsetId: any;
 	@Input() conceptCode: any;
 	@Input() workFlowMapActions: any;
 	@Input() isWFMapModalOpen: any;
-	@Output() updateWorkFlowMapStatus = new EventEmitter<boolean>();
-	@Output() closeWorkflowMapModal = new EventEmitter<boolean>();
+	@Output() updateWorkFlowMapStatus = new EventEmitter<any>();
+	@Output() closeWorkflowMapModal = new EventEmitter<void>();
 
 	@ViewChild('workFlowMapModalNotes') private workflowMapModalNotes!: ElementRef;
 	@ViewChild('workFlowMapModal') workflowMapModal!: TemplateRef<any>;
@@ -91,7 +90,7 @@ export class WorkflowMapModalComponent {
 		this.waitingForMapResponse = true;
 		this.refsetService
 			.setMappingWorkflowStatus(
-				this.mapsetId,
+				this.mapsetInfo.id,
 				this.conceptCode,
 				this.workFlowMapStatus.value,
 				this.workFlowMapStatus.notes,
@@ -100,7 +99,7 @@ export class WorkflowMapModalComponent {
 			.subscribe((response) => {
 				if (response) {
 					console.log(' Mapset Info: ', response);
-					this.updateWorkFlowMapStatus.emit();
+					this.updateWorkFlowMapStatus.emit(response);
 					this.closeWorkFlowMapModal();
 				}
 			});

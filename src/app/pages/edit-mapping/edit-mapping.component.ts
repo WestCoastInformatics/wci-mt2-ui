@@ -254,7 +254,6 @@ export class EditMappingComponent implements OnInit {
 	getMapsetInfo() {
 		this.refsetService.getMappingWorkflowStatus(this.mapsetCode!, this.conceptCode).subscribe({
 			next: (results) => {
-				console.log(' status results', results);
 				this.userList = ['devUser'];
 				this.selectedUser = '';
 				this.mappingStatus.current = results.workflowStatus.replaceAll('_', ' ').trim();
@@ -271,7 +270,6 @@ export class EditMappingComponent implements OnInit {
 					default:
 						this.mappingStatus.next = '';
 				}
-				console.log(' this.mappingStatus.current', this.mappingStatus.current);
 			},
 		});
 
@@ -655,7 +653,6 @@ export class EditMappingComponent implements OnInit {
 				for (let i = 0; i < this.numOfGroups; i++) {
 					this.groupList.push('group' + i);
 				}
-				console.log(' whehre w', data);
 				this.mapsetData = data;
 				this.breadcrumbService.setBreadcrumbs([
 					{ path: '/projects', label: 'Projects' },
@@ -971,9 +968,6 @@ export class EditMappingComponent implements OnInit {
 		});
 	}
 
-	show(m) {
-		console.log(' mmmm', m);
-	}
 	showDropdown(): void {
 		this.toggleDropdown = !this.toggleDropdown;
 	}
@@ -1523,9 +1517,6 @@ export class EditMappingComponent implements OnInit {
 			.setMappingWorkflowStatus(this.mapsetInfo.id, this.conceptCode, this.workFlowStatus.value, this.workFlowStatus.notes, this.selectedUser)
 			.subscribe((response) => {
 				if (response) {
-					//this.mapsetInfo = response;
-					console.log(' Mapset Info: ', response);
-					//this.setWorkflowStatus();
 					this.getMapsetInfo();
 					this.closeWorkFlowModal();
 				}
