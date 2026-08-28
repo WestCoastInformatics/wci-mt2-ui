@@ -594,6 +594,11 @@
 	}
 }
 
+.mappings-section {
+	color: #666;
+	font-size: 12px;
+}
+
 .record-loading {
 	position: absolute;
 }

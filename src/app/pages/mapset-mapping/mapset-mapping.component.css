@@ -66,17 +66,9 @@
 }
 
 .workflow-container {
-	position: relative;
 	white-space: nowrap;
-	margin-right: 135px;
-}
-
-.user-selection {
-	width: 400px;
-	margin-top: 10px;
-	mat-form-field {
-		width: 400px;
-		background: #fff;
+	.workflow-status-badge {
+		position: relative !important;
 	}
 }
 
@@ -521,11 +513,6 @@
 	height: 22px;
 
 	filter: invert(10%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
-}
-
-.notes-text {
-	width: 100%;
-	min-height: 100px;
 }
 
 .discussion-icon {

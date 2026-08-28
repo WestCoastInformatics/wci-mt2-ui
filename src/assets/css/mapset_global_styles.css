@@ -2185,6 +2185,10 @@ img.mt2-edition-flag {
 	margin-top: 5px;
 }
 
+.heading-inbetween {
+	margin-bottom: -30px;
+}
+
 .btn-wide-font {
 	letter-spacing: 1.5px;
 }

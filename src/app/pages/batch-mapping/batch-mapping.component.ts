@@ -734,6 +734,10 @@ export class BatchMappingComponent implements OnInit {
 				if (mapsetFound.length > 0) {
 					this.mapsetInfo = mapsetFound[0];
 				}
+			} else {
+				const versionDate = this.mapsetInfo.versionDate || new Date();
+				this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
+				localStorage.setItem('projects_mapsetVersion', JSON.stringify(this.selectedVersion));
 			}
 			this.getMapsetData();
 			this.getMapProject();

@@ -280,7 +280,7 @@
 					>
 						<span>Batch Edit Maps By List</span>
 					</button>
-					<ng-container *ngIf="!libraryOnly && workFlowMapActions[0].status !== ''">
+					<ng-container *ngIf="!libraryOnly && workFlowMapActions.length">
 						<span *ngFor="let action of workFlowMapActions">
 							<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value)">
 								<span> {{ action.label }}</span>

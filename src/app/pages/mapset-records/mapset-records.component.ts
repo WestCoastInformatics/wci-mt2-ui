@@ -481,11 +481,11 @@ export class MapsetRecordsComponent implements OnInit {
 					unSortIcon: true,
 				},
 				{
-					colId: 'modifiedBy',
-					field: 'modifiedBy',
-					tooltipField: 'modifiedBy',
-					headerName: 'Modified By',
-					headerTooltip: 'Modified By',
+					colId: 'assignedUser',
+					field: 'assignedUser',
+					tooltipField: 'assignedUser',
+					headerName: 'Assigned to',
+					headerTooltip: 'Assigned to',
 					cellClass: 'mt2-directory-column-id',
 					width: 145,
 					resizable: true,
@@ -632,6 +632,7 @@ export class MapsetRecordsComponent implements OnInit {
 		} else {
 			if (this.versionStatuses.length > 0) {
 				this.selectedVersion = this.versionStatuses[0];
+				localStorage.setItem(this.mapsetVersionStorage, JSON.stringify(this.selectedVersion));
 			}
 		}
 		this.setMapsetInfo();
@@ -934,7 +935,7 @@ export class MapsetRecordsComponent implements OnInit {
 					for (const column of columns) {
 						column.show = true;
 						if (this.libraryOnly) {
-							if (column.colId === 'workflowStatus' || column.colId === 'modifiedBy') {
+							if (column.colId === 'workflowStatus' || column.colId === 'assignedUser' || column.colId === 'modified') {
 								column.show = false;
 							}
 							this.manualStateRefresh = true;
@@ -1064,6 +1065,7 @@ export class MapsetRecordsComponent implements OnInit {
 										modFlag: this.getModuleLanguageIcon(results[a].mapEntries[b].moduleId),
 										modLang: this.getModuleLanguageName(results[a].mapEntries[b].moduleId),
 										workflowStatus: results[a].mappingWorkflow?.workflowStatus,
+										assignedUser: results[a].mappingWorkflow?.assignedUser,
 										modifiedBy: results[a].mappingWorkflow?.modifiedBy,
 									});
 									count++;
@@ -1745,59 +1747,15 @@ export class MapsetRecordsComponent implements OnInit {
 			)
 			.subscribe((response) => {
 				if (response) {
-					//this.mapsetInfo = response;
-					console.log(' Mapset Map Info: ', response);
 					for (let c = 0; c < this.mapsetData.length; c++) {
 						if (this.mapsetData[c].checked === true) {
 							this.mapsetData[c].workflowStatus = response.workflowStatus;
 							this.mapsetData[c].modified = response.modified;
-							this.mapsetData[c].modifiedBy = response.modifiedBy;
+							this.mapsetData[c].assignedUser = response.assignedUser;
 							this.mapsetData[c].checked = false;
 						}
 					}
 					this.refsetGridApi.redrawRows();
-					// 					active
-					// :
-					// true
-					// assignedAt
-					// :
-					// 1787807881712
-					// assignedUser
-					// :
-					// "mt2-specialist@marquesnunohotmail.onmicrosoft.com"
-					// created
-					// :
-					// 1787807881575
-					// id
-					// :
-					// "2853dd86-e3fd-400e-9a00-fb82724754b8"
-					// leaseExpiresAt
-					// :
-					// 1787836681712
-					// mapProjectId
-					// :
-					// "map-project-mt2-dev-icd10"
-					// mapSetId
-					// :
-					// "a4b762a9-9186-4e45-b116-1706d9253e8e"
-					// modified
-					// :
-					// 1787807881712
-					// modifiedBy
-					// :
-					// "mt2-specialist@marquesnunohotmail.onmicrosoft.com"
-					// sourceConceptCode
-					// :
-					// "10001005"
-					// specialistSlot
-					// :
-					// 1
-					// workflowStatus
-					// :
-					// "EDITING_IN_PROGRESS"
-					//this.getMapsetInfo();
-
-					//sett updated data to selected row, uncheck row, refresh grid see batch class
 					this.closeWorkFlowMapModal();
 				}
 			});
@@ -1813,12 +1771,12 @@ export class MapsetRecordsComponent implements OnInit {
 			const roles = this.workFlowMapStatus.roles as string[];
 			if (Array.isArray(roles) && roles.includes('ADMIN')) {
 				this.userList = this.mapsetInfo.mapProject.mapLeads.filter((users: any) => {
-					users.applicationRole === 'ADMINISTRATOR';
+					return users.applicationRole === 'ADMINISTRATOR';
 				});
 			}
 			if (Array.isArray(roles) && roles.includes('LEAD')) {
 				this.userList = this.mapsetInfo.mapProject.mapLeads.filter((users: any) => {
-					users.applicationRole === 'LEAD';
+					return users.applicationRole === 'LEAD';
 				});
 			}
 			if (Array.isArray(roles) && roles.includes('SPECIALIST')) {

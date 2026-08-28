@@ -95,7 +95,7 @@ import { ReadonlyTextModalComponent } from 'src/app/components/readonly-text-mod
 import { AuthGuardGuard } from 'src/app/services/authentication/auth-guard.guard';
 import { LoginComponent } from 'src/app/auth/login/login.component';
 import { InviteComponent } from 'src/app/auth/invite/invite.component';
-import { ReviewModalComponent } from 'src/app/components/review-modal/review-modal.component';
+import { WorkflowMapModalComponent } from 'src/app/components/workflow-map-modal/workflow-map-modal.component';
 import { UsersService } from './services/rest/users.service';
 import { RefsetFeedbackListComponent } from './components/refset-feedback-list/refset-feedback-list.component';
 import { DomService } from './services/dom.service';
@@ -189,7 +189,7 @@ const appRoutes: Routes = [
 		ImportFromFileModalComponent,
 		ImportFromListModalComponent,
 		ReadonlyTextModalComponent,
-		ReviewModalComponent,
+		WorkflowMapModalComponent,
 		LoginComponent,
 		InviteComponent,
 		LandingComponent,

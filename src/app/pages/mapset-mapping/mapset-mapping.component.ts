@@ -16,8 +16,6 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
 import { MapWorkflow } from 'src/app/models/map-workflow.model';
-import { FormControl } from '@angular/forms';
-import { assign } from 'node_modules/cypress/types/lodash';
 
 @Component({
 	standalone: false,
@@ -55,8 +53,8 @@ export class MapsetMappingComponent implements OnInit {
 	showLoadingSearch = true;
 	toBeDevelopedModalRef!: NgbModalRef;
 	downloadModalRef!: NgbModalRef;
-	workFlowModalRef!: NgbModalRef;
 	isModalOpen = false;
+	isWFMapModalOpen = false;
 	mapsetName = 'Mapset Name';
 	mapsetCode: string | undefined;
 	conceptCode = '';
@@ -78,11 +76,8 @@ export class MapsetMappingComponent implements OnInit {
 	moduleMetadata: any;
 	refsetData: any;
 	currentStatus = '';
-	userList: any;
-	selectedUser: any;
-	waitingForMapResponse = false;
+	assignedUser = '';
 	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
-	workFlowMapNotesFC = new FormControl('');
 	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
 	reviewMapWF: any;
 
@@ -91,8 +86,6 @@ export class MapsetMappingComponent implements OnInit {
 	@ViewChild('directoryInfoDialog') infoDialog!: TemplateRef<any>;
 	@ViewChild('directoryFeedbackDialog') feedbackDialog!: TemplateRef<any>;
 	@ViewChild('directoryActionSection') actionSection!: TemplateRef<any>;
-	@ViewChild('workFlowMapModalNotes') private workflowMapModalNotes!: ElementRef;
-	@ViewChild('workFlowMapModal') workflowMapModal!: TemplateRef<any>;
 	@ViewChild('downloadModal') downloadModal!: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal!: TemplateRef<any>;
 	@ViewChild('actions') private actions!: MatSelect;
@@ -156,8 +149,8 @@ export class MapsetMappingComponent implements OnInit {
 	getMapsetInfo() {
 		this.refsetService.getMappingWorkflowStatus(this.mapsetCode!, this.conceptCode).subscribe({
 			next: (results) => {
-				this.selectedUser = null;
 				this.currentStatus = results.workflowStatus;
+				this.assignedUser = results.assignedUser;
 				this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
 					if (results.workflowStatus !== wf.status) {
 						return false;
@@ -199,6 +192,7 @@ export class MapsetMappingComponent implements OnInit {
 
 			this.mapsetInfo = mapsetVersions[0];
 			const _storedVersion = localStorage.getItem(this.mapsetVersionStorage);
+
 			if (_storedVersion) {
 				this.selectedVersion = JSON.parse(_storedVersion);
 				const foundVersion = mapsetVersions.filter((v) => {
@@ -209,6 +203,10 @@ export class MapsetMappingComponent implements OnInit {
 				if (foundVersion.length > 0) {
 					this.mapsetInfo = foundVersion[0];
 				}
+			} else {
+				const versionDate = this.mapsetInfo.versionDate || new Date();
+				this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
+				localStorage.setItem(this.mapsetVersionStorage, JSON.stringify(this.selectedVersion));
 			}
 			this.getMapsetData();
 		});
@@ -404,72 +402,22 @@ export class MapsetMappingComponent implements OnInit {
 		this.isModalOpen = false;
 	}
 
-	openWorkFlowMapModal(content: any) {
-		this.workFlowModalRef = this.modalService.open(content, { centered: true });
-		this.isModalOpen = true;
-		setTimeout(() => {
-			this.workflowMapModalNotes.nativeElement.focus();
-		}, 50);
+	updateWorkFlowMapStatus() {
+		//this.isWFMapModalOpen = false;
+		console.log('update wf stan map modal ');
+		this.getMapsetInfo();
 	}
 
-	closeWorkFlowMapModal() {
-		this.selectedUser = null;
-		this.workFlowModalRef.close();
-		this.isModalOpen = false;
-		this.workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
-		this.workFlowMapNotesFC.setValue('');
-		this.workFlowMapNotesFC.reset();
-		this.waitingForMapResponse = false;
-	}
-
-	changeWorkFlowMapStatus() {
-		if (this.workFlowMapNotesFC.dirty && this.workFlowMapNotesFC.value) {
-			this.workFlowMapStatus.notes = this.workFlowMapNotesFC.value;
-		}
-		this.waitingForMapResponse = true;
-		this.refsetService
-			.setMappingWorkflowStatus(
-				this.mapsetInfo.id,
-				this.conceptCode,
-				this.workFlowMapStatus.value,
-				this.workFlowMapStatus.notes,
-				this.selectedUser ? this.selectedUser : '',
-			)
-			.subscribe((response) => {
-				if (response) {
-					//this.mapsetInfo = response;
-					console.log(' Mapset Info: ', response);
-					this.getMapsetInfo();
-					this.closeWorkFlowMapModal();
-				}
-			});
+	closeWorkflowMapModal() {
+		this.isWFMapModalOpen = false;
+		console.log('close wf stan modal ');
 	}
 
 	reviewMapWorkflow(status: any) {
 		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
 			return status === review.value;
 		})[0];
-		this.selectedUser = null;
-		this.userList = [];
-		if (this.hasWorkflowAction('assign') === true) {
-			const roles = this.workFlowMapStatus.roles as string[];
-			if (Array.isArray(roles) && roles.includes('ADMIN')) {
-				this.userList = this.mapsetInfo.mapProject.mapLeads.filter((users: any) => {
-					users.applicationRole === 'ADMINISTRATOR';
-				});
-			}
-			if (Array.isArray(roles) && roles.includes('LEAD')) {
-				this.userList = this.mapsetInfo.mapProject.mapLeads.filter((users: any) => {
-					users.applicationRole === 'LEAD';
-				});
-			}
-			if (Array.isArray(roles) && roles.includes('SPECIALIST')) {
-				this.userList = this.mapsetInfo.mapProject.mapSpecialists.filter((users: any) => {
-					return users.applicationRole === 'SPECIALIST';
-				});
-			}
-		}
-		this.openWorkFlowMapModal(this.workflowMapModal);
+		this.isWFMapModalOpen = true;
 	}
 
 	//***** General Functions *****/

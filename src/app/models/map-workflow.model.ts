@@ -10,6 +10,7 @@ export class MapWorkflow {
 				message: 'Are you sure you want to assign this mapping?',
 				notes: '',
 				assign: true,
+				assignment: ['SPECIALIST'],
 				edit: false,
 			},
 			{
@@ -20,6 +21,7 @@ export class MapWorkflow {
 				message: 'Are you sure you want to assign this mapping?',
 				notes: '',
 				assign: true,
+				assignment: ['SPECIALIST'],
 				edit: false,
 			},
 			{
@@ -30,6 +32,7 @@ export class MapWorkflow {
 				message: 'Are you sure you want to assign this mapping?',
 				notes: '',
 				assign: true,
+				assignment: ['SPECIALIST'],
 				edit: false,
 			},
 			{
@@ -40,6 +43,7 @@ export class MapWorkflow {
 				message: 'Are you sure you want to unassign this mapping?',
 				notes: '',
 				assign: false,
+				assignment: [],
 				edit: true,
 			},
 			{
@@ -50,6 +54,7 @@ export class MapWorkflow {
 				message: 'Are you sure you want to finish editing this Mapping?',
 				notes: '',
 				assign: false,
+				assignment: [],
 				edit: true,
 			},
 			{
@@ -60,6 +65,7 @@ export class MapWorkflow {
 				message: 'Are you sure you want to unassign this mapping?',
 				notes: '',
 				assign: false,
+				assignment: [],
 				edit: true,
 			},
 			{
@@ -70,6 +76,7 @@ export class MapWorkflow {
 				message: 'Are you sure you want to reassign this mapping?',
 				notes: '',
 				assign: true,
+				assignment: ['SPECIALIST'],
 				edit: false,
 			},
 			{
@@ -80,6 +87,7 @@ export class MapWorkflow {
 				message: 'Are you sure you want to request review this mapping?',
 				notes: '',
 				assign: false,
+				assignment: [],
 				edit: false,
 			},
 			{
@@ -90,6 +98,7 @@ export class MapWorkflow {
 				message: 'Are you sure you want to approve for publication this mapping?',
 				notes: '',
 				assign: false,
+				assignment: [],
 				edit: false,
 			},
 			{
@@ -100,6 +109,7 @@ export class MapWorkflow {
 				message: 'Are you sure you want to start reviewing this Mapping?',
 				notes: '',
 				assign: true,
+				assignment: ['LEAD'],
 				edit: false,
 			},
 			{
@@ -110,6 +120,7 @@ export class MapWorkflow {
 				message: 'Are you sure you want to unassign this mapping?',
 				notes: '',
 				assign: false,
+				assignment: [],
 				edit: true,
 			},
 			{
@@ -120,6 +131,7 @@ export class MapWorkflow {
 				message: 'Are you sure you want to reassign this mapping?',
 				notes: '',
 				assign: true,
+				assignment: ['LEAD'],
 				edit: false,
 			},
 			{
@@ -130,6 +142,7 @@ export class MapWorkflow {
 				message: 'Are you sure you want to unassign this mapping?',
 				notes: '',
 				assign: false,
+				assignment: [],
 				edit: true,
 			},
 			{
@@ -140,6 +153,7 @@ export class MapWorkflow {
 				message: 'Are you sure you want to accept the review for this Mapping?',
 				notes: '',
 				assign: false,
+				assignment: [],
 				edit: true,
 			},
 		];
