@@ -307,7 +307,7 @@ export class MapsetRecordsComponent implements OnInit {
 		return Array.isArray(roles) && roles.includes(this.userRoles);
 	}
 
-	hasWorkflowAction(action: string): boolean {
+	hasWorkflowMapAction(action: string): boolean {
 		const foundActions = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
 			return wfAction[action] === true;
 		});

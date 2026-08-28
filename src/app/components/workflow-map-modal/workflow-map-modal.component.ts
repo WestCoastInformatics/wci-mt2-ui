@@ -39,7 +39,7 @@ export class WorkflowMapModalComponent {
 				if (changes.isWFMapModalOpen.currentValue === true) {
 					this.selectedUser = null;
 					this.userList = [];
-					if (this.hasWorkflowAction('assign') === true) {
+					if (this.hasWorkflowMapAction('assign') === true) {
 						const assignment = this.workFlowMapStatus.assignment as string[];
 						if (Array.isArray(assignment) && assignment.includes('ADMIN')) {
 							this.userList = this.mapsetInfo.mapProject.mapLeads.filter((users: any) => {
@@ -98,14 +98,13 @@ export class WorkflowMapModalComponent {
 			)
 			.subscribe((response) => {
 				if (response) {
-					console.log(' Mapset Info: ', response);
 					this.updateWorkFlowMapStatus.emit(response);
 					this.closeWorkFlowMapModal();
 				}
 			});
 	}
 
-	hasWorkflowAction(action: string): boolean {
+	hasWorkflowMapAction(action: string): boolean {
 		const foundActions = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
 			return wfAction[action] === true;
 		});

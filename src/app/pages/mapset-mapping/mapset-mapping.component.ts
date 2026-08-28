@@ -138,11 +138,18 @@ export class MapsetMappingComponent implements OnInit {
 		return Array.isArray(roles) && roles.some((role: string) => this.userRoles.includes(role));
 	}
 
-	hasWorkflowAction(action: string): boolean {
+	hasWorkflowMapAction(action: string): boolean {
 		const foundActions = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
 			return wfAction[action] === true;
 		});
 		return foundActions.length > 0;
+	}
+
+	isWorkFlowMapEdit(): boolean {
+		const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+			return wfAction.edit === true;
+		});
+		return foundEdit.length > 0;
 	}
 
 	getMapsetInfo() {

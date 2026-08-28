@@ -21,7 +21,7 @@
 			placeholder="enter status change notes..."
 			[formControl]="workFlowMapNotesFC"
 		></textarea>
-		<div class="user-selection" [hidden]="userList.length === 0 || hasWorkflowAction('assign') === false">
+		<div class="user-selection" [hidden]="userList.length === 0 || hasWorkflowMapAction('assign') === false">
 			<mat-form-field appearance="fill" floatLabel="never">
 				<mat-select #selectUser title="Select user to assign" placeholder="Select user to assign" [(value)]="selectedUser">
 					<mat-option *ngFor="let user of userList" value="{{ user.id }}" title="{{ user.name }}" class="no-checkbox border-bottom"
@@ -32,7 +32,7 @@
 				</mat-select>
 			</mat-form-field>
 		</div>
-		<span [hidden]="hasWorkflowAction('assign') === false" class="mappings-section m-l-10" *ngIf="userList.length === 0"
+		<span [hidden]="hasWorkflowMapAction('assign') === false" class="mappings-section m-l-10" *ngIf="userList.length === 0"
 			>No users to assign.</span
 		>
 	</div>
