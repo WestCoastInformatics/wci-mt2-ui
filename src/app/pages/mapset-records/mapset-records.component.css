@@ -383,6 +383,21 @@
 	text-wrap: nowrap;
 }
 
+.assigned-column {
+	text-wrap: nowrap;
+	text-wrap-mode: nowrap;
+	text-overflow: ellipsis;
+	overflow: clip;
+}
+
+.workflow-container {
+	width: fit-content;
+	white-space: nowrap;
+	.workflow-status-badge {
+		position: relative !important;
+	}
+}
+
 .checkbox-column {
 	margin-left: 18px;
 	width: 30px;

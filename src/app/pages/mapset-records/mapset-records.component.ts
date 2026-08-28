@@ -314,6 +314,13 @@ export class MapsetRecordsComponent implements OnInit {
 		return foundActions.length > 0;
 	}
 
+	isWorkFlowMapEdit(): boolean {
+		const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+			return wfAction.edit === true;
+		});
+		return foundEdit.length > 0;
+	}
+
 	selectedMapUserActions(status: string) {
 		this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
 			if (status !== wf.status) {
@@ -1136,22 +1143,6 @@ export class MapsetRecordsComponent implements OnInit {
 			},
 		};
 	}
-
-	// getMappingWorkflowStatus() {
-	// 	for (let i = 0; i < this.mapsetData.length; i++) {
-	// 		this.refsetService.getMappingWorkflowStatus(this.mapsetCode!, this.mapsetData[i].code).subscribe({
-	// 			next: (results) => {
-	// 				this.mapsetData.forEach((data: any) => {
-	// 					if (data.code === results.sourceConceptCode) {
-	// 						data.workflowStatus = results.workflowStatus.replaceAll('_', ' ').trim();
-	// 					}
-	// 				});
-	// 				this.refsetGridApi.refreshCells(this.refsetGridParams);
-	// 				this.refsetGridApi.redrawRows();
-	// 			},
-	// 		});
-	// 	}
-	// }
 
 	checkboxRowSelect(event, index) {
 		for (let d = 0; d < this.mapsetData.length; d++) {

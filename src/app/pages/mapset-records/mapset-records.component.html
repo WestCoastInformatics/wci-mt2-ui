@@ -257,30 +257,29 @@
 						<span>View Selected Mapping</span>
 					</button>
 					<button
-						*ngIf="!libraryOnly && hasUserRoles('SPECIALIST') === true"
+						*ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && isWorkFlowMapEdit() && checkedNum === 1"
 						mat-menu-item
 						(click)="selectAction('edit')"
-						[disabled]="checkedNum !== 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
 					>
 						<span>Edit Selected Mapping</span>
 					</button>
 					<button
-						*ngIf="!libraryOnly && hasUserRoles('SPECIALIST') === true"
+						*ngIf="!libraryOnly && checkedNum > 1 && mapsetInfo.workflowStatus === 'IN_EDIT'"
 						mat-menu-item
 						(click)="selectAction('batch')"
-						[disabled]="checkedNum < 2 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+						[disabled]="true"
 					>
 						<span>Batch Edit Selected Mappings</span>
 					</button>
 					<button
-						*ngIf="!libraryOnly && hasUserRoles('SPECIALIST')"
+						*ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT'"
 						mat-menu-item
 						(click)="selectAction('list')"
-						[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
+						[disabled]="true"
 					>
 						<span>Batch Edit Maps By List</span>
 					</button>
-					<ng-container *ngIf="!libraryOnly && workFlowMapActions.length">
+					<ng-container *ngIf="!libraryOnly && workFlowMapActions.length && checkedNum === 1 && mapsetInfo.workflowStatus === 'IN_EDIT'">
 						<span *ngFor="let action of workFlowMapActions">
 							<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value)">
 								<span> {{ action.label }}</span>
@@ -389,9 +388,16 @@
 											[ngTemplateOutletContext]="{ $implicit: record }"
 										></ng-container>
 									</div>
-									<span class="date-column second-row" *ngIf="record?.modified"
-										>Last Modified: {{ dateFormatter(record.modified) }}</span
-									>
+									<div class="date-column" *ngIf="record?.modified">Last Modified: {{ dateFormatter(record.modified) }}</div>
+									<div class="assigned-column" *ngIf="!libraryOnly && record?.assignedUser">
+										Assigned to: {{ record.assignedUser }}
+									</div>
+									<div *ngIf="!libraryOnly" class="workflow-container">
+										<ng-container
+											[ngTemplateOutlet]="workflowStatusSection"
+											[ngTemplateOutletContext]="{ $implicit: record?.workflowStatus }"
+										></ng-container>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -652,7 +658,7 @@
 	</div>
 	<!-- Workflow Status Templates -->
 	<ng-template #workflowStatusSection let-params>
-		<workflow-status-badge [status]="params?.value"> </workflow-status-badge>
+		<workflow-status-badge [status]="typeof params === 'string' ? params : params.value"> </workflow-status-badge>
 	</ng-template>
 	<ng-template #directoryInfoDialog let-data>
 		<div class="container-fluid w-min-350 mt2-refset-metadata-column" id="directoryInformationSection">
@@ -709,9 +715,13 @@
 
 	<!-- Action Templates -->
 	<ng-template #directoryActionSection let-params>
-		<div class="d-flex" *ngIf="params?.value === true">
+		<div class="d-flex">
 			<div class="col-6">
-				<notes-modal [libraryOnly]="libraryOnly" [mapSetId]="mapsetInfo.id" [conceptCode]="params?.data?.code"></notes-modal>
+				<notes-modal
+					[libraryOnly]="libraryOnly"
+					[mapSetId]="mapsetInfo.id"
+					[conceptCode]="params?.data?.code ? params.data.code : params?.code"
+				></notes-modal>
 			</div>
 
 			<div class="col-6">

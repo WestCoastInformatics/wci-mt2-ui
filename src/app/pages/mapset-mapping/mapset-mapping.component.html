@@ -42,10 +42,14 @@
 							</button>
 						</div>
 						<mat-menu #actionMenu="matMenu">
-							<button *ngIf="!libraryOnly && isWorkFlowMapEdit()" mat-menu-item (click)="selectAction('edit')">
+							<button
+								*ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && isWorkFlowMapEdit()"
+								mat-menu-item
+								(click)="selectAction('edit')"
+							>
 								<span>Edit Maps</span>
 							</button>
-							<ng-container *ngIf="!libraryOnly">
+							<ng-container *ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT'">
 								<span *ngFor="let action of workFlowMapActions">
 									<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value)">
 										<span> {{ action.label }}</span>
@@ -120,12 +124,8 @@
 		<!-- Action Templates -->
 		<ng-template #directoryActionSection let-params>
 			<div class="d-flex">
-				<div class="col" *ngIf="!libraryOnly && isWorkFlowMapEdit()">
-					<button
-						class="library-app-refset-notes m-r-15 no-padding"
-						(click)="selectAction('edit')"
-						[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
-					>
+				<div class="col" *ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && isWorkFlowMapEdit()">
+					<button class="library-app-refset-notes m-r-15 no-padding" (click)="selectAction('edit')">
 						<img src="/assets/edit-icon.svg" title="Edit Maps" aria-label="Edit Maps" class="mapset-notes-icon mapset-edit-icon" />
 					</button>
 				</div>
