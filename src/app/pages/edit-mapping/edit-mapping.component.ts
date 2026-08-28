@@ -30,6 +30,7 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
+import { MapWorkflow } from 'src/app/models/map-workflow.model';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { PaginationService } from 'src/app/services/pagination.service';
 
@@ -101,6 +102,7 @@ export class EditMappingComponent implements OnInit {
 	confirmModalRef!: NgbModalRef;
 	workFlowModalRef!: NgbModalRef;
 	isModalOpen = false;
+	isWFMapModalOpen = false;
 	mapsetName = 'Mapset Name';
 	selectedMapset: any;
 	showConfigSection = true;
@@ -152,18 +154,11 @@ export class EditMappingComponent implements OnInit {
 	browserColumnDefs: any;
 	conceptDetail = false;
 	currentConcept: any;
-	userList: string[] = [];
-	selectedUser = '';
-	waitingForResponse = false;
-	workFlowStatus = { label: '', value: '', message: '', notes: '' };
-	workFlowNotesFC = new FormControl('');
-	mappingStatus = { current: '', next: '' };
-	reviewWF = [
-		{ label: 'Request Review', value: 'FINISH_EDITING', message: 'Are you sure you want to finish editing this Mapping?', notes: '' },
-		{ label: 'Start Review', value: 'START_REVIEW', message: 'Are you sure you want to start reviewing this Mapping?', notes: '' },
-		{ label: 'Accept Review', value: 'ACCEPT_REVIEW', message: 'Are you sure you want to accept the review for this Mapping?', notes: '' },
-		{ label: 'Reject Review', value: 'REJECT_REVIEW', message: 'Are you sure you want to reject the review for this Mapping?', notes: '' },
-	];
+	currentStatus = '';
+	assignedUser = '';
+	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
+	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
+	reviewMapWF: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -172,9 +167,7 @@ export class EditMappingComponent implements OnInit {
 	@ViewChild('directoryActionSection') actionSection!: TemplateRef<any>;
 	@ViewChild('confirmationModal') confirmationModal!: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal!: TemplateRef<any>;
-	@ViewChild('workFlowModalNotes') private workflowModalNotes!: ElementRef;
 	@ViewChild('browserSearchInput') private browserSearchInput!: ElementRef;
-	@ViewChild('workFlowModal') workflowModal!: TemplateRef<any>;
 	@ViewChild('actions') private actions!: MatSelect;
 	@ViewChild('selectRelationship') private selectRelationship!: MatSelect;
 	@ViewChild('selectRule') private selectRule!: MatSelect;
@@ -199,6 +192,7 @@ export class EditMappingComponent implements OnInit {
 		private pagerService: PaginationService,
 	) {
 		document.body.scrollTop = 0;
+		this.reviewMapWF = MapWorkflow.getWorkFlowForMap();
 		this.targetFC.valueChanges.pipe(debounceTime(600), distinctUntilChanged()).subscribe((res) => {
 			if (this.targetFC.dirty && !this.searchByTypeahead) {
 				this.foundConceptCode = false;
@@ -246,29 +240,38 @@ export class EditMappingComponent implements OnInit {
 		this.targetFC.disable();
 	}
 
-	//*ngIf="!libraryOnly && workFlowStatus.status === 'EDITING_IN_PROGRESS' && userRole === 'SPECIALIST'" return to dashboard if not edit permissions === && isWorkFlowMapEdit()
 	hasUserRoles(roles: any): boolean {
-		return Array.isArray(roles) && roles.includes(this.userRoles);
+		return Array.isArray(roles) && roles.some((role: string) => this.userRoles.includes(role));
+	}
+
+	hasWorkflowMapAction(action: string): boolean {
+		const foundActions = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+			return wfAction[action] === true;
+		});
+		return foundActions.length > 0;
+	}
+
+	isWorkFlowMapEdit(): boolean {
+		const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+			return wfAction.edit === true;
+		});
+		return foundEdit.length > 0;
 	}
 
 	getMapsetInfo() {
 		this.refsetService.getMappingWorkflowStatus(this.mapsetCode!, this.conceptCode).subscribe({
 			next: (results) => {
-				this.userList = ['devUser'];
-				this.selectedUser = '';
-				this.mappingStatus.current = results.workflowStatus.replaceAll('_', ' ').trim();
-				switch (this.mappingStatus.current) {
-					case 'NEW':
-						this.mappingStatus.next = 'FINISH_EDITING';
-						break;
-					case 'EDITING DONE':
-						this.mappingStatus.next = 'START_REVIEW';
-						break;
-					case 'IN REVIEW':
-						this.mappingStatus.next = 'ACCEPT_REVIEW';
-						break;
-					default:
-						this.mappingStatus.next = '';
+				this.currentStatus = results.workflowStatus;
+				this.assignedUser = results.assignedUser;
+				this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
+					if (results.workflowStatus !== wf.status) {
+						return false;
+					}
+					return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
+				});
+				if (this.isWorkFlowMapEdit() === false) {
+					this.notificationService.show('Editing is not permitted.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+					this.selectActionMenu('view');
 				}
 			},
 		});
@@ -1444,6 +1447,21 @@ export class EditMappingComponent implements OnInit {
 		this.conceptDetail = false;
 	}
 
+	updateWorkFlowMapStatus(response: any) {
+		this.getMapsetInfo();
+	}
+
+	closeWorkflowMapModal() {
+		this.isWFMapModalOpen = false;
+	}
+
+	reviewMapWorkflow(status: any) {
+		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
+			return status === review.value;
+		})[0];
+		this.isWFMapModalOpen = true;
+	}
+
 	openToBeDevelopedModal(content: any) {
 		this.toBeDevelopedModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
@@ -1480,67 +1498,14 @@ export class EditMappingComponent implements OnInit {
 		switch (target) {
 			case '_blank':
 				this.router.navigate([]).then((result) => {
-					window.open('/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode, target);
+					window.open('/projects/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode, target);
 				});
 				break;
 			default:
-				this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode], {
+				this.router.navigate(['/projects/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode], {
 					replaceUrl: false,
 					skipLocationChange: false,
 				});
-		}
-	}
-
-	openWorkFlowModal(content: any) {
-		this.workFlowModalRef = this.modalService.open(content, { centered: true });
-		this.isModalOpen = true;
-		setTimeout(() => {
-			this.workflowModalNotes.nativeElement.focus();
-		}, 50);
-	}
-
-	closeWorkFlowModal() {
-		this.workFlowModalRef.close();
-		this.isModalOpen = false;
-		this.workFlowStatus = { label: '', value: '', message: '', notes: '' };
-		this.workFlowNotesFC.setValue('');
-		this.workFlowNotesFC.reset();
-		this.waitingForResponse = false;
-	}
-
-	changeWorkFlowStatus() {
-		if (this.workFlowNotesFC.dirty) {
-			this.workFlowStatus.notes = this.workFlowNotesFC.value;
-		}
-		this.waitingForResponse = true;
-		this.refsetService
-			.setMappingWorkflowStatus(this.mapsetInfo.id, this.conceptCode, this.workFlowStatus.value, this.workFlowStatus.notes, this.selectedUser)
-			.subscribe((response) => {
-				if (response) {
-					this.getMapsetInfo();
-					this.closeWorkFlowModal();
-				}
-			});
-	}
-
-	reviewWorkflow(status: any) {
-		switch (status) {
-			case this.reviewWF[0].value: //FINISH_EDIT
-				this.workFlowStatus = this.reviewWF[0];
-				this.openWorkFlowModal(this.workflowModal);
-				break;
-			case this.reviewWF[1].value: //START_REVIEW
-				this.workFlowStatus = this.reviewWF[1];
-				this.openWorkFlowModal(this.workflowModal);
-				break;
-			case this.reviewWF[2].value: //ACCEPT_REVIEW
-				this.workFlowStatus = this.reviewWF[2];
-				this.openWorkFlowModal(this.workflowModal);
-				break;
-			case this.reviewWF[3].value: //REJECT_REVIEW
-				this.workFlowStatus = this.reviewWF[3];
-				this.openWorkFlowModal(this.workflowModal);
-				break;
 		}
 	}
 

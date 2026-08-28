@@ -696,7 +696,7 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	hasUserRoles(roles: any): boolean {
-		return Array.isArray(roles) && roles.includes(this.userRoles);
+		return Array.isArray(roles) && roles.some((role: string) => this.userRoles.includes(role));
 	}
 
 	getMapsetInfo() {
@@ -1933,7 +1933,7 @@ export class BatchMappingComponent implements OnInit {
 	/*end functions*/
 
 	goToMappingPage(code: any) {
-		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + code], { replaceUrl: false, skipLocationChange: false });
+		this.router.navigate(['/projects/mapset/' + this.mapsetCode + '/mapping/' + code], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	goToMappingsPage() {

@@ -304,7 +304,7 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	hasUserRoles(roles: any): boolean {
-		return Array.isArray(roles) && roles.includes(this.userRoles);
+		return Array.isArray(roles) && roles.some((role: string) => this.userRoles.includes(role));
 	}
 
 	hasWorkflowMapAction(action: string): boolean {

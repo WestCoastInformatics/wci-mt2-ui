@@ -21,9 +21,10 @@
 <div [hidden]="loaded || loadError" class="section-loading m-b-20">Loading...</div>
 <div [hidden]="!loadError || !loaded" class="section-loading m-b-20">Error loading, please contact support.</div>
 <div class="dropdown-group row edit-actions" *ngIf="loaded && !loadError">
-	<div class="col-10">
-		<div class="workflow-container d-flex justify-content-end">
-			<workflow-status-badge [status]="mappingStatus.current"></workflow-status-badge>
+	<div class="col-10 d-flex justify-content-end">
+		<div class="assigned-column mappings-section align-self-center m-r-20" *ngIf="assignedUser">Assigned to: {{ assignedUser }}</div>
+		<div class="workflow-container">
+			<workflow-status-badge [status]="currentStatus"></workflow-status-badge>
 		</div>
 	</div>
 	<div class="action-column col-2 no-margin-top">
@@ -819,7 +820,7 @@
 		</div>
 
 		<div class="col">
-			<ng-container>
+			<!-- <ng-container>
 				<span *ngFor="let review of reviewWF"
 					><button
 						*ngIf="mappingStatus.next === review.value"
@@ -833,7 +834,33 @@
 							class="rate-review-icon"
 						/></button
 				></span>
-			</ng-container>
+			</ng-container> -->
+			<!-- <ng-container *ngIf="mapsetInfo.workflowStatus === 'IN_EDIT'">
+				<span *ngFor="let action of workFlowMapActions">
+					<button class="library-app-refset-discussion-list mr-20 no-padding" (click)="reviewMapWorkflow(action.value)">
+						<span> {{ action.label }}</span>
+						<img
+							src="/assets/rate-review.svg"
+							title="{{ action.label }}"
+							aria-label="{{ action.label }}"
+							class="rate-review-icon"
+						/></button
+				></span>
+			</ng-container> -->
+			<!-- <div class="menu-inline"> -->
+			<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="library-app-refset-discussion-list mr-20 no-padding">
+				<img src="/assets/rate-review.svg" class="rate-review-icon" />
+			</button>
+			<!-- </div> -->
+			<mat-menu #actionMenu="matMenu">
+				<ng-container *ngIf="mapsetInfo.workflowStatus === 'IN_EDIT'">
+					<span *ngFor="let action of workFlowMapActions">
+						<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value)">
+							<span> {{ action.label }}</span>
+						</button></span
+					>
+				</ng-container>
+			</mat-menu>
 		</div>
 	</div>
 </ng-template>
@@ -1000,51 +1027,12 @@
 	</div>
 </ng-template>
 
-<ng-template #workFlowModal let-modal>
-	<div class="modal-header mt2-modal-header">
-		<div class="modal-title">{{ workFlowStatus.label }}</div>
-		<button
-			type="button"
-			class="close dialog-close-x close-icon-font"
-			title="Close"
-			aria-label="Close"
-			(click)="!waitingForResponse ? closeWorkFlowModal() : null"
-		>
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</div>
-	<p class="p-l-30 p-t-10 p-b-0">{{ workFlowStatus.message }}</p>
-	<div class="modal-body m-t-5">
-		<textarea
-			#workFlowModalNotes
-			class="form-field-value notes-text"
-			type="text"
-			name="notes"
-			placeholder="enter status change notes..."
-			[formControl]="workFlowNotesFC"
-		></textarea>
-		<div class="user-selection" [hidden]="userList.length === 0">
-			<mat-form-field appearance="fill" floatLabel="never" class="advice-selection-box target-selection-box-advice">
-				<mat-select #selectAdvice title="Select user to assign" placeholder="Select user to assign" [(value)]="selectedUser">
-					<mat-option *ngFor="let user of userList" value="{{ user }}" title="{{ user }}" class="no-checkbox border-bottom"
-						><span class="advice-item">
-							<div class="line-clamp-2">{{ user }}</div></span
-						></mat-option
-					>
-				</mat-select>
-			</mat-form-field>
-		</div>
-		<span class="mappings-section m-l-20" *ngIf="userList.length === 0">No users to assign.</span>
-	</div>
-	<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
-		<button type="button" class="mt2-btn mt2-action-btn" (click)="!waitingForResponse ? closeWorkFlowModal() : null">Cancel</button>
-		<button
-			type="button"
-			title="Confirm {{ workFlowStatus.label }}"
-			class="mt2-btn mt2-action-btn"
-			(click)="!waitingForResponse ? changeWorkFlowStatus() : null"
-		>
-			Confirm
-		</button>
-	</div>
-</ng-template>
+<workflow-map-modal
+	(updateWorkFlowMapStatus)="updateWorkFlowMapStatus($event)"
+	(closeWorkflowMapModal)="closeWorkflowMapModal()"
+	[workFlowMapStatus]="workFlowMapStatus"
+	[mapsetInfo]="mapsetInfo"
+	[isWFMapModalOpen]="isWFMapModalOpen"
+	[conceptCode]="conceptCode"
+	[workFlowMapActions]="workFlowMapActions"
+></workflow-map-modal>
