@@ -57,6 +57,7 @@ import { BulkUpgradeModalComponent } from 'src/app/components/bulk-upgrade-modal
 import { HeadingWithCountComponent } from 'src/app/components/heading-with-count/heading-with-count.component';
 import { PageContainerComponent } from 'src/app/components/page-container/page-container.component';
 import { WorkflowStatusBadgeComponent } from './components/workflow-status-badge/workflow-status-badge.component';
+import { NotesModalComponent } from './components/notes-modal/notes-modal.component';
 import { ArtifactsModule } from './components/artifacts/artifacts.module';
 import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
 import { WorkflowStatusComponent } from './components/workflow-status/workflow-status.component';
@@ -91,12 +92,10 @@ import { PersonalComponentService } from './pages/personal/personal-component.se
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
 import { ReadonlyTextModalComponent } from 'src/app/components/readonly-text-modal/readonly-text-modal.component';
-import { ReadyForPublicationModalComponent } from 'src/app/components/ready-for-publication-modal/ready-for-publication-modal.component';
-import { WorkflowHistoryNotesModalComponent } from 'src/app/components/workflow-history-notes-modal/workflow-history-notes-modal.component';
 import { AuthGuardGuard } from 'src/app/services/authentication/auth-guard.guard';
 import { LoginComponent } from 'src/app/auth/login/login.component';
 import { InviteComponent } from 'src/app/auth/invite/invite.component';
-import { ReviewModalComponent } from 'src/app/components/review-modal/review-modal.component';
+import { WorkflowMapModalComponent } from 'src/app/components/workflow-map-modal/workflow-map-modal.component';
 import { UsersService } from './services/rest/users.service';
 import { RefsetFeedbackListComponent } from './components/refset-feedback-list/refset-feedback-list.component';
 import { DomService } from './services/dom.service';
@@ -190,9 +189,7 @@ const appRoutes: Routes = [
 		ImportFromFileModalComponent,
 		ImportFromListModalComponent,
 		ReadonlyTextModalComponent,
-		ReadyForPublicationModalComponent,
-		ReviewModalComponent,
-		WorkflowHistoryNotesModalComponent,
+		WorkflowMapModalComponent,
 		LoginComponent,
 		InviteComponent,
 		LandingComponent,
@@ -214,6 +211,7 @@ const appRoutes: Routes = [
 		PersonalLandingComponent,
 		PersonalConfigurationComponent,
 		WorkflowStatusBadgeComponent,
+		NotesModalComponent,
 		RefsetMetaTableComponent,
 		WorkflowStatusComponent,
 	],

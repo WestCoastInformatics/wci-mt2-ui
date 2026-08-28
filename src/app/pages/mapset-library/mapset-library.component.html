@@ -10,12 +10,12 @@
 	</div>
 </div>
 <div [hidden]="!showLoadingSearch" class="section-loading">Loading...</div>
-<div class="rt2-container refsetDirectoryPage" (window:resize)="onResize($event)">
+<div class="mt2-container refsetDirectoryPage" (window:resize)="onResize($event)">
 	<div class="metadata-collapsible-container" [ngClass]="{ 'm-t-20': !showLoadingSearch }">
 		<div class="metadata-collapsible-container-group-header row">
 			<div class="metadata-section-background">
 				<div class="row d-flex dropdown-group">
-					<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
+					<div class="col-md-auto mt2-directory-chooser-column" *ngIf="showTable">
 						<app-column-chooser
 							title="Select Columns to Display"
 							[gridColumnApi]="refsetGridApi"
@@ -24,7 +24,7 @@
 						>
 						</app-column-chooser>
 					</div>
-					<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
+					<div class="col-md-auto mt2-directory-chooser-column" *ngIf="showTable">
 						<mat-menu #searchMenu="matMenu" class="search-box">
 							<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
 								<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
@@ -77,7 +77,7 @@
 				<ag-grid-angular
 					#directoryTable
 					*ngIf="showTable"
-					class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct"
+					class="ag-theme-alpine mt2-ag-grid mt2-ag-grid-filter w-100-pct"
 					[rowHeight]="51"
 					[columnDefs]="columnDefs"
 					[gridOptions]="refsetGridOptions"
@@ -85,9 +85,9 @@
 				</ag-grid-angular>
 
 				<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
-				<div class="rt2-pagination-container" [hidden]="showLoadingSearch || numOfMembers === 0">
-					<div class="rt2-pagination-top-row">
-						<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons no-wrap">
+				<div class="mt2-pagination-container" [hidden]="showLoadingSearch || numOfMembers === 0">
+					<div class="mt2-pagination-top-row">
+						<div *ngIf="paginationPages.totalPages > 1" class="mt2-pagination-buttons no-wrap">
 							<button
 								#paginationFirstPage
 								mat-raised-button
@@ -174,7 +174,7 @@
 							</button>
 						</div>
 
-						<div class="rt2-pagination-bottom-row" *ngIf="showPaging">
+						<div class="mt2-pagination-bottom-row" *ngIf="showPaging">
 							<span *ngFor="let sizeOption of refsetGridPaging.pageSizeOptions">
 								<button
 									mat-raised-button
@@ -189,7 +189,7 @@
 							</span>
 						</div>
 					</div>
-					<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
+					<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
 						<div *ngIf="searchInput === ''">
 							Showing
 							<span class="fw-bold p-l-5 p-r-5">
@@ -209,7 +209,7 @@
 					</div>
 				</div>
 				<div
-					class="rt2-pagination-total-label directory-new-paging ag-theme-alpine"
+					class="mt2-pagination-total-label directory-new-paging ag-theme-alpine"
 					[hidden]="showPaging || !showTable || !showLoadingSearch"
 				>
 					No results to show
@@ -225,7 +225,7 @@
 
 	<!-- Information Templates -->
 	<ng-template #directoryInfoSection let-params>
-		<div class="d-flex rt2-wrap">
+		<div class="d-flex mt2-wrap">
 			<div class="col-6">
 				<div
 					aria-hidden="false"
@@ -247,8 +247,8 @@
 	</ng-template>
 
 	<ng-template #directoryInfoDialog let-data>
-		<div class="container-fluid w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
-			<div class="row rt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
+		<div class="container-fluid w-min-350 mt2-refset-metadata-column" id="directoryInformationSection">
+			<div class="row mt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
 				<p class="fs-18 mb-0 ml-10">{{ data.name }}</p>
 				<p class="fs-16 ml-10">
 					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span
@@ -272,7 +272,7 @@
 			*ngIf="params?.data?.privateRefset"
 			aria-hidden="false"
 			#directoryPrivateIcon
-			class="rt2-table-action-icon rt2-table-action-form-icon"
+			class="mt2-table-action-icon mt2-table-action-form-icon"
 			aria-label="Private Reference Set"
 			title="Private Reference Set"
 		>
@@ -281,7 +281,7 @@
 		<mat-icon
 			*ngIf="params?.data?.localSet"
 			aria-hidden="false"
-			class="rt2-table-action-icon rt2-table-action-form-icon"
+			class="mt2-table-action-icon mt2-table-action-form-icon"
 			aria-label="Local Set"
 			title="Local Set"
 		>
@@ -313,7 +313,7 @@
 	</ng-template>
 
 	<ng-template #toBeDevelopedModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<h4 class="modal-title">Coming Soon</h4>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
 				<span aria-hidden="true">&times;</span>
@@ -322,13 +322,13 @@
 		<div class="modal-body">
 			<p>This feature is not yet available. Please check back later.</p>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
 		</div>
 	</ng-template>
 
 	<ng-template #mapsetInfoModalRef let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<h4 class="modal-title">Map Set Metadata</h4>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeMapsetInfoModal()">
 				<span aria-hidden="true">&times;</span>
@@ -393,13 +393,13 @@
 				</div>
 			</div>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeMapsetInfoModal()">Close</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeMapsetInfoModal()">Close</button>
 		</div>
 	</ng-template>
 
 	<ng-template #downloadModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<div class="modal-title">Download Map Set</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeDownloadModal()">
 				<span aria-hidden="true">&times;</span>
@@ -413,7 +413,7 @@
 			<div class="modal-select">
 				<label class="modal-label">File Type: <span class="mandatory-field">*</span></label>
 				<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
-					<mat-select placeholder="Select a type" [ngModel]="types" [(value)]="selectedType" class="rt2-column-chooser-select">
+					<mat-select placeholder="Select a type" [ngModel]="types" [(value)]="selectedType" class="mt2-column-chooser-select">
 						<mat-select-trigger class="trigger"
 							><span *ngIf="!selectedType"> Select a type </span
 							><span *ngIf="selectedType">{{ selectedType.display }}</span></mat-select-trigger
@@ -428,7 +428,7 @@
 			<div class="modal-select">
 				<label class="modal-label">File Format: <span class="mandatory-field">*</span></label>
 				<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
-					<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="rt2-column-chooser-select">
+					<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="mt2-column-chooser-select">
 						<mat-select-trigger class="trigger"
 							><span *ngIf="!selectedFormat"> Select a format </span
 							><span *ngIf="selectedFormat">{{ selectedFormat.display }}</span></mat-select-trigger
@@ -448,9 +448,9 @@
 		<div class="modal-body" *ngIf="downloading">
 			<p>Please wait, downloading...</p>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group" *ngIf="!downloading">
-			<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
-			<button type="button" title="Download" class="rt2-btn rt2-action-btn" (click)="startDownload()">Download</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group" *ngIf="!downloading">
+			<button type="button" title="Cancel" class="mt2-btn mt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
+			<button type="button" title="Download" class="mt2-btn mt2-action-btn" (click)="startDownload()">Download</button>
 		</div>
 	</ng-template>
 </div>

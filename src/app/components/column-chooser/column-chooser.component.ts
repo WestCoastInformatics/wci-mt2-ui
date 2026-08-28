@@ -113,19 +113,21 @@ export class ColumnChooserComponent {
 				const columnSelection = localStorage.getItem(this.columnStorage);
 				if (columnSelection) {
 					const columnsSelected = JSON.parse(columnSelection);
-					this.gridColumnApi.applyColumnState(columnsSelected);
-					columnsSelected.forEach((selectCol: any) => {
-						this.columns.forEach((col) => {
-							if (selectCol.colId == col.colId) {
-								if (selectCol.hide) {
-									col.show = false;
-								} else {
-									col.show = true;
-									this.selectedColumns.push(col);
+					if (columnsSelected.length > 0) {
+						this.gridColumnApi.applyColumnState(columnsSelected);
+						columnsSelected.forEach((selectCol: any) => {
+							this.columns.forEach((col) => {
+								if (selectCol.colId == col.colId) {
+									if (selectCol.hide) {
+										col.show = false;
+									} else {
+										col.show = true;
+										this.selectedColumns.push(col);
+									}
 								}
-							}
+							});
 						});
-					});
+					}
 				}
 			}
 		}

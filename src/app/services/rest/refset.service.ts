@@ -353,9 +353,11 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + `mapset/${code}`, '', false);
 	}
 
-	getMappingsByMapset(mapsetId: string, params): Observable<any> {
+	//mapset mappings list
+	getMappingsByMapset(mapsetId: string, params: any): Observable<any> {
 		return this.get(
-			this.contextPath + `mapset/${mapsetId}/mappings?limit=` + params.limit + `&offset=` + params.offset + `&filter=` + params.filter,
+			this.contextPath +
+				`mapset/${mapsetId}/mappings?limit=${params.limit}&offset=${params.offset}&filter=${params.filter}&includeWorkflowStatus=true`,
 			'',
 			false,
 		);
@@ -373,8 +375,44 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + `mapset/${mapsetId}/workflowStatus/`, '', false);
 	}
 
+	getMappingWorkflowStatus(mapsetId: string, conceptCode: string): Observable<any> {
+		return this.get(this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/workflowStatus`, '', false);
+	}
+
 	setMapsetWorkflowStatus(mapsetId: string, action: string, notes: string): Observable<any> {
 		return this.post(this.contextPath + `mapset/${mapsetId}/workflowStatus?action=${action}&notes=${notes}`, '');
+	}
+
+	setMappingWorkflowStatus(mapsetId: string, conceptCode: string, action: string, notes: string, assign: string): Observable<any> {
+		return this.post(
+			this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/workflowStatus?action=${action}&notes=${notes}&assignToUser=${assign}`,
+			'',
+		);
+	}
+
+	setMappingsWorkflowStatus(mapsetId: string, conceptCodes: any, action: string, notes: string, assign: string): Observable<any> {
+		const url = this.contextPath + `mapset/${mapsetId}/mappings/workflowStatus?action=${action}&notes=${notes}&assignToUser=${assign}`;
+		return this.post(url, conceptCodes);
+	}
+
+	/*Notes*/
+	getNotes(mapsetId: string, conceptCode: any): Observable<any> {
+		return this.get(this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/notes`, '', false);
+	}
+
+	saveNotes(mapsetId: string, conceptCode: any, notes: string): Observable<any> {
+		const url = this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/notes`;
+		return this.post(url, notes);
+	}
+
+	updateNotes(mapsetId: string, conceptCode: any, noteId: string, notes: string): Observable<any> {
+		const url = this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/notes/${noteId}`;
+		return this.put(url, notes);
+	}
+
+	removeNote(mapsetId: string, conceptCode: any, noteId: string): Observable<any> {
+		const url = this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/notes/${noteId}`;
+		return this.delete(url);
 	}
 
 	//not used

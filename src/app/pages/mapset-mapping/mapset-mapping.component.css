@@ -65,6 +65,13 @@
 	border-top: 1px solid #aaa;
 }
 
+.workflow-container {
+	white-space: nowrap;
+	.workflow-status-badge {
+		position: relative !important;
+	}
+}
+
 .popup-handle-bottom {
 	bottom: -9px;
 	border-right: 1px solid #aaa;
@@ -177,7 +184,7 @@
 	margin: 7px;
 }
 
-.rt2-wrap {
+.mt2-wrap {
 	min-width: 75vw;
 }
 
@@ -207,7 +214,7 @@
 	}
 }
 
-.rt2-directory-chooser-column {
+.mt2-directory-chooser-column {
 	padding-right: 20px;
 	margin-top: -0.5em;
 }
@@ -219,7 +226,7 @@
 	font-weight: 500 !important;
 }
 
-.rt2-ag-cell {
+.mt2-ag-cell {
 	width: 90px;
 	text-align: center;
 	align-items: center;
@@ -256,7 +263,7 @@
 	padding-right: 10px;
 }
 
-.rt2-action-btn {
+.mt2-action-btn {
 	height: 40px;
 	padding-left: 0;
 	padding-right: 0;
@@ -274,7 +281,7 @@
 	letter-spacing: normal;
 }
 
-.rt2-btn:hover {
+.mt2-btn:hover {
 	background-color: var(--mapset-blue) !important;
 	color: #ffffff !important;
 	filter: none;
@@ -485,7 +492,7 @@
 	font-weight: 500 !important;
 }
 
-.rt2-ag-cell {
+.mt2-ag-cell {
 	width: 90px;
 	text-align: center;
 	align-items: center;

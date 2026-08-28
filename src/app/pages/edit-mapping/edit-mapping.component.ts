@@ -30,6 +30,7 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
+import { MapWorkflow } from 'src/app/models/map-workflow.model';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { PaginationService } from 'src/app/services/pagination.service';
 
@@ -41,6 +42,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 })
 export class EditMappingComponent implements OnInit {
 	user!: User;
+	userRoles: any[] = [];
 	targetCodeInput = '';
 	targetNameInput = '';
 	ruleBased = false;
@@ -89,7 +91,7 @@ export class EditMappingComponent implements OnInit {
 	showLoadingSpinner = false;
 	toggleDropdown = false;
 	numOfResults = 0;
-	directUrl: string;
+	directUrl = '';
 	numOfMembers: any;
 	disableChannel = new BroadcastChannel('disable-button-channel');
 	originalGridParams: any;
@@ -98,12 +100,14 @@ export class EditMappingComponent implements OnInit {
 	showLoadingSearch = true;
 	toBeDevelopedModalRef!: NgbModalRef;
 	confirmModalRef!: NgbModalRef;
+	workFlowModalRef!: NgbModalRef;
 	isModalOpen = false;
+	isWFMapModalOpen = false;
 	mapsetName = 'Mapset Name';
 	selectedMapset: any;
 	showConfigSection = true;
 	showBrowserSection = false;
-	mapsetCode: string;
+	mapsetCode = '';
 	mapsetInfo: any = {};
 	selectedVersion: any;
 	conceptCode: string;
@@ -127,7 +131,6 @@ export class EditMappingComponent implements OnInit {
 	userChanged = false;
 	internationalId = '449080006';
 	tempModuleIdChangeBeforeRelease = '449080006';
-
 	targetFC = new FormControl('a');
 	groupFC = new FormControl('');
 
@@ -151,6 +154,11 @@ export class EditMappingComponent implements OnInit {
 	browserColumnDefs: any;
 	conceptDetail = false;
 	currentConcept: any;
+	currentStatus = '';
+	assignedUser = '';
+	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
+	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
+	reviewMapWF: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -184,6 +192,7 @@ export class EditMappingComponent implements OnInit {
 		private pagerService: PaginationService,
 	) {
 		document.body.scrollTop = 0;
+		this.reviewMapWF = MapWorkflow.getWorkFlowForMap();
 		this.targetFC.valueChanges.pipe(debounceTime(600), distinctUntilChanged()).subscribe((res) => {
 			if (this.targetFC.dirty && !this.searchByTypeahead) {
 				this.foundConceptCode = false;
@@ -200,12 +209,16 @@ export class EditMappingComponent implements OnInit {
 	//***** Framework Functions *****/
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
+		this.userRoles = this.authenticationService.getUserPrimaryRoles();
 		this.titleService.setTitle('Mapping Tool - Edit Map');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.conceptCode = routeParams.concept;
-			if (this.mapsetCode) {
+			if (this.mapsetCode && this.conceptCode) {
 				this.getMapsetInfo();
+			} else {
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+				console.error('no mapset found');
 			}
 			this.getModuleMetadata();
 			this.firstLoadBrowser();
@@ -227,7 +240,42 @@ export class EditMappingComponent implements OnInit {
 		this.targetFC.disable();
 	}
 
+	hasUserRoles(roles: any): boolean {
+		return Array.isArray(roles) && roles.some((role: string) => this.userRoles.includes(role));
+	}
+
+	hasWorkflowMapAction(action: string): boolean {
+		const foundActions = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+			return wfAction[action] === true;
+		});
+		return foundActions.length > 0;
+	}
+
+	isWorkFlowMapEdit(): boolean {
+		const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+			return wfAction.edit === true;
+		});
+		return foundEdit.length > 0;
+	}
+
 	getMapsetInfo() {
+		this.refsetService.getMappingWorkflowStatus(this.mapsetCode!, this.conceptCode).subscribe({
+			next: (results) => {
+				this.currentStatus = results.workflowStatus;
+				this.assignedUser = results.assignedUser;
+				this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
+					if (results.workflowStatus !== wf.status) {
+						return false;
+					}
+					return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
+				});
+				if (this.isWorkFlowMapEdit() === false) {
+					this.notificationService.show('Editing is not permitted.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+					this.selectActionMenu('view');
+				}
+			},
+		});
+
 		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe((results) => {
 			const mapsetVersions = Array.isArray(results) ? results : [results];
 
@@ -262,6 +310,10 @@ export class EditMappingComponent implements OnInit {
 				if (mapsetFound.length > 0) {
 					this.mapsetInfo = mapsetFound[0];
 				}
+			} else {
+				const versionDate = this.mapsetInfo.versionDate || new Date();
+				this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
+				localStorage.setItem('projects_mapsetVersion', JSON.stringify(this.selectedVersion));
 			}
 			this.getMapsetData();
 			this.getMapProject();
@@ -588,6 +640,7 @@ export class EditMappingComponent implements OnInit {
 							rule: results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
 							relation: results.mapEntries[b].relation.length > 0 ? results.mapEntries[b].relation.toUpperCase() : '---',
 							modified: results.mapEntries[b].modified,
+							modifiedBy: 'AAA',
 							advices: results.mapEntries[b].advices,
 							group: results.mapEntries[b].group,
 							groupTotal: results.mapEntries[b].group,
@@ -603,7 +656,6 @@ export class EditMappingComponent implements OnInit {
 				for (let i = 0; i < this.numOfGroups; i++) {
 					this.groupList.push('group' + i);
 				}
-
 				this.mapsetData = data;
 				this.breadcrumbService.setBreadcrumbs([
 					{ path: '/projects', label: 'Projects' },
@@ -722,7 +774,7 @@ export class EditMappingComponent implements OnInit {
 			group: groupNum,
 			id: null,
 			modified: null,
-			modifiedBy: null,
+			modifiedBy: this.user?.userName,
 			moduleId: this.tempModuleIdChangeBeforeRelease,
 			modFlag: '',
 			modLang: '',
@@ -805,7 +857,7 @@ export class EditMappingComponent implements OnInit {
 				group: this.numOfGroups,
 				id: null,
 				modified: null,
-				modifiedBy: null,
+				modifiedBy: this.user?.userName,
 				moduleId: this.tempModuleIdChangeBeforeRelease,
 				modFlag: '',
 				modLang: '',
@@ -890,7 +942,7 @@ export class EditMappingComponent implements OnInit {
 				id: uiEntry.id,
 				modified: uiEntry.modified,
 				created: uiEntry.created,
-				modifiedBy: uiEntry.modifiedBy,
+				modifiedBy: this.user?.userName,
 			};
 			saveMapset.mapEntries.push(mapEntry);
 		}
@@ -1395,6 +1447,21 @@ export class EditMappingComponent implements OnInit {
 		this.conceptDetail = false;
 	}
 
+	updateWorkFlowMapStatus(response: any) {
+		this.getMapsetInfo();
+	}
+
+	closeWorkflowMapModal() {
+		this.isWFMapModalOpen = false;
+	}
+
+	reviewMapWorkflow(status: any) {
+		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
+			return status === review.value;
+		})[0];
+		this.isWFMapModalOpen = true;
+	}
+
 	openToBeDevelopedModal(content: any) {
 		this.toBeDevelopedModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
@@ -1431,11 +1498,11 @@ export class EditMappingComponent implements OnInit {
 		switch (target) {
 			case '_blank':
 				this.router.navigate([]).then((result) => {
-					window.open('/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode, target);
+					window.open('/projects/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode, target);
 				});
 				break;
 			default:
-				this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode], {
+				this.router.navigate(['/projects/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode], {
 					replaceUrl: false,
 					skipLocationChange: false,
 				});

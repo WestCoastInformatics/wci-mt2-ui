@@ -7,7 +7,7 @@
 	<div class="d-flex">
 		<div class="row">
 			<div class="col-md-9 page-title" title="{{ mapsetInfo.refSetName }}">
-				<div class="rt2-wrap">{{ mapsetInfo.refSetName }}</div>
+				<div class="mt2-wrap">{{ mapsetInfo.refSetName }}</div>
 			</div>
 			<div class="col-md-3 d-flex header-menu">
 				<mat-form-field
@@ -76,7 +76,7 @@
 						*ngIf="(editStatus && edit.label === editWF[0].label) || (!editStatus && edit.label !== editWF[0].label)"
 						type="button"
 						[title]="edit.label"
-						class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+						class="mt2-btn mt2-action-btn col-md-6 no-margin-top"
 						(click)="editWorkflow(edit.value)"
 						[disabled]="!showEdit"
 						(ngClass)="({ disabled: !showEdit })"
@@ -91,7 +91,7 @@
 						*ngIf="(upgradeStatus && upgrade.label === upgradeWF[0].label) || (!upgradeStatus && upgrade.label !== upgradeWF[0].label)"
 						type="button"
 						[title]="upgrade.label"
-						class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+						class="mt2-btn mt2-action-btn col-md-6 no-margin-top"
 						(click)="upgradeWorkflow(upgrade.value)"
 						[disabled]="!showUpgrade"
 						(ngClass)="({ disabled: !showUpgrade })"
@@ -114,7 +114,7 @@
 						"
 						type="button"
 						[title]="review.label"
-						class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+						class="mt2-btn mt2-action-btn col-md-6 no-margin-top"
 						(click)="reviewWorkflow(review.value)"
 						[disabled]="!showReview"
 						(ngClass)="({ disabled: !showReview })"
@@ -134,7 +134,7 @@
 						"
 						type="button"
 						[title]="publish.label"
-						class="rt2-btn rt2-action-btn col-md-6 no-margin-top"
+						class="mt2-btn mt2-action-btn col-md-6 no-margin-top"
 						(click)="publishWorkflow(publish.value)"
 						[disabled]="!showPublish"
 						(ngClass)="({ disabled: !showPublish })"
@@ -146,7 +146,7 @@
 		</span>
 	</div>
 </div>
-<div class="rt2-container" (window:resize)="onResize($event)" [ngClass]="{ 'm-t-20': libraryOnly }">
+<div class="mt2-container" (window:resize)="onResize($event)" [ngClass]="{ 'm-t-20': libraryOnly }">
 	<div class="metadata-collapsible-container">
 		<div class="switch-view" *ngIf="showMappingsSection && loaded" [hidden]="numOfMembers === 0">
 			<mat-label class="switch-label">view by</mat-label>
@@ -186,7 +186,7 @@
 			/>
 		</div>
 		<div class="d-flex dropdown-group" *ngIf="showMappingsSection && numOfMembers > 0">
-			<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable && showMapTable === 'table'">
+			<div class="col-md-auto mt2-directory-chooser-column" *ngIf="showTable && showMapTable === 'table'">
 				<app-column-chooser
 					title="Select Columns to Display"
 					[gridColumnApi]="refsetGridApi"
@@ -197,7 +197,7 @@
 				</app-column-chooser>
 			</div>
 
-			<div class="col-md-auto rt2-directory-chooser-column">
+			<div class="col-md-auto mt2-directory-chooser-column">
 				<mat-menu #searchMenu="matMenu" class="search-box">
 					<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
 						<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
@@ -242,7 +242,7 @@
 					</button>
 				</div>
 			</div>
-			<div class="col-md-auto rt2-directory-chooser-column">
+			<div class="col-md-auto mt2-directory-chooser-column">
 				<div class="menu-inline">
 					<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="mapset-download-icon menu-button">
 						<mat-icon class="menu-icon">more_vert</mat-icon>
@@ -257,24 +257,35 @@
 						<span>View Selected Mapping</span>
 					</button>
 					<button
-						*ngIf="!libraryOnly"
+						*ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && isWorkFlowMapEdit() && checkedNum === 1"
 						mat-menu-item
 						(click)="selectAction('edit')"
-						[disabled]="checkedNum !== 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
 					>
 						<span>Edit Selected Mapping</span>
 					</button>
 					<button
-						*ngIf="!libraryOnly"
+						*ngIf="!libraryOnly && checkedNum > 1 && mapsetInfo.workflowStatus === 'IN_EDIT'"
 						mat-menu-item
 						(click)="selectAction('batch')"
-						[disabled]="checkedNum < 2 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+						[disabled]="true"
 					>
 						<span>Batch Edit Selected Mappings</span>
 					</button>
-					<button *ngIf="!libraryOnly" mat-menu-item (click)="selectAction('list')" [disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'">
+					<button
+						*ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT'"
+						mat-menu-item
+						(click)="selectAction('list')"
+						[disabled]="true"
+					>
 						<span>Batch Edit Maps By List</span>
 					</button>
+					<ng-container *ngIf="!libraryOnly && workFlowMapActions.length && checkedNum === 1 && mapsetInfo.workflowStatus === 'IN_EDIT'">
+						<span *ngFor="let action of workFlowMapActions">
+							<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value)">
+								<span> {{ action.label }}</span>
+							</button></span
+						>
+					</ng-container>
 					<div class="dropdown-divider"></div>
 					<button mat-menu-item (click)="selectAction('selected')" [disabled]="checkedNum < 1">
 						<span>Download Selected Mappings</span>
@@ -310,7 +321,7 @@
 							id="directoryTable"
 							#directoryTable
 							[hidden]="!loaded || numOfMembers === 0 || showMapTable !== 'table'"
-							class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter"
+							class="ag-theme-alpine mt2-ag-grid mt2-ag-grid-no-filter"
 							style="width: 100%; height: 100%"
 							[columnDefs]="columnDefs"
 							[suppressRowTransform]="true"
@@ -377,7 +388,16 @@
 											[ngTemplateOutletContext]="{ $implicit: record }"
 										></ng-container>
 									</div>
-									<span class="date-column second-row">Last Updated: {{ dateFormatter(record.modified) }}</span>
+									<div class="date-column" *ngIf="record?.modified">Last Modified: {{ dateFormatter(record.modified) }}</div>
+									<div class="assigned-column" *ngIf="!libraryOnly && record?.assignedUser">
+										Assigned to: {{ record.assignedUser }}
+									</div>
+									<div *ngIf="!libraryOnly" class="workflow-container">
+										<ng-container
+											[ngTemplateOutlet]="workflowStatusSection"
+											[ngTemplateOutletContext]="{ $implicit: record?.workflowStatus }"
+										></ng-container>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -386,9 +406,9 @@
 			</div>
 		</div>
 		<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
-		<div class="rt2-pagination-container" [hidden]="!loaded || numOfMembers === 0" *ngIf="showMappingsSection">
-			<div class="rt2-pagination-top-row">
-				<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons no-wrap">
+		<div class="mt2-pagination-container" [hidden]="!loaded || numOfMembers === 0" *ngIf="showMappingsSection">
+			<div class="mt2-pagination-top-row">
+				<div *ngIf="paginationPages.totalPages > 1" class="mt2-pagination-buttons no-wrap">
 					<button
 						#paginationFirstPage
 						mat-raised-button
@@ -474,7 +494,7 @@
 					</button>
 				</div>
 
-				<div class="rt2-pagination-bottom-row" *ngIf="showPaging">
+				<div class="mt2-pagination-bottom-row" *ngIf="showPaging">
 					<span *ngFor="let sizeOption of refsetGridPaging.pageSizeOptions">
 						<button
 							mat-raised-button
@@ -489,7 +509,7 @@
 					</span>
 				</div>
 			</div>
-			<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
+			<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
 				Showing
 				<span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }} </span> to
 				<span class="fw-bold p-l-5 p-r-5">
@@ -502,7 +522,7 @@
 				of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span
 				><span class="p-r-5" *ngIf="numOfMembers === 10000">maximum </span> results
 			</div>
-			<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
+			<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
 		</div>
 	</div>
 	<div class="metadata-collapsible-container">
@@ -625,7 +645,7 @@
 						*ngIf="showHistoryTable"
 						id="historyTable"
 						#historyTable
-						class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter"
+						class="ag-theme-alpine mt2-ag-grid mt2-ag-grid-no-filter"
 						style="width: 100%; height: 100%"
 						[columnDefs]="historyColumnDefs"
 						[suppressRowTransform]="true"
@@ -638,11 +658,11 @@
 	</div>
 	<!-- Workflow Status Templates -->
 	<ng-template #workflowStatusSection let-params>
-		<workflow-status-badge [status]="params?.value"> </workflow-status-badge>
+		<workflow-status-badge [status]="typeof params === 'string' ? params : params.value"> </workflow-status-badge>
 	</ng-template>
 	<ng-template #directoryInfoDialog let-data>
-		<div class="container-fluid w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
-			<div class="row rt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
+		<div class="container-fluid w-min-350 mt2-refset-metadata-column" id="directoryInformationSection">
+			<div class="row mt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
 				<p class="fs-18 mb-0 ml-10">{{ data.name }}</p>
 				<p class="fs-16 ml-10">
 					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span
@@ -686,7 +706,7 @@
 			(load)="showFlagIcon($event, true)"
 			(error)="showFlagIcon($event, false)"
 			src="{{ params?.data?.flagIcon }}"
-			class="rt2-edition-flag"
+			class="mt2-edition-flag"
 			title="{{ params?.data?.editionName }} Flag"
 			aria-label="{{ params?.data?.editionName }} Flag"
 		/>
@@ -695,16 +715,13 @@
 
 	<!-- Action Templates -->
 	<ng-template #directoryActionSection let-params>
-		<div class="d-flex" *ngIf="params?.value === true">
+		<div class="d-flex">
 			<div class="col-6">
-				<div class="library-app-refset-notes" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-					<img
-						src="/assets/sticky-note.svg"
-						title="{{ `${libraryOnly ? 'View' : 'Add'} Notes` }}"
-						aria-label="{{ `${libraryOnly ? 'View' : 'Add'} Notes` }}"
-						class="mapset-notes-icon"
-					/>
-				</div>
+				<notes-modal
+					[libraryOnly]="libraryOnly"
+					[mapSetId]="mapsetInfo.id"
+					[conceptCode]="params?.data?.code ? params.data.code : params?.code"
+				></notes-modal>
 			</div>
 
 			<div class="col-6">
@@ -772,7 +789,7 @@
 	</ng-template>
 
 	<ng-template #toBeDevelopedModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<div class="modal-title">Coming Soon</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
 				<span aria-hidden="true">&times;</span>
@@ -781,13 +798,13 @@
 		<div class="modal-body">
 			<p>This feature is not yet available. Please check back later.</p>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
 		</div>
 	</ng-template>
 
 	<ng-template #batchListModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<div class="modal-title">Batch Edit Maps By List</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeBatchListModal()">
 				<span aria-hidden="true">&times;</span>
@@ -803,9 +820,9 @@
 				[formControl]="batchListFC"
 			></textarea>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeBatchListModal()">Cancel</button>
-			<button type="button" title="Edit" class="rt2-btn rt2-action-btn" (click)="submitBatchList()">Edit</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeBatchListModal()">Cancel</button>
+			<button type="button" title="Edit" class="mt2-btn mt2-action-btn" (click)="submitBatchList()">Edit</button>
 		</div>
 	</ng-template>
 
@@ -826,7 +843,7 @@
 	</ng-template>
 
 	<ng-template #workFlowModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<div class="modal-title">{{ workFlowStatus.label }}</div>
 			<button
 				type="button"
@@ -849,12 +866,12 @@
 				[formControl]="workFlowNotesFC"
 			></textarea>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" class="rt2-btn rt2-action-btn" (click)="!waitingForResponse ? closeWorkFlowModal() : null">Cancel</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="!waitingForResponse ? closeWorkFlowModal() : null">Cancel</button>
 			<button
 				type="button"
 				title="Confirm {{ workFlowStatus.label }}"
-				class="rt2-btn rt2-action-btn"
+				class="mt2-btn mt2-action-btn"
 				(click)="!waitingForResponse ? changeWorkFlowStatus() : null"
 			>
 				Confirm
@@ -863,7 +880,7 @@
 	</ng-template>
 
 	<ng-template #downloadModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<div class="modal-title">Download Map Set</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeDownloadModal()">
 				<span aria-hidden="true">&times;</span>
@@ -877,7 +894,7 @@
 			<div class="modal-select" *ngIf="downloadType === 'all'">
 				<label class="modal-label">File Type: <span class="mandatory-field">*</span></label>
 				<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
-					<mat-select placeholder="Select a type" [ngModel]="types" [(value)]="selectedType" class="rt2-column-chooser-select">
+					<mat-select placeholder="Select a type" [ngModel]="types" [(value)]="selectedType" class="mt2-column-chooser-select">
 						<mat-select-trigger class="trigger"
 							><span *ngIf="!selectedType"> Select a type </span
 							><span *ngIf="selectedType">{{ selectedType.display }}</span></mat-select-trigger
@@ -892,7 +909,7 @@
 			<div class="modal-select">
 				<label class="modal-label">File Format: <span class="mandatory-field">*</span></label>
 				<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
-					<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="rt2-column-chooser-select">
+					<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="mt2-column-chooser-select">
 						<mat-select-trigger class="trigger"
 							><span *ngIf="!selectedFormat"> Select a format </span
 							><span *ngIf="selectedFormat">{{ selectedFormat.display }}</span></mat-select-trigger
@@ -912,9 +929,18 @@
 		<div class="modal-body" *ngIf="downloading">
 			<p>Please wait, downloading...</p>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group" *ngIf="!downloading">
-			<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
-			<button type="button" title="Download" class="rt2-btn rt2-action-btn" (click)="startDownload()">Download</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group" *ngIf="!downloading">
+			<button type="button" title="Cancel" class="mt2-btn mt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
+			<button type="button" title="Download" class="mt2-btn mt2-action-btn" (click)="startDownload()">Download</button>
 		</div>
 	</ng-template>
+	<workflow-map-modal
+		(updateWorkFlowMapStatus)="updateWorkFlowMapStatus($event)"
+		(closeWorkflowMapModal)="closeWorkflowMapModal()"
+		[workFlowMapStatus]="workFlowMapStatus"
+		[mapsetInfo]="mapsetInfo"
+		[isWFMapModalOpen]="isWFMapModalOpen"
+		[conceptCode]="conceptCode"
+		[workFlowMapActions]="workFlowMapActions"
+	></workflow-map-modal>
 </div>

@@ -23,6 +23,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { NotificationService } from 'src/app/services/notification.service';
 import { formatDate } from '@angular/common';
 import { PaginationService } from 'src/app/services/pagination.service';
+import { MapWorkflow } from 'src/app/models/map-workflow.model';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -33,6 +34,7 @@ import { FormControl } from '@angular/forms';
 })
 export class MapsetRecordsComponent implements OnInit {
 	user!: User;
+	userRoles: any[] = [];
 	libraryOnly: any;
 	searchInput = '';
 	viewOptions = [
@@ -42,6 +44,7 @@ export class MapsetRecordsComponent implements OnInit {
 	];
 	selectedVersion: any;
 	refsetGridApi: any;
+	refsetGridParams: any;
 	columnDefs: any;
 	historyColumnDefs: any;
 	refsetGridColumns = [
@@ -85,6 +88,8 @@ export class MapsetRecordsComponent implements OnInit {
 	batchListModalRef!: NgbModalRef;
 	reportModalRef!: NgbModalRef;
 	isModalOpen = false;
+	isWFMapModalOpen = false;
+	conceptCode = '';
 	mapsetInfo: any = {};
 	mapsetVersions: any[] = [];
 	mapsetCode: string | undefined;
@@ -143,7 +148,7 @@ export class MapsetRecordsComponent implements OnInit {
 	workFlowStatus = { label: '', value: '', message: '', notes: '' };
 	workFlowNotesFC = new FormControl('');
 	batchListFC = new FormControl('');
-	showEdit = true;
+	showEdit = true; //? fix this permissions??
 	editStatus = true;
 	// { label: 'Cancel Edit', value: 'CANCEL_EDIT', message: 'Are you sure you want to cancel editing this Map Set?', notes: '' },
 	editWF = [
@@ -182,6 +187,13 @@ export class MapsetRecordsComponent implements OnInit {
 		// { label: 'Start Publish', value: 'START_PUBLISH', message: 'Are you sure you want to start publishing of this Map Set?', notes: '' },
 		// { label: 'Finish Publish', value: 'PUBLISH_REFSET', message: 'Are you sure you want to finish publishing this Map Set?', notes: '' },
 	];
+	userList: any;
+	selectedUser: any;
+	waitingForMapResponse = false;
+	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
+	workFlowMapNotesFC = new FormControl('');
+	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
+	reviewMapWF: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 	@ViewChild('workflowStatusSection')
@@ -190,6 +202,8 @@ export class MapsetRecordsComponent implements OnInit {
 	@ViewChild('directoryFeedbackDialog') feedbackDialog!: TemplateRef<any>;
 	@ViewChild('toBeDevelopedModal') tbdModal!: TemplateRef<any>;
 	@ViewChild('workFlowModal') workflowModal!: TemplateRef<any>;
+	@ViewChild('workFlowMapModal') workflowMapModal!: TemplateRef<any>;
+	@ViewChild('workFlowMapModalNotes') private workflowMapModalNotes!: ElementRef;
 	@ViewChild('batchListModal') batchListModal!: TemplateRef<any>;
 	@ViewChild('reportModal') reportModal!: TemplateRef<any>;
 	@ViewChild('workFlowModalNotes') private workflowModalNotes!: ElementRef;
@@ -224,11 +238,13 @@ export class MapsetRecordsComponent implements OnInit {
 		private notificationService: NotificationService,
 	) {
 		document.body.scrollTop = 0;
+		this.reviewMapWF = MapWorkflow.getWorkFlowForMap();
 	}
 
 	//***** Framework Functions *****/
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
+		this.userRoles = this.authenticationService.getUserPrimaryRoles();
 		this.titleService.setTitle('Mapping Tool - Mappings');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.route.url.forEach((part) => {
@@ -285,6 +301,33 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 
 		keysToRemove.forEach((key) => localStorage.removeItem(key));
+	}
+
+	hasUserRoles(roles: any): boolean {
+		return Array.isArray(roles) && roles.some((role: string) => this.userRoles.includes(role));
+	}
+
+	hasWorkflowMapAction(action: string): boolean {
+		const foundActions = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+			return wfAction[action] === true;
+		});
+		return foundActions.length > 0;
+	}
+
+	isWorkFlowMapEdit(): boolean {
+		const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+			return wfAction.edit === true;
+		});
+		return foundEdit.length > 0;
+	}
+
+	selectedMapUserActions(status: string) {
+		this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
+			if (status !== wf.status) {
+				return false;
+			}
+			return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
+		});
 	}
 
 	getMapsetInfo() {
@@ -394,14 +437,13 @@ export class MapsetRecordsComponent implements OnInit {
 					tooltipField: 'relation',
 					headerName: 'Relationship',
 					headerTooltip: 'Relationship',
-					cellClass: 'rt2-directory-column-id',
+					cellClass: 'mt2-directory-column-id',
 					resizable: true,
 					unSortIcon: true,
 					sortable: false,
 					suppressSorting: true,
 					flex: 1,
 					minWidth: 100,
-					hide: !this.libraryOnly ? true : false,
 				},
 				{
 					colId: 'rule',
@@ -409,21 +451,20 @@ export class MapsetRecordsComponent implements OnInit {
 					tooltipField: 'rule',
 					headerName: 'Rule',
 					headerTooltip: 'Rule',
-					cellClass: 'rt2-directory-column-id',
+					cellClass: 'mt2-directory-column-id',
 					flex: 1,
 					minWidth: 85,
 					resizable: true,
 					unSortIcon: true,
 					sortable: false,
 					suppressSorting: true,
-					hide: !this.libraryOnly ? true : false,
 				},
 				{
 					colId: 'advices',
 					field: 'advices',
 					headerName: 'Advices',
 					headerTooltip: 'Advices',
-					cellClass: 'rt2-directory-column-advices',
+					cellClass: 'mt2-directory-column-advices',
 					minWidth: 65,
 					width: 125,
 					resizable: true,
@@ -432,42 +473,39 @@ export class MapsetRecordsComponent implements OnInit {
 					unSortIcon: true,
 					sortable: false,
 					suppressSorting: true,
-					hide: !this.libraryOnly ? true : false,
 				},
 				{
 					colId: 'workflowStatus',
 					field: 'workflowStatus',
 					tooltipField: 'workflowStatus',
 					headerName: 'Workflow Status',
-					cellClass: 'rt2-directory-column-version-status',
+					cellClass: 'mt2-directory-column-version-status',
 					minWidth: 165,
 					width: 200,
 					resizable: true,
 					cellRenderer: TemplateRendererComponent,
 					cellRendererParams: { template: this.workflowStatus },
 					unSortIcon: true,
-					hide: this.libraryOnly ? true : false,
 				},
 				{
-					colId: 'modifiedBy',
-					field: 'modifiedBy',
-					tooltipField: 'modifiedBy',
-					headerName: 'Modified By',
-					headerTooltip: 'Modified By',
-					cellClass: 'rt2-directory-column-id',
+					colId: 'assignedUser',
+					field: 'assignedUser',
+					tooltipField: 'assignedUser',
+					headerName: 'Assigned to',
+					headerTooltip: 'Assigned to',
+					cellClass: 'mt2-directory-column-id',
 					width: 145,
 					resizable: true,
 					unSortIcon: true,
 					sortable: false,
 					suppressSorting: true,
-					hide: this.libraryOnly ? true : false,
 				},
 				{
 					field: 'modified',
 					tooltipValueGetter: UiUtility.gridDateValueGetter,
 					headerName: 'Last Modified',
 					headerTooltip: 'Last Modified',
-					cellClass: 'rt2-directory-column-modified-date',
+					cellClass: 'mt2-directory-column-modified-date',
 					minWidth: 65,
 					width: 165,
 					resizable: true,
@@ -483,7 +521,7 @@ export class MapsetRecordsComponent implements OnInit {
 					colId: 'action-btns',
 					headerName: '',
 					width: 90,
-					cellClass: 'rt2-directory-column-actions',
+					cellClass: 'mt2-directory-column-actions',
 					cellRenderer: TemplateRendererComponent,
 					cellRendererParams: { template: this.actionSection },
 					sortable: false,
@@ -601,6 +639,7 @@ export class MapsetRecordsComponent implements OnInit {
 		} else {
 			if (this.versionStatuses.length > 0) {
 				this.selectedVersion = this.versionStatuses[0];
+				localStorage.setItem(this.mapsetVersionStorage, JSON.stringify(this.selectedVersion));
 			}
 		}
 		this.setMapsetInfo();
@@ -738,7 +777,7 @@ export class MapsetRecordsComponent implements OnInit {
 				field: 'modified',
 				tooltipValueGetter: UiUtility.gridDateValueGetter,
 				headerName: 'Last Modified',
-				cellClass: 'rt2-directory-column-modified-date',
+				cellClass: 'mt2-directory-column-modified-date',
 				minWidth: 125,
 				flex: 1,
 				resizable: true,
@@ -751,7 +790,7 @@ export class MapsetRecordsComponent implements OnInit {
 				field: 'workflowStatus',
 				tooltipField: 'workflowStatus',
 				headerName: 'Workflow Status',
-				cellClass: 'rt2-directory-column-version-status',
+				cellClass: 'mt2-directory-column-version-status',
 				minWidth: 125,
 				flex: 1,
 				resizable: true,
@@ -880,12 +919,14 @@ export class MapsetRecordsComponent implements OnInit {
 	onGridReady = (gridReadyParams: any) => {
 		if (gridReadyParams?.api && gridReadyParams.type === 'gridReady') {
 			this.refsetGridApi = gridReadyParams.api;
+			this.refsetGridParams = gridReadyParams;
 			if (this.mapsetRecordsColumnStorage) {
 				if (!localStorage.getItem(this.mapsetRecordsColumnStorage)) {
 					const columns: any = [];
 					const columnDefs = this.refsetGridApi.getColumnDefs?.();
 					for (const column of columnDefs) {
 						const columnData: any = {};
+
 						if (!column.colId) {
 							columnData.colId = column.field;
 						} else {
@@ -901,7 +942,7 @@ export class MapsetRecordsComponent implements OnInit {
 					for (const column of columns) {
 						column.show = true;
 						if (this.libraryOnly) {
-							if (column.colId === 'workflowStatus' || column.colId === 'modifiedBy') {
+							if (column.colId === 'workflowStatus' || column.colId === 'assignedUser' || column.colId === 'modified') {
 								column.show = false;
 							}
 							this.manualStateRefresh = true;
@@ -915,6 +956,9 @@ export class MapsetRecordsComponent implements OnInit {
 					}
 					this.refsetGridApi.applyColumnState({ state: state });
 					localStorage.setItem(this.mapsetRecordsColumnStorage, JSON.stringify(state));
+				} else {
+					this.refsetGridApi.applyColumnState({ state: JSON.parse(localStorage.getItem(this.mapsetRecordsColumnStorage)) });
+					this.manualStateRefresh = true;
 				}
 			}
 		}
@@ -1020,15 +1064,16 @@ export class MapsetRecordsComponent implements OnInit {
 												: 'No map entries available.',
 										rule: results[a].mapEntries[b].rule.length > 0 ? results[a].mapEntries[b].rule : '---',
 										relation: results[a].mapEntries[b].relation.length > 0 ? results[a].mapEntries[b].relation : '---',
-										modified: results[a].mapEntries[b].modified,
+										modified: results[a].mappingWorkflow?.modified,
 										advices: { number: adviceArray.length, list: adviceArray },
 										group: results[a].mapEntries[b].group,
 										priority: results[a].mapEntries[b].priority,
 										moduleId: results[a].mapEntries[b].moduleId,
 										modFlag: this.getModuleLanguageIcon(results[a].mapEntries[b].moduleId),
 										modLang: this.getModuleLanguageName(results[a].mapEntries[b].moduleId),
-										workflowStatus: 'in development',
-										modifiedBy: 'test user',
+										workflowStatus: results[a].mappingWorkflow?.workflowStatus,
+										assignedUser: results[a].mappingWorkflow?.assignedUser,
+										modifiedBy: results[a].mappingWorkflow?.modifiedBy,
 									});
 									count++;
 								}
@@ -1114,10 +1159,15 @@ export class MapsetRecordsComponent implements OnInit {
 			}
 		}
 		this.checkedNum = 0;
+		let oneStatus = '';
 		for (let c = 0; c < this.mapsetData.length; c++) {
 			if (this.mapsetData[c].checked === true) {
 				this.checkedNum++;
+				oneStatus = this.mapsetData[c].workflowStatus;
 			}
+		}
+		if (this.checkedNum === 1 && oneStatus !== '') {
+			this.selectedMapUserActions(oneStatus);
 		}
 	}
 
@@ -1643,6 +1693,38 @@ export class MapsetRecordsComponent implements OnInit {
 				break;
 		}
 		this.closeWorkFlowModal();
+	}
+
+	/* Map Workflow */
+
+	updateWorkFlowMapStatus(response: any) {
+		for (let c = 0; c < this.mapsetData.length; c++) {
+			if (this.mapsetData[c].checked === true) {
+				this.mapsetData[c].workflowStatus = response.workflowStatus;
+				this.mapsetData[c].modified = response.modified;
+				this.mapsetData[c].assignedUser = response.assignedUser;
+				this.mapsetData[c].checked = false;
+			}
+		}
+		this.refsetGridApi.redrawRows();
+	}
+
+	closeWorkflowMapModal() {
+		this.isWFMapModalOpen = false;
+	}
+
+	reviewMapWorkflow(status: any) {
+		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
+			return status === review.value;
+		})[0];
+		if (this.checkedNum === 1) {
+			for (let c = 0; c < this.mapsetData.length; c++) {
+				if (this.mapsetData[c].checked === true) {
+					this.conceptCode = this.mapsetData[c].code;
+				}
+			}
+		}
+		this.isWFMapModalOpen = true;
 	}
 
 	/* Reports */

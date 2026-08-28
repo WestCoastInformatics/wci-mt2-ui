@@ -18,6 +18,7 @@
 	min-width: 300px;
 	max-width: 300px;
 }
+
 .advice-column {
 	overflow-y: auto;
 	max-height: 40px;
@@ -223,11 +224,11 @@
 	}
 }
 
-.rt2-wrap {
+.mt2-wrap {
 	min-width: 75vw;
 }
 
-.rt2-directory-chooser-column {
+.mt2-directory-chooser-column {
 	padding-right: 20px;
 	margin-top: -0.5em;
 }
@@ -239,7 +240,7 @@
 	font-weight: 500 !important;
 }
 
-.rt2-ag-cell {
+.mt2-ag-cell {
 	width: 90px;
 	text-align: center;
 	align-items: center;
@@ -269,7 +270,7 @@
 	padding-right: 10px;
 }
 
-.rt2-action-btn {
+.mt2-action-btn {
 	height: 37px;
 	min-width: 135px;
 	max-width: 145px;
@@ -301,11 +302,11 @@
 	margin-top: 19px;
 }
 
-.rt2-container {
+.mt2-container {
 	padding-top: 0 !important;
 }
 
-.rt2-btn:hover {
+.mt2-btn:hover {
 	background-color: var(--mapset-blue) !important;
 	color: #ffffff !important;
 	filter: none;
@@ -380,6 +381,21 @@
 	margin: 0;
 	padding: 0;
 	text-wrap: nowrap;
+}
+
+.assigned-column {
+	text-wrap: nowrap;
+	text-wrap-mode: nowrap;
+	text-overflow: ellipsis;
+	overflow: clip;
+}
+
+.workflow-container {
+	width: fit-content;
+	white-space: nowrap;
+	.workflow-status-badge {
+		position: relative !important;
+	}
 }
 
 .checkbox-column {
@@ -565,6 +581,7 @@
 
 .notes-text {
 	width: 100%;
+	min-height: 100px;
 }
 
 .discussion-icon {
@@ -581,6 +598,20 @@
 	height: 25px;
 	/* //color: #2269e8; */
 	filter: invert(78%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
+}
+
+.user-selection {
+	width: 400px;
+	margin-top: 10px;
+	mat-form-field {
+		width: 400px;
+		background: #fff;
+	}
+}
+
+.mappings-section {
+	color: #666;
+	font-size: 12px;
 }
 
 .record-loading {

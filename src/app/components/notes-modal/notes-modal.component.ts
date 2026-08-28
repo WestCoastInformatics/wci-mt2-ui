@@ -1,6 +1,7 @@
 import { ElementRef, Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { UiUtility } from 'src/app/utilities/ui.utility';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { NotificationService } from 'src/app/services/notification.service';
 
@@ -16,6 +17,7 @@ export class NotesModalComponent {
 	showAddNotes = false;
 	isModalOpen = false;
 	notesModalRef!: NgbModalRef;
+	uiUtility = UiUtility;
 
 	@ViewChild('notes') private notes!: ElementRef;
 	@ViewChild('notesModal') notesModal!: TemplateRef<any>;
@@ -34,28 +36,17 @@ export class NotesModalComponent {
 		this.refsetService.getNotes(this.mapSetId, this.conceptCode).subscribe(
 			(response) => {
 				if (response) {
-					this.notesList = [
-						{
-							date: '121243',
-							user: 'name',
-							notes: 'test text box line test box lines,test text box line test box lines,test text box line test box lines',
-						},
-						{ date: '121243', user: 'name', notes: 'test text box line test box lines' },
-						{ date: '121243', user: 'name', notes: 'test text box line test box lines' },
-						{
-							date: '121243',
-							user: 'name',
-							notes: 'test text box line test box lines,test text box line test box lines,test text box line test box lines',
-						},
-						{ date: '121243', user: 'name', notes: 'test text box line test box lines' },
-						{
-							date: '121243',
-							user: 'name',
-							notes: 'test text box line test box lines,test text box line test box lines,test text box line test box lines,test text box line test box lines',
-						},
-						{ date: '121243', user: 'name', notes: 'test text box line test box lines' },
-					];
-					console.log('get notes Info: ', response);
+					this.notesList = response.map((item: any) => ({
+						id: item.id,
+						date: item.modified,
+						user: item.user?.name,
+						notes: JSON.parse(item.note),
+					}));
+					this.notesList.sort((a: any, b: any) => {
+						const ad = a.date || 0;
+						const bd = b.date || 0;
+						return bd - ad;
+					});
 				}
 			},
 			(error: any) => {
@@ -69,7 +60,6 @@ export class NotesModalComponent {
 		this.getNotes();
 		this.notesList = [];
 		this.notesModalRef = this.modalService.open(content, { size: 'lg', centered: true });
-		console.log(' this n', this.notesModalRef);
 		this.isModalOpen = true;
 	}
 
@@ -88,36 +78,36 @@ export class NotesModalComponent {
 		this.notesFC.reset();
 	}
 
+	dateFormatter(val: any): any {
+		return UiUtility.dateFormatter(val);
+	}
+
 	removeNote(noteId: string) {
 		this.refsetService.removeNote(this.mapSetId, this.conceptCode, noteId).subscribe(
 			(response) => {
-				if (response) {
-					//this.mapsetInfo = response;
-					console.log(' notes Info: ', response);
-					//this.setWorkflowStatus();
-					//this.getMapsetInfo();
-					//this.closeNotesModal();
-					this.notificationService.show('The notes have been removed.', 'Removed', 'success', { timeOut: 0, extendedTimeOut: 0 });
-				}
+				//response
 			},
 			(error: any) => {
 				console.log(' Error: ', error);
 				this.notificationService.show('Error removing, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 			},
 		);
+
+		setTimeout(() => {
+			this.notificationService.show('The notes have been removed.', 'Removed', 'success', { timeOut: 2500, extendedTimeOut: 0 });
+			this.getNotes();
+		}, 1200);
 	}
 
 	saveNotes() {
 		if (this.notesFC.dirty) {
-			this.refsetService.saveNotes(this.mapSetId, this.conceptCode, this.notesFC.value).subscribe(
+			this.refsetService.saveNotes(this.mapSetId, this.conceptCode, JSON.stringify(this.notesFC.value)).subscribe(
 				(response) => {
 					if (response) {
-						//this.mapsetInfo = response;
-						console.log(' notes Info: ', response);
-						//this.setWorkflowStatus();
-						//this.getMapsetInfo();
-						this.notificationService.show('The notes have been saved.', 'Saved', 'success', { timeOut: 0, extendedTimeOut: 0 });
+						this.notesFC.reset();
+						this.notificationService.show('The notes have been saved.', 'Saved', 'success', { timeOut: 2500, extendedTimeOut: 0 });
 						this.showAddNotes = false;
+						this.getNotes();
 					}
 				},
 				(error: any) => {

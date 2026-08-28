@@ -1,18 +1,23 @@
-<button title="Create New Project" class="rt2-btn rt2-action-btn float-right mt-1" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">
+<button
+	title="Create New Project"
+	class="mt2-btn mt2-action-btn float-right mt-1"
+	aria-label="Create New Project"
+	(click)="openCreateNewProjectModal(createNewProjectDialog)"
+>
 	Create New Project
 </button>
 
 <ng-template #createNewProjectDialog let-modal>
-	<div class="modal-header rt2-modal-header">
+	<div class="modal-header mt2-modal-header">
 		<button ngbAutofocus class="unfocus-btn"></button>
-		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Create New Project</h3>
+		<h3 class="modal-title mt2-modal-title modal-header-font" id="modal-basic-title">Create New Project</h3>
 
 		<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
 			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
 		</button>
 	</div>
 
-	<div class="container-fluid rt2-lockable create-new-project-modal-body form-field-header pt-0">
+	<div class="container-fluid mt2-lockable create-new-project-modal-body form-field-header pt-0">
 		<table>
 			<tr>
 				<td>
@@ -34,7 +39,11 @@
 				<td>
 					<label class="modal-label">Name: <span class="mandatory-field">*</span></label>
 				</td>
-				<td><input class="modal-input-field" placeholder="Project Name" autofocus #projectName [(ngModel)]="name" />{{ setAutoFocus(projectName) }}</td>
+				<td>
+					<input class="modal-input-field" placeholder="Project Name" autofocus #projectName [(ngModel)]="name" />{{
+						setAutoFocus(projectName)
+					}}
+				</td>
 			</tr>
 			<tr>
 				<td>
@@ -57,18 +66,28 @@
 		</table>
 	</div>
 
-	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+	<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
 		<button
 			type="button"
 			[disabled]="name === ''"
 			(click)="createProjectObject()"
 			color="green"
 			aria-hidden="false"
-			class="rt2-btn rt2-next-back-btn"
+			class="mt2-btn mt2-next-back-btn"
 			aria-label="Create Project"
-			title="Create Project">
+			title="Create Project"
+		>
 			Create Project
 		</button>
-		<button type="button" (click)="modal.dismiss('Cross click')" aria-hidden="false" class="rt2-btn rt2-cancel-btn" aria-label="Cancel" title="Cancel">Cancel</button>
+		<button
+			type="button"
+			(click)="modal.dismiss('Cross click')"
+			aria-hidden="false"
+			class="mt2-btn mt2-cancel-btn"
+			aria-label="Cancel"
+			title="Cancel"
+		>
+			Cancel
+		</button>
 	</div>
 </ng-template>

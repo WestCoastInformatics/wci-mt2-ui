@@ -1,7 +1,14 @@
-<div class="rt2-pagination-container container-fluid">
-	<div class="rt2-pagination-top-row">
-		<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons">
-			<button #paginationFirstPage mat-raised-button (click)="goToPage(1)" class="pagination-page-buttons" title="Go To First Page" attr.aria-label="Go To First Page">
+<div class="mt2-pagination-container container-fluid">
+	<div class="mt2-pagination-top-row">
+		<div *ngIf="paginationPages.totalPages > 1" class="mt2-pagination-buttons">
+			<button
+				#paginationFirstPage
+				mat-raised-button
+				(click)="goToPage(1)"
+				class="pagination-page-buttons"
+				title="Go To First Page"
+				attr.aria-label="Go To First Page"
+			>
 				<mat-icon aria-hidden="false">first_page</mat-icon>
 			</button>
 
@@ -11,7 +18,8 @@
 				(click)="goToPrevious(currentPage - 1)"
 				title="Go To Previous Page"
 				class="pagination-page-buttons"
-				attr.aria-label="Go To Previous Page {{ currentPage - 1 }}">
+				attr.aria-label="Go To Previous Page {{ currentPage - 1 }}"
+			>
 				<mat-icon aria-hidden="false">arrow_left</mat-icon>
 			</button>
 
@@ -23,7 +31,8 @@
 					[color]="currentPage === page ? 'primary' : ''"
 					(click)="goToPage(page)"
 					attr.aria-label="Go To Page {{ page }}"
-					title="Go To Page {{ page }}">
+					title="Go To Page {{ page }}"
+				>
 					{{ page }}
 				</button>
 			</span>
@@ -35,7 +44,8 @@
 				class="pagination-page-buttons w-min-32 p-0"
 				title="Go To Page {{ paginationPages.startPage + 5 }}"
 				attr.aria-label="Go To Page {{ paginationPages.startPage + 5 }}"
-				title="Go To Page {{ paginationPages.startPage + 5 }}">
+				title="Go To Page {{ paginationPages.startPage + 5 }}"
+			>
 				...
 			</button>
 
@@ -45,7 +55,8 @@
 				(click)="goToPage(paginationPages.totalPages)"
 				class="pagination-page-buttons"
 				attr.aria-label="Go To Page {{ paginationPages.totalPages }}"
-				title="Go To Page {{ paginationPages.totalPages }}">
+				title="Go To Page {{ paginationPages.totalPages }}"
+			>
 				{{ paginationPages.totalPages }}
 			</button>
 
@@ -55,7 +66,8 @@
 				(click)="manualStateRefresh = true; goToNext(currentPage + 1)"
 				title="Go To Next Page"
 				class="pagination-page-buttons"
-				attr.aria-label="Go To Next Page {{ currentPage + 1 }}">
+				attr.aria-label="Go To Next Page {{ currentPage + 1 }}"
+			>
 				<mat-icon aria-hidden="false">arrow_right</mat-icon>
 			</button>
 
@@ -65,12 +77,13 @@
 				(click)="goToPage(paginationPages.totalPages)"
 				title="Go To Last Page ({{ paginationPages.totalPages }})"
 				class="pagination-page-buttons"
-				attr.aria-label="Go To Last Page {{ paginationPages.totalPages }}">
+				attr.aria-label="Go To Last Page {{ paginationPages.totalPages }}"
+			>
 				<mat-icon aria-hidden="false">last_page</mat-icon>
 			</button>
 		</div>
 
-		<div class="rt2-pagination-bottom-row">
+		<div class="mt2-pagination-bottom-row">
 			<ng-container *ngIf="!showAll">
 				<span *ngFor="let sizeOption of pageSizeOptions">
 					<button
@@ -79,7 +92,8 @@
 						[color]="pageSize === sizeOption ? 'secondary' : ''"
 						class="pagination-page-buttons"
 						(click)="setPageSize(sizeOption); goToPage(1)"
-						title="{{ sizeOption }} Members per Page">
+						title="{{ sizeOption }} Members per Page"
+					>
 						{{ sizeOption }}
 					</button>
 				</span>
@@ -93,7 +107,8 @@
 							class="pagination-page-buttons"
 							[color]="pageSize === sizeOption ? 'secondary' : ''"
 							(click)="setPageSize(sizeOption); goToPage(1)"
-							title="{{ sizeOption }} Members per Page">
+							title="{{ sizeOption }} Members per Page"
+						>
 							{{ sizeOption }}
 						</button>
 					</span>
@@ -103,17 +118,18 @@
 					[color]="showAll ? 'secondary' : ''"
 					(click)="setPageSize(displayedResults, true); goToPage(1)"
 					class="pagination-page-buttons"
-					title="Show All Members per Page">
+					title="Show All Members per Page"
+				>
 					All
 				</button>
 			</span>
 		</div>
 	</div>
 
-	<div class="rt2-pagination-total-label">
+	<div class="mt2-pagination-total-label">
 		<div *ngIf="showTotal && totalKnown && displayedResults > 0">
-			Showing <span class="rt2-pagination-count">{{ startRecord }}</span> to <span class="rt2-pagination-count">{{ endRecord }}</span> of
-			<span class="rt2-pagination-count">{{ displayedResults }}</span>
+			Showing <span class="mt2-pagination-count">{{ startRecord }}</span> to <span class="mt2-pagination-count">{{ endRecord }}</span> of
+			<span class="mt2-pagination-count">{{ displayedResults }}</span>
 			results
 		</div>
 		<div *ngIf="displayedResults === 0">No Results to Show</div>

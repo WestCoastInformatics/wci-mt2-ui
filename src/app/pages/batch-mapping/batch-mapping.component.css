@@ -142,6 +142,12 @@
 	display: flex;
 }
 
+.workflow-container {
+	position: relative;
+	white-space: nowrap;
+	margin-right: 120px;
+}
+
 .grid-wrapper {
 	position: relative;
 }
@@ -214,7 +220,7 @@
 	}
 }
 
-.rt2-container {
+.mt2-container {
 	min-height: calc(100vh - 250px) !important;
 	max-height: calc(100vh - 250px) !important;
 	padding-top: 0 !important;
@@ -421,7 +427,7 @@
 	margin: 7px;
 }
 
-.rt2-wrap {
+.mt2-wrap {
 	min-width: 75vw;
 }
 
@@ -485,7 +491,7 @@
 	font-weight: 500 !important;
 }
 
-.rt2-ag-cell {
+.mt2-ag-cell {
 	width: 90px;
 	text-align: center;
 	align-items: center;
@@ -509,7 +515,7 @@
 	padding-right: 10px;
 }
 
-.rt2-action-btn {
+.mt2-action-btn {
 	height: 40px;
 	padding-left: 0;
 	padding-right: 0;
@@ -527,7 +533,7 @@
 	letter-spacing: normal;
 }
 
-.rt2-btn:hover {
+.mt2-btn:hover {
 	background-color: var(--mapset-blue) !important;
 	color: #ffffff !important;
 	filter: none;
@@ -736,6 +742,20 @@
 	padding-left: 0.5em !important;
 }
 
+.notes-text {
+	width: 100%;
+	min-height: 100px;
+}
+
+.user-selection {
+	width: 400px;
+	margin-top: 10px;
+	mat-form-field {
+		width: 400px;
+		background: #fff;
+	}
+}
+
 .discussion-icon {
 	cursor: pointer;
 	margin-top: -0.2em;
@@ -848,7 +868,7 @@
 	max-height: 55vh;
 }
 
-.rt2-pagination-container {
+.mt2-pagination-container {
 	padding: 20px 10px;
 }
 
@@ -883,7 +903,7 @@
 	color: #666;
 }
 
-.rt2-directory-chooser-column {
+.mt2-directory-chooser-column {
 	margin-bottom: 10px;
 }
 

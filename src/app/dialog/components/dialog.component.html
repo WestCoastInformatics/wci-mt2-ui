@@ -1,5 +1,5 @@
-<div class="modal-header rt2-modal-header">
-	<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title " *ngIf="config.showTitle" id="{{ id }}Title">
+<div class="modal-header mt2-modal-header">
+	<h3 class="modal-title mt2-modal-title modal-header-font" id="modal-basic-title " *ngIf="config.showTitle" id="{{ id }}Title">
 		{{ config.headerText }}
 	</h3>
 	<button *ngIf="config.showCloseIcon" type="button" class="close dialog-close-x close-icon-font" aria-label="Close Dialog" (click)="cancel()">
@@ -7,27 +7,40 @@
 	</button>
 </div>
 
-<div mat-dialog-content class="rt2-dialog-content">
+<div mat-dialog-content class="mt2-dialog-content">
 	<ng-container [ngTemplateOutlet]="config.template" [ngTemplateOutletContext]="{ $implicit: data }"></ng-container>
 </div>
 
-<div mat-dialog-actions class="rt2-dialog-actions" id="{{ id }}Actions">
-	<div class="p-2 w-100-pct d-flex jc-flex-e rt2-btn-group">
+<div mat-dialog-actions class="mt2-dialog-actions" id="{{ id }}Actions">
+	<div class="p-2 w-100-pct d-flex jc-flex-e mt2-btn-group">
 		<button
 			[hidden]="config.showConfirm === false"
-			class="rt2-btn"
-			[class]="config.confirmText === 'Download' ? 'rt2-download-btn' : 'rt2-action-btn'"
+			class="mt2-btn"
+			[class]="config.confirmText === 'Download' ? 'mt2-download-btn' : 'mt2-action-btn'"
 			id="{{ id }}Confirm"
-			(click)="isDisabled ? '' : confirm()">
+			(click)="isDisabled ? '' : confirm()"
+		>
 			{{ config.confirmText }}
-			<mat-icon *ngIf="config.confirmIcon" role="img" class="rt2-dialog-confirm-icon mat-icon notranslate material-icons mat-icon-no-color rt2-icon" aria-hidden="true" data-mat-icon-type="font">
+			<mat-icon
+				*ngIf="config.confirmIcon"
+				role="img"
+				class="mt2-dialog-confirm-icon mat-icon notranslate material-icons mat-icon-no-color mt2-icon"
+				aria-hidden="true"
+				data-mat-icon-type="font"
+			>
 				{{ config.confirmIcon }}
 			</mat-icon>
 		</button>
 
-		<button *ngIf="config.showCancel" id="{{ id }}Cancel" (click)="cancel()" class="rt2-btn rt2-cancel-btn">
+		<button *ngIf="config.showCancel" id="{{ id }}Cancel" (click)="cancel()" class="mt2-btn mt2-cancel-btn">
 			{{ config.cancelText }}
-			<mat-icon *ngIf="config.cancelIcon" role="img" class="rt2-dialog-cancel-icon mat-icon notranslate material-icons mat-icon-no-color rt2-icon" aria-hidden="true" data-mat-icon-type="font">
+			<mat-icon
+				*ngIf="config.cancelIcon"
+				role="img"
+				class="mt2-dialog-cancel-icon mat-icon notranslate material-icons mat-icon-no-color mt2-icon"
+				aria-hidden="true"
+				data-mat-icon-type="font"
+			>
 				{{ config.cancelIcon }}
 			</mat-icon>
 		</button>
@@ -35,10 +48,11 @@
 		<button
 			color="green"
 			[hidden]="config.showAction !== true"
-			class="rt2-btn"
-			[class]="isDisabled ? 'rt2-download-btn' : 'rt2-next-back-btn'"
+			class="mt2-btn"
+			[class]="isDisabled ? 'mt2-download-btn' : 'mt2-next-back-btn'"
 			id="{{ id }}Action"
-			(click)="isDisabled ? '' : confirm()">
+			(click)="isDisabled ? '' : confirm()"
+		>
 			{{ config.actionText }}
 		</button>
 	</div>

@@ -16,12 +16,14 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 export class NavbarComponent implements OnInit {
 	environment: string;
 	user?: User;
+	userRoles: any[] = [];
 	userSubscription: Subscription;
 	guestUser: string;
 	isUserLoggedIn = false;
 	uiUtility = UiUtility;
 	projectRole = '';
 	refsetRole = '';
+	formatedRoles = '';
 	@Input() breadcrumbs: any;
 
 	constructor(
@@ -58,7 +60,27 @@ export class NavbarComponent implements OnInit {
 
 	setUserInfo() {
 		this.user = this.authenticationService.getUser();
+		this.userRoles = this.authenticationService.getUserPrimaryRoles();
+		this.formatedRoles = this.getFormattedRoles();
 		this.isUserLoggedIn = !!this.user && this.user.userName != this.guestUser;
+	}
+
+	getFormattedRoles(): string {
+		if (!this.userRoles || this.userRoles.length === 0) {
+			return '';
+		}
+
+		const rolesArray = Array.isArray(this.userRoles) ? this.userRoles : [this.userRoles];
+		return rolesArray
+			.map((item) => {
+				if (!item) return '';
+
+				const str = String(item);
+
+				// Capitalize the first letter, and LOWERCASE the rest of the string
+				return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+			})
+			.join(', ');
 	}
 
 	showProjectRoleAndAssignee(): boolean {

@@ -169,7 +169,7 @@ export class MapsetLibraryComponent implements OnInit {
 						headerName: '',
 						minWidth: 50,
 						width: 70,
-						cellClass: 'rt2-directory-column-information',
+						cellClass: 'mt2-directory-column-information',
 						cellRenderer: TemplateRendererComponent,
 						cellRendererParams: { template: this.infoSection },
 						filter: false,
@@ -183,7 +183,7 @@ export class MapsetLibraryComponent implements OnInit {
 						field: 'refSetCode',
 						tooltipField: 'refSetCode',
 						headerName: 'Map Set ID',
-						cellClass: 'rt2-directory-column-id',
+						cellClass: 'mt2-directory-column-id',
 						minWidth: 65,
 						resizable: true,
 						unSortIcon: true,
@@ -192,7 +192,7 @@ export class MapsetLibraryComponent implements OnInit {
 						field: 'refSetName',
 						tooltipField: 'refSetName',
 						headerName: 'Map Set Name',
-						cellClass: 'rt2-directory-column-name',
+						cellClass: 'mt2-directory-column-name',
 						flex: 2,
 						resizable: true,
 						minWidth: 65,
@@ -203,7 +203,7 @@ export class MapsetLibraryComponent implements OnInit {
 						field: 'versionStatus',
 						tooltipField: 'versionStatus',
 						headerName: 'Version Status',
-						cellClass: 'rt2-directory-column-version-status',
+						cellClass: 'mt2-directory-column-version-status',
 						minWidth: 165,
 						width: 200,
 						resizable: true,
@@ -215,7 +215,7 @@ export class MapsetLibraryComponent implements OnInit {
 						field: 'version',
 						tooltipValueGetter: UiUtility.gridDateValueGetter,
 						headerName: 'Version Date',
-						cellClass: 'rt2-directory-column-version-date',
+						cellClass: 'mt2-directory-column-version-date',
 						minWidth: 65,
 						width: 170,
 						resizable: true,
@@ -229,7 +229,7 @@ export class MapsetLibraryComponent implements OnInit {
 						field: 'modified',
 						tooltipValueGetter: UiUtility.gridDateValueGetter,
 						headerName: 'Last Modified',
-						cellClass: 'rt2-directory-column-modified-date',
+						cellClass: 'mt2-directory-column-modified-date',
 						minWidth: 65,
 						width: 170,
 						resizable: true,
@@ -244,7 +244,7 @@ export class MapsetLibraryComponent implements OnInit {
 						colId: 'actions',
 						headerName: '',
 						width: 90,
-						cellClass: 'rt2-directory-column-actions',
+						cellClass: 'mt2-directory-column-actions',
 						cellRenderer: TemplateRendererComponent,
 						cellRendererParams: { template: this.actionSection },
 						sortable: false,
@@ -701,7 +701,7 @@ export class MapsetLibraryComponent implements OnInit {
 	}
 
 	onResize(event: any) {
-		const gridWidth = document.getElementsByClassName('rt2-ag-grid')[0]?.clientWidth;
+		const gridWidth = document.getElementsByClassName('mt2-ag-grid')[0]?.clientWidth;
 		document.getElementsByClassName('ag-header')[0]?.setAttribute('style', `width: ${gridWidth}px;`);
 	}
 
