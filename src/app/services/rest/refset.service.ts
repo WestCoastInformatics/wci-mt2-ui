@@ -361,6 +361,14 @@ export class RefsetService extends RestService {
 		);
 	}
 
+	getMappingsRecentlyModified(): Observable<any> {
+		return this.get(this.contextPath + `mappings/workflow/recentlyModified`, '', false);
+	}
+
+	getMappingsCurrentlyAssigned(): Observable<any> {
+		return this.get(this.contextPath + `mappings/workflow/assigned?limit=25&offset=0&sort=assignedAt&sortAscending=false`, '', false);
+	}
+
 	getMapsetWorkflowStatus(mapsetId: string): Observable<any> {
 		return this.get(this.contextPath + `mapset/${mapsetId}/workflowStatus/`, '', false);
 	}

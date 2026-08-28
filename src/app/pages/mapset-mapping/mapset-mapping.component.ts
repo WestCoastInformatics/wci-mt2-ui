@@ -127,17 +127,13 @@ export class MapsetMappingComponent implements OnInit {
 	}
 
 	getMapsetInfo() {
-		this.refsetService.getMapsetsByCode(this.mapsetCode!).subscribe({
-			next: (results) => {
-				if (results?.length > 0) {
-					this.mapsetName = results[0]?.refSetName;
-				} else {
-					console.error('no mapset found');
-				}
-			},
-		});
-
 		this.refsetService.getMapsetsByCode(this.mapsetCode!).subscribe((results) => {
+			if (results?.length > 0) {
+				this.mapsetName = results[0]?.refSetName;
+			} else {
+				console.error('no mapset found');
+				return;
+			}
 			const mapsetVersions = Array.isArray(results) ? results : [results];
 
 			const getIsInDevelopment = (status: string): boolean => {

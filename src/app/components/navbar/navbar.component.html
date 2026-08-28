@@ -67,18 +67,8 @@
 
 		<div
 			*ngIf="isUserLoggedIn"
-			class="navbar-div navbar-divider hide"
-			(click)="navigateToRoute('/library')"
-			[ngClass]="{ 'active-page': isCurrentPage('browsers') }"
-		>
-			<div class="navbar-icon"><i class="fa fa-earth-europe fa-lg navbar-icon-label navbar-fa-icon"></i></div>
-			<div class="navbar-icon-label header-icon-font">Browsers</div>
-		</div>
-
-		<div
-			*ngIf="isUserLoggedIn"
 			class="navbar-div navbar-divider"
-			(click)="navigateToRoute('/library')"
+			(click)="navigateToRoute('/inbox')"
 			[ngClass]="{ 'active-page': isCurrentPage('inbox') }"
 		>
 			<div class="navbar-icon"><i class="fa fa-inbox fa-lg navbar-icon-label navbar-fa-icon"></i></div>
@@ -88,7 +78,7 @@
 		<div
 			*ngIf="isUserLoggedIn"
 			class="navbar-div navbar-divider"
-			(click)="navigateToRoute('/library')"
+			(click)="navigateToRoute('/dashboard')"
 			[ngClass]="{ 'active-page': isCurrentPage('dashboard') }"
 		>
 			<div class="navbar-icon"><img src="/assets/dashboard-icon.svg" /></div>
