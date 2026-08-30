@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { PaginationChangedEvent } from 'ag-grid-community';
+import { PaginationChangedEvent, RowClassParams } from 'ag-grid-community';
 import { MatSelect } from '@angular/material/select';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
@@ -148,9 +148,9 @@ export class MapsetRecordsComponent implements OnInit {
 	workFlowStatus = { label: '', value: '', message: '', notes: '' };
 	workFlowNotesFC = new FormControl('');
 	batchListFC = new FormControl('');
-	showEdit = true; //? fix this permissions??
+	showEdit = true;
 	editStatus = true;
-	// { label: 'Cancel Edit', value: 'CANCEL_EDIT', message: 'Are you sure you want to cancel editing this Map Set?', notes: '' },
+	rowClassRules: any;
 	editWF = [
 		{ label: 'Edit', value: 'EDIT', message: 'Are you sure you want to edit this Map Set?', notes: '' },
 		{ label: 'Finish Edit', value: 'FINISH_EDIT', message: 'Are you sure you want to finish editing this Map Set?', notes: '' },
@@ -273,14 +273,6 @@ export class MapsetRecordsComponent implements OnInit {
 			this.getMapsetInfo();
 			this.getModuleMetadata();
 		});
-
-		// if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
-		// 	this.formats.splice(1, 0, { value: 'rf2_with_names', display: 'RF2 With Names' });
-		// }
-
-		// if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
-		// 	this.formats.splice(-1, 0, { value: 'freeset', display: 'Free Set' });
-		// }
 
 		this.disableChannel.postMessage(false);
 		const storedView = localStorage.getItem(this.showMapTableStorage);
@@ -577,14 +569,8 @@ export class MapsetRecordsComponent implements OnInit {
 				},
 				enableBrowserTooltips: true,
 				rowClassRules: {
-					refset_tool_grid_inactive_row: function (params: any) {
-						let inactivatedRow = false;
-
-						if (params.data) {
-							inactivatedRow = params.data.active == false;
-						}
-
-						return inactivatedRow;
+					'updated-row': (params: RowClassParams) => {
+						return params.data?.updated === true;
 					},
 				},
 			};
@@ -849,17 +835,6 @@ export class MapsetRecordsComponent implements OnInit {
 				suppressMovable: true,
 			},
 			enableBrowserTooltips: true,
-			rowClassRules: {
-				refset_tool_grid_inactive_row: function (params: any) {
-					let inactivatedRow = false;
-
-					if (params.data) {
-						inactivatedRow = params.data.active == false;
-					}
-
-					return inactivatedRow;
-				},
-			},
 		};
 		this.showHistoryTable = true;
 	}
@@ -1043,6 +1018,7 @@ export class MapsetRecordsComponent implements OnInit {
 										index: results[a].code !== '' ? a + results[a].code + count : count,
 										spanned: spanned,
 										downloadable: true,
+										updated: false,
 										mapEntries: results[a].mapEntries,
 										descriptions: results[a].descriptions,
 										entries: results[a].mapEntries.length,
@@ -1704,6 +1680,9 @@ export class MapsetRecordsComponent implements OnInit {
 				this.mapsetData[c].modified = response.modified;
 				this.mapsetData[c].assignedUser = response.assignedUser;
 				this.mapsetData[c].checked = false;
+				this.mapsetData[c].updated = true;
+			} else {
+				this.mapsetData[c].updated = false;
 			}
 		}
 		this.refsetGridApi.redrawRows();
@@ -1721,6 +1700,11 @@ export class MapsetRecordsComponent implements OnInit {
 			for (let c = 0; c < this.mapsetData.length; c++) {
 				if (this.mapsetData[c].checked === true) {
 					this.conceptCode = this.mapsetData[c].code;
+				}
+			}
+			for (let c = 0; c < this.mapsetData.length; c++) {
+				if (this.mapsetData[c].code === this.conceptCode) {
+					this.mapsetData[c].checked = true;
 				}
 			}
 		}

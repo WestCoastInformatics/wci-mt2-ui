@@ -282,17 +282,6 @@ export class MapsetLibraryComponent implements OnInit {
 						resizable: true,
 					},
 					enableBrowserTooltips: true,
-					rowClassRules: {
-						refset_tool_grid_inactive_row: function (params: any) {
-							let inactivatedRow = false;
-
-							if (params.data) {
-								inactivatedRow = params.data.active == false;
-							}
-
-							return inactivatedRow;
-						},
-					},
 				};
 
 				this.showTable = true;

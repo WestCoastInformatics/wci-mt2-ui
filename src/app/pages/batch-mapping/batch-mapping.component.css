@@ -80,11 +80,11 @@
 }
 
 .dotted-target-border {
-	border: 1px dashed #2169e8;
+	border: 1px dashed var(--action_button_color);
 }
 
 .solid-target-border {
-	border: 2px solid #2169e8;
+	border: 2px solid var(--action_button_color);
 }
 
 .map-group-header {
@@ -630,15 +630,15 @@
 }
 
 .advice-item:hover {
-	color: #2169e8;
+	color: var(--action_button_color);
 }
 .code-color {
-	color: #2169e8;
+	color: var(--action_button_color);
 }
 
 .code-link,
 .link-icon {
-	color: #2169e8;
+	color: var(--action_button_color);
 	cursor: pointer;
 }
 

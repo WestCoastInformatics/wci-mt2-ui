@@ -353,16 +353,18 @@ export class AuthenticationService {
 	}
 
 	noCookieAccess() {
-		this.notificationService.show(
-			'There was a problem accessing local storage or cookies - make sure they are enabled for this site in your browser.',
-			null,
-			'error',
-			{
-				timeOut: 0,
-				extendedTimeOut: 0,
-			},
-		);
-		this.router.navigateByUrl('');
+		if (this.router.url !== '/') {
+			this.notificationService.show(
+				'There was a problem accessing local storage or cookies - make sure they are enabled for this site in your browser.',
+				null,
+				'error',
+				{
+					timeOut: 0,
+					extendedTimeOut: 0,
+				},
+			);
+			this.router.navigateByUrl('');
+		}
 	}
 
 	resetSession() {

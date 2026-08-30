@@ -18,14 +18,15 @@
 		</div>
 	</div>
 </div>
-<div class="d-flex justify-content-end heading-inbetween m-r-30" *ngIf="!libraryOnly && loaded">
-	<div class="action-column mappings-section m-r-20" [hidden]="!assignedUser">Assigned to: {{ assignedUser }}</div>
-	<div class="workflow-container m-b-10 justify-content-end m-t-5">
-		<workflow-status-badge [status]="currentStatus"></workflow-status-badge>
-	</div>
-</div>
+
 <div [hidden]="loaded" class="section-loading">Loading...</div>
 <div class="mt2-container">
+	<div class="d-flex justify-content-end heading-inbetween m-r-30" *ngIf="!libraryOnly && loaded">
+		<div class="action-column mappings-section m-r-20" [hidden]="!assignedUser">Assigned to: {{ assignedUser }}</div>
+		<div class="workflow-container m-b-10 justify-content-end m-t-5">
+			<workflow-status-badge [status]="currentStatus"></workflow-status-badge>
+		</div>
+	</div>
 	<div class="metadata-collapsible-container" [ngClass]="{ 'm-t-20': loaded }">
 		<div class="metadata-collapsible-container-group-header row">
 			<div class="metadata-collapsible-container-title page-header-font" *ngIf="mapsetData.length > 0">
@@ -218,6 +219,5 @@
 		[mapsetInfo]="mapsetInfo"
 		[isWFMapModalOpen]="isWFMapModalOpen"
 		[conceptCode]="conceptCode"
-		[workFlowMapActions]="workFlowMapActions"
 	></workflow-map-modal>
 </div>

@@ -327,6 +327,7 @@
 							[suppressRowTransform]="true"
 							[gridOptions]="refsetGridOptions"
 							[rowSelection]="rowSelection"
+							[rowClassRules]="rowClassRules"
 							(firstDataRendered)="onResize(500)"
 						>
 						</ag-grid-angular>
@@ -941,6 +942,5 @@
 		[mapsetInfo]="mapsetInfo"
 		[isWFMapModalOpen]="isWFMapModalOpen"
 		[conceptCode]="conceptCode"
-		[workFlowMapActions]="workFlowMapActions"
 	></workflow-map-modal>
 </div>
