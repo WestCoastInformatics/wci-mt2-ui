@@ -83,6 +83,11 @@ export class NotesModalComponent {
 	}
 
 	removeNote(noteId: string) {
+		// Ask user to confirm the removal
+		if (!confirm('Are you sure you want to remove this note?')) {
+			return;
+		}
+
 		this.refsetService.removeNote(this.mapSetId, this.conceptCode, noteId).subscribe(
 			(response) => {
 				//response

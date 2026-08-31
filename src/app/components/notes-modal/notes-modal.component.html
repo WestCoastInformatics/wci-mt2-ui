@@ -36,7 +36,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="row cell border-top" *ngIf="notesList?.length === 0"><span class="none">0 notes</span></div>
+			<!--  *ngIf="notesList?.length === 0" -->
+			<div class="row cell border-top"><span class="none">{{ notesList?.length || 0 }} notes</span></div>
 		</div>
 		<textarea
 			#notes
