@@ -75,6 +75,7 @@ export class MapsetMappingComponent implements OnInit {
 	currentRowColor = 0;
 	moduleMetadata: any;
 	refsetData: any;
+	editEnabled = false;
 	currentStatus = '';
 	assignedUser = '';
 	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
@@ -134,17 +135,6 @@ export class MapsetMappingComponent implements OnInit {
 		this.disableChannel.postMessage(false);
 	}
 
-	hasUserRoles(roles: any): boolean {
-		return Array.isArray(roles) && roles.some((role: string) => this.userRoles.includes(role));
-	}
-
-	hasWorkflowMapAction(action: string): boolean {
-		const foundActions = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
-			return wfAction[action] === true;
-		});
-		return foundActions.length > 0;
-	}
-
 	isWorkFlowMapEdit(): boolean {
 		const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
 			return wfAction.edit === true;
@@ -163,6 +153,13 @@ export class MapsetMappingComponent implements OnInit {
 					}
 					return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 				});
+				this.editEnabled = false;
+				const editable = this.isWorkFlowMapEdit();
+				if (editable) {
+					if (this.assignedUser === this.user?.userName) {
+						this.editEnabled = true;
+					}
+				}
 			},
 		});
 

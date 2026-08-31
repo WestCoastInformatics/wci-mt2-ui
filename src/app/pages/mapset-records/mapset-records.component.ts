@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { PaginationChangedEvent } from 'ag-grid-community';
+import { PaginationChangedEvent, RowClassParams } from 'ag-grid-community';
 import { MatSelect } from '@angular/material/select';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
@@ -144,13 +144,15 @@ export class MapsetRecordsComponent implements OnInit {
 	downloadTitle = 'Download';
 	downloadType = 'all';
 	report = null;
+	singleEditEnabled = false;
+	batchEditEnabled = false;
 	waitingForResponse = false;
 	workFlowStatus = { label: '', value: '', message: '', notes: '' };
 	workFlowNotesFC = new FormControl('');
 	batchListFC = new FormControl('');
-	showEdit = true; //? fix this permissions??
+	showEdit = true;
 	editStatus = true;
-	// { label: 'Cancel Edit', value: 'CANCEL_EDIT', message: 'Are you sure you want to cancel editing this Map Set?', notes: '' },
+	rowClassRules: any;
 	editWF = [
 		{ label: 'Edit', value: 'EDIT', message: 'Are you sure you want to edit this Map Set?', notes: '' },
 		{ label: 'Finish Edit', value: 'FINISH_EDIT', message: 'Are you sure you want to finish editing this Map Set?', notes: '' },
@@ -274,14 +276,6 @@ export class MapsetRecordsComponent implements OnInit {
 			this.getModuleMetadata();
 		});
 
-		// if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
-		// 	this.formats.splice(1, 0, { value: 'rf2_with_names', display: 'RF2 With Names' });
-		// }
-
-		// if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
-		// 	this.formats.splice(-1, 0, { value: 'freeset', display: 'Free Set' });
-		// }
-
 		this.disableChannel.postMessage(false);
 		const storedView = localStorage.getItem(this.showMapTableStorage);
 		if (storedView) {
@@ -303,31 +297,11 @@ export class MapsetRecordsComponent implements OnInit {
 		keysToRemove.forEach((key) => localStorage.removeItem(key));
 	}
 
-	hasUserRoles(roles: any): boolean {
-		return Array.isArray(roles) && roles.some((role: string) => this.userRoles.includes(role));
-	}
-
-	hasWorkflowMapAction(action: string): boolean {
-		const foundActions = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
-			return wfAction[action] === true;
-		});
-		return foundActions.length > 0;
-	}
-
 	isWorkFlowMapEdit(): boolean {
 		const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
 			return wfAction.edit === true;
 		});
 		return foundEdit.length > 0;
-	}
-
-	selectedMapUserActions(status: string) {
-		this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
-			if (status !== wf.status) {
-				return false;
-			}
-			return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
-		});
 	}
 
 	getMapsetInfo() {
@@ -544,9 +518,9 @@ export class MapsetRecordsComponent implements OnInit {
 				animateRows: false,
 				cacheBlockSize: this.refsetGridPaging.pageSize,
 				debug: false,
-				cacheOverflowSize: 2,
-				maxBlocksInCache: 2,
-				maxConcurrentDatasourceRequests: 2,
+				cacheOverflowSize: 1,
+				maxBlocksInCache: 1,
+				maxConcurrentDatasourceRequests: 1,
 				paginationPageSize: this.refsetGridPaging.pageSize,
 				serverSideEnableClientSideSort: true,
 				paginationPageSizeSelector: this.refsetGridPaging.pageSizeOptions,
@@ -577,14 +551,8 @@ export class MapsetRecordsComponent implements OnInit {
 				},
 				enableBrowserTooltips: true,
 				rowClassRules: {
-					refset_tool_grid_inactive_row: function (params: any) {
-						let inactivatedRow = false;
-
-						if (params.data) {
-							inactivatedRow = params.data.active == false;
-						}
-
-						return inactivatedRow;
+					'updated-row': (params: RowClassParams) => {
+						return params.data?.updated === true;
 					},
 				},
 			};
@@ -849,17 +817,6 @@ export class MapsetRecordsComponent implements OnInit {
 				suppressMovable: true,
 			},
 			enableBrowserTooltips: true,
-			rowClassRules: {
-				refset_tool_grid_inactive_row: function (params: any) {
-					let inactivatedRow = false;
-
-					if (params.data) {
-						inactivatedRow = params.data.active == false;
-					}
-
-					return inactivatedRow;
-				},
-			},
 		};
 		this.showHistoryTable = true;
 	}
@@ -908,12 +865,14 @@ export class MapsetRecordsComponent implements OnInit {
 
 	checkboxAllClick() {
 		this.gridSelectAll == undefined || this.gridSelectAll ? (this.gridSelectAll = false) : (this.gridSelectAll = true);
-		this.mapsetData = this.mapsetData.map((set: any) => {
-			set.checked = this.gridSelectAll;
-			return set;
-		});
+		for (let data of this.mapsetData) {
+			data.checked = this.gridSelectAll;
+		}
 		this.refsetGridApi.redrawRows();
 		this.checkedNum = this.gridSelectAll ? this.mapsetData.length : 0;
+		if (this.checkedNum > 0) {
+			this.checkedStatusActions();
+		}
 	}
 
 	onGridReady = (gridReadyParams: any) => {
@@ -1020,6 +979,7 @@ export class MapsetRecordsComponent implements OnInit {
 							this.loaded = false;
 							const mapsetResults = results;
 							results = results.items;
+							this.mapsetData = undefined;
 
 							const data = [];
 							let count = 0;
@@ -1043,6 +1003,7 @@ export class MapsetRecordsComponent implements OnInit {
 										index: results[a].code !== '' ? a + results[a].code + count : count,
 										spanned: spanned,
 										downloadable: true,
+										updated: false,
 										mapEntries: results[a].mapEntries,
 										descriptions: results[a].descriptions,
 										entries: results[a].mapEntries.length,
@@ -1159,15 +1120,66 @@ export class MapsetRecordsComponent implements OnInit {
 			}
 		}
 		this.checkedNum = 0;
-		let oneStatus = '';
 		for (let c = 0; c < this.mapsetData.length; c++) {
 			if (this.mapsetData[c].checked === true) {
 				this.checkedNum++;
-				oneStatus = this.mapsetData[c].workflowStatus;
 			}
 		}
-		if (this.checkedNum === 1 && oneStatus !== '') {
-			this.selectedMapUserActions(oneStatus);
+		if (this.checkedNum > 0) {
+			this.checkedStatusActions();
+		}
+	}
+
+	checkedStatusActions() {
+		this.singleEditEnabled = false;
+		let multiStatus = [];
+		let assigned = [];
+		for (let c = 0; c < this.mapsetData.length; c++) {
+			if (this.mapsetData[c].checked === true) {
+				assigned.push(this.mapsetData[c].assignedUser);
+				multiStatus.push(this.mapsetData[c].workflowStatus);
+			}
+		}
+		if (this.checkedNum === 1 && multiStatus.length === 1) {
+			this.workFlowMapActions = [];
+			this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
+				if (multiStatus[0] !== wf.status) {
+					return false;
+				}
+				return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
+			});
+			const editable = this.isWorkFlowMapEdit();
+			if (editable) {
+				const thisUser = assigned.find((u) => {
+					return u === this.user?.userName;
+				});
+				if (thisUser !== undefined) {
+					this.singleEditEnabled = true;
+				}
+			}
+		}
+		if (this.checkedNum > 1 && multiStatus.length > 1) {
+			this.batchEditEnabled = false;
+
+			const availableActions = this.reviewMapWF.filter((wf: any) => {
+				if (!multiStatus.includes(wf.status)) {
+					return false;
+				}
+
+				return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
+			});
+
+			const foundEdit = availableActions.filter((wfAction: Record<string, unknown>) => {
+				return wfAction.edit === true;
+			});
+			if (foundEdit.length > 0) {
+				const thisUser = assigned.find((u) => {
+					return u === this.user?.userName;
+				});
+				if (thisUser !== undefined) {
+					this.batchEditEnabled = true;
+				}
+			}
 		}
 	}
 
@@ -1453,11 +1465,17 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	goToPage(number: number) {
-		if (this.showMapTable === 'table') {
-			this.gridWrapper.nativeElement.scrollTo(0, 0);
+		if (this.getCurrentPage() !== number) {
+			this.unCheckAll();
+			setTimeout(() => {
+				if (this.showMapTable === 'table') {
+					this.gridWrapper.nativeElement.scrollTo(0, 0);
+				}
+				localStorage.setItem(this.mapsetGridCurrentPageNum, JSON.stringify(number));
+				this.refsetGridApi.paginationGoToPage(number);
+				this.refsetGridApi.redrawRows();
+			}, 150);
 		}
-		localStorage.setItem(this.mapsetGridCurrentPageNum, JSON.stringify(number));
-		this.refsetGridApi.paginationGoToPage(number);
 	}
 
 	checkStored() {
@@ -1704,6 +1722,9 @@ export class MapsetRecordsComponent implements OnInit {
 				this.mapsetData[c].modified = response.modified;
 				this.mapsetData[c].assignedUser = response.assignedUser;
 				this.mapsetData[c].checked = false;
+				this.mapsetData[c].updated = true;
+			} else {
+				this.mapsetData[c].updated = false;
 			}
 		}
 		this.refsetGridApi.redrawRows();
@@ -1721,6 +1742,11 @@ export class MapsetRecordsComponent implements OnInit {
 			for (let c = 0; c < this.mapsetData.length; c++) {
 				if (this.mapsetData[c].checked === true) {
 					this.conceptCode = this.mapsetData[c].code;
+				}
+			}
+			for (let c = 0; c < this.mapsetData.length; c++) {
+				if (this.mapsetData[c].code === this.conceptCode) {
+					this.mapsetData[c].checked = true;
 				}
 			}
 		}

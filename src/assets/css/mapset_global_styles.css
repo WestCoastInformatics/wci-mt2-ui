@@ -179,6 +179,9 @@ tr.refset_tool_inactive_row {
 		height: 800px;
 	}
 
+	.ag-row.updated-row {
+		border: 1px dashed var(--action_button_color) !important;
+	}
 	.ag-row.refset_tool_grid_inactive_row {
 		background-color: var(--inactive_row_color);
 		border: 1px solid #aaaaaa !important;
@@ -232,7 +235,7 @@ tr.refset_tool_inactive_row {
 }
 
 .ag-theme-alpine .ag-cell {
-	line-height: 50px;
+	/* line-height: 50px; */
 }
 
 .ag-theme-alpine .ag-row-odd {
@@ -287,7 +290,7 @@ tr.refset_tool_inactive_row {
 	font-family: var(--standard_font_family);
 
 	.ag-row {
-		height: 51px !important;
+		/* height: 51px !important; */
 		color: #666666;
 		font-size: var(--standard_font_size_text) !important;
 		font-weight: var(--standard_font_weight);
@@ -2186,7 +2189,8 @@ img.mt2-edition-flag {
 }
 
 .heading-inbetween {
-	margin-bottom: -30px;
+	margin-bottom: -15px;
+	margin-top: -15px;
 }
 
 .btn-wide-font {

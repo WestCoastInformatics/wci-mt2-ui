@@ -18,14 +18,15 @@
 		</div>
 	</div>
 </div>
-<div class="d-flex justify-content-end heading-inbetween m-r-30" *ngIf="!libraryOnly && loaded">
-	<div class="action-column mappings-section m-r-20" [hidden]="!assignedUser">Assigned to: {{ assignedUser }}</div>
-	<div class="workflow-container m-b-10 justify-content-end m-t-5">
-		<workflow-status-badge [status]="currentStatus"></workflow-status-badge>
-	</div>
-</div>
+
 <div [hidden]="loaded" class="section-loading">Loading...</div>
 <div class="mt2-container">
+	<div class="d-flex justify-content-end heading-inbetween m-r-30" *ngIf="!libraryOnly && loaded">
+		<div class="action-column mappings-section m-r-20" [hidden]="!assignedUser">Assigned to: {{ assignedUser }}</div>
+		<div class="workflow-container m-b-10 justify-content-end m-t-5">
+			<workflow-status-badge [status]="currentStatus"></workflow-status-badge>
+		</div>
+	</div>
 	<div class="metadata-collapsible-container" [ngClass]="{ 'm-t-20': loaded }">
 		<div class="metadata-collapsible-container-group-header row">
 			<div class="metadata-collapsible-container-title page-header-font" *ngIf="mapsetData.length > 0">
@@ -43,7 +44,7 @@
 						</div>
 						<mat-menu #actionMenu="matMenu">
 							<button
-								*ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && isWorkFlowMapEdit()"
+								*ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && editEnabled"
 								mat-menu-item
 								(click)="selectAction('edit')"
 							>
@@ -124,7 +125,7 @@
 		<!-- Action Templates -->
 		<ng-template #directoryActionSection let-params>
 			<div class="d-flex">
-				<div class="col" *ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && isWorkFlowMapEdit()">
+				<div class="col" *ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && editEnabled">
 					<button class="library-app-refset-notes m-r-15 no-padding" (click)="selectAction('edit')">
 						<img src="/assets/edit-icon.svg" title="Edit Maps" aria-label="Edit Maps" class="mapset-notes-icon mapset-edit-icon" />
 					</button>
@@ -218,6 +219,5 @@
 		[mapsetInfo]="mapsetInfo"
 		[isWFMapModalOpen]="isWFMapModalOpen"
 		[conceptCode]="conceptCode"
-		[workFlowMapActions]="workFlowMapActions"
 	></workflow-map-modal>
 </div>

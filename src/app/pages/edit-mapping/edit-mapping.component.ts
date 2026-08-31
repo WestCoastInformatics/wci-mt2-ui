@@ -240,17 +240,6 @@ export class EditMappingComponent implements OnInit {
 		this.targetFC.disable();
 	}
 
-	hasUserRoles(roles: any): boolean {
-		return Array.isArray(roles) && roles.some((role: string) => this.userRoles.includes(role));
-	}
-
-	hasWorkflowMapAction(action: string): boolean {
-		const foundActions = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
-			return wfAction[action] === true;
-		});
-		return foundActions.length > 0;
-	}
-
 	isWorkFlowMapEdit(): boolean {
 		const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
 			return wfAction.edit === true;
@@ -269,8 +258,17 @@ export class EditMappingComponent implements OnInit {
 					}
 					return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 				});
-				if (this.isWorkFlowMapEdit() === false) {
-					this.notificationService.show('Editing is not permitted.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+				const editable = this.isWorkFlowMapEdit();
+				let exit = false;
+				if (editable) {
+					if (this.assignedUser !== this.user?.userName) {
+						exit = true;
+					}
+				} else {
+					exit = true;
+				}
+				if (exit) {
+					this.notificationService.show('Editing is not permitted.', 'Warning', 'warning', { timeOut: 2500, extendedTimeOut: 0 });
 					this.selectActionMenu('view');
 				}
 			},
@@ -1348,17 +1346,6 @@ export class EditMappingComponent implements OnInit {
 				suppressMovable: true,
 			},
 			enableBrowserTooltips: true,
-			rowClassRules: {
-				refset_tool_grid_inactive_row: function (params: any) {
-					let inactivatedRow = false;
-
-					if (params.data) {
-						inactivatedRow = params.data.active == false;
-					}
-
-					return inactivatedRow;
-				},
-			},
 		};
 		this.showTable = true;
 	}

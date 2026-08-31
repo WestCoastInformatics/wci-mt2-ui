@@ -378,7 +378,7 @@
 }
 
 .code-link {
-	color: #2169e8;
+	color: var(--action_button_color);
 	cursor: pointer;
 }
 
