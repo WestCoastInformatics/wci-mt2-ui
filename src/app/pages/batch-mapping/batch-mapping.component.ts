@@ -1366,6 +1366,7 @@ export class BatchMappingComponent implements OnInit {
 
 	saveMappings() {
 		this.saving = true;
+
 		for (let f = 0; f < this.mapsetResponse.length; f++) {
 			this.mapsetResponse[f].mapEntries = [];
 			for (let p = 0; p < this.mapsetData.length; p++) {
@@ -1406,9 +1407,12 @@ export class BatchMappingComponent implements OnInit {
 					(status) => {
 						this.saving = false;
 						this.notificationService.show('The mappings have been saved.', 'Success', 'success', { timeOut: 0, extendedTimeOut: 0 });
-						this.mapsetData.forEach((map: any) => {
-							map.updated = false;
-						});
+						setTimeout(() => {
+							this.mapsetData.forEach((map: any) => {
+								map.updated = false;
+							});
+							this.gridApi.redrawRows();
+						}, 50);
 					},
 					(error: any) => {
 						this.notificationService.show('Error saving, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
@@ -1732,26 +1736,22 @@ export class BatchMappingComponent implements OnInit {
 	checkMapEditStatus(map): boolean {
 		let editable = false;
 		const status = map.workflowStatus === undefined ? map.mappingWorkflow.workflowStatus : map.workflowStatus;
-		console.log(' stssdfuads', status);
+		const assigned = map.assignedUser === undefined ? map.mappingWorkflow.assignedUser : map.assignedUser;
 		const availableActions = this.reviewMapWF.filter((wf: any) => {
-			if (status.includes(wf.status) && wf.edit === true) {
+			if (!status.includes(wf.status) || wf.edit !== true) {
 				return false;
 			}
 
 			return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 		});
-		console.log(' availableActions --', availableActions);
 		if (availableActions.length > 0) {
-			if (map.assignedUser === this.user?.userName) {
+			if (assigned === this.user?.userName) {
 				editable = true;
-				console.log(' edit 1');
 				return editable;
 			} else {
-				console.log(' edit 2');
 				return editable;
 			}
 		} else {
-			console.log(' edit 3');
 			return editable;
 		}
 	}
