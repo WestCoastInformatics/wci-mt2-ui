@@ -316,6 +316,7 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	selectedMapUserActions(status: string) {
+		this.workFlowMapActions = [];
 		this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
 			if (status !== wf.status) {
 				return false;
@@ -324,19 +325,17 @@ export class MapsetRecordsComponent implements OnInit {
 		});
 	}
 
-	selectedMapsUserActions(statuses: string[]) {
+	selectedMapsUserActions(statuses: string[], assigned: string[]) {
 		this.batchEditEnabled = false;
 		if (!statuses || statuses.length === 0) {
 			return;
 		}
 
 		const availableActions = this.reviewMapWF.filter((wf: any) => {
-			// 1. Check if the current workflow's status is in our array of allowed statuses
 			if (!statuses.includes(wf.status)) {
 				return false;
 			}
 
-			// 2. Check if the user has at least one of the required roles
 			return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 		});
 
@@ -344,7 +343,12 @@ export class MapsetRecordsComponent implements OnInit {
 			return wfAction.edit === true;
 		});
 		if (foundEdit.length > 0) {
-			this.batchEditEnabled = true;
+			const thisUser = assigned.find((u) => {
+				return u === this.user?.userName;
+			});
+			if (thisUser !== undefined) {
+				this.batchEditEnabled = true;
+			}
 		}
 	}
 
@@ -1184,7 +1188,7 @@ export class MapsetRecordsComponent implements OnInit {
 			}
 		}
 		if (this.checkedNum > 1 && multiStatus.length > 1) {
-			this.selectedMapsUserActions(multiStatus);
+			this.selectedMapsUserActions(multiStatus, assigned);
 		}
 	}
 
