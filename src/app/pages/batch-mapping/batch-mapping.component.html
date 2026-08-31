@@ -133,19 +133,38 @@
 					</button>
 				</div>
 				<mat-menu #actionMenu="matMenu">
-					<button mat-menu-item (click)="selectAction('set')" [disabled]="checkedNum < 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
+					<button mat-menu-item (click)="selectAction('view')" [disabled]="checkedNum !== 1">
+						<span>View Selected Mapping</span>
+					</button>
+					<button
+						*ngIf="batchEditEnabled"
+						mat-menu-item
+						(click)="selectAction('set')"
+						[disabled]="checkedNum < 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+					>
 						<span>Set Empty Target to Mappings</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('add')" [disabled]="checkedNum < 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
+					<button
+						*ngIf="batchEditEnabled"
+						mat-menu-item
+						(click)="selectAction('add')"
+						[disabled]="checkedNum < 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+					>
 						<span>Add Entry to Mappings</span>
 					</button>
-					<button mat-menu-item (click)="selectAction('group')" [disabled]="checkedNum < 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
+					<button
+						*ngIf="batchEditEnabled"
+						mat-menu-item
+						(click)="selectAction('group')"
+						[disabled]="checkedNum < 1 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+					>
 						<span>Change Group of Mappings</span>
 					</button>
 					<!-- <button mat-menu-item (click)="selectAction('advice')" [disabled]="checkedNum < 1">
 						<span>Add Advice to Mappings</span>
 					</button> -->
 					<button
+						*ngIf="batchEditEnabled"
 						mat-menu-item
 						(click)="openConfirmationModal()"
 						[disabled]="checkedNum < 1 || mapsetData.length < 2 || mapsetInfo.workflowStatus !== 'IN_EDIT'"

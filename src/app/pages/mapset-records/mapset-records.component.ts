@@ -304,43 +304,6 @@ export class MapsetRecordsComponent implements OnInit {
 		return foundEdit.length > 0;
 	}
 
-	selectedMapUserActions(status: string) {
-		this.workFlowMapActions = [];
-		this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
-			if (status !== wf.status) {
-				return false;
-			}
-			return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
-		});
-	}
-
-	selectedMapsUserActions(statuses: string[], assigned: string[]) {
-		this.batchEditEnabled = false;
-		if (!statuses || statuses.length === 0) {
-			return;
-		}
-
-		const availableActions = this.reviewMapWF.filter((wf: any) => {
-			if (!statuses.includes(wf.status)) {
-				return false;
-			}
-
-			return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
-		});
-
-		const foundEdit = availableActions.filter((wfAction: Record<string, unknown>) => {
-			return wfAction.edit === true;
-		});
-		if (foundEdit.length > 0) {
-			const thisUser = assigned.find((u) => {
-				return u === this.user?.userName;
-			});
-			if (thisUser !== undefined) {
-				this.batchEditEnabled = true;
-			}
-		}
-	}
-
 	getMapsetInfo() {
 		this.refsetService.getMapsetsByCode(this.mapsetCode!).subscribe((results) => {
 			this.mapsetVersions = Array.isArray(results) ? results : [results];
@@ -1178,7 +1141,13 @@ export class MapsetRecordsComponent implements OnInit {
 			}
 		}
 		if (this.checkedNum === 1 && multiStatus.length === 1) {
-			this.selectedMapUserActions(multiStatus[0]);
+			this.workFlowMapActions = [];
+			this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
+				if (multiStatus[0] !== wf.status) {
+					return false;
+				}
+				return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
+			});
 			const editable = this.isWorkFlowMapEdit();
 			if (editable) {
 				const thisUser = assigned.find((u) => {
@@ -1190,7 +1159,27 @@ export class MapsetRecordsComponent implements OnInit {
 			}
 		}
 		if (this.checkedNum > 1 && multiStatus.length > 1) {
-			this.selectedMapsUserActions(multiStatus, assigned);
+			this.batchEditEnabled = false;
+
+			const availableActions = this.reviewMapWF.filter((wf: any) => {
+				if (!multiStatus.includes(wf.status)) {
+					return false;
+				}
+
+				return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
+			});
+
+			const foundEdit = availableActions.filter((wfAction: Record<string, unknown>) => {
+				return wfAction.edit === true;
+			});
+			if (foundEdit.length > 0) {
+				const thisUser = assigned.find((u) => {
+					return u === this.user?.userName;
+				});
+				if (thisUser !== undefined) {
+					this.batchEditEnabled = true;
+				}
+			}
 		}
 	}
 
