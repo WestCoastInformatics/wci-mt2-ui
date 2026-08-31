@@ -143,9 +143,11 @@
 }
 
 .workflow-container {
-	position: relative;
+	width: fit-content;
 	white-space: nowrap;
-	margin-right: 120px;
+	.workflow-status-badge {
+		position: relative !important;
+	}
 }
 
 .grid-wrapper {

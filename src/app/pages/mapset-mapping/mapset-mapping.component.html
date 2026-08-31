@@ -44,7 +44,7 @@
 						</div>
 						<mat-menu #actionMenu="matMenu">
 							<button
-								*ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && isWorkFlowMapEdit()"
+								*ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && editEnabled"
 								mat-menu-item
 								(click)="selectAction('edit')"
 							>
@@ -125,7 +125,7 @@
 		<!-- Action Templates -->
 		<ng-template #directoryActionSection let-params>
 			<div class="d-flex">
-				<div class="col" *ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && isWorkFlowMapEdit()">
+				<div class="col" *ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && editEnabled">
 					<button class="library-app-refset-notes m-r-15 no-padding" (click)="selectAction('edit')">
 						<img src="/assets/edit-icon.svg" title="Edit Maps" aria-label="Edit Maps" class="mapset-notes-icon mapset-edit-icon" />
 					</button>

@@ -76,6 +76,7 @@
 					[gridColumnApi]="gridApi"
 					[useDialog]="useDialog"
 					[columnStorage]="mapsetBatchColumnStorage"
+					[manualStateRefresh]="manualStateRefresh"
 				>
 				</app-column-chooser>
 			</div>
@@ -157,9 +158,13 @@
 					<button mat-menu-item (click)="selectAction('comm')" [disabled]="checkedNum < 1">
 						<span>View or Add Authoring Communication</span>
 					</button> -->
-					<button mat-menu-item (click)="selectAction('review')" [disabled]="checkedNum < 1">
-						<span>Request Review</span>
-					</button>
+					<ng-container *ngIf="workFlowMapActions.length && checkedNum === 1 && mapsetInfo.workflowStatus === 'IN_EDIT'">
+						<span *ngFor="let action of workFlowMapActions">
+							<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value)">
+								<span> {{ action.label }}</span>
+							</button></span
+						>
+					</ng-container>
 				</mat-menu>
 			</div>
 		</div>
@@ -174,6 +179,7 @@
 						[gridOptions]="gridOptions"
 						class="ag-theme-alpine mt2-ag-grid mt2-ag-grid-no-filter"
 						[suppressScrollOnNewData]="true"
+						[rowClassRules]="rowClassRules"
 					>
 					</ag-grid-angular>
 
@@ -1000,53 +1006,12 @@
 			<button type="button" class="mt2-btn mt2-action-btn" (click)="setHeaderGroup()">Save</button>
 		</div>
 	</ng-template>
-
-	<ng-template #workFlowModal let-modal>
-		<div class="modal-header mt2-modal-header">
-			<div class="modal-title">{{ workFlowStatus.label }}</div>
-			<button
-				type="button"
-				class="close dialog-close-x close-icon-font"
-				title="Close"
-				aria-label="Close"
-				(click)="!waitingForResponse ? closeWorkFlowModal() : null"
-			>
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		<p class="p-l-30 p-t-10 p-b-0">{{ workFlowStatus.message }}</p>
-		<div class="modal-body m-t-5">
-			<textarea
-				#workFlowModalNotes
-				class="form-field-value notes-text"
-				type="text"
-				name="notes"
-				placeholder="enter status change notes..."
-				[formControl]="workFlowNotesFC"
-			></textarea>
-			<div class="user-selection" [hidden]="userList.length === 0">
-				<mat-form-field appearance="fill" floatLabel="never" class="advice-selection-box target-selection-box-advice">
-					<mat-select #selectAdvice title="Select user to assign" placeholder="Select user to assign" [(value)]="selectedUser">
-						<mat-option *ngFor="let user of userList" value="{{ user }}" title="{{ user }}" class="no-checkbox border-bottom"
-							><span class="advice-item">
-								<div class="line-clamp-2">{{ user }}</div></span
-							></mat-option
-						>
-					</mat-select>
-				</mat-form-field>
-			</div>
-			<span class="mappings-section m-l-20" *ngIf="userList.length === 0">No users to assign.</span>
-		</div>
-		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
-			<button type="button" class="mt2-btn mt2-action-btn" (click)="!waitingForResponse ? closeWorkFlowModal() : null">Cancel</button>
-			<button
-				type="button"
-				title="Confirm {{ workFlowStatus.label }}"
-				class="mt2-btn mt2-action-btn"
-				(click)="!waitingForResponse ? changeWorkFlowStatus() : null"
-			>
-				Confirm
-			</button>
-		</div>
-	</ng-template>
+	<workflow-map-modal
+		(updateWorkFlowMapStatus)="updateWorkFlowMapStatus($event)"
+		(closeWorkflowMapModal)="closeWorkflowMapModal()"
+		[workFlowMapStatus]="workFlowMapStatus"
+		[mapsetInfo]="mapsetInfo"
+		[isWFMapModalOpen]="isWFMapModalOpen"
+		[conceptCode]="conceptCode"
+	></workflow-map-modal>
 </div>

@@ -235,7 +235,7 @@ tr.refset_tool_inactive_row {
 }
 
 .ag-theme-alpine .ag-cell {
-	line-height: 50px;
+	/* line-height: 50px; */
 }
 
 .ag-theme-alpine .ag-row-odd {

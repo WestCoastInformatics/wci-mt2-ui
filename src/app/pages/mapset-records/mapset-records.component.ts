@@ -144,6 +144,8 @@ export class MapsetRecordsComponent implements OnInit {
 	downloadTitle = 'Download';
 	downloadType = 'all';
 	report = null;
+	singleEditEnabled = false;
+	batchEditEnabled = false;
 	waitingForResponse = false;
 	workFlowStatus = { label: '', value: '', message: '', notes: '' };
 	workFlowNotesFC = new FormControl('');
@@ -320,6 +322,30 @@ export class MapsetRecordsComponent implements OnInit {
 			}
 			return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 		});
+	}
+
+	selectedMapsUserActions(statuses: string[]) {
+		this.batchEditEnabled = false;
+		if (!statuses || statuses.length === 0) {
+			return;
+		}
+
+		const availableActions = this.reviewMapWF.filter((wf: any) => {
+			// 1. Check if the current workflow's status is in our array of allowed statuses
+			if (!statuses.includes(wf.status)) {
+				return false;
+			}
+
+			// 2. Check if the user has at least one of the required roles
+			return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
+		});
+
+		const foundEdit = availableActions.filter((wfAction: Record<string, unknown>) => {
+			return wfAction.edit === true;
+		});
+		if (foundEdit.length > 0) {
+			this.batchEditEnabled = true;
+		}
 	}
 
 	getMapsetInfo() {
@@ -1135,15 +1161,30 @@ export class MapsetRecordsComponent implements OnInit {
 			}
 		}
 		this.checkedNum = 0;
-		let oneStatus = '';
+		this.singleEditEnabled = false;
+		let multiStatus = [];
+		let assigned = [];
 		for (let c = 0; c < this.mapsetData.length; c++) {
 			if (this.mapsetData[c].checked === true) {
 				this.checkedNum++;
-				oneStatus = this.mapsetData[c].workflowStatus;
+				assigned.push(this.mapsetData[c].assignedUser);
+				multiStatus.push(this.mapsetData[c].workflowStatus);
 			}
 		}
-		if (this.checkedNum === 1 && oneStatus !== '') {
-			this.selectedMapUserActions(oneStatus);
+		if (this.checkedNum === 1 && multiStatus.length === 1) {
+			this.selectedMapUserActions(multiStatus[0]);
+			const editable = this.isWorkFlowMapEdit();
+			if (editable) {
+				const thisUser = assigned.find((u) => {
+					return u === this.user?.userName;
+				});
+				if (thisUser !== undefined) {
+					this.singleEditEnabled = true;
+				}
+			}
+		}
+		if (this.checkedNum > 1 && multiStatus.length > 1) {
+			this.selectedMapsUserActions(multiStatus);
 		}
 	}
 

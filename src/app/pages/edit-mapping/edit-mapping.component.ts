@@ -269,7 +269,16 @@ export class EditMappingComponent implements OnInit {
 					}
 					return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 				});
-				if (this.isWorkFlowMapEdit() === false) {
+				const editable = this.isWorkFlowMapEdit();
+				let exit = false;
+				if (editable) {
+					if (this.assignedUser !== this.user?.userName) {
+						exit = true;
+					}
+				} else {
+					exit = true;
+				}
+				if (exit) {
 					this.notificationService.show('Editing is not permitted.', 'Warning', 'warning', { timeOut: 2500, extendedTimeOut: 0 });
 					this.selectActionMenu('view');
 				}
