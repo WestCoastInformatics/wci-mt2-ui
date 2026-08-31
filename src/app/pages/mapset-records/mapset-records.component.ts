@@ -1476,7 +1476,6 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	goToPage(number: number) {
-		if (this.showMapTable === 'table') {
 		if (this.getCurrentPage() !== number) {
 			this.unCheckAll();
 			setTimeout(() => {
