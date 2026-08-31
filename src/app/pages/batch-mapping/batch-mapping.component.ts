@@ -169,6 +169,7 @@ export class BatchMappingComponent implements OnInit {
 	currentConcept: any;
 	manualStateRefresh = false;
 	rowClassRules: any;
+	batchEditEnabled = false;
 	userList: any;
 	selectedUser: any;
 	waitingForMapResponse = false;
@@ -683,31 +684,31 @@ export class BatchMappingComponent implements OnInit {
 		this.conceptDetail = false;
 	}
 
-	hasUserRoles(roles: any): boolean {
-		return Array.isArray(roles) && roles.some((role: string) => this.userRoles.includes(role));
-	}
+	selectedMapsUserActions(statuses: string[], assigned: string[]) {
+		this.batchEditEnabled = false;
+		if (!statuses || statuses.length === 0) {
+			return;
+		}
 
-	hasWorkflowMapAction(action: string): boolean {
-		const foundActions = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
-			return wfAction[action] === true;
-		});
-		return foundActions.length > 0;
-	}
-
-	isWorkFlowMapEdit(): boolean {
-		const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
-			return wfAction.edit === true;
-		});
-		return foundEdit.length > 0;
-	}
-
-	selectedMapUserActions(status: string) {
-		this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
-			if (status !== wf.status) {
+		const availableActions = this.reviewMapWF.filter((wf: any) => {
+			if (!statuses.includes(wf.status)) {
 				return false;
 			}
+
 			return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 		});
+
+		const foundEdit = availableActions.filter((wfAction: Record<string, unknown>) => {
+			return wfAction.edit === true;
+		});
+		if (foundEdit.length > 0) {
+			const thisUser = assigned.find((u) => {
+				return u === this.user?.userName;
+			});
+			if (thisUser !== undefined) {
+				this.batchEditEnabled = true;
+			}
+		}
 	}
 
 	getMapsetInfo() {
@@ -1860,26 +1861,41 @@ export class BatchMappingComponent implements OnInit {
 			}
 		}
 		this.checkedNum = 0;
-		let oneStatus = '';
 		for (let c = 0; c < this.mapsetData.length; c++) {
 			if (this.mapsetData[c].checked === true) {
 				this.checkedNum++;
-				oneStatus = this.mapsetData[c].workflowStatus;
 			}
 		}
-		if (this.checkedNum === 1 && oneStatus !== '') {
-			this.selectedMapUserActions(oneStatus);
+		if (this.checkedNum > 0) {
+			this.checkedStatusActions();
+		}
+	}
+
+	checkedStatusActions() {
+		let multiStatus = [];
+		let assigned = [];
+		for (let c = 0; c < this.mapsetData.length; c++) {
+			if (this.mapsetData[c].checked === true) {
+				assigned.push(this.mapsetData[c].assignedUser);
+				multiStatus.push(this.mapsetData[c].workflowStatus);
+			}
+		}
+		if (this.checkedNum > 0 && multiStatus.length > 0) {
+			this.selectedMapsUserActions(multiStatus, assigned);
 		}
 	}
 
 	checkboxAllClick() {
 		this.gridSelectAll == undefined || this.gridSelectAll ? (this.gridSelectAll = false) : (this.gridSelectAll = true);
-		this.mapsetData = this.mapsetData.map((set: any) => {
-			set.checked = this.gridSelectAll;
-			return set;
-		});
+		for (let data of this.mapsetData) {
+			data.checked = this.gridSelectAll;
+		}
 		this.gridApi.setGridOption('rowData', this.mapsetData);
+		this.gridApi.redrawRows();
 		this.checkedNum = this.gridSelectAll ? this.mapsetData.length : 0;
+		if (this.checkedNum > 0) {
+			this.checkedStatusActions();
+		}
 	}
 
 	setHeaderGroup() {

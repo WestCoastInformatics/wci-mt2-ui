@@ -135,17 +135,6 @@ export class MapsetMappingComponent implements OnInit {
 		this.disableChannel.postMessage(false);
 	}
 
-	hasUserRoles(roles: any): boolean {
-		return Array.isArray(roles) && roles.some((role: string) => this.userRoles.includes(role));
-	}
-
-	hasWorkflowMapAction(action: string): boolean {
-		const foundActions = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
-			return wfAction[action] === true;
-		});
-		return foundActions.length > 0;
-	}
-
 	isWorkFlowMapEdit(): boolean {
 		const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
 			return wfAction.edit === true;
