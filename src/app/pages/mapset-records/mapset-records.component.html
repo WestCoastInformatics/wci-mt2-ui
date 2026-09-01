@@ -185,9 +185,10 @@
 				class="caret-down-solid"
 			/>
 		</div>
-		<div class="d-flex dropdown-group" *ngIf="showMappingsSection && numOfMembers > 0">
+		<div class="d-flex dropdown-group" *ngIf="showMappingsSection">
 			<div class="col-md-auto mt2-directory-chooser-column" *ngIf="showTable && showMapTable === 'table'">
 				<app-column-chooser
+					*ngIf="showPaging"
 					title="Select Columns to Display"
 					[gridColumnApi]="refsetGridApi"
 					[useDialog]="useDialog"
@@ -216,14 +217,18 @@
 							*ngIf="searchInput.length > 0"
 							title="Clear Search"
 							(click)="$event.stopPropagation(); clearSearch()"
-							>&#10005;</span
-						><br />
-						<span *ngIf="searchInput.length > 0 && loaded" class="mappings-section"
-							>{{ refsetGridApi.getDisplayedRowCount() > 0 ? refsetGridApi.getDisplayedRowCount() : 'No ' }} result{{
+						>
+							&#10005;
+						</span>
+
+						<br />
+						<span *ngIf="searchInput.length > 0 && loaded && !searchLoading" class="mappings-section">
+							{{ refsetGridApi.getDisplayedRowCount() > 0 ? refsetGridApi.getDisplayedRowCount() : 'No ' }} result{{
 								refsetGridApi.getDisplayedRowCount() > 1 ? 's' : ''
 							}}
-							found</span
-						><span *ngIf="!loaded" class="mappings-section">Loading...</span>
+							found
+						</span>
+						<span *ngIf="!loaded || searchLoading" class="mappings-section">searching...</span>
 					</div></mat-menu
 				>
 				<div class="menu-inline">
@@ -242,7 +247,7 @@
 					</button>
 				</div>
 			</div>
-			<div class="col-md-auto mt2-directory-chooser-column">
+			<div class="col-md-auto mt2-directory-chooser-column" *ngIf="showPaging">
 				<div class="menu-inline">
 					<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="mapset-download-icon menu-button">
 						<mat-icon class="menu-icon">more_vert</mat-icon>
@@ -257,20 +262,26 @@
 						<span>View Selected Mapping</span>
 					</button>
 					<button
-						*ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && singleEditEnabled && checkedNum === 1"
+						*ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && isWorkFlowMapEdit() && checkedNum === 1"
 						mat-menu-item
 						(click)="selectAction('edit')"
 					>
 						<span>Edit Selected Mapping</span>
 					</button>
 					<button
-						*ngIf="!libraryOnly && checkedNum > 1 && mapsetInfo.workflowStatus === 'IN_EDIT' && batchEditEnabled"
+						*ngIf="!libraryOnly && checkedNum > 1 && mapsetInfo.workflowStatus === 'IN_EDIT'"
 						mat-menu-item
 						(click)="selectAction('batch')"
+						[disabled]="true"
 					>
 						<span>Batch Edit Selected Mappings</span>
 					</button>
-					<button *ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT'" mat-menu-item (click)="selectAction('list')">
+					<button
+						*ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT'"
+						mat-menu-item
+						(click)="selectAction('list')"
+						[disabled]="true"
+					>
 						<span>Batch Edit Maps By List</span>
 					</button>
 					<ng-container *ngIf="!libraryOnly && workFlowMapActions.length && checkedNum === 1 && mapsetInfo.workflowStatus === 'IN_EDIT'">
@@ -304,11 +315,11 @@
 			<div
 				id="directoryHeader"
 				class="directory-header ag-theme-alpine"
-				[hidden]="!showMappingsSection || !loaded || numOfMembers === 0 || showMapTable !== 'table'"
+				[hidden]="!showMappingsSection || !loaded || numOfMembers === 0 || showMapTable !== 'table' || !showPaging"
 			></div>
 			<div [hidden]="!showMappingsSection" class="section-background mappings-section" [ngClass]="{ overflow: showMapTable !== 'table' }">
-				<div [hidden]="!loaded" *ngIf="numOfMembers === 0" class="status-no-results">No Results to Show</div>
-				<div class="content-wrapper" [hidden]="showMapTable !== 'table' || !loaded">
+				<div [hidden]="!loaded" *ngIf="numOfMembers === 0 || !showPaging" class="status-no-results">No result found</div>
+				<div class="content-wrapper" [hidden]="showMapTable !== 'table' || !loaded || !showPaging">
 					<div #gridWrapper class="grid-wrapper">
 						<ag-grid-angular
 							*ngIf="showTable"
@@ -321,7 +332,6 @@
 							[suppressRowTransform]="true"
 							[gridOptions]="refsetGridOptions"
 							[rowSelection]="rowSelection"
-							[rowClassRules]="rowClassRules"
 							(firstDataRendered)="onResize(500)"
 						>
 						</ag-grid-angular>
@@ -401,7 +411,7 @@
 			</div>
 		</div>
 		<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
-		<div class="mt2-pagination-container" [hidden]="!loaded || numOfMembers === 0" *ngIf="showMappingsSection">
+		<div class="mt2-pagination-container" [hidden]="!loaded || numOfMembers === 0" *ngIf="showMappingsSection && showPaging">
 			<div class="mt2-pagination-top-row">
 				<div *ngIf="paginationPages.totalPages > 1" class="mt2-pagination-buttons no-wrap">
 					<button
@@ -936,5 +946,6 @@
 		[mapsetInfo]="mapsetInfo"
 		[isWFMapModalOpen]="isWFMapModalOpen"
 		[conceptCode]="conceptCode"
+		[workFlowMapActions]="workFlowMapActions"
 	></workflow-map-modal>
 </div>
