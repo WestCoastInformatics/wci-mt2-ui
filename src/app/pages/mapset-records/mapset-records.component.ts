@@ -144,6 +144,7 @@ export class MapsetRecordsComponent implements OnInit {
 	downloadTitle = 'Download';
 	downloadType = 'all';
 	report = null;
+	searchLoading = false;
 	singleEditEnabled = false;
 	batchEditEnabled = false;
 	waitingForResponse = false;
@@ -879,47 +880,7 @@ export class MapsetRecordsComponent implements OnInit {
 		if (gridReadyParams?.api && gridReadyParams.type === 'gridReady') {
 			this.refsetGridApi = gridReadyParams.api;
 			this.refsetGridParams = gridReadyParams;
-			if (this.mapsetRecordsColumnStorage) {
-				if (!localStorage.getItem(this.mapsetRecordsColumnStorage)) {
-					const columns: any = [];
-					const columnDefs = this.refsetGridApi.getColumnDefs?.();
-					for (const column of columnDefs) {
-						const columnData: any = {};
-
-						if (!column.colId) {
-							columnData.colId = column.field;
-						} else {
-							columnData.colId = column.colId;
-						}
-						columnData.show = true;
-						if (columnData.colId !== 'action-btns' && columnData.colId !== 'checkbox') {
-							columns.push(columnData);
-						}
-					}
-
-					const state: any = [];
-					for (const column of columns) {
-						column.show = true;
-						if (this.libraryOnly) {
-							if (column.colId === 'workflowStatus' || column.colId === 'assignedUser' || column.colId === 'modified') {
-								column.show = false;
-							}
-							this.manualStateRefresh = true;
-						} else {
-							if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
-								column.show = false;
-							}
-							this.manualStateRefresh = true;
-						}
-						state.push({ colId: column.colId, hide: !column.show });
-					}
-					this.refsetGridApi.applyColumnState({ state: state });
-					localStorage.setItem(this.mapsetRecordsColumnStorage, JSON.stringify(state));
-				} else {
-					this.refsetGridApi.applyColumnState({ state: JSON.parse(localStorage.getItem(this.mapsetRecordsColumnStorage)) });
-					this.manualStateRefresh = true;
-				}
-			}
+			this.checkColumnSettings();
 		}
 		const _window = window;
 		_window['checkboxHandleClick'] = () => {
@@ -930,6 +891,50 @@ export class MapsetRecordsComponent implements OnInit {
 			this.mapSetSubscription.unsubscribe();
 		}
 	};
+
+	checkColumnSettings() {
+		if (this.mapsetRecordsColumnStorage) {
+			if (!localStorage.getItem(this.mapsetRecordsColumnStorage)) {
+				const columns: any = [];
+				const columnDefs = this.refsetGridApi.getColumnDefs?.();
+				for (const column of columnDefs) {
+					const columnData: any = {};
+
+					if (!column.colId) {
+						columnData.colId = column.field;
+					} else {
+						columnData.colId = column.colId;
+					}
+					columnData.show = true;
+					if (columnData.colId !== 'action-btns' && columnData.colId !== 'checkbox') {
+						columns.push(columnData);
+					}
+				}
+
+				const state: any = [];
+				for (const column of columns) {
+					column.show = true;
+					if (this.libraryOnly) {
+						if (column.colId === 'workflowStatus' || column.colId === 'assignedUser' || column.colId === 'modified') {
+							column.show = false;
+						}
+						this.manualStateRefresh = true;
+					} else {
+						if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
+							column.show = false;
+						}
+						this.manualStateRefresh = true;
+					}
+					state.push({ colId: column.colId, hide: !column.show });
+				}
+				this.refsetGridApi.applyColumnState({ state: state });
+				localStorage.setItem(this.mapsetRecordsColumnStorage, JSON.stringify(state));
+			} else {
+				this.refsetGridApi.applyColumnState({ state: JSON.parse(localStorage.getItem(this.mapsetRecordsColumnStorage)) });
+				this.manualStateRefresh = true;
+			}
+		}
+	}
 
 	createDataSource() {
 		return {
@@ -953,7 +958,7 @@ export class MapsetRecordsComponent implements OnInit {
 				if (this.isNewPageSize) {
 					rowParams.failCallback();
 				} else {
-					this.loaded = false;
+					this.loaded = true;
 					let limit = endRow - startRow;
 
 					if (this.numOfMembers > 0) {
@@ -973,10 +978,21 @@ export class MapsetRecordsComponent implements OnInit {
 					} else {
 						restParams.filter = '';
 					}
+					this.searchLoading = true;
 					this.mapSetSubscription = this.refsetService.getMappingsByMapset(this.mapsetInfo.id, restParams).subscribe({
 						next: (results) => {
+							if (results.total === 0) {
+								this.loaded = true;
+								this.showPaging = false;
+								this.checkColumnSettings();
+								this.refsetGridApi.showNoRowsOverlay();
+								rowParams.successCallback([], 0);
+								this.mapsetData = undefined;
+								this.searchLoading = false;
+								return;
+							}
 							this.changeDetectorRef.detectChanges();
-							this.loaded = false;
+
 							const mapsetResults = results;
 							results = results.items;
 							this.mapsetData = undefined;
@@ -1047,7 +1063,7 @@ export class MapsetRecordsComponent implements OnInit {
 							if (this.numOfMembers > 10000) {
 								this.numOfMembers = 10000;
 							}
-
+							this.searchLoading = false;
 							setTimeout(() => {
 								const lastIndexH = document.getElementsByClassName('ag-header').length - 1;
 								const childH = document.getElementsByClassName('ag-header')[0];

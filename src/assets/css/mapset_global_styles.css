@@ -2134,6 +2134,18 @@ img.mt2-edition-flag {
 	background-color: rgba(0, 0, 0, 0) !important;
 }
 
+.mat-mdc-form-field.mat-form-field-disabled {
+	/* Replace 'blue' with your desired color or hex code */
+	--mdc-outlined-text-field-disabled-input-text-color: rgb(80, 80, 80);
+	--mdc-filled-text-field-disabled-input-text-color: rgb(80, 80, 80);
+}
+
+::ng-deep .mat-mdc-form-field.mat-form-field-disabled .mat-mdc-input-element:disabled {
+	color: rgb(80, 80, 80) !important;
+	-webkit-text-fill-color: rgb(80, 80, 80) !important; /* Crucial for Chrome/Safari */
+	opacity: 1 !important;
+}
+
 .dashboard-section {
 	box-shadow: 0 0.1rem 0.2rem rgb(0 0 0 / 20%);
 	background-color: #f8f9fa;
