@@ -1,9 +1,17 @@
 <button class="library-app-refset-notes m-r-20 no-padding" (click)="openNotesModal(notesModal)">
 	<img
+		*ngIf="notesList?.length > 0"
 		src="/assets/sticky-note.svg"
 		title="{{ `${libraryOnly ? 'View' : 'Add'} Notes` }}"
 		aria-label="{{ `${libraryOnly ? 'View' : 'Add'} Notes` }}"
 		class="mapset-notes-icon"
+	/>
+	<img
+		*ngIf="!notesList || notesList.length === 0"
+		src="/assets/sticky-note.svg"
+		title="{{ `${libraryOnly ? 'View' : 'Add'} Notes` }}"
+		aria-label="{{ `${libraryOnly ? 'View' : 'Add'} Notes` }}"
+		class="mapset-notes-icon no-notes"
 	/>
 </button>
 

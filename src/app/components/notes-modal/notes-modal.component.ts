@@ -33,6 +33,10 @@ export class NotesModalComponent {
 		private modalService: NgbModal,
 	) {}
 
+	ngOnInit() {
+		this.getNotes();
+	}
+
 	getNotes() {
 		this.refsetService.getNotes(this.mapSetId, this.conceptCode).subscribe(
 			(response) => {
