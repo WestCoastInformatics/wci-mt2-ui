@@ -275,7 +275,6 @@
 					>
 						<span>Batch Edit Selected Mappings</span>
 					</button>
-					the libray {{ libraryOnly }} status {{ mapsetInfo.workflowStatus }}
 					<button *ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT'" mat-menu-item (click)="selectAction('list')">
 						<span>Batch Edit Maps By List</span>
 					</button>
