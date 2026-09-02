@@ -15,6 +15,7 @@ export class NotesModalComponent {
 	notesFC = new FormControl('');
 	notesList: any;
 	showAddNotes = false;
+	confirmRemoveNote = false;
 	isModalOpen = false;
 	notesModalRef!: NgbModalRef;
 	uiUtility = UiUtility;
@@ -82,12 +83,18 @@ export class NotesModalComponent {
 		return UiUtility.dateFormatter(val);
 	}
 
-	removeNote(noteId: string) {
-		// Ask user to confirm the removal
-		if (!confirm('Are you sure you want to remove this note?')) {
-			return;
-		}
+	checkRemove(noteId: string) {
+		this.confirmRemoveNote = true;
+		setTimeout(() => {
+			const confirmBtn = document.querySelector('[title="Confirm Remove"]');
+			confirmBtn?.addEventListener('click', () => {
+				this.removeNote(noteId);
+			});
+		}, 10);
+	}
 
+	removeNote(noteId: string) {
+		this.confirmRemoveNote = false;
 		this.refsetService.removeNote(this.mapSetId, this.conceptCode, noteId).subscribe(
 			(response) => {
 				//response

@@ -9,13 +9,13 @@
 
 <ng-template #notesModal let-modal>
 	<div class="modal-header mt2-modal-header">
-		<div class="modal-title">{{ showAddNotes ? 'Add Notes' : 'Notes' }}</div>
+		<div class="modal-title">{{ showAddNotes ? 'Add Notes' : confirmRemoveNote ? 'Remove Note' : 'Notes' }}</div>
 		<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeNotesModal()">
 			<span aria-hidden="true">&times;</span>
 		</button>
 	</div>
 	<div class="modal-body m-t-20">
-		<div *ngIf="!showAddNotes">
+		<div *ngIf="!showAddNotes && !confirmRemoveNote">
 			<div class="row header-row">
 				<div class="col-2">Date</div>
 				<div class="col-1">|</div>
@@ -32,7 +32,7 @@
 					<div class="col-1 cell"></div>
 					<div class="col-5 cell">{{ note.notes }}</div>
 					<div class="col-1 cell">
-						<button *ngIf="!libraryOnly" title="Remove Note" class="remove-btn no-padding" (click)="removeNote(note.id)">&#10005;</button>
+						<button *ngIf="!libraryOnly" title="Remove Note" class="remove-btn no-padding" (click)="checkRemove(note.id)">&#10005;</button>
 					</div>
 				</div>
 			</div>
@@ -48,11 +48,16 @@
 			placeholder="enter notes..."
 			[formControl]="notesFC"
 		></textarea>
+		<div *ngIf="confirmRemoveNote">
+			<p>Are you sure you want to remove this note?</p>
+		</div>
 	</div>
 	<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
-		<button *ngIf="!showAddNotes" type="button" class="mt2-btn mt2-action-btn" (click)="closeNotesModal()">Close</button>
-		<button *ngIf="!showAddNotes && !libraryOnly" type="button" class="mt2-btn mt2-action-btn" (click)="addNotes()">Add Notes</button>
+		<button *ngIf="!showAddNotes && !confirmRemoveNote" type="button" class="mt2-btn mt2-action-btn" (click)="closeNotesModal()">Close</button>
+		<button *ngIf="!showAddNotes && !confirmRemoveNote && !libraryOnly" type="button" class="mt2-btn mt2-action-btn" (click)="addNotes()">Add Notes</button>
 		<button *ngIf="showAddNotes" type="button" class="mt2-btn mt2-action-btn" (click)="showAddNotes = false; notesFC.reset()">Cancel</button>
 		<button *ngIf="showAddNotes" type="button" title="Save Notes" class="mt2-btn mt2-action-btn" (click)="saveNotes()">Save</button>
+		<button *ngIf="confirmRemoveNote" type="button" title="Confirm Remove" class="mt2-btn mt2-action-btn" (click)="confirmRemoveNote = false">Confirm</button>
+		<button *ngIf="confirmRemoveNote" type="button" title="Cancel Remove" class="mt2-btn mt2-action-btn" (click)="confirmRemoveNote = false">Cancel</button>
 	</div>
 </ng-template>
