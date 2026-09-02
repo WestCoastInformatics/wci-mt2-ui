@@ -1,4 +1,5 @@
 @import 'src/assets/css/variables.css';
+@import 'src/assets/css/button-styles.css';
 @import 'src/assets/css/core-styles.css';
 
 .advice-popover {
@@ -466,7 +467,6 @@
 	left: 0 !important;
 }
 
-#directorySearchInputField,
 #browserSearchInputField {
 	width: 340px;
 	margin-top: 0.25em;

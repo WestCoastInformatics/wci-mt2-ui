@@ -629,6 +629,10 @@ export class BatchMappingComponent implements OnInit {
 					this.manualStateRefresh = true;
 				}
 			}
+			if (localStorage.getItem(this.batchSearchInput)) {
+				this.searchInput = JSON.parse(localStorage.getItem(this.batchSearchInput));
+				this.gridApi.setGridOption('quickFilterText', this.searchInput);
+			}
 		}
 		const _window = window;
 		_window['checkboxHandleClick'] = () => {
@@ -1168,10 +1172,6 @@ export class BatchMappingComponent implements OnInit {
 						{ path: '/projects/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
 						{ label: 'Batch Edit Mappings' },
 					]);
-					if (localStorage.getItem(this.batchSearchInput)) {
-						this.searchInput = JSON.parse(localStorage.getItem(this.batchSearchInput));
-						this.gridApi.setGridOption('quickFilterText', this.searchInput);
-					}
 				},
 				error: (error: any) => {
 					console.log(' Error: ', error);

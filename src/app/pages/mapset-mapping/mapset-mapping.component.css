@@ -78,15 +78,6 @@
 	border-bottom: 1px solid #aaa;
 }
 
-#directorySearchInputField {
-	width: 340px;
-	margin-top: 0.25em;
-
-	.mat-form-field-flex {
-		width: 320px;
-	}
-}
-
 .caret-up-solid,
 .caret-down-solid {
 	width: 17px;
@@ -461,15 +452,6 @@
 
 .mapset-name {
 	padding-left: 0.5em !important;
-}
-
-#directorySearchInputField {
-	width: 340px;
-	margin-top: 0.25em;
-
-	.mat-form-field-flex {
-		width: 320px;
-	}
 }
 
 .directoryViewFilterField.mat-form-field {

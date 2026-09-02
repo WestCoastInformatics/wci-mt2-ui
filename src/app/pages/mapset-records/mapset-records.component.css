@@ -291,6 +291,24 @@
 	letter-spacing: normal;
 }
 
+.mt2-map-btn {
+	height: 40px;
+	padding-left: 0;
+	padding-right: 0;
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
+	margin-right: 1em;
+	margin-top: 1em;
+	border-radius: 5px;
+	border: 1px solid var(--mapset-blue);
+	background-color: #ffffff;
+	box-sizing: border-box;
+	color: var(--mapset-blue);
+	box-shadow: none;
+	font-weight: 900;
+	letter-spacing: normal;
+}
+
 .no-margin-top {
 	margin-top: 0 !important;
 }
@@ -356,6 +374,19 @@
 	margin-top: 22px;
 	margin-right: 10px;
 	color: #666;
+}
+
+.form-btn {
+	width: fit-content;
+	padding-left: 0.8em !important;
+	padding-right: 0.8em !important;
+	margin-right: 0 !important;
+	height: 34px !important;
+	padding-top: 0.12em !important;
+}
+
+.sm-inline-btn {
+	scale: 0.85;
 }
 
 .status-no-results {
