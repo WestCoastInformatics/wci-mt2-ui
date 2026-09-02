@@ -1,15 +1,6 @@
 @import 'src/assets/css/variables.css';
 @import 'src/assets/css/core-styles.css';
 
-#directorySearchInputField {
-	width: 340px;
-	margin-top: 0.25em;
-
-	.mat-form-field-flex {
-		width: 320px;
-	}
-}
-
 .directoryViewFilterField.mat-form-field {
 	width: 125px;
 	padding-left: 5px;
