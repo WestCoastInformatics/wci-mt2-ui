@@ -262,26 +262,20 @@
 						<span>View Selected Mapping</span>
 					</button>
 					<button
-						*ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && isWorkFlowMapEdit() && checkedNum === 1"
+						*ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && singleEditEnabled && checkedNum === 1"
 						mat-menu-item
 						(click)="selectAction('edit')"
 					>
 						<span>Edit Selected Mapping</span>
 					</button>
 					<button
-						*ngIf="!libraryOnly && checkedNum > 1 && mapsetInfo.workflowStatus === 'IN_EDIT'"
+						*ngIf="!libraryOnly && checkedNum > 1 && mapsetInfo.workflowStatus === 'IN_EDIT' && batchEditEnabled"
 						mat-menu-item
 						(click)="selectAction('batch')"
-						[disabled]="true"
 					>
 						<span>Batch Edit Selected Mappings</span>
 					</button>
-					<button
-						*ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT'"
-						mat-menu-item
-						(click)="selectAction('list')"
-						[disabled]="true"
-					>
+					<button *ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT'" mat-menu-item (click)="selectAction('list')">
 						<span>Batch Edit Maps By List</span>
 					</button>
 					<ng-container *ngIf="!libraryOnly && workFlowMapActions.length && checkedNum === 1 && mapsetInfo.workflowStatus === 'IN_EDIT'">
@@ -946,6 +940,5 @@
 		[mapsetInfo]="mapsetInfo"
 		[isWFMapModalOpen]="isWFMapModalOpen"
 		[conceptCode]="conceptCode"
-		[workFlowMapActions]="workFlowMapActions"
 	></workflow-map-modal>
 </div>
