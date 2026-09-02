@@ -57,7 +57,7 @@
 		<button *ngIf="!showAddNotes && !confirmRemoveNote && !libraryOnly" type="button" class="mt2-btn mt2-action-btn" (click)="addNotes()">Add Notes</button>
 		<button *ngIf="showAddNotes" type="button" class="mt2-btn mt2-action-btn" (click)="showAddNotes = false; notesFC.reset()">Cancel</button>
 		<button *ngIf="showAddNotes" type="button" title="Save Notes" class="mt2-btn mt2-action-btn" (click)="saveNotes()">Save</button>
-		<button *ngIf="confirmRemoveNote" type="button" title="Confirm Remove" class="mt2-btn mt2-action-btn" (click)="confirmRemoveNote = false">Confirm</button>
 		<button *ngIf="confirmRemoveNote" type="button" title="Cancel Remove" class="mt2-btn mt2-action-btn" (click)="confirmRemoveNote = false">Cancel</button>
+		<button *ngIf="confirmRemoveNote" type="button" title="Confirm Remove" class="mt2-btn mt2-action-btn" (click)="confirmRemoveNote = false">Confirm</button>
 	</div>
 </ng-template>
