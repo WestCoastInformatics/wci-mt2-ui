@@ -37,7 +37,7 @@
 				</div>
 			</div>
 			<!--  *ngIf="notesList?.length === 0" -->
-			<div class="row cell border-top"><span class="none">{{ notesList?.length || 0 }} notes</span></div>
+			<div class="row cell border-top"><span class="none">{{ notesList?.length || 0 }} note{{ notesList?.length != 1 ? 's' : '' }}</span></div>
 		</div>
 		<textarea
 			#notes
