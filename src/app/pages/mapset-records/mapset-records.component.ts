@@ -1049,6 +1049,7 @@ export class MapsetRecordsComponent implements OnInit {
 										modFlag: this.getModuleLanguageIcon(results[a].mapEntries[b].moduleId),
 										modLang: this.getModuleLanguageName(results[a].mapEntries[b].moduleId),
 										workflowStatus: results[a].mappingWorkflow?.workflowStatus,
+										hasNotes: results[a].mapNotes?.length > 0 ? true : false,
 										assignedUser: results[a].mappingWorkflow?.assignedUser,
 										modifiedBy: results[a].mappingWorkflow?.modifiedBy,
 									});
@@ -1727,6 +1728,16 @@ export class MapsetRecordsComponent implements OnInit {
 				break;
 		}
 		this.closeWorkFlowModal();
+	}
+
+	updateNotesStatus(event: any) {
+		console.log('updateNotesStatus event', event.hasNotes);
+		for (let c = 0; c < this.mapsetData.length; c++) {
+			if (this.mapsetData[c].code === event.conceptCode) {
+				this.mapsetData[c].hasNotes = event.hasNotes;
+			}
+		}
+		this.refsetGridApi.redrawRows();
 	}
 
 	/* Map Workflow */

@@ -1,4 +1,4 @@
-import { ElementRef, Component, Input, TemplateRef, ViewChild } from '@angular/core';
+import { ElementRef, Component, Input, TemplateRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { UiUtility } from 'src/app/utilities/ui.utility';
@@ -20,22 +20,20 @@ export class NotesModalComponent {
 	notesModalRef!: NgbModalRef;
 	uiUtility = UiUtility;
 
-	@ViewChild('notes') private notes!: ElementRef;
+	@ViewChild('notesInput') private notes!: ElementRef;
 	@ViewChild('notesModal') notesModal!: TemplateRef<any>;
 
 	@Input() libraryOnly: any;
 	@Input() mapSetId: any;
 	@Input() conceptCode: any;
+	@Input() hasNotes: any;
+	@Output() updateNotesStatus = new EventEmitter<any>();
 
 	constructor(
 		private refsetService: RefsetService,
 		private notificationService: NotificationService,
 		private modalService: NgbModal,
 	) {}
-
-	ngOnInit() {
-		this.getNotes();
-	}
 
 	getNotes() {
 		this.refsetService.getNotes(this.mapSetId, this.conceptCode).subscribe(
@@ -47,11 +45,20 @@ export class NotesModalComponent {
 						user: item.user?.name,
 						notes: JSON.parse(item.note),
 					}));
-					this.notesList.sort((a: any, b: any) => {
-						const ad = a.date || 0;
-						const bd = b.date || 0;
-						return bd - ad;
-					});
+					if (this.notesList.length === 0) {
+						this.hasNotes = false;
+						this.updateNotesStatus.emit({ mapSetId: this.mapSetId, conceptCode: this.conceptCode, hasNotes: this.hasNotes });
+						return;
+					}
+					if (this.notesList.length > 0) {
+						this.notesList.sort((a: any, b: any) => {
+							const ad = a.date || 0;
+							const bd = b.date || 0;
+							return bd - ad;
+						});
+						this.hasNotes = true;
+						this.updateNotesStatus.emit({ mapSetId: this.mapSetId, conceptCode: this.conceptCode, hasNotes: this.hasNotes });
+					}
 				}
 			},
 			(error: any) => {
@@ -62,7 +69,9 @@ export class NotesModalComponent {
 	}
 
 	openNotesModal(content: any) {
-		this.getNotes();
+		if (this.hasNotes) {
+			this.getNotes();
+		}
 		this.notesList = [];
 		this.notesModalRef = this.modalService.open(content, { size: 'lg', centered: true });
 		this.isModalOpen = true;
@@ -71,8 +80,8 @@ export class NotesModalComponent {
 	addNotes() {
 		this.showAddNotes = true;
 		setTimeout(() => {
-			this.notes.nativeElement.focus();
-		}, 50);
+			// this.notes.nativeElement.focus();
+		}, 150);
 	}
 
 	closeNotesModal() {

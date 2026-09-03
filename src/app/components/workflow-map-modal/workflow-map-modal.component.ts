@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ElementRef, ViewChild, SimpleChanges, TemplateRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ElementRef, ViewChild, SimpleChanges, TemplateRef, OnChanges } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl } from '@angular/forms';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -9,7 +9,7 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 	templateUrl: './workflow-map-modal.component.html',
 	styleUrls: ['workflow-map-modal.component.css'],
 })
-export class WorkflowMapModalComponent {
+export class WorkflowMapModalComponent implements OnChanges {
 	userList: any;
 	selectedUser: any;
 	isModalOpen = false;

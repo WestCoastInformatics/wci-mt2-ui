@@ -1,13 +1,13 @@
 <button class="library-app-refset-notes m-r-20 no-padding" (click)="openNotesModal(notesModal)">
 	<img
-		*ngIf="notesList?.length > 0"
+		*ngIf="hasNotes"
 		src="/assets/sticky-note.svg"
 		title="{{ `${libraryOnly ? 'View' : 'Add'} Notes` }}"
 		aria-label="{{ `${libraryOnly ? 'View' : 'Add'} Notes` }}"
 		class="mapset-notes-icon"
 	/>
 	<img
-		*ngIf="!notesList || notesList.length === 0"
+		*ngIf="!hasNotes"
 		src="/assets/sticky-note.svg"
 		title="{{ `${libraryOnly ? 'View' : 'Add'} Notes` }}"
 		aria-label="{{ `${libraryOnly ? 'View' : 'Add'} Notes` }}"
@@ -40,15 +40,19 @@
 					<div class="col-1 cell"></div>
 					<div class="col-5 cell">{{ note.notes }}</div>
 					<div class="col-1 cell">
-						<button *ngIf="!libraryOnly" title="Remove Note" class="remove-btn no-padding" (click)="checkRemove(note.id)">&#10005;</button>
+						<button *ngIf="!libraryOnly" title="Remove Note" class="remove-btn no-padding" (click)="checkRemove(note.id)">
+							&#10005;
+						</button>
 					</div>
 				</div>
 			</div>
 			<!--  *ngIf="notesList?.length === 0" -->
-			<div class="row cell border-top"><span class="none">{{ notesList?.length || 0 }} note{{ notesList?.length != 1 ? 's' : '' }}</span></div>
+			<div class="row cell border-top">
+				<span class="none">{{ notesList?.length || 0 }} note{{ notesList?.length != 1 ? 's' : '' }}</span>
+			</div>
 		</div>
 		<textarea
-			#notes
+			#notesInput
 			*ngIf="showAddNotes"
 			class="form-field-value notes-text"
 			type="text"
@@ -62,10 +66,16 @@
 	</div>
 	<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
 		<button *ngIf="!showAddNotes && !confirmRemoveNote" type="button" class="mt2-btn mt2-action-btn" (click)="closeNotesModal()">Close</button>
-		<button *ngIf="!showAddNotes && !confirmRemoveNote && !libraryOnly" type="button" class="mt2-btn mt2-action-btn" (click)="addNotes()">Add Notes</button>
+		<button *ngIf="!showAddNotes && !confirmRemoveNote && !libraryOnly" type="button" class="mt2-btn mt2-action-btn" (click)="addNotes()">
+			Add Notes
+		</button>
 		<button *ngIf="showAddNotes" type="button" class="mt2-btn mt2-action-btn" (click)="showAddNotes = false; notesFC.reset()">Cancel</button>
 		<button *ngIf="showAddNotes" type="button" title="Save Notes" class="mt2-btn mt2-action-btn" (click)="saveNotes()">Save</button>
-		<button *ngIf="confirmRemoveNote" type="button" title="Cancel Remove" class="mt2-btn mt2-action-btn" (click)="confirmRemoveNote = false">Cancel</button>
-		<button *ngIf="confirmRemoveNote" type="button" title="Confirm Remove" class="mt2-btn mt2-action-btn" (click)="confirmRemoveNote = false">Confirm</button>
+		<button *ngIf="confirmRemoveNote" type="button" title="Cancel Remove" class="mt2-btn mt2-action-btn" (click)="confirmRemoveNote = false">
+			Cancel
+		</button>
+		<button *ngIf="confirmRemoveNote" type="button" title="Confirm Remove" class="mt2-btn mt2-action-btn" (click)="confirmRemoveNote = false">
+			Confirm
+		</button>
 	</div>
 </ng-template>
