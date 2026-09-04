@@ -380,6 +380,7 @@
 	margin: 0;
 	padding: 0;
 	text-wrap: nowrap;
+	margin-left: auto;
 }
 
 .assigned-column {
@@ -387,6 +388,7 @@
 	text-wrap-mode: nowrap;
 	text-overflow: ellipsis;
 	overflow: clip;
+	margin-left: auto;
 }
 
 .workflow-container {
@@ -395,7 +397,7 @@
 	.workflow-status-badge {
 		position: relative !important;
 		width: fit-content !important;
-		justify-self: right;
+		margin-left: auto;
 	}
 }
 
@@ -418,12 +420,13 @@
 .action-column {
 	margin-top: 15px;
 	text-align: right;
+	margin-left: auto;
 }
 
 .action-btns {
 	width: 65px;
 	height: 25px;
-	justify-self: right;
+	margin-left: auto;
 }
 
 .odd-row {
