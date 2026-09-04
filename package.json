@@ -71,7 +71,7 @@
 		"@types/node": "^22.5.5",
 		"@typescript-eslint/eslint-plugin": "^8.33.1",
 		"@typescript-eslint/parser": "^8.33.1",
-		"cypress": "^15.13.0",
+		"cypress": "^15.21.0",
 		"esbuild": "^0.25.0",
 		"eslint": "^9.28.0",
 		"eslint-config-prettier": "^9.1.0",
@@ -88,7 +88,7 @@
 		"yarn": "^1.22.19"
 	},
 	"overrides": {
-		"qs": "^6.15.2",
+		"qs": "^6.16.0",
 		"picomatch": "^4.0.4",
 		"minimatch": "^10.2.4",
 		"jsdom": "^26.0.0",
