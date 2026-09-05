@@ -250,6 +250,22 @@ export class AuthenticationService {
 		}
 	}
 
+	checkError(error: any): void {
+		if (
+			error?.error?.status === 500 &&
+			error?.error?.message.includes('The Token has expired') &&
+			error?.error?.error === 'Internal Server Error'
+		) {
+			this.notificationService.show('Your session has expired and you have been logged out', null, 'error');
+			this.logoutUser();
+		} else {
+			this.notificationService.show('Unexpected application error, please try again.', 'Error', 'error', {
+				timeOut: 2500,
+				extendedTimeOut: 0,
+			});
+		}
+	}
+
 	notAuthenticated(fromLogout = false): any {
 		const userWasLoggedin = this.isUserLoggedIn;
 		sessionStorage.removeItem('auth_token');

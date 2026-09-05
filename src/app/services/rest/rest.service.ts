@@ -19,7 +19,10 @@ export class RestWrapper<T> {
 export class RestService {
 	restUrl = environment.restUrl;
 
-	constructor(private http: HttpClient, private readonly notificationService: NotificationService) {}
+	constructor(
+		private http: HttpClient,
+		private readonly notificationService: NotificationService,
+	) {}
 
 	makeCall(url: string, method = 'get'): Observable<any> {
 		return this.http[method]<any>(url);
@@ -43,7 +46,7 @@ export class RestService {
 		return this.http.get<any>(this.restUrl + url + queryString).pipe(
 			catchError((err) => {
 				return this.giveErrorNotification(err, ignoreErrors, returnErrorOnIgnore);
-			})
+			}),
 		);
 	}
 
@@ -54,22 +57,22 @@ export class RestService {
 					return errorHandler(err);
 				}
 				return this.giveErrorNotification(err, ignoreErrors);
-			})
+			}),
 		);
 	}
 
 	postWithFile(url: string, params: any, ignoreErrors = false): Observable<any> {
 		return this.http
 			.post<any>(this.restUrl + url, params, {
-				'headers': new HttpHeaders({
-					'Accept': 'application/json',
-					'enctype': 'multipart/form-data',
+				headers: new HttpHeaders({
+					Accept: 'application/json',
+					enctype: 'multipart/form-data',
 				}),
 			})
 			.pipe(
 				catchError((err) => {
 					return this.giveErrorNotification(err, ignoreErrors);
-				})
+				}),
 			);
 	}
 
@@ -81,7 +84,7 @@ export class RestService {
 					return errorHandler(err);
 				}
 				return this.giveErrorNotification(err, ignoreErrors);
-			})
+			}),
 		);
 	}
 
@@ -89,22 +92,22 @@ export class RestService {
 		return this.http.put<any>(this.restUrl + url, params).pipe(
 			catchError((err) => {
 				return this.giveErrorNotification(err, ignoreErrors);
-			})
+			}),
 		);
 	}
 
 	putWithFile(url: string, params: any, ignoreErrors = false): Observable<any> {
 		return this.http
 			.put<any>(this.restUrl + url, params, {
-				'headers': new HttpHeaders({
-					'Accept': 'application/json',
-					'enctype': 'multipart/form-data',
+				headers: new HttpHeaders({
+					Accept: 'application/json',
+					enctype: 'multipart/form-data',
 				}),
 			})
 			.pipe(
 				catchError((err) => {
 					return this.giveErrorNotification(err, ignoreErrors);
-				})
+				}),
 			);
 	}
 
@@ -112,11 +115,20 @@ export class RestService {
 		return this.http.delete<any>(this.restUrl + url).pipe(
 			catchError((err) => {
 				return this.giveErrorNotification(err, ignoreErrors);
-			})
+			}),
 		);
 	}
 
 	giveErrorNotification(error: any, ignoreErrors = false, returnErrorOnIgnore = false) {
+		console.log(' show err rnot ', error);
+		if (
+			error?.error?.status === 500 &&
+			error?.error?.message.includes('The Token has expired') &&
+			error?.error?.error === 'Internal Server Error'
+		) {
+			ignoreErrors = true;
+			return error?.error;
+		}
 		if (!ignoreErrors) {
 			let definedError = '';
 			if (error?.status) {
