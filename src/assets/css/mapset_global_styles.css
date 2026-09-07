@@ -1775,6 +1775,22 @@ input[type='checkbox'] {
 	display: inline-block;
 }
 
+.heading {
+	font-weight: 700;
+	margin-bottom: 32px;
+	padding: 5px 8px 5px 8px !important;
+	color: #666666;
+}
+
+.sub-heading {
+	font-family: ArialMT, Arial, sans-serif;
+	font-size: 14px;
+	font-weight: 300;
+	line-height: 21px;
+	color: rgb(102, 102, 102);
+	padding-left: 8px;
+}
+
 .mat-horizontal-stepper-header-container {
 	height: 65px;
 }
@@ -1792,7 +1808,10 @@ input[type='checkbox'] {
 }
 
 .mat-badge-small.mat-badge-overlap.mat-badge-after .mat-badge-content {
-	right: -2px;
+	right: -1px;
+	top: 4px;
+	width: 10px;
+	height: 10px;
 }
 
 .details-page-stepper-started-step {

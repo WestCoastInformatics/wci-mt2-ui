@@ -122,7 +122,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 						console.error('no mapset found');
 					}
 				},
-				erro: (err) => {
+				error: (err) => {
 					console.error(' Error: ', err);
 					this.authenticationService.checkError(err);
 				},

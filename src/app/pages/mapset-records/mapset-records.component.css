@@ -430,6 +430,12 @@
 	}
 }
 
+.filter-box {
+	padding-left: 2px;
+	padding-right: 2px;
+	width: 150px;
+}
+
 .checkbox-column {
 	margin-left: 18px;
 	width: 30px;

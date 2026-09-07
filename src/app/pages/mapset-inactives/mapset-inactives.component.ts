@@ -612,7 +612,7 @@ export class MapsetInactivesComponent implements OnInit {
 					} else {
 						restParams.filter = '';
 					}
-					this.mapSetSubscription = this.refsetService.getMappingsByMapset(this.mapsetInfo.id, restParams).subscribe({
+					this.mapSetSubscription = this.refsetService.getMappingsByMapset(this.mapsetInfo.id, restParams, '').subscribe({
 						next: (results) => {
 							this.changeDetectorRef.detectChanges();
 							this.loaded = false;

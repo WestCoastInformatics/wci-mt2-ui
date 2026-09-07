@@ -65,7 +65,7 @@ export class MapsetProjectsComponent implements OnInit {
 	numOfResults = 0;
 	directUrl: string | undefined;
 	numOfMembers: any;
-	mapsetLibraryColumnStorage = 'mapsetLibraryColumnStorage';
+	mapsetProjectsColumnStorage = 'mapsetProjectsColumnStorage';
 	disableChannel = new BroadcastChannel('disable-button-channel');
 	originalGridParams: any;
 	uiUtility = UiUtility;

@@ -177,6 +177,18 @@ export class BatchMappingComponent implements OnInit {
 	workFlowMapNotesFC = new FormControl('');
 	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
 	reviewMapWF: any;
+	workflowFilter = '';
+	assignedFilter = '';
+	workflowFilterOptions = [
+		{ label: 'Published', value: 'PUBLISHED' },
+		{ label: 'New', value: 'NEW' },
+		{ label: 'Ready For Publication', value: 'READY_FOR_PUBLICATION' },
+		{ label: 'In Edit', value: 'EDITING_IN_PROGRESS' },
+		{ label: 'Edit Completed', value: 'EDITING_DONE' },
+		{ label: 'Ready For Review', value: 'REVIEW_NEEDED' },
+		{ label: 'In Review', value: 'REVIEW_IN_PROGRESS' },
+	];
+	assignedFilterOptions = [];
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
@@ -545,8 +557,8 @@ export class BatchMappingComponent implements OnInit {
 				colId: 'assignedUser',
 				field: 'assignedUser',
 				tooltipField: 'assignedUser',
-				headerName: 'Assigned to',
-				headerTooltip: 'Assigned to',
+				headerName: 'Assigned To',
+				headerTooltip: 'Assigned To',
 				cellClass: 'mt2-directory-column-id',
 				width: 145,
 				resizable: true,
@@ -980,6 +992,18 @@ export class BatchMappingComponent implements OnInit {
 				console.log(' Error: ', error);
 			},
 		});
+	}
+
+	filterSelection(filter: string): void {
+		switch (filter) {
+			case 'workflow':
+				console.log(' this workflow filter', this.workflowFilter);
+
+				break;
+			case 'assigned':
+				console.log(' this assigned filter', this.assignedFilter);
+				break;
+		}
 	}
 
 	createDataSource() {

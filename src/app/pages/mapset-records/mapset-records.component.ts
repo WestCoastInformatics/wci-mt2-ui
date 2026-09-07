@@ -138,6 +138,8 @@ export class MapsetRecordsComponent implements OnInit {
 	mapsetSearchInput = 'mapsetSearchInput';
 	mapsetGridCurrentPageNum = 'mapsetGridCurrentPageNum';
 	mapsetGridCurrentPageSize = 'mapsetGridCurrentPageSize';
+	mapsetRecordsWorkflowFilter = 'mapsetRecordsWorkflowFilter';
+	mapsetRecordsAssignedFilter = 'mapsetRecordsAssignedFilter';
 	moduleMetadata: any;
 	rowColors = [{ background: 'white' }, { background: '#f2f2f2' }];
 	currentRowColor = 0;
@@ -199,6 +201,18 @@ export class MapsetRecordsComponent implements OnInit {
 	reviewMapWF: any;
 	isMultiple = false;
 	conceptCodeList: any;
+	workflowFilter = '';
+	assignedFilter = '';
+	workflowFilterOptions = [
+		{ label: 'Published', value: 'PUBLISHED' },
+		{ label: 'New', value: 'NEW' },
+		{ label: 'Ready For Publication', value: 'READY_FOR_PUBLICATION' },
+		{ label: 'In Edit', value: 'EDITING_IN_PROGRESS' },
+		{ label: 'Edit Completed', value: 'EDITING_DONE' },
+		{ label: 'Ready For Review', value: 'REVIEW_NEEDED' },
+		{ label: 'In Review', value: 'REVIEW_IN_PROGRESS' },
+	];
+	assignedFilterOptions: any[] = [];
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 	@ViewChild('workflowStatusSection')
@@ -269,11 +283,15 @@ export class MapsetRecordsComponent implements OnInit {
 			this.mapsetSearchInput = prefix + this.mapsetSearchInput;
 			this.mapsetGridCurrentPageNum = prefix + this.mapsetGridCurrentPageNum;
 			this.mapsetGridCurrentPageSize = prefix + this.mapsetGridCurrentPageSize;
+			this.mapsetRecordsWorkflowFilter = prefix + this.mapsetRecordsWorkflowFilter;
+			this.mapsetRecordsAssignedFilter = prefix + this.mapsetRecordsAssignedFilter;
 			this.mapsetCode = routeParams.code;
 			this.mapsetRecordsColumnStorage += this.mapsetCode;
 			this.mapsetSearchInput += this.mapsetCode;
 			this.mapsetGridCurrentPageNum += this.mapsetCode;
 			this.mapsetGridCurrentPageSize += this.mapsetCode;
+			this.mapsetRecordsWorkflowFilter += this.mapsetCode;
+			this.mapsetRecordsAssignedFilter += this.mapsetCode;
 			this.clearSavedSelections();
 			this.getMapsetInfo();
 			this.getModuleMetadata();
@@ -469,8 +487,8 @@ export class MapsetRecordsComponent implements OnInit {
 						colId: 'assignedUser',
 						field: 'assignedUser',
 						tooltipField: 'assignedUser',
-						headerName: 'Assigned to',
-						headerTooltip: 'Assigned to',
+						headerName: 'Assigned To',
+						headerTooltip: 'Assigned To',
 						cellClass: 'mt2-directory-column-id',
 						width: 145,
 						resizable: true,
@@ -623,6 +641,15 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	setMapsetInfo() {
+		for (const u of this.mapsetInfo.mapProject.mapLeads) {
+			this.assignedFilterOptions.push({ label: u.name, value: u.id });
+		}
+		for (const s of this.mapsetInfo.mapProject.mapSpecialists) {
+			this.assignedFilterOptions.push({ label: s.name, value: s.id });
+		}
+		for (const p of this.mapsetInfo.mapProject.mapPrinciples) {
+			this.assignedFilterOptions.push({ label: p.name, value: p.id });
+		}
 		localStorage.setItem(this.mapsetVersionStorage, JSON.stringify(this.selectedVersion));
 		this.breadcrumbService.setBreadcrumbs([
 			{ path: this.libraryOnly ? '/library/' : '/projects/', label: this.libraryOnly ? 'Library' : 'Projects' },
@@ -948,6 +975,19 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 	}
 
+	filterSelection(filter: string): void {
+		switch (filter) {
+			case 'workflow':
+				this.refsetGridApi.purgeInfiniteCache();
+				localStorage.setItem(this.mapsetRecordsWorkflowFilter, JSON.stringify(this.workflowFilter));
+				break;
+			case 'assigned':
+				this.refsetGridApi.purgeInfiniteCache();
+				localStorage.setItem(this.mapsetRecordsAssignedFilter, JSON.stringify(this.assignedFilter));
+				break;
+		}
+	}
+
 	createDataSource() {
 		return {
 			rowCount: null,
@@ -961,6 +1001,14 @@ export class MapsetRecordsComponent implements OnInit {
 				const storedSearchInput = localStorage.getItem(this.mapsetSearchInput);
 				if (storedSearchInput) {
 					this.searchInput = JSON.parse(storedSearchInput);
+				}
+				const storedWorkflowFilter = localStorage.getItem(this.mapsetRecordsWorkflowFilter);
+				if (storedWorkflowFilter) {
+					this.workflowFilter = JSON.parse(storedWorkflowFilter);
+				}
+				const storedAssignedFilter = localStorage.getItem(this.mapsetRecordsAssignedFilter);
+				if (storedAssignedFilter) {
+					this.assignedFilter = JSON.parse(storedAssignedFilter);
 				}
 
 				if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
@@ -990,8 +1038,16 @@ export class MapsetRecordsComponent implements OnInit {
 					} else {
 						restParams.filter = '';
 					}
+
+					let addFilters = '';
+					if (this.workflowFilter !== '') {
+						addFilters += `&workflowStatus=${this.workflowFilter}`;
+					}
+					if (this.assignedFilter !== '') {
+						addFilters += `&assignedUser=${this.assignedFilter}`;
+					}
 					this.searchLoading = true;
-					this.mapSetSubscription = this.refsetService.getMappingsByMapset(this.mapsetInfo.id, restParams).subscribe({
+					this.mapSetSubscription = this.refsetService.getMappingsByMapset(this.mapsetInfo.id, restParams, addFilters).subscribe({
 						next: (results) => {
 							if (results.total === 0) {
 								this.loaded = true;
