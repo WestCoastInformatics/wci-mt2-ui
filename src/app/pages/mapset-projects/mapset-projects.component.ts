@@ -19,7 +19,6 @@ import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
 	standalone: false,
@@ -115,7 +114,6 @@ export class MapsetProjectsComponent implements OnInit {
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
 		private modalService: NgbModal,
-		private pagerService: PaginationService,
 		private mt2Service: MT2Service,
 		private notificationService: NotificationService,
 	) {
@@ -287,8 +285,9 @@ export class MapsetProjectsComponent implements OnInit {
 				this.showTable = true;
 				this.changeDetectorRef.detectChanges();
 			},
-			error: (error) => {
-				//
+			error: (err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
 			},
 		});
 	}
@@ -373,6 +372,7 @@ export class MapsetProjectsComponent implements OnInit {
 			error: (error) => {
 				this.refsetGridApi.showNoRowsOverlay();
 				this.refsetGridApi.setGridOption('rowData', []);
+				this.authenticationService.checkError(error);
 			},
 		});
 
@@ -502,7 +502,8 @@ export class MapsetProjectsComponent implements OnInit {
 					},
 					(err) => {
 						this.downloading = false;
-						console.error(err);
+						console.error(' Error: ', err);
+						this.authenticationService.checkError(err);
 					},
 				);
 			});
@@ -538,7 +539,8 @@ export class MapsetProjectsComponent implements OnInit {
 			},
 			(err) => {
 				this.downloading = false;
-				console.error(err);
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
 			},
 		);
 	}
@@ -636,6 +638,10 @@ export class MapsetProjectsComponent implements OnInit {
 				next: (results) => {
 					this.mt2Service.setModuleMetadata(results);
 					this.moduleMetadata = results;
+				},
+				error: (err) => {
+					console.error(' Error: ', err);
+					this.authenticationService.checkError(err);
 				},
 			});
 		} else {

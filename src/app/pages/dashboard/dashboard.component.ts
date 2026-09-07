@@ -1,11 +1,9 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
-import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
@@ -17,8 +15,6 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { NotificationService } from 'src/app/services/notification.service';
-import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
 	standalone: false,
@@ -95,15 +91,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	constructor(
 		private router: Router,
 		private titleService: Title,
-		private dialogFactoryService: DialogFactoryService,
 		private refsetService: RefsetService,
 		private changeDetectorRef: ChangeDetectorRef,
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
-		private modalService: NgbModal,
-		private pagerService: PaginationService,
 		private mt2Service: MT2Service,
-		private notificationService: NotificationService,
 	) {
 		document.body.scrollTop = 0;
 		refsetService.getTaxonomyRoot();
@@ -129,6 +121,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					} else {
 						console.error('no mapset found');
 					}
+				},
+				erro: (err) => {
+					console.error(' Error: ', err);
+					this.authenticationService.checkError(err);
 				},
 			});
 		}
@@ -360,6 +356,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 										console.error('no mapset found');
 									}
 								},
+								error: (err) => {
+									console.error(' Error: ', err);
+									this.authenticationService.checkError(err);
+								},
 							});
 						}
 					}
@@ -388,10 +388,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 				UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
 			},
-			error: (error: any) => {
-				console.log(' Error: ', error);
+			error: (err: any) => {
 				this.refsetGridApi.showNoRowsOverlay();
 				this.refsetGridApi.setGridOption('rowData', []);
+				this.authenticationService.checkError(err);
 			},
 		});
 
@@ -535,6 +535,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				next: (results) => {
 					this.mt2Service.setModuleMetadata(results);
 					this.moduleMetadata = results;
+				},
+				error: (err) => {
+					console.error(' Error: ', err);
+					this.authenticationService.checkError(err);
 				},
 			});
 		} else {

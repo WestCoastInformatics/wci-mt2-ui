@@ -288,7 +288,7 @@
 					<button *ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT'" mat-menu-item (click)="selectAction('list')">
 						<span>Batch Edit Maps By List</span>
 					</button>
-					<ng-container *ngIf="!libraryOnly && workFlowMapActions.length && checkedNum === 1 && mapsetInfo.workflowStatus === 'IN_EDIT'">
+					<ng-container *ngIf="!libraryOnly && workFlowMapActions.length > 0 && mapsetInfo.workflowStatus === 'IN_EDIT'">
 						<span *ngFor="let action of workFlowMapActions">
 							<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value)">
 								<span> {{ action.label }}</span>
@@ -945,10 +945,13 @@
 	</ng-template>
 	<workflow-map-modal
 		(updateWorkFlowMapStatus)="updateWorkFlowMapStatus($event)"
+		(updateMultiWorkFlowMapStatus)="updateMultiWorkFlowMapStatus($event)"
 		(closeWorkflowMapModal)="closeWorkflowMapModal()"
 		[workFlowMapStatus]="workFlowMapStatus"
 		[mapsetInfo]="mapsetInfo"
 		[isWFMapModalOpen]="isWFMapModalOpen"
 		[conceptCode]="conceptCode"
+		[conceptCodeList]="conceptCodeList"
+		[multiple]="isMultiple"
 	></workflow-map-modal>
 </div>
