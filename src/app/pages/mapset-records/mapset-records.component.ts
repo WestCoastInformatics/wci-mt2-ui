@@ -978,10 +978,16 @@ export class MapsetRecordsComponent implements OnInit {
 	filterSelection(filter: string): void {
 		switch (filter) {
 			case 'workflow':
+				this.setPageSize(10);
+				this.goToPage(0);
+				this.loaded = false;
 				this.refsetGridApi.purgeInfiniteCache();
 				localStorage.setItem(this.mapsetRecordsWorkflowFilter, JSON.stringify(this.workflowFilter));
 				break;
 			case 'assigned':
+				this.setPageSize(10);
+				this.goToPage(0);
+				this.loaded = false;
 				this.refsetGridApi.purgeInfiniteCache();
 				localStorage.setItem(this.mapsetRecordsAssignedFilter, JSON.stringify(this.assignedFilter));
 				break;
@@ -999,15 +1005,15 @@ export class MapsetRecordsComponent implements OnInit {
 				this.refsetGridApi.showLoadingOverlay();
 
 				const storedSearchInput = localStorage.getItem(this.mapsetSearchInput);
-				if (storedSearchInput) {
+				if (storedSearchInput !== null && storedSearchInput !== '') {
 					this.searchInput = JSON.parse(storedSearchInput);
 				}
 				const storedWorkflowFilter = localStorage.getItem(this.mapsetRecordsWorkflowFilter);
-				if (storedWorkflowFilter) {
+				if (storedWorkflowFilter !== null && storedWorkflowFilter !== '') {
 					this.workflowFilter = JSON.parse(storedWorkflowFilter);
 				}
 				const storedAssignedFilter = localStorage.getItem(this.mapsetRecordsAssignedFilter);
-				if (storedAssignedFilter) {
+				if (storedAssignedFilter !== null && storedAssignedFilter !== '') {
 					this.assignedFilter = JSON.parse(storedAssignedFilter);
 				}
 
@@ -1254,22 +1260,13 @@ export class MapsetRecordsComponent implements OnInit {
 
 				return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 			});
-
 			if (availableActions) {
-				console.log(' availableActions', availableActions);
-
 				const bulkActions = new Set(availableActions.map((item) => `${item.value}-${item.status}`));
-				console.log(' bulkActions', bulkActions);
-
 				this.isMultiple = bulkActions.size > 0;
 				if (this.isMultiple) {
-					console.log(' this.isMultiple', this.isMultiple);
-
 					this.workFlowMapActions = availableActions;
-					console.log(' this.workFlowMapActions', this.workFlowMapActions);
 				}
 			}
-
 			const foundEdit = availableActions.filter((wfAction: Record<string, unknown>) => {
 				return wfAction.edit === true;
 			});
@@ -1838,19 +1835,21 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	updateMultiWorkFlowMapStatus(response: any) {
-		console.log(' updateMultiWorkFlowMapStatus', response);
-		// for (let c = 0; c < this.mapsetData.length; c++) {
-		// 	if (this.mapsetData[c].checked === true) {
-		// 		this.mapsetData[c].workflowStatus = response.workflowStatus;
-		// 		this.mapsetData[c].modified = response.modified;
-		// 		this.mapsetData[c].assignedUser = response.assignedUser;
-		// 		this.mapsetData[c].checked = false;
-		// 		this.mapsetData[c].updated = true;
-		// 	} else {
-		// 		this.mapsetData[c].updated = false;
-		// 	}
-		// }
-		// this.refsetGridApi.redrawRows();
+		for (let u = 0; u < this.mapsetData.length; u++) {
+			this.mapsetData[u].updated = false;
+			this.mapsetData[u].checked = false;
+		}
+		for (const item of response.items) {
+			for (let c = 0; c < this.mapsetData.length; c++) {
+				if (item.conceptCode === this.mapsetData[c].code) {
+					this.mapsetData[c].workflowStatus = item.workflow.workflowStatus;
+					this.mapsetData[c].modified = item.workflow.modified;
+					this.mapsetData[c].assignedUser = item.workflow.assignedUser;
+					this.mapsetData[c].updated = true;
+				}
+			}
+		}
+		this.refsetGridApi.redrawRows();
 	}
 
 	closeWorkflowMapModal() {
@@ -1924,7 +1923,6 @@ export class MapsetRecordsComponent implements OnInit {
 			case 'nrmr':
 				this.refsetService.requestReport_NRMR().subscribe(
 					(data) => {
-						// console.log(' data ', data);
 						this.notificationService.show('Report request successful, email will be sent shortly.', 'Success', 'success', {
 							timeOut: 0,
 							extendedTimeOut: 0,
@@ -1940,7 +1938,6 @@ export class MapsetRecordsComponent implements OnInit {
 			case 'nrtr':
 				this.refsetService.requestReport_NRTR().subscribe(
 					(data) => {
-						// console.log(' data ', data);
 						this.notificationService.show('Report request successful, email will be sent shortly.', 'Success', 'success', {
 							timeOut: 0,
 							extendedTimeOut: 0,
@@ -1956,7 +1953,6 @@ export class MapsetRecordsComponent implements OnInit {
 			case 'hur':
 				this.refsetService.requestReport_HUR().subscribe(
 					(data) => {
-						// console.log(' data ', data);
 						this.notificationService.show('Report request successful, email will be sent shortly.', 'Success', 'success', {
 							timeOut: 0,
 							extendedTimeOut: 0,
