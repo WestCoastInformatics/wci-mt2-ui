@@ -190,7 +190,7 @@ export class BatchMappingComponent implements OnInit {
 		{ label: 'Ready For Review', value: 'REVIEW_NEEDED' },
 		{ label: 'In Review', value: 'REVIEW_IN_PROGRESS' },
 	];
-	assignedFilterOptions = [];
+	assignedFilterOptions: any[] = [];
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
@@ -764,6 +764,7 @@ export class BatchMappingComponent implements OnInit {
 					this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
 					localStorage.setItem('projects_mapsetVersion', JSON.stringify(this.selectedVersion));
 				}
+
 				this.getMapsetData();
 				this.getMapProject();
 			},
@@ -1177,7 +1178,7 @@ export class BatchMappingComponent implements OnInit {
 					const batch = [];
 					const list = response.items;
 					this.mapsetResponse = list;
-
+					this.assignedFilterOptions = [];
 					for (let i = 0; i < list.length; i++) {
 						const results = list[i];
 						let data = {};
@@ -1231,6 +1232,16 @@ export class BatchMappingComponent implements OnInit {
 								workflowStatus: results.mappingWorkflow?.workflowStatus,
 								assignedUser: results.mappingWorkflow?.assignedUser,
 							};
+							const assignedUser = results.mappingWorkflow?.assignedUser;
+							if (assignedUser !== null && assignedUser !== undefined) {
+								const isDuplicate = this.assignedFilterOptions.some((option) => option.value === assignedUser);
+								if (!isDuplicate) {
+									this.assignedFilterOptions.push({
+										label: assignedUser,
+										value: assignedUser,
+									});
+								}
+							}
 							count++;
 							batch.push(data);
 						}

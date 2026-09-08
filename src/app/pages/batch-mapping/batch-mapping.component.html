@@ -109,9 +109,13 @@
 									(click)="$event.stopPropagation()"
 									(selectionChange)="filterSelection('assigned')"
 								>
-									<mat-option *ngFor="let assigned of assignedFilterOptions" value="{{ assigned.value }}" class="no-checkbox">{{
-										assigned.label
-									}}</mat-option>
+									<mat-option
+										*ngFor="let assigned of assignedFilterOptions"
+										value="{{ assigned.value }}"
+										class="no-checkbox line-clamp-2"
+										title="{{ assigned.label }}"
+										>{{ assigned.label }}</mat-option
+									>
 								</mat-select> </mat-form-field
 							><span
 								class="clear-search ml-20"
