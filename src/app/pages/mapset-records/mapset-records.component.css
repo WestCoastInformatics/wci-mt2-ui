@@ -421,12 +421,10 @@
 }
 
 .workflow-container {
-	min-width: fit-content;
+	width: fit-content;
 	white-space: nowrap;
 	.workflow-status-badge {
 		position: relative !important;
-		width: fit-content !important;
-		justify-self: right;
 	}
 }
 
@@ -454,7 +452,7 @@
 .action-btns {
 	width: 65px;
 	height: 25px;
-	justify-self: right;
+	margin-left: 145px;
 }
 
 .odd-row {
