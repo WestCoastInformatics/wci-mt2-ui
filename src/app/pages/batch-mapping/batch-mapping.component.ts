@@ -133,6 +133,8 @@ export class BatchMappingComponent implements OnInit {
 	tempModuleIdChangeBeforeRelease = '449080006';
 	mapsetBatchColumnStorage = 'mapsetBatchColumnStorage';
 	batchSearchInput = 'batchSearchInput';
+	mapsetBatchWorkflowFilter = 'mapsetBatchWorkflowFilter';
+	mapsetBatchAssignedFilter = 'mapsetBatchAssignedFilter';
 	targetFC = new FormControl('a');
 	public query: any;
 	//formatter = (result: any) => result || this.query;
@@ -263,6 +265,8 @@ export class BatchMappingComponent implements OnInit {
 			this.conceptCodes = routeParams.concepts.split('_');
 			this.mapsetBatchColumnStorage += routeParams.concepts;
 			this.batchSearchInput += routeParams.concepts;
+			this.mapsetBatchWorkflowFilter += routeParams.concepts;
+			this.mapsetBatchAssignedFilter += routeParams.concepts;
 
 			if (this.mapsetCode) {
 				this.getMapsetInfo();
@@ -641,16 +645,35 @@ export class BatchMappingComponent implements OnInit {
 					this.manualStateRefresh = true;
 				}
 			}
-			if (localStorage.getItem(this.batchSearchInput)) {
-				this.searchInput = JSON.parse(localStorage.getItem(this.batchSearchInput));
-				this.gridApi.setGridOption('quickFilterText', this.searchInput);
-			}
+
+			setTimeout(() => {
+				this.checkSearchFilters();
+			}, 500);
 		}
 		const _window = window;
 		_window['checkboxHandleClick'] = () => {
 			this.checkboxAllClick();
 		};
 	};
+
+	checkSearchFilters() {
+		const filters: string[] = [];
+		if (localStorage.getItem(this.batchSearchInput)) {
+			this.searchInput = JSON.parse(localStorage.getItem(this.batchSearchInput));
+			filters.push(this.searchInput);
+		}
+		if (localStorage.getItem(this.mapsetBatchWorkflowFilter)) {
+			this.workflowFilter = JSON.parse(localStorage.getItem(this.mapsetBatchWorkflowFilter));
+			filters.push(this.workflowFilter);
+		}
+		if (localStorage.getItem(this.mapsetBatchAssignedFilter)) {
+			this.assignedFilter = JSON.parse(localStorage.getItem(this.mapsetBatchAssignedFilter));
+			filters.push(this.assignedFilter);
+		}
+		if (filters.length > 0) {
+			this.gridApi.setGridOption('quickFilterText', filters.join(' '));
+		}
+	}
 
 	onCellValueChanged = (event: any) => {
 		this.userChanged = true;
@@ -864,8 +887,8 @@ export class BatchMappingComponent implements OnInit {
 		this.searchInput = this.searchInput.trim();
 
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-			this.gridApi.setGridOption('quickFilterText', this.searchInput);
 			localStorage.setItem(this.batchSearchInput, JSON.stringify(this.searchInput));
+			this.checkSearchFilters();
 			this.checkedNum = 0;
 			if (this.gridSelectAll) {
 				window['checkbox-table-all'].click();
@@ -997,11 +1020,12 @@ export class BatchMappingComponent implements OnInit {
 	filterSelection(filter: string): void {
 		switch (filter) {
 			case 'workflow':
-				console.log(' this workflow filter', this.workflowFilter);
-
+				this.gridApi.setGridOption('quickFilterText', this.workflowFilter);
+				localStorage.setItem(this.mapsetBatchWorkflowFilter, JSON.stringify(this.workflowFilter));
 				break;
 			case 'assigned':
-				console.log(' this assigned filter', this.assignedFilter);
+				this.gridApi.setGridOption('quickFilterText', this.assignedFilter);
+				localStorage.setItem(this.mapsetBatchAssignedFilter, JSON.stringify(this.assignedFilter));
 				break;
 		}
 	}
@@ -1018,6 +1042,15 @@ export class BatchMappingComponent implements OnInit {
 				let query = this.searchBrowserInput;
 				if (this.searchBrowserInput === '') {
 					query = '';
+				}
+
+				const storedWorkflowFilter = localStorage.getItem(this.mapsetBatchWorkflowFilter);
+				if (storedWorkflowFilter) {
+					this.workflowFilter = JSON.parse(storedWorkflowFilter);
+				}
+				const storedAssignedFilter = localStorage.getItem(this.mapsetBatchAssignedFilter);
+				if (storedAssignedFilter) {
+					this.assignedFilter = JSON.parse(storedAssignedFilter);
 				}
 
 				if (this.isNewPageSize) {
@@ -1043,7 +1076,13 @@ export class BatchMappingComponent implements OnInit {
 					} else {
 						restParams.filter = '';
 					}
-
+					let addFilters = '';
+					if (this.workflowFilter !== '') {
+						addFilters += `&workflowStatus=${this.workflowFilter}`;
+					}
+					if (this.assignedFilter !== '') {
+						addFilters += `&assignedUser=${this.assignedFilter}`;
+					}
 					this.browserSubscription = this.refsetService
 						.searchBrowserByQuery(this.targetTerminology, this.targetTerminologyVersion, query, restParams.offset, restParams.limit)
 						.subscribe({

@@ -73,58 +73,76 @@
 			<div class="col-md-auto mt2-directory-chooser-column m-l-20">
 				<mat-menu #settingsMenu="matMenu" class="menu">
 					<div class="heading">TABLE SETTINGS</div>
-					FILTER BY
-					<div class="d-flex mb-2 align-items-center">
-						<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
-							<mat-select
-								#filterWorkflowStatus
-								title="Filter by Workflow Status"
-								placeholder="Workflow Status"
-								[(value)]="workflowFilter"
-								(click)="$event.stopPropagation()"
-								(selectionChange)="filterSelection('workflow')"
+					<div class="mat-mdc-menu-content">
+						FILTER BY
+						<div class="d-flex mb-2 align-items-center">
+							<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
+								<mat-select
+									#filterWorkflowStatus
+									title="Filter by Workflow Status"
+									placeholder="Workflow Status"
+									[(value)]="workflowFilter"
+									(click)="$event.stopPropagation()"
+									(selectionChange)="filterSelection('workflow')"
+								>
+									<mat-option *ngFor="let workflow of workflowFilterOptions" value="{{ workflow.value }}" class="no-checkbox">{{
+										workflow.label
+									}}</mat-option>
+								</mat-select>
+							</mat-form-field>
+							<span
+								class="clear-search ml-20"
+								*ngIf="workflowFilter"
+								title="Clear Filter"
+								(click)="$event.stopPropagation(); workflowFilter = ''; filterSelection('workflow')"
 							>
-								<mat-option *ngFor="let workflow of workflowFilterOptions" value="{{ workflow.value }}" class="no-checkbox">{{
-									workflow.label
-								}}</mat-option>
-							</mat-select>
-						</mat-form-field>
-						<span
-							class="clear-search ml-20"
-							*ngIf="workflowFilter !== ''"
-							title="Clear Filter"
-							(click)="$event.stopPropagation(); workflowFilter = ''"
-						>
-							&#10005;
-						</span>
-					</div>
-					<div class="d-flex mb-2 align-items-center">
-						<mat-form-field appearance="fill" floatLabel="never" class="filter-box d-flex mb-5">
-							<mat-select
-								#filterAssignedUser
-								title="Filter by Assigned To"
-								placeholder="Assigned To"
-								[(value)]="assignedFilter"
-								(click)="$event.stopPropagation()"
-								(selectionChange)="filterSelection('assigned')"
+								&#10005;
+							</span>
+						</div>
+						<div class="d-flex mb-5 align-items-center">
+							<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
+								<mat-select
+									#filterAssignedUser
+									title="Filter by Assigned To"
+									placeholder="Assigned To"
+									[(value)]="assignedFilter"
+									(click)="$event.stopPropagation()"
+									(selectionChange)="filterSelection('assigned')"
+								>
+									<mat-option *ngFor="let assigned of assignedFilterOptions" value="{{ assigned.value }}" class="no-checkbox">{{
+										assigned.label
+									}}</mat-option>
+								</mat-select> </mat-form-field
+							><span
+								class="clear-search ml-20"
+								*ngIf="assignedFilter"
+								title="Clear Filter"
+								(click)="$event.stopPropagation(); assignedFilter = ''; filterSelection('assigned')"
 							>
-								<mat-option *ngFor="let assigned of assignedFilterOptions" value="{{ assigned }}" class="no-checkbox">{{
-									assigned
-								}}</mat-option>
-							</mat-select> </mat-form-field
-						><span
-							class="clear-search ml-20"
-							*ngIf="assignedFilter !== ''"
-							title="Clear Filter"
-							(click)="$event.stopPropagation(); assignedFilter = ''"
-						>
-							&#10005;
-						</span>
+								&#10005;
+							</span>
+						</div>
 					</div>
-				</mat-menu>
+					<app-column-chooser
+						title="Select Columns to Display"
+						[gridColumnApi]="gridApi"
+						[useDialog]="useDialog"
+						[columnStorage]="mapsetBatchColumnStorage"
+						[manualStateRefresh]="manualStateRefresh"
+					>
+					</app-column-chooser
+				></mat-menu>
 
 				<div class="menu-inline">
-					<button [matMenuTriggerFor]="settingsMenu" aria-label="Settings" title="Settings" class="mapset-download-icon menu-button">
+					<button
+						[matMenuTriggerFor]="settingsMenu"
+						[matBadgeHidden]="workflowFilter === '' && assignedFilter === ''"
+						matBadgeSize="small"
+						[matBadge]="'.'"
+						aria-label="Settings"
+						title="Settings"
+						class="mapset-download-icon menu-button"
+					>
 						<mat-icon class="menu-icon">settings</mat-icon>
 						<span class="menu-label">Settings</span>
 					</button>
