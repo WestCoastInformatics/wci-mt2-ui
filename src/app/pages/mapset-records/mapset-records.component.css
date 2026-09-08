@@ -392,12 +392,11 @@
 }
 
 .workflow-container {
-	min-width: fit-content;
+	width: fit-content;
 	white-space: nowrap;
+	margin: 0 0 0 auto;
 	.workflow-status-badge {
 		position: relative !important;
-		width: fit-content !important;
-		margin-left: auto !important;
 	}
 }
 
