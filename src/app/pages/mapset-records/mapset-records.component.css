@@ -393,6 +393,7 @@
 	width: fit-content;
 	white-space: nowrap;
 	position: relative;
+	margin: 0 0 0 auto;
 	.workflow-status-badge {
 		position: relative !important;
 	}
@@ -422,7 +423,7 @@
 .action-btns {
 	width: 65px;
 	height: 25px;
-	margin-left: 145px;
+	margin-left: auto;
 }
 
 .odd-row {
