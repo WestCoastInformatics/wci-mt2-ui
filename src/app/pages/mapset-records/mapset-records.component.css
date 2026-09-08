@@ -392,6 +392,7 @@
 .workflow-container {
 	width: fit-content;
 	white-space: nowrap;
+	position: relative;
 	.workflow-status-badge {
 		position: relative !important;
 	}
