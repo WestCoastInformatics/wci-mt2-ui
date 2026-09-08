@@ -397,7 +397,7 @@
 	.workflow-status-badge {
 		position: relative !important;
 		width: fit-content !important;
-		margin-left: auto;
+		margin-left: auto !important;
 	}
 }
 
