@@ -712,9 +712,9 @@ export class BatchMappingComponent implements OnInit {
 				this.currentConcept = results;
 				this.conceptDetail = true;
 			},
-			error: (error: any) => {
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
-				console.log(' Error: ', error);
+			error: (err: any) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
 			},
 		});
 	}
@@ -724,48 +724,54 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	getMapsetInfo() {
-		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe((results) => {
-			const mapsetVersions = Array.isArray(results) ? results : [results];
+		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe(
+			(results) => {
+				const mapsetVersions = Array.isArray(results) ? results : [results];
 
-			const getIsInDevelopment = (status: string): boolean => {
-				return status === 'IN_DEVELOPMENT' || status === 'IN DEVELOPMENT';
-			};
+				const getIsInDevelopment = (status: string): boolean => {
+					return status === 'IN_DEVELOPMENT' || status === 'IN DEVELOPMENT';
+				};
 
-			mapsetVersions.sort((a, b) => {
-				const aInDev = getIsInDevelopment(a.versionStatus);
-				const bInDev = getIsInDevelopment(b.versionStatus);
+				mapsetVersions.sort((a, b) => {
+					const aInDev = getIsInDevelopment(a.versionStatus);
+					const bInDev = getIsInDevelopment(b.versionStatus);
 
-				if (aInDev && !bInDev) {
-					return -1;
-				}
-				if (bInDev && !aInDev) {
-					return 1;
-				}
+					if (aInDev && !bInDev) {
+						return -1;
+					}
+					if (bInDev && !aInDev) {
+						return 1;
+					}
 
-				const ad = a.versionDate || 0;
-				const bd = b.versionDate || 0;
-				return bd - ad;
-			});
-
-			this.mapsetInfo = mapsetVersions[0];
-			if (localStorage.getItem('projects_mapsetVersion')) {
-				this.selectedVersion = JSON.parse(localStorage.getItem('projects_mapsetVersion')).trim();
-				const mapsetFound = mapsetVersions.filter((v) => {
-					const versionDate = v.versionDate || new Date();
-					const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
-					return mapsetVersionStatus === this.selectedVersion;
+					const ad = a.versionDate || 0;
+					const bd = b.versionDate || 0;
+					return bd - ad;
 				});
-				if (mapsetFound.length > 0) {
-					this.mapsetInfo = mapsetFound[0];
+
+				this.mapsetInfo = mapsetVersions[0];
+				if (localStorage.getItem('projects_mapsetVersion')) {
+					this.selectedVersion = JSON.parse(localStorage.getItem('projects_mapsetVersion')).trim();
+					const mapsetFound = mapsetVersions.filter((v) => {
+						const versionDate = v.versionDate || new Date();
+						const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
+						return mapsetVersionStatus === this.selectedVersion;
+					});
+					if (mapsetFound.length > 0) {
+						this.mapsetInfo = mapsetFound[0];
+					}
+				} else {
+					const versionDate = this.mapsetInfo.versionDate || new Date();
+					this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
+					localStorage.setItem('projects_mapsetVersion', JSON.stringify(this.selectedVersion));
 				}
-			} else {
-				const versionDate = this.mapsetInfo.versionDate || new Date();
-				this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
-				localStorage.setItem('projects_mapsetVersion', JSON.stringify(this.selectedVersion));
-			}
-			this.getMapsetData();
-			this.getMapProject();
-		});
+				this.getMapsetData();
+				this.getMapProject();
+			},
+			(err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
+			},
+		);
 		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe({
 			next: (results) => {
 				if (results?.length > 0) {
@@ -775,9 +781,9 @@ export class BatchMappingComponent implements OnInit {
 					this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 				}
 			},
-			error: (error: any) => {
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
-				console.log(' Error: ', error);
+			error: (err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
 			},
 		});
 	}
@@ -788,6 +794,10 @@ export class BatchMappingComponent implements OnInit {
 				next: (results) => {
 					this.mt2Service.setModuleMetadata(results);
 					this.moduleMetadata = results;
+				},
+				error: (err) => {
+					console.error(' Error: ', err);
+					this.authenticationService.checkError(err);
 				},
 			});
 		} else {
@@ -832,8 +842,8 @@ export class BatchMappingComponent implements OnInit {
 			},
 			error: (err: any) => {
 				this.loadError = true;
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
-				console.log(' Error: ', err);
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
 			},
 		});
 	}
@@ -1010,9 +1020,9 @@ export class BatchMappingComponent implements OnInit {
 					this.targetToName = results.name;
 				}
 			},
-			error: (error: any) => {
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
-				console.log(' Error: ', error);
+			error: (err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
 			},
 		});
 	}
@@ -1142,6 +1152,8 @@ export class BatchMappingComponent implements OnInit {
 								this.showPaging = false;
 								this.browserApi.showNoRowsOverlay();
 								rowParams.successCallback([], 0);
+								//console.error(' Error: ', error);
+								this.authenticationService.checkError(error);
 							},
 						});
 				}
@@ -1237,8 +1249,8 @@ export class BatchMappingComponent implements OnInit {
 					]);
 				},
 				error: (error: any) => {
-					console.log(' Error: ', error);
-					this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+					console.error(' Error: ', error);
+					this.authenticationService.checkError(error);
 					setTimeout(() => {
 						this.goToMappingsPage();
 					}, 1500);
@@ -1464,28 +1476,34 @@ export class BatchMappingComponent implements OnInit {
 			}
 		});
 		this.userChanged = false;
-		this.refsetService.getMapsetWorkflowStatus(this.mapsetInfo.id).subscribe((status) => {
-			if (status.workflowStatus === 'IN_EDIT') {
-				this.refsetService.updateMapsetMappingBulk(this.mapsetInfo.id, this.mapsetResponse).subscribe(
-					(status) => {
-						this.saving = false;
-						this.notificationService.show('The mappings have been saved.', 'Success', 'success', { timeOut: 0, extendedTimeOut: 0 });
-						setTimeout(() => {
-							this.mapsetData.forEach((map: any) => {
-								map.updated = false;
-							});
-							this.gridApi.redrawRows();
-						}, 50);
-					},
-					(error: any) => {
-						this.notificationService.show('Error saving, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
-						console.log(' Error: ', error);
-					},
-				);
-			} else {
-				this.notificationService.show('Mapset workflow status is not in Edit mode.');
-			}
-		});
+		this.refsetService.getMapsetWorkflowStatus(this.mapsetInfo.id).subscribe(
+			(status) => {
+				if (status.workflowStatus === 'IN_EDIT') {
+					this.refsetService.updateMapsetMappingBulk(this.mapsetInfo.id, this.mapsetResponse).subscribe(
+						(status) => {
+							this.saving = false;
+							this.notificationService.show('The mappings have been saved.', 'Success', 'success', { timeOut: 0, extendedTimeOut: 0 });
+							setTimeout(() => {
+								this.mapsetData.forEach((map: any) => {
+									map.updated = false;
+								});
+								this.gridApi.redrawRows();
+							}, 50);
+						},
+						(error: any) => {
+							this.notificationService.show('Error saving, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+							console.log(' Error: ', error);
+						},
+					);
+				} else {
+					this.notificationService.show('Mapset workflow status is not in Edit mode.');
+				}
+			},
+			(err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
+			},
+		);
 	}
 
 	showDropdown(): void {
