@@ -303,6 +303,7 @@ export class BatchMappingComponent implements OnInit {
 			rowSelection: 'single',
 			animateRows: false,
 			enableCellTextSelection: true,
+			singleClickEdit: true,
 			onGridReady: this.onGridReady,
 			onCellDoubleClicked: this.onGridCellClick,
 			onCellValueChanged: this.onCellValueChanged,
@@ -470,7 +471,7 @@ export class BatchMappingComponent implements OnInit {
 				headerName: 'Target',
 				headerTooltip: 'Target',
 				flex: 1,
-				minWidth: 125,
+				minWidth: 145,
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: {
 					template: this.codeSection,
@@ -498,19 +499,32 @@ export class BatchMappingComponent implements OnInit {
 				tooltipField: 'relation',
 				headerName: 'Relationship',
 				headerTooltip: 'Relationship',
-				cellClass: 'editCell',
+				cellClass: (params: any) => {
+					if (this.mapsetInfo?.workflowStatus && this.mapsetInfo.workflowStatus === 'IN_EDIT' && params.data?.editable === true) {
+						return 'editCell';
+					}
+					return 'noneditCell';
+				},
 				resizable: true,
 				cellEditor: 'agSelectCellEditor',
-				cellEditorParams: (params: any) =>
-					params.data.mapEntries.toCode === '[Empty Target]'
+				cellEditorParams: (params: any) => {
+					const toCode = params.data?.mapEntries?.toCode;
+
+					return toCode === '[Empty Target]'
 						? { values: this.noTargetRelations, valueListGap: 1 }
-						: { values: this.targetRelations, valueListGap: 1 },
+						: { values: this.targetRelations, valueListGap: 1 };
+				},
 				unSortIcon: true,
 				sortable: false,
 				suppressSorting: true,
 				minWidth: 165,
-				editable: this.mapsetInfo?.workflowStatus ? this.mapsetInfo.workflowStatus === 'IN_EDIT' : false,
 				width: 165,
+				editable: (params: any) => {
+					if (this.mapsetInfo?.workflowStatus && this.mapsetInfo.workflowStatus === 'IN_EDIT' && params.data?.editable === true) {
+						return true;
+					}
+					return false;
+				},
 			},
 			{
 				colId: 'rule',
@@ -518,15 +532,25 @@ export class BatchMappingComponent implements OnInit {
 				tooltipField: 'rule',
 				headerName: 'Rule',
 				headerTooltip: 'Rule',
-				cellClass: 'editCell',
-				minWidth: 90,
-				width: 90,
+				cellClass: (params: any) => {
+					if (this.mapsetInfo?.workflowStatus && this.mapsetInfo.workflowStatus === 'IN_EDIT' && params.data?.editable === true) {
+						return 'editCell';
+					}
+					return 'noneditCell';
+				},
+				minWidth: 120,
+				width: 120,
 				resizable: true,
 				cellEditor: 'agSelectCellEditor',
 				cellEditorParams: {
 					values: this.ruleOptions,
 				},
-				editable: this.mapsetInfo?.workflowStatus ? this.mapsetInfo.workflowStatus === 'IN_EDIT' : false,
+				editable: (params: any) => {
+					if (this.mapsetInfo?.workflowStatus && this.mapsetInfo.workflowStatus === 'IN_EDIT' && params.data?.editable === true) {
+						return true;
+					}
+					return false;
+				},
 				unSortIcon: true,
 				sortable: false,
 				suppressSorting: true,
@@ -836,9 +860,10 @@ export class BatchMappingComponent implements OnInit {
 					}
 					this.mapRelations = this.projectRelations.map((res) => this.titleCaseWord(res.name));
 				}
+				this.ruleOptions = ['FALSE', ...this.ruleOptions];
 				this.mapAdvices = results.mapAdvices || [];
 				if (this.mapAdvices.length > 0) {
-					this.mapAdvices = results.mapAdvices.map((res) => {
+					this.mapAdvices = results.mapAdvices.map((res: any) => {
 						return res.name;
 					});
 				}
@@ -1287,7 +1312,7 @@ export class BatchMappingComponent implements OnInit {
 				return wfAction.edit === true;
 			});
 			if (foundEdit.length > 0) {
-				if (assignedUser !== this.user?.userName) {
+				if (assignedUser === this.user?.userName) {
 					editable = true;
 				}
 			}
@@ -2178,10 +2203,6 @@ export class BatchMappingComponent implements OnInit {
 			}
 		}
 		this.gridApi.redrawRows();
-	}
-
-	showme(v) {
-		console.log(' vv', v);
 	}
 
 	updateMultiWorkFlowMapStatus(response: any) {

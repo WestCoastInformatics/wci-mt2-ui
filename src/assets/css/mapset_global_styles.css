@@ -2687,6 +2687,11 @@ input[type='number']::-webkit-inner-spin-button {
 	outline-offset: -12px !important;
 }
 
+.noneditCell {
+	outline: 1px solid var(--slate-grey) !important;
+	outline-offset: -12px !important;
+}
+
 .mat-primary .mat-mdc-option .mdc-list-item__primary-text,
 .mat-primary .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text {
 	color: #666 !important;

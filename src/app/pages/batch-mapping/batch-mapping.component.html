@@ -979,9 +979,11 @@
 					title="Select a Rule"
 					placeholder="Select a Rule"
 					[(value)]="params.value"
+					(click)="$event.stopPropagation()"
 					(selectionChange)="userChangeSelection('rule')"
 					[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
 				>
+					<mat-option value="null" class="no-checkbox"></mat-option>
 					<mat-option value="TRUE" class="no-checkbox">TRUE</mat-option>
 					<mat-option value="Gender - Female" class="no-checkbox" [hidden]="!ruleBased">Gender - Female</mat-option>
 					<mat-option value="Gender - Male" class="no-checkbox" [hidden]="!ruleBased">Gender - Male</mat-option>
@@ -998,7 +1000,10 @@
 					<i class="fa-solid fa-star-of-life advice-icon-sm"></i><span class="advice-name-wrap" title="{{ advice }}">{{ advice }}</span>
 				</li>
 
-				<li class="advice-line" [hidden]="params.value.mapAdvices.length === 0 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
+				<li
+					class="advice-line"
+					[hidden]="params.value.mapAdvices.length === 0 || mapsetInfo.workflowStatus !== 'IN_EDIT' || params.data.editable === false"
+				>
 					<span class="code-link" (click)="openPopover($event, params)" title="Add/Edit Advice"
 						>Add/Edit Advice ({{ params.value.mapAdvices.length }})</span
 					>
@@ -1008,18 +1013,22 @@
 				class="code-link p-l-10 advice-line"
 				(click)="openPopover($event, params)"
 				title="Add an Advice"
-				[hidden]="params.value.mapAdvices.length !== 0 || mapAdvices.length === 0 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+				[hidden]="
+					params.value.mapAdvices.length !== 0 ||
+					mapAdvices.length === 0 ||
+					mapsetInfo.workflowStatus !== 'IN_EDIT' ||
+					params.data.editable === false
+				"
 				>+ Add Advice</span
 			>
 		</div>
 	</ng-template>
 
 	<ng-template #directoryCodeSection let-params>
-		<span *ngIf="params?.value !== undefined" [ngClass]="{ pointer: mapsetInfo.workflowStatus === 'IN_EDIT' && params.data.editable === true }">
+		<span *ngIf="params?.value !== undefined">
 			<mat-chip-list
 				*ngIf="params?.value.split('#')[0] !== '1/1&1'"
 				(click)="mapsetInfo.workflowStatus === 'IN_EDIT' && params.data.editable === true ? editGroup($event, params) : null"
-				[ngClass]="{ pointer: mapsetInfo.workflowStatus === 'IN_EDIT' && params.data.editable === true }"
 				[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT' || params.data.editable === false"
 			>
 				<mat-chip
@@ -1030,16 +1039,21 @@
 							', Entry ' +
 							params?.value.split('#')[0].split('&')[0].split('/')[1]
 					}}"
-					>{{ params.data.editable }}
-					{{ params?.value.split('#')[0].split('&')[0] }}
+				>
+					<span [ngClass]="{ pointer: mapsetInfo.workflowStatus === 'IN_EDIT' && params.data.editable === true }">
+						{{ params?.value.split('#')[0].split('&')[0] }}</span
+					>
 				</mat-chip>
 			</mat-chip-list>
 			<button
 				title="{{ params?.value.split('#')[1] }}"
 				class="no-padding"
 				(click)="editTarget($event, params)"
-				[ngClass]="{ 'blue-link': mapsetInfo.workflowStatus === 'IN_EDIT', 'disabled-link': mapsetInfo.workflowStatus !== 'IN_EDIT' }"
-				[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
+				[ngClass]="{
+					'blue-link': mapsetInfo.workflowStatus === 'IN_EDIT' && params.data.editable === true,
+					'disabled-link': mapsetInfo.workflowStatus !== 'IN_EDIT' || params.data.editable === false,
+				}"
+				[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT' || params.data.editable === false"
 			>
 				{{ params?.value.split('#')[1] }}
 			</button></span
