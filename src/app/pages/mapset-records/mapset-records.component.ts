@@ -1731,7 +1731,7 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	updateNotesStatus(event: any) {
-		console.log('updateNotesStatus event', event.hasNotes);
+		// console.log('updateNotesStatus event', event.hasNotes);
 		for (let c = 0; c < this.mapsetData.length; c++) {
 			if (this.mapsetData[c].code === event.conceptCode) {
 				this.mapsetData[c].hasNotes = event.hasNotes;

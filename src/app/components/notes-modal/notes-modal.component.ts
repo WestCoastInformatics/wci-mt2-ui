@@ -71,9 +71,7 @@ export class NotesModalComponent {
 	}
 
 	openNotesModal(content: any) {
-		if (this.hasNotes) {
-			this.getNotes();
-		}
+		this.getNotes();
 		this.notesList = [];
 		this.notesModalRef = this.modalService.open(content, { size: 'lg', centered: true });
 		this.isModalOpen = true;
