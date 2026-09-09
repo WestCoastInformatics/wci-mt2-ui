@@ -318,13 +318,6 @@ export class MapsetRecordsComponent implements OnInit {
 		keysToRemove.forEach((key) => localStorage.removeItem(key));
 	}
 
-	isWorkFlowMapEdit(): boolean {
-		const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
-			return wfAction.edit === true;
-		});
-		return foundEdit.length > 0;
-	}
-
 	getMapsetInfo() {
 		this.refsetService.getMapsetsByCode(this.mapsetCode!).subscribe(
 			(results) => {
@@ -1240,7 +1233,10 @@ export class MapsetRecordsComponent implements OnInit {
 				}
 				return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 			});
-			const editable = this.isWorkFlowMapEdit();
+			const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+				return wfAction.edit === true;
+			});
+			const editable = foundEdit.length > 0 ? true : false;
 			if (editable) {
 				const thisUser = assigned.find((u) => {
 					return u === this.user?.userName;

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output, ElementRef, ViewChild, SimpleCh
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl } from '@angular/forms';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
 	standalone: false,
@@ -33,6 +34,7 @@ export class WorkflowMapModalComponent {
 	constructor(
 		private readonly modalService: NgbModal,
 		private refsetService: RefsetService,
+		private authenticationService: AuthenticationService,
 	) {}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -90,9 +92,7 @@ export class WorkflowMapModalComponent {
 			this.workFlowMapStatus.notes = this.workFlowMapNotesFC.value;
 		}
 		this.waitingForMapResponse = true;
-
-		console.log('this.conceptCodeList mul--- ', this.multiple, this.conceptCodeList);
-		if (this.multiple) {
+		if (this.multiple && this.conceptCodeList.length > 0) {
 			this.refsetService
 				.setMappingsWorkflowStatus(
 					this.mapsetInfo.id,
@@ -101,26 +101,39 @@ export class WorkflowMapModalComponent {
 					this.workFlowMapStatus.notes,
 					this.selectedUser ? this.selectedUser : '',
 				)
-				.subscribe((response) => {
-					if (response) {
-						this.updateMultiWorkFlowMapStatus.emit(response);
-						this.closeWorkFlowMapModal();
-					}
-				});
+				.subscribe(
+					(response) => {
+						if (response) {
+							this.updateMultiWorkFlowMapStatus.emit(response);
+							this.closeWorkFlowMapModal();
+						}
+					},
+					(err) => {
+						console.error(' Error: ', err);
+						this.authenticationService.checkError(err);
+					},
+				);
+		} else {
+			this.refsetService
+				.setMappingWorkflowStatus(
+					this.mapsetInfo.id,
+					this.conceptCode,
+					this.workFlowMapStatus.value,
+					this.workFlowMapStatus.notes,
+					this.selectedUser ? this.selectedUser : '',
+				)
+				.subscribe(
+					(response) => {
+						if (response) {
+							this.updateWorkFlowMapStatus.emit(response);
+							this.closeWorkFlowMapModal();
+						}
+					},
+					(err) => {
+						console.error(' Error: ', err);
+						this.authenticationService.checkError(err);
+					},
+				);
 		}
-		this.refsetService
-			.setMappingWorkflowStatus(
-				this.mapsetInfo.id,
-				this.conceptCode,
-				this.workFlowMapStatus.value,
-				this.workFlowMapStatus.notes,
-				this.selectedUser ? this.selectedUser : '',
-			)
-			.subscribe((response) => {
-				if (response) {
-					this.updateWorkFlowMapStatus.emit(response);
-					this.closeWorkFlowMapModal();
-				}
-			});
 	}
 }

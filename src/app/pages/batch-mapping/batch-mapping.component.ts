@@ -51,17 +51,17 @@ export class BatchMappingComponent implements OnInit {
 	targetCodeInput = '';
 	targetNameInput = '';
 	ruleBased = false;
-	ruleOptions = [];
+	ruleOptions: any[] = [];
 	rulesTrue = ['TRUE'];
 	rulesFalse = ['TRUE', 'Gender - Female', 'Gender - Male'];
 	targetTerminology = '';
 	targetTerminologyVersion = '';
-	mapRelations = [];
-	targetRelations = [];
-	noTargetRelations = [];
-	projectRelations = [];
-	mapAdvices = [];
-	updateAdviceList = [];
+	mapRelations: any[] = [];
+	targetRelations: any[] = [];
+	noTargetRelations: any[] = [];
+	projectRelations: any[] = [];
+	mapAdvices: any[] = [];
+	updateAdviceList: any[] = [];
 	viewOptions = [
 		{ value: 'all', display: 'All' },
 		{ value: 'public', display: 'Public' },
@@ -72,13 +72,13 @@ export class BatchMappingComponent implements OnInit {
 	refsetGridLastFilter = '';
 	refsetGridLastSort = '';
 	showTable = false;
-	mapsetResponse = [];
-	mapsetData = [];
+	mapsetResponse: any[] = [];
+	mapsetData: any;
 	dialog!: DialogService;
 	versionStatuses: any;
 	versions: any;
 	organizations: any;
-	initialGridWidth: number;
+	initialGridWidth: number | undefined;
 	showFullNarrativeText = false;
 	showFullNotesText = false;
 	showLoadingSpinner = false;
@@ -88,7 +88,7 @@ export class BatchMappingComponent implements OnInit {
 	numOfMembers: any;
 	disableChannel = new BroadcastChannel('disable-button-channel');
 	originalGridParams: any;
-	searchCallArray = [];
+	searchCallArray: any[] = [];
 	showLoadingSearch = true;
 	toBeDevelopedModalRef!: NgbModalRef;
 	confirmModalRef!: NgbModalRef;
@@ -104,7 +104,7 @@ export class BatchMappingComponent implements OnInit {
 	mapsetCode = '';
 	mapsetInfo: any = {};
 	selectedVersion: any;
-	conceptCodes: [];
+	conceptCodes: any[] = [];
 	mapping = '';
 	routeParamsSubscription$!: Subscription;
 	browserSubscription!: Subscription;
@@ -113,8 +113,8 @@ export class BatchMappingComponent implements OnInit {
 	popoverLocationX = 0;
 	popover_uuid = '';
 	popover_adviceToAdd = '';
-	popover_updateAdviceList = [];
-	popover_addAdviceList = [];
+	popover_updateAdviceList: any[] = [];
+	popover_addAdviceList: any[] = [];
 	loaded = false;
 	loadError = false;
 	showPaging = false;
@@ -161,7 +161,7 @@ export class BatchMappingComponent implements OnInit {
 	loadedBrowser = false;
 	isNewPageSize = false;
 	paginationPages: any = {};
-	browserData = [];
+	browserData: any[] = [];
 	browserOptions: any;
 	browserPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
 	browserParams: any;
@@ -171,6 +171,7 @@ export class BatchMappingComponent implements OnInit {
 	currentConcept: any;
 	manualStateRefresh = false;
 	rowClassRules: any;
+	singleEditEnabled = false;
 	batchEditEnabled = false;
 	userList: any;
 	selectedUser: any;
@@ -179,6 +180,8 @@ export class BatchMappingComponent implements OnInit {
 	workFlowMapNotesFC = new FormControl('');
 	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
 	reviewMapWF: any;
+	isMultiple = false;
+	conceptCodeList: any;
 	workflowFilter = '';
 	assignedFilter = '';
 	workflowFilterOptions = [
@@ -1231,6 +1234,7 @@ export class BatchMappingComponent implements OnInit {
 								modLang: this.getModuleLanguageName(results.mapEntries[b].moduleId),
 								workflowStatus: results.mappingWorkflow?.workflowStatus,
 								assignedUser: results.mappingWorkflow?.assignedUser,
+								editable: this.isMapEditable(results.mappingWorkflow?.workflowStatus, results.mappingWorkflow?.assignedUser),
 							};
 							const assignedUser = results.mappingWorkflow?.assignedUser;
 							if (assignedUser !== null && assignedUser !== undefined) {
@@ -1268,6 +1272,27 @@ export class BatchMappingComponent implements OnInit {
 				},
 			});
 		}
+	}
+
+	isMapEditable(workflowStatus: string, assignedUser: string): boolean {
+		let editable = false;
+		const foundActions = this.reviewMapWF.filter((wf: any) => {
+			if (workflowStatus !== wf.status) {
+				return false;
+			}
+			return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
+		});
+		if (foundActions.length > 0) {
+			const foundEdit = foundActions.filter((wfAction: Record<string, unknown>) => {
+				return wfAction.edit === true;
+			});
+			if (foundEdit.length > 0) {
+				if (assignedUser !== this.user?.userName) {
+					editable = true;
+				}
+			}
+		}
+		return editable;
 	}
 
 	addMapGroup() {
@@ -1986,6 +2011,7 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	checkedStatusActions() {
+		this.singleEditEnabled = false;
 		let multiStatus = [];
 		let assigned = [];
 		for (let c = 0; c < this.mapsetData.length; c++) {
@@ -1994,18 +2020,45 @@ export class BatchMappingComponent implements OnInit {
 				multiStatus.push(this.mapsetData[c].workflowStatus);
 			}
 		}
-		if (this.checkedNum > 0 && multiStatus.length > 0) {
-			this.batchEditEnabled = false;
+		if (this.checkedNum === 1 && multiStatus.length === 1) {
 			this.workFlowMapActions = [];
 			this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
+				if (multiStatus[0] !== wf.status) {
+					return false;
+				}
+				return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
+			});
+			const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+				return wfAction.edit === true;
+			});
+			const editable = foundEdit.length > 0 ? true : false;
+			if (editable) {
+				const thisUser = assigned.find((u) => {
+					return u === this.user?.userName;
+				});
+				if (thisUser !== undefined) {
+					this.singleEditEnabled = true;
+				}
+			}
+		}
+		if (this.checkedNum > 1 && multiStatus.length > 1) {
+			this.batchEditEnabled = false;
+			this.workFlowMapActions = [];
+			const availableActions = this.reviewMapWF.filter((wf: any) => {
 				if (!multiStatus.includes(wf.status)) {
 					return false;
 				}
 
 				return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 			});
-
-			const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+			if (availableActions) {
+				const bulkActions = new Set(availableActions.map((item) => `${item.value}-${item.status}`));
+				this.isMultiple = bulkActions.size > 0;
+				if (this.isMultiple) {
+					this.workFlowMapActions = availableActions;
+				}
+			}
+			const foundEdit = availableActions.filter((wfAction: Record<string, unknown>) => {
 				return wfAction.edit === true;
 			});
 			if (foundEdit.length > 0) {
@@ -2119,8 +2172,32 @@ export class BatchMappingComponent implements OnInit {
 				this.mapsetData[c].assignedUser = response.assignedUser;
 				this.mapsetData[c].checked = false;
 				this.mapsetData[c].updated = true;
+				this.mapsetData[c].editable = this.isMapEditable(response.workflowStatus, response.assignedUser);
 			} else {
 				this.mapsetData[c].updated = false;
+			}
+		}
+		this.gridApi.redrawRows();
+	}
+
+	showme(v) {
+		console.log(' vv', v);
+	}
+
+	updateMultiWorkFlowMapStatus(response: any) {
+		for (let u = 0; u < this.mapsetData.length; u++) {
+			this.mapsetData[u].updated = false;
+			this.mapsetData[u].checked = false;
+		}
+		for (const item of response.items) {
+			for (let c = 0; c < this.mapsetData.length; c++) {
+				if (item.conceptCode === this.mapsetData[c].code) {
+					this.mapsetData[c].workflowStatus = item.workflow.workflowStatus;
+					this.mapsetData[c].modified = item.workflow.modified;
+					this.mapsetData[c].assignedUser = item.workflow.assignedUser;
+					this.mapsetData[c].updated = true;
+					this.mapsetData[c].editable = this.isMapEditable(item.workflow.workflowStatus, item.workflow.assignedUser);
+				}
 			}
 		}
 		this.gridApi.redrawRows();
@@ -2135,6 +2212,7 @@ export class BatchMappingComponent implements OnInit {
 			return status === review.value;
 		})[0];
 		if (this.checkedNum === 1) {
+			this.isMultiple = false;
 			for (let c = 0; c < this.mapsetData.length; c++) {
 				if (this.mapsetData[c].checked === true) {
 					this.conceptCode = this.mapsetData[c].code;
@@ -2143,6 +2221,24 @@ export class BatchMappingComponent implements OnInit {
 			for (let c = 0; c < this.mapsetData.length; c++) {
 				if (this.mapsetData[c].code === this.conceptCode) {
 					this.mapsetData[c].checked = true;
+				}
+			}
+		}
+		if (this.checkedNum > 1 && this.isMultiple === true) {
+			this.conceptCodeList = [];
+
+			for (let c = 0; c < this.mapsetData.length; c++) {
+				const currentItem = this.mapsetData[c];
+
+				if (currentItem.checked === true && !this.conceptCodeList.includes(currentItem.code)) {
+					this.conceptCodeList.push(currentItem.code);
+				}
+			}
+			for (let c = 0; c < this.mapsetData.length; c++) {
+				for (let d = 0; d < this.conceptCodeList.length; d++) {
+					if (this.mapsetData[c].code === this.conceptCodeList[d]) {
+						this.mapsetData[c].checked = true;
+					}
 				}
 			}
 		}
