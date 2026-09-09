@@ -4,6 +4,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { MapsetRecordsComponent } from 'src/app/pages/mapset-records/mapset-records.component';
 
 @Component({
 	standalone: false,
@@ -33,6 +34,7 @@ export class NotesModalComponent {
 		private refsetService: RefsetService,
 		private notificationService: NotificationService,
 		private modalService: NgbModal,
+		private mapsetRecordsPage: MapsetRecordsComponent,
 	) {}
 
 	getNotes() {
@@ -47,7 +49,7 @@ export class NotesModalComponent {
 					}));
 					if (this.notesList.length === 0) {
 						this.hasNotes = false;
-						this.updateNotesStatus.emit({ mapSetId: this.mapSetId, conceptCode: this.conceptCode, hasNotes: this.hasNotes });
+						this.mapsetRecordsPage.updateNotesStatus({ mapSetId: this.mapSetId, conceptCode: this.conceptCode, hasNotes: this.hasNotes });
 						return;
 					}
 					if (this.notesList.length > 0) {
@@ -57,7 +59,7 @@ export class NotesModalComponent {
 							return bd - ad;
 						});
 						this.hasNotes = true;
-						this.updateNotesStatus.emit({ mapSetId: this.mapSetId, conceptCode: this.conceptCode, hasNotes: this.hasNotes });
+						this.mapsetRecordsPage.updateNotesStatus({ mapSetId: this.mapSetId, conceptCode: this.conceptCode, hasNotes: this.hasNotes });
 					}
 				}
 			},
