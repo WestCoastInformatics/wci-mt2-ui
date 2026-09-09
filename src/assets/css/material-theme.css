@@ -51,4 +51,7 @@
 	--mat-select-disabled-trigger-text-color: #999;
 	--mat-button-protected-label-text-color: #fefbff;
 	--mat-button-protected-container-color: #448aff;
+	--mat-sys-hover-state-layer-opacity: 0.2;
+	--mat-option-hover-state-layer-color: #d1e4ff;
+	--mat-option-focus-state-layer-color: #d1e4ff;
 }

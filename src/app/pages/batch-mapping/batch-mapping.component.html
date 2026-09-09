@@ -71,14 +71,86 @@
 		</div>
 		<div class="row d-flex dropdown-group" *ngIf="showConfigSection && loaded && !saving && !loadError">
 			<div class="col-md-auto mt2-directory-chooser-column m-l-20">
-				<app-column-chooser
-					title="Select Columns to Display"
-					[gridColumnApi]="gridApi"
-					[useDialog]="useDialog"
-					[columnStorage]="mapsetBatchColumnStorage"
-					[manualStateRefresh]="manualStateRefresh"
-				>
-				</app-column-chooser>
+				<mat-menu #settingsMenu="matMenu" class="menu">
+					<div class="heading">TABLE SETTINGS</div>
+					<div class="mat-mdc-menu-content">
+						FILTER BY
+						<div class="d-flex mb-2 align-items-center">
+							<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
+								<mat-select
+									#filterWorkflowStatus
+									title="Filter by Workflow Status"
+									placeholder="Workflow Status"
+									[(value)]="workflowFilter"
+									(click)="$event.stopPropagation()"
+									(selectionChange)="filterSelection('workflow')"
+								>
+									<mat-option *ngFor="let workflow of workflowFilterOptions" value="{{ workflow.value }}" class="no-checkbox">{{
+										workflow.label
+									}}</mat-option>
+								</mat-select>
+							</mat-form-field>
+							<span
+								class="clear-search ml-20"
+								*ngIf="workflowFilter"
+								title="Clear Filter"
+								(click)="$event.stopPropagation(); workflowFilter = ''; filterSelection('workflow')"
+							>
+								&#10005;
+							</span>
+						</div>
+						<div class="d-flex mb-5 align-items-center">
+							<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
+								<mat-select
+									#filterAssignedUser
+									title="Filter by Assigned To"
+									placeholder="Assigned To"
+									[(value)]="assignedFilter"
+									(click)="$event.stopPropagation()"
+									(selectionChange)="filterSelection('assigned')"
+								>
+									<mat-option
+										*ngFor="let assigned of assignedFilterOptions"
+										value="{{ assigned.value }}"
+										class="no-checkbox line-clamp-2"
+										title="{{ assigned.label }}"
+										>{{ assigned.label }}</mat-option
+									>
+								</mat-select> </mat-form-field
+							><span
+								class="clear-search ml-20"
+								*ngIf="assignedFilter"
+								title="Clear Filter"
+								(click)="$event.stopPropagation(); assignedFilter = ''; filterSelection('assigned')"
+							>
+								&#10005;
+							</span>
+						</div>
+					</div>
+					<app-column-chooser
+						title="Select Columns to Display"
+						[gridColumnApi]="gridApi"
+						[useDialog]="useDialog"
+						[columnStorage]="mapsetBatchColumnStorage"
+						[manualStateRefresh]="manualStateRefresh"
+					>
+					</app-column-chooser
+				></mat-menu>
+
+				<div class="menu-inline">
+					<button
+						[matMenuTriggerFor]="settingsMenu"
+						[matBadgeHidden]="workflowFilter === '' && assignedFilter === ''"
+						matBadgeSize="small"
+						[matBadge]="'.'"
+						aria-label="Settings"
+						title="Settings"
+						class="mapset-download-icon menu-button"
+					>
+						<mat-icon class="menu-icon">settings</mat-icon>
+						<span class="menu-label">Settings</span>
+					</button>
+				</div>
 			</div>
 			<div class="col-md-auto mt2-directory-chooser-column">
 				<mat-menu #searchMenu="matMenu" class="search-box">
@@ -191,7 +263,7 @@
 					<button mat-menu-item (click)="selectAction('comm')" [disabled]="checkedNum < 1">
 						<span>View or Add Authoring Communication</span>
 					</button> -->
-					<ng-container *ngIf="workFlowMapActions.length && checkedNum === 1 && mapsetInfo.workflowStatus === 'IN_EDIT'">
+					<ng-container *ngIf="workFlowMapActions.length > 0 && mapsetInfo.workflowStatus === 'IN_EDIT'">
 						<span *ngFor="let action of workFlowMapActions">
 							<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value)">
 								<span> {{ action.label }}</span>
@@ -907,9 +979,11 @@
 					title="Select a Rule"
 					placeholder="Select a Rule"
 					[(value)]="params.value"
+					(click)="$event.stopPropagation()"
 					(selectionChange)="userChangeSelection('rule')"
 					[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
 				>
+					<mat-option value="null" class="no-checkbox"></mat-option>
 					<mat-option value="TRUE" class="no-checkbox">TRUE</mat-option>
 					<mat-option value="Gender - Female" class="no-checkbox" [hidden]="!ruleBased">Gender - Female</mat-option>
 					<mat-option value="Gender - Male" class="no-checkbox" [hidden]="!ruleBased">Gender - Male</mat-option>
@@ -926,7 +1000,10 @@
 					<i class="fa-solid fa-star-of-life advice-icon-sm"></i><span class="advice-name-wrap" title="{{ advice }}">{{ advice }}</span>
 				</li>
 
-				<li class="advice-line" [hidden]="params.value.mapAdvices.length === 0 || mapsetInfo.workflowStatus !== 'IN_EDIT'">
+				<li
+					class="advice-line"
+					[hidden]="params.value.mapAdvices.length === 0 || mapsetInfo.workflowStatus !== 'IN_EDIT' || params.data.editable === false"
+				>
 					<span class="code-link" (click)="openPopover($event, params)" title="Add/Edit Advice"
 						>Add/Edit Advice ({{ params.value.mapAdvices.length }})</span
 					>
@@ -936,19 +1013,23 @@
 				class="code-link p-l-10 advice-line"
 				(click)="openPopover($event, params)"
 				title="Add an Advice"
-				[hidden]="params.value.mapAdvices.length !== 0 || mapAdvices.length === 0 || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+				[hidden]="
+					params.value.mapAdvices.length !== 0 ||
+					mapAdvices.length === 0 ||
+					mapsetInfo.workflowStatus !== 'IN_EDIT' ||
+					params.data.editable === false
+				"
 				>+ Add Advice</span
 			>
 		</div>
 	</ng-template>
 
 	<ng-template #directoryCodeSection let-params>
-		<span *ngIf="params?.value !== undefined" [ngClass]="{ pointer: mapsetInfo.workflowStatus === 'IN_EDIT' }">
+		<span *ngIf="params?.value !== undefined">
 			<mat-chip-list
 				*ngIf="params?.value.split('#')[0] !== '1/1&1'"
-				(click)="editGroup($event, params)"
-				[ngClass]="{ pointer: mapsetInfo.workflowStatus === 'IN_EDIT' }"
-				[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
+				(click)="mapsetInfo.workflowStatus === 'IN_EDIT' && params.data.editable === true ? editGroup($event, params) : null"
+				[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT' || params.data.editable === false"
 			>
 				<mat-chip
 					class="mapset-chip"
@@ -959,15 +1040,20 @@
 							params?.value.split('#')[0].split('&')[0].split('/')[1]
 					}}"
 				>
-					{{ params?.value.split('#')[0].split('&')[0] }}
+					<span [ngClass]="{ pointer: mapsetInfo.workflowStatus === 'IN_EDIT' && params.data.editable === true }">
+						{{ params?.value.split('#')[0].split('&')[0] }}</span
+					>
 				</mat-chip>
 			</mat-chip-list>
 			<button
 				title="{{ params?.value.split('#')[1] }}"
 				class="no-padding"
 				(click)="editTarget($event, params)"
-				[ngClass]="{ 'blue-link': mapsetInfo.workflowStatus === 'IN_EDIT', 'disabled-link': mapsetInfo.workflowStatus !== 'IN_EDIT' }"
-				[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT'"
+				[ngClass]="{
+					'blue-link': mapsetInfo.workflowStatus === 'IN_EDIT' && params.data.editable === true,
+					'disabled-link': mapsetInfo.workflowStatus !== 'IN_EDIT' || params.data.editable === false,
+				}"
+				[disabled]="mapsetInfo.workflowStatus !== 'IN_EDIT' || params.data.editable === false"
 			>
 				{{ params?.value.split('#')[1] }}
 			</button></span
@@ -1053,10 +1139,13 @@
 	</ng-template>
 	<workflow-map-modal
 		(updateWorkFlowMapStatus)="updateWorkFlowMapStatus($event)"
+		(updateMultiWorkFlowMapStatus)="updateMultiWorkFlowMapStatus($event)"
 		(closeWorkflowMapModal)="closeWorkflowMapModal()"
 		[workFlowMapStatus]="workFlowMapStatus"
 		[mapsetInfo]="mapsetInfo"
 		[isWFMapModalOpen]="isWFMapModalOpen"
 		[conceptCode]="conceptCode"
+		[conceptCodeList]="conceptCodeList"
+		[multiple]="isMultiple"
 	></workflow-map-modal>
 </div>

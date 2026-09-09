@@ -19,7 +19,6 @@ import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
 	standalone: false,
@@ -115,7 +114,6 @@ export class InboxComponent implements OnInit, AfterViewInit {
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
 		private modalService: NgbModal,
-		private pagerService: PaginationService,
 		private mt2Service: MT2Service,
 		private notificationService: NotificationService,
 	) {
@@ -143,6 +141,10 @@ export class InboxComponent implements OnInit, AfterViewInit {
 					} else {
 						console.error('no mapset found');
 					}
+				},
+				error: (err) => {
+					console.error(' Error: ', err);
+					this.authenticationService.checkError(err);
 				},
 			});
 		}
@@ -178,8 +180,6 @@ export class InboxComponent implements OnInit, AfterViewInit {
 	}
 
 	getMapsetData() {
-		// this.refsetService.getMapsetsByStatus('PUBLISHED').subscribe({
-		// 	next: ([results]) => {
 		this.columnDefs = [
 			{
 				field: 'mapSetCode',
@@ -290,12 +290,6 @@ export class InboxComponent implements OnInit, AfterViewInit {
 
 		this.showTable = true;
 		this.changeDetectorRef.detectChanges();
-		// 	},
-		// 	error: (error: any) => {
-		// 		console.log(' Error: ', error);
-		// 		this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
-		// 	},
-		// });
 	}
 
 	showDropdown(): void {
@@ -387,6 +381,10 @@ export class InboxComponent implements OnInit, AfterViewInit {
 										console.error('no mapset found');
 									}
 								},
+								error: (err) => {
+									console.error(' Error: ', err);
+									this.authenticationService.checkError(err);
+								},
 							});
 						}
 					}
@@ -422,9 +420,10 @@ export class InboxComponent implements OnInit, AfterViewInit {
 				UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
 			},
 			error: (error: any) => {
-				console.log(' Error: ', error);
+				//console.log(' Error: ', error);
 				this.refsetGridApi.showNoRowsOverlay();
 				this.refsetGridApi.setGridOption('rowData', []);
+				this.authenticationService.checkError(error);
 			},
 		});
 
@@ -533,33 +532,36 @@ export class InboxComponent implements OnInit, AfterViewInit {
 		this.downloadError = '';
 		if (this.selectedFormat['value'] !== undefined && this.selectedType['value'] !== undefined) {
 			this.downloading = true;
-			this.refsetService.getMapsetsByCode(this.mapsetInfo.refSetCode).subscribe((results) => {
-				this.mapsetInfo = results;
-				const params = {
-					branch: this.mapsetInfo.branchPath,
-					mapSetCode: this.mapsetInfo.refSetCode,
-					fileFormatType: this.selectedType['value'],
-					fileExportType: this.selectedFormat['value'],
-					fileNameDate: CodeUtility.getCurrentDate().split('-').join(''),
-					languageId: this.mapsetInfo.moduleId,
-					startEffectiveTime: this.mapsetInfo.version.replaceAll('-', ''),
-					transientEffectiveTime: this.mapsetInfo.version.replaceAll('-', ''),
-					exportMetadata: this.selectExportMetadata,
-				};
-				this.refsetService.exportMapset(params).subscribe(
-					(data: any) => {
-						this.getMapsetDownloadStatus(data.url);
-					},
-					(err: any) => {
-						this.downloading = false;
-						console.error(' Error: ', err);
-						this.notificationService.show('Error downloading, please try again.', 'Error', 'error', {
-							timeOut: 2500,
-							extendedTimeOut: 0,
-						});
-					},
-				);
-			});
+			this.refsetService.getMapsetsByCode(this.mapsetInfo.refSetCode).subscribe(
+				(results) => {
+					this.mapsetInfo = results;
+					const params = {
+						branch: this.mapsetInfo.branchPath,
+						mapSetCode: this.mapsetInfo.refSetCode,
+						fileFormatType: this.selectedType['value'],
+						fileExportType: this.selectedFormat['value'],
+						fileNameDate: CodeUtility.getCurrentDate().split('-').join(''),
+						languageId: this.mapsetInfo.moduleId,
+						startEffectiveTime: this.mapsetInfo.version.replaceAll('-', ''),
+						transientEffectiveTime: this.mapsetInfo.version.replaceAll('-', ''),
+						exportMetadata: this.selectExportMetadata,
+					};
+					this.refsetService.exportMapset(params).subscribe(
+						(data: any) => {
+							this.getMapsetDownloadStatus(data.url);
+						},
+						(err: any) => {
+							this.downloading = false;
+							console.error(' Error: ', err);
+							this.authenticationService.checkError(err);
+						},
+					);
+				},
+				(err) => {
+					console.error(' Error: ', err);
+					this.authenticationService.checkError(err);
+				},
+			);
 		} else {
 			this.downloadError = 'Please select a download type and format.';
 		}
@@ -593,7 +595,7 @@ export class InboxComponent implements OnInit, AfterViewInit {
 			(err: any) => {
 				this.downloading = false;
 				console.error(' Error: ', err);
-				this.notificationService.show('Error downloading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+				this.authenticationService.checkError(err);
 			},
 		);
 	}
@@ -691,6 +693,10 @@ export class InboxComponent implements OnInit, AfterViewInit {
 				next: (results) => {
 					this.mt2Service.setModuleMetadata(results);
 					this.moduleMetadata = results;
+				},
+				error: (err) => {
+					console.error(' Error: ', err);
+					this.authenticationService.checkError(err);
 				},
 			});
 		} else {
