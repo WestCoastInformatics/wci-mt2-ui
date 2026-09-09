@@ -9,91 +9,97 @@
 		</div>
 	</div>
 </div>
-
-<div class="rt2-container refsetDirectoryPage" (window:resize)="onResize($event)">
-	<div class="metadata-collapsible-container m-t-20">
+<div [hidden]="!showLoadingSearch" class="section-loading">Loading...</div>
+<div class="mt2-container refsetDirectoryPage" (window:resize)="onResize($event)">
+	<div class="metadata-collapsible-container" [ngClass]="{ 'm-t-20': !showLoadingSearch }">
 		<div class="metadata-collapsible-container-group-header row">
 			<div class="metadata-section-background">
 				<div class="row d-flex dropdown-group">
-					<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
-						<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridApi" [useDialog]="useDialog">
+					<div class="col-md-auto mt2-directory-chooser-column" *ngIf="showTable">
+						<app-column-chooser
+							title="Select Columns to Display"
+							[gridColumnApi]="refsetGridApi"
+							[useDialog]="useDialog"
+							[columnStorage]="mapsetLibraryColumnStorage"
+						>
 						</app-column-chooser>
 					</div>
-					<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
+					<div class="col-md-auto mt2-directory-chooser-column" *ngIf="showTable">
 						<mat-menu #searchMenu="matMenu" class="search-box">
 							<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
-								<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
-									<mat-label *ngIf="searchInput === ''" class="search-label"
-										>Search by Source PT (enter at least 3 characters)</mat-label
+								<div class="d-flex align-items-center">
+									<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
+										<mat-label *ngIf="searchInput === ''" class="search-label"
+											>Search by Source PT (enter at least 3 characters)</mat-label
+										>
+										<input
+											matInput
+											#directorySearchInput
+											id="directorySearchInput"
+											[(ngModel)]="searchInput"
+											(keydown.enter)="onSearchChange()"
+											(click)="$event.stopPropagation()"
+										/>
+									</mat-form-field>
+									<span
+										class="clear-search"
+										*ngIf="searchInput.length > 0"
+										title="Clear Search"
+										(click)="$event.stopPropagation(); clearSearch()"
 									>
-									<input
-										matInput
-										#directorySearchInput
-										id="directorySearchInput"
-										[(ngModel)]="searchInput"
-										(input)="onSearchChange()"
-										(click)="$event.stopPropagation()"
-									/>
-								</mat-form-field>
-								<span
-									class="clear-search"
-									title="Clear Search"
-									(click)="$event.stopPropagation(); clearSearch()"
-									*ngIf="searchInput.length > 0"
-									>&#10005;</span
-								><br />
-								<span *ngIf="searchInput.length > 0" class="mappings-section"
-									>{{ refsetGridApi.getDisplayedRowCount() > 0 ? refsetGridApi.getDisplayedRowCount() : 'No ' }} result{{
-										refsetGridApi.getDisplayedRowCount() > 1 ? 's' : ''
-									}}
-									found</span
-								>
+										&#10005;
+									</span>
+								</div>
+								<div class="d-flex col-md-12">
+									<div class="col-10"></div>
+									<div class="col-2">
+										<button
+											type="button"
+											title="Search"
+											class="mt2-btn mt2-action-btn sm-inline-btn no-margin-top form-btn"
+											(click)="onSearchChange()"
+											[disabled]="searchInput === ''"
+											(ngClass)="({ disabled: searchInput === '' })"
+										>
+											Search
+										</button>
+									</div>
+								</div>
 							</div></mat-menu
 						>
 						<div class="menu-inline">
 							<button
 								[matMenuTriggerFor]="searchMenu"
 								(menuOpened)="menuOpened()"
+								[matBadgeHidden]="searchInput === ''"
+								matBadgeSize="small"
+								[matBadge]="'.'"
 								aria-label="Search"
 								title="Search"
 								class="mapset-download-icon menu-button"
 							>
 								<mat-icon class="menu-icon">search</mat-icon>
-								<span class="menu-label">search</span>
+								<span class="menu-label">Search</span>
 							</button>
 						</div>
 					</div>
 				</div>
 				<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showTable && !showLoadingSearch"></div>
-				<div class="row loading-details dashboard-section" *ngIf="showLoadingSearch">
-					<div>Loading...</div>
-				</div>
-				<!-- Page Title -->
-				<!-- <div class="container-fluid page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div> -->
 
-				<!-- Reference Set Table -->
 				<ag-grid-angular
 					#directoryTable
 					*ngIf="showTable"
-					class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct"
+					class="ag-theme-alpine mt2-ag-grid mt2-ag-grid-filter w-100-pct"
+					[rowHeight]="51"
 					[columnDefs]="columnDefs"
 					[gridOptions]="refsetGridOptions"
 				>
 				</ag-grid-angular>
 
-				<!--<app-pagination
-				#directoryPaging
-				*ngIf="showTable"
-				[pageSize]="refsetGridPaging.pageSize"
-				[gridOptions]="refsetGridOptions"
-				[pageSizeOptions]="refsetGridPaging.pageSizeOptions"
-				[totalKnown]="refsetGridPaging.totalKnown"
-				[manualStateRefresh]="refsetGridPaging.manualStateRefresh">
-			</app-pagination>-->
 				<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
-				<div class="rt2-pagination-container" [hidden]="showLoadingSearch || numOfMembers === 0">
-					<div class="rt2-pagination-top-row">
-						<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons">
+				<div class="mt2-pagination-container" [hidden]="showLoadingSearch || numOfMembers === 0">
+					<div class="mt2-pagination-top-row">
+						<div *ngIf="paginationPages.totalPages > 1" class="mt2-pagination-buttons no-wrap">
 							<button
 								#paginationFirstPage
 								mat-raised-button
@@ -180,7 +186,7 @@
 							</button>
 						</div>
 
-						<div class="rt2-pagination-bottom-row" *ngIf="showPaging">
+						<div class="mt2-pagination-bottom-row" *ngIf="showPaging">
 							<span *ngFor="let sizeOption of refsetGridPaging.pageSizeOptions">
 								<button
 									mat-raised-button
@@ -195,29 +201,43 @@
 							</span>
 						</div>
 					</div>
-					<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
-						Showing
-						<span class="fw-bold p-l-5 p-r-5">
-							{{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }}
-						</span>
-						to
-						<span class="fw-bold p-l-5 p-r-5">
-							{{
-								numOfMembers < (getCurrentPage() + 1) * refsetGridPaging.pageSize
-									? numOfMembers
-									: (getCurrentPage() + 1) * refsetGridPaging.pageSize
-							}}
-						</span>
-						of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
+					<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
+						<div *ngIf="searchInput === ''">
+							Showing
+							<span class="fw-bold p-l-5 p-r-5">
+								{{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }}
+							</span>
+							to
+							<span class="fw-bold p-l-5 p-r-5">
+								{{
+									numOfMembers < (getCurrentPage() + 1) * refsetGridPaging.pageSize
+										? numOfMembers
+										: (getCurrentPage() + 1) * refsetGridPaging.pageSize
+								}}
+							</span>
+							of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
+						</div>
+						<div *ngIf="searchInput !== ''">Showing {{ refsetGridApi.getDisplayedRowCount() }} search results</div>
 					</div>
-					<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
+				</div>
+				<div
+					class="mt2-pagination-total-label directory-new-paging ag-theme-alpine"
+					[hidden]="showPaging || !showTable || !showLoadingSearch"
+				>
+					No results to show
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<!-- Workflow Status Templates -->
+	<ng-template #dashboardWorkflowStatusSection let-params>
+		<workflow-status-badge [status]="params?.data?.workflowStatus"> </workflow-status-badge>
+	</ng-template>
+
 	<!-- Information Templates -->
 	<ng-template #directoryInfoSection let-params>
-		<div class="d-flex rt2-wrap">
+		<div class="d-flex mt2-wrap">
 			<div class="col-6">
 				<div
 					aria-hidden="false"
@@ -225,7 +245,7 @@
 					class="mat-button-wrapper mapset-notes-icon"
 					aria-label="View Map Set Metadata"
 					title="View Map Set Metadata"
-					(click)="openToBeDevelopedModal(toBeDevelopedModal)"
+					(click)="openMapsetInfoModal(params, mapsetInfoModalRef)"
 				>
 					<mat-icon class="scale-85-pct">information</mat-icon>
 				</div>
@@ -239,8 +259,8 @@
 	</ng-template>
 
 	<ng-template #directoryInfoDialog let-data>
-		<div class="container-fluid w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
-			<div class="row rt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
+		<div class="container-fluid w-min-350 mt2-refset-metadata-column" id="directoryInformationSection">
+			<div class="row mt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
 				<p class="fs-18 mb-0 ml-10">{{ data.name }}</p>
 				<p class="fs-16 ml-10">
 					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span
@@ -252,8 +272,8 @@
 	</ng-template>
 
 	<!-- Workflow Status Templates -->
-	<ng-template #directoryWorkflowStatusSection let-params>
-		<object [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)">{{ params?.value }}</object>
+	<ng-template #workflowStatusSection let-params>
+		<workflow-status-badge [status]="params?.value"> </workflow-status-badge>
 	</ng-template>
 
 	<!-- Name Templates -->
@@ -264,7 +284,7 @@
 			*ngIf="params?.data?.privateRefset"
 			aria-hidden="false"
 			#directoryPrivateIcon
-			class="rt2-table-action-icon rt2-table-action-form-icon"
+			class="mt2-table-action-icon mt2-table-action-form-icon"
 			aria-label="Private Reference Set"
 			title="Private Reference Set"
 		>
@@ -273,7 +293,7 @@
 		<mat-icon
 			*ngIf="params?.data?.localSet"
 			aria-hidden="false"
-			class="rt2-table-action-icon rt2-table-action-form-icon"
+			class="mt2-table-action-icon mt2-table-action-form-icon"
 			aria-label="Local Set"
 			title="Local Set"
 		>
@@ -287,7 +307,7 @@
 	<ng-template #directoryActionSection let-params>
 		<div class="d-flex">
 			<div class="col-6">
-				<div class="library-app-refset-download" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+				<div class="library-app-refset-download" (click)="downloadMapsets(params)">
 					<div class="mat-button-wrapper mapset-notes-icon">
 						<i class="fa fa-download fa-lg" title="Download Map Set" aria-label="Download Map Set"></i>
 					</div>
@@ -311,7 +331,7 @@
 	</ng-template>
 
 	<ng-template #toBeDevelopedModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<h4 class="modal-title">Coming Soon</h4>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
 				<span aria-hidden="true">&times;</span>
@@ -320,9 +340,139 @@
 		<div class="modal-body">
 			<p>This feature is not yet available. Please check back later.</p>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		</div>
+	</ng-template>
+
+	<ng-template #mapsetInfoModalRef let-modal>
+		<div class="modal-header mt2-modal-header">
+			<h4 class="modal-title">Map Set Metadata</h4>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeMapsetInfoModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<div class="section-background metadata-section">
+				<div class="col-12 row metadata-group">
+					<div class="record-row metadata-row d-flex">
+						<div class="col-6 odd-row d-flex">
+							<div class="code-name col-4">Map Set ID</div>
+							{{ mapsetInfo.refSetCode }}
+						</div>
+						<div class="col-6 odd-row d-flex">
+							<div class="code-name date-column second-row col-4">Version Status</div>
+							{{ mapsetInfo.versionStatus }}
+						</div>
+					</div>
+					<div class="record-row metadata-row d-flex">
+						<div class="col-6 d-flex">
+							<div class="code-name col-4">Map Set Name</div>
+							{{ mapsetInfo.refSetName }}
+						</div>
+						<div class="col-6 d-flex">
+							<div class="code-name date-column second-row col-4">Version Date</div>
+							{{ mapsetInfo.version }}
+						</div>
+					</div>
+					<div class="record-row metadata-row d-flex">
+						<div class="col-6 odd-row d-flex">
+							<div class="code-name col-4">Map from</div>
+							{{ mapsetInfo.fromTerminology }} {{ mapsetInfo.fromVersion }}
+						</div>
+						<div class="col-6 odd-row d-flex">
+							<div class="code-name date-column second-row col-4">Last Modified</div>
+							{{ dateFormatter(mapsetInfo.modified) }}
+						</div>
+					</div>
+					<div class="record-row metadata-row d-flex">
+						<div class="col-6 d-flex">
+							<div class="code-name col-4">Map to</div>
+							{{ mapsetInfo.toTerminology }} {{ mapsetInfo.toVersion }}
+						</div>
+						<div class="col-6 d-flex">
+							<div class="code-name date-column second-row col-4">Language</div>
+							<span *ngIf="getModuleLanguageIcon(mapsetInfo.moduleId) !== ''">
+								<img
+									class="mapset-mod-icon"
+									*ngIf="mapsetInfo.moduleId !== internationalId"
+									src="{{ 'assets/flags/' + getModuleLanguageIcon(mapsetInfo.moduleId) + '.png' }}"
+									title="{{ getModuleLanguageName(mapsetInfo.moduleId) }}"
+									aria-label="{{ getModuleLanguageName(mapsetInfo.moduleId) }}"
+							/></span>
+						</div>
+					</div>
+					<div class="record-row metadata-row d-flex">
+						<div class="col-12 odd-row d-flex">
+							<div class="code-name col-2">Current Branch</div>
+							<div>
+								{{ mapsetInfo.editionBranch }}/REFSETS/REFSET-{{ mapsetInfo.refSetCode }}-{{ mapsetInfo.refsetBranchId }}/EDIT-{{
+									mapsetInfo.editBranchId
+								}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeMapsetInfoModal()">Close</button>
+		</div>
+	</ng-template>
+
+	<ng-template #downloadModal let-modal>
+		<div class="modal-header mt2-modal-header">
+			<div class="modal-title">Download Map Set</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeDownloadModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body" *ngIf="!downloading">
+			<p>{{ downloadTitle }}</p>
+			<div class="modal-error-message" *ngIf="downloadError">
+				<div>{{ downloadError }}</div>
+			</div>
+			<div class="modal-select">
+				<label class="modal-label">File Type: <span class="mandatory-field">*</span></label>
+				<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
+					<mat-select placeholder="Select a type" [ngModel]="types" [(value)]="selectedType" class="mt2-column-chooser-select">
+						<mat-select-trigger class="trigger"
+							><span *ngIf="!selectedType"> Select a type </span
+							><span *ngIf="selectedType">{{ selectedType.display }}</span></mat-select-trigger
+						>
+
+						<mat-option *ngFor="let type of types" [value]="type" class="no-checkbox">
+							{{ type.display }}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<div class="modal-select">
+				<label class="modal-label">File Format: <span class="mandatory-field">*</span></label>
+				<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
+					<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="mt2-column-chooser-select">
+						<mat-select-trigger class="trigger"
+							><span *ngIf="!selectedFormat"> Select a format </span
+							><span *ngIf="selectedFormat">{{ selectedFormat.display }}</span></mat-select-trigger
+						>
+
+						<mat-option *ngFor="let format of formats" [value]="format" class="no-checkbox">
+							{{ format.display }}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<div class="d-flex align-items-center justify-content-center m-3">
+				<label class="modal-label">Export Metadata:</label>
+				<mat-checkbox class="menu-checkbox" [(ngModel)]="selectExportMetadata"></mat-checkbox>
+			</div>
+		</div>
+		<div class="modal-body" *ngIf="downloading">
+			<p>Please wait, downloading...</p>
+		</div>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group" *ngIf="!downloading">
+			<button type="button" title="Cancel" class="mt2-btn mt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
+			<button type="button" title="Download" class="mt2-btn mt2-action-btn" (click)="startDownload()">Download</button>
 		</div>
 	</ng-template>
 </div>
-<scroll-top></scroll-top>

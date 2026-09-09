@@ -28,10 +28,7 @@ describe('BreadcrumbService', () => {
 	});
 
 	it('should emit formatted breadcrumbs when setBreadcrumbs is called', (done) => {
-		const input = [
-			{ label: 'Home', path: '/home' },
-			{ label: 'About' },
-		];
+		const input = [{ label: 'Home', path: '/home' }, { label: 'About' }];
 
 		// Skip the initial emission
 		let emissionCount = 0;
@@ -40,9 +37,9 @@ describe('BreadcrumbService', () => {
 			if (emissionCount === 2) {
 				expect(breadcrumbs.length).toBe(2);
 				expect(breadcrumbs[0].id).toBe(0);
-				expect(breadcrumbs[0].class).toContain('rt2-breadcrumb');
+				expect(breadcrumbs[0].class).toContain('mt2-breadcrumb');
 				expect(breadcrumbs[0].selectable).toBe(true);
-				expect(breadcrumbs[0].class).toContain('rt2-breadcrumb-selectable');
+				expect(breadcrumbs[0].class).toContain('mt2-breadcrumb-selectable');
 
 				expect(breadcrumbs[1].id).toBe(1);
 				expect(breadcrumbs[1].selectable).toBeUndefined();
@@ -61,7 +58,7 @@ describe('BreadcrumbService', () => {
 			emissionCount++;
 			if (emissionCount === 2) {
 				expect(breadcrumbs[0].selectable).toBe(true);
-				expect(breadcrumbs[0].class).toContain('rt2-breadcrumb-selectable');
+				expect(breadcrumbs[0].class).toContain('mt2-breadcrumb-selectable');
 				done();
 			}
 		});

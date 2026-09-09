@@ -1,4 +1,5 @@
 @import 'src/assets/css/variables.css';
+@import 'src/assets/css/button-styles.css';
 @import 'src/assets/css/core-styles.css';
 
 #directorySearchInputField {
@@ -21,6 +22,14 @@
 	.mat-form-field-underline {
 		width: 125px;
 	}
+}
+
+.search-label {
+	font-size: 1.3rem !important;
+	font-weight: 300;
+
+	top: 50% !important;
+	transform: translateY(-30%) !important;
 }
 
 .top-search-bar {
@@ -64,6 +73,19 @@
 	margin: 10px 0 15px 10px;
 }
 
+.form-btn {
+	width: fit-content;
+	padding-left: 0.8em !important;
+	padding-right: 0.8em !important;
+	margin-right: 0 !important;
+	height: 34px !important;
+	padding-top: 0.12em !important;
+}
+
+.sm-inline-btn {
+	scale: 0.85;
+}
+
 .mappings-section {
 	color: #666;
 	font-size: 12px;
@@ -101,7 +123,7 @@
 	padding-right: 10px;
 }
 
-.rt2-directory-chooser-column {
+.mt2-directory-chooser-column {
 	padding-right: 20px;
 	margin-top: -0.5em;
 }
@@ -113,13 +135,13 @@
 	font-weight: 500 !important;
 }
 
-.rt2-ag-cell {
+.mt2-ag-cell {
 	width: 90px;
 	text-align: center;
 	align-items: center;
 }
 
-.rt2-ag-grid {
+.mt2-ag-grid {
 	padding: 0;
 	margin: 0;
 	margin-left: 10px;
@@ -137,7 +159,7 @@
 	cursor: pointer;
 }
 
-.rt2-action-btn {
+.mt2-action-btn {
 	height: 40px;
 	padding-left: 0;
 	padding-right: 0;
@@ -155,7 +177,7 @@
 	letter-spacing: normal;
 }
 
-.rt2-btn:hover {
+.mt2-btn:hover {
 	background-color: var(--mapset-blue) !important;
 	color: #ffffff !important;
 	filter: none;

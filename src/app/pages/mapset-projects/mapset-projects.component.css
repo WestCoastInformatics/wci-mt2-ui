@@ -1,11 +1,11 @@
 @import 'src/assets/css/variables.css';
+@import 'src/assets/css/button-styles.css';
 @import 'src/assets/css/core-styles.css';
 
 #directorySearchInputField {
 	width: 340px;
 	margin-top: 0.25em;
 
-	/* // set this to 20px less than the field to leave room for the cancel 'X' */
 	.mat-form-field-flex {
 		width: 320px;
 	}
@@ -22,6 +22,14 @@
 	.mat-form-field-underline {
 		width: 125px;
 	}
+}
+
+.search-label {
+	font-size: 1.3rem !important;
+	font-weight: 300;
+
+	top: 50% !important;
+	transform: translateY(-30%) !important;
 }
 
 .top-search-bar {
@@ -48,6 +56,19 @@
 		display: inline-flex !important;
 		padding-right: 3rem;
 	}
+}
+
+.form-btn {
+	width: fit-content;
+	padding-left: 0.8em !important;
+	padding-right: 0.8em !important;
+	margin-right: 0 !important;
+	height: 34px !important;
+	padding-top: 0.12em !important;
+}
+
+.sm-inline-btn {
+	scale: 0.85;
 }
 
 .directory-header {
@@ -94,7 +115,15 @@
 	padding-right: 15px;
 }
 
-.rt2-directory-chooser-column {
+.modal-select {
+	text-align: center;
+}
+
+.modal-label {
+	padding-right: 10px;
+}
+
+.mt2-directory-chooser-column {
 	padding-right: 20px;
 	margin-top: -0.5em;
 }
@@ -106,13 +135,13 @@
 	font-weight: 500 !important;
 }
 
-.rt2-ag-cell {
+.mt2-ag-cell {
 	width: 90px;
 	text-align: center;
 	align-items: center;
 }
 
-.rt2-ag-grid {
+.mt2-ag-grid {
 	padding: 0;
 	margin: 0;
 	margin-left: 10px;
@@ -130,7 +159,7 @@
 	cursor: pointer;
 }
 
-.rt2-action-btn {
+.mt2-action-btn {
 	height: 40px;
 	padding-left: 0;
 	padding-right: 0;
@@ -148,30 +177,26 @@
 	letter-spacing: normal;
 }
 
-.rt2-btn:hover {
+.mt2-btn:hover {
 	background-color: var(--mapset-blue) !important;
 	color: #ffffff !important;
 	filter: none;
 }
 
-.loading-details {
-	position: absolute;
-	z-index: 100;
-	background: white;
+.section-loading {
+	background: rgba(232, 240, 255, 1) !important;
 	border: 0.2px groove #999 !important;
-	border-radius: 0;
-	margin-left: 45%;
-	margin-top: 10%;
+	border-radius: 3px !important;
+	margin-left: 45% !important;
+	margin-top: 1% !important;
 	padding: 0.25em;
-	width: 6.5em;
-	padding-left: 0;
+	width: fit-content;
 }
 
 .mapset-notes-icon {
 	cursor: pointer;
 	width: 24px;
-	/* //height: 24px; */
-	/* //color: #2269e8; */
+
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 
@@ -189,7 +214,7 @@
 	margin-top: -0.2em;
 	width: 24px;
 	height: 24px;
-	/* //color: #2269e8; */
+
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 

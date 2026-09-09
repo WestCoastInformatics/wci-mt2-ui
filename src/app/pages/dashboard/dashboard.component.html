@@ -1,78 +1,165 @@
 <div *ngIf="showLoadingSpinner" class="loading"></div>
-<div class="content-header">
-	<div class="row header-title">
-		<span class="title-label dashboard-title">My Dashboard</span>
+
+<!-- Heading -->
+<div class="top-search-bar content-header">
+	<div class="row align-items-baseline">
+		<div class="col page-title">
+			<span>Recent Mappings&nbsp; </span><span [hidden]="!numOfMembers">{{ '(' + numOfMembers + ')' }}</span>
+			<span [hidden]="numOfMembers">{{ '(0)' }}</span>
+		</div>
 	</div>
 </div>
-<div class="rt2-container">
-	<div class="row">
-		<div class="col-md-4 col-12">
-			<section>
-				<heading-with-count title="My Organizations" [count]="organizationList.length"></heading-with-count>
-				<div class="dashboard-section">
-					<div class="dashboard-section-mid">
-						<ng-container *ngFor="let organization of organizationList">
-							<div class="section-list" *ngIf="organization.name">
-								<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, organization.iconUri)" class="medium-icon-image" /> {{ params?.value }}
-								<span [routerLink]="" (click)="navigateToPage('/organizations/' + organization.id + '/edition/0/projects')"
-									><a>{{ organization.name }}</a></span
+<div [hidden]="!showLoadingSearch" class="section-loading">Loading...</div>
+<div class="mt2-container refsetDirectoryPage" (window:resize)="onResize($event)">
+	<div class="metadata-collapsible-container" [ngClass]="{ 'm-t-20': !showLoadingSearch }">
+		<div class="metadata-collapsible-container-group-header row">
+			<div class="metadata-section-background">
+				<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showTable && !showLoadingSearch"></div>
+
+				<ag-grid-angular
+					#directoryTable
+					*ngIf="showTable"
+					class="ag-theme-alpine mt2-ag-grid mt2-ag-grid-filter w-100-pct"
+					[rowHeight]="51"
+					[columnDefs]="columnDefs"
+					[gridOptions]="refsetGridOptions"
+				>
+				</ag-grid-angular>
+
+				<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
+				<div class="mt2-pagination-container" [hidden]="showLoadingSearch || numOfMembers === 0">
+					<div class="mt2-pagination-top-row">
+						<div *ngIf="paginationPages.totalPages > 1" class="mt2-pagination-buttons no-wrap">
+							<button
+								#paginationFirstPage
+								mat-raised-button
+								(click)="goToPage(0)"
+								class="pagination-page-buttons"
+								[ngClass]="{ disabled: getCurrentPage() === 0 }"
+								title="Go To First Page"
+								attr.aria-label="Go To First Page"
+							>
+								<mat-icon aria-hidden="false">first_page</mat-icon>
+							</button>
+
+							<button
+								#paginationPreviousPage
+								mat-raised-button
+								(click)="refsetGridApi.paginationGoToPreviousPage()"
+								title="Go To Previous Page {{ getCurrentPage() }}"
+								class="pagination-page-buttons"
+								[ngClass]="{ disabled: getCurrentPage() === 0 }"
+								attr.aria-label="Go To Previous Page {{ getCurrentPage() }}"
+							>
+								<mat-icon aria-hidden="false">arrow_left</mat-icon>
+							</button>
+
+							<span *ngFor="let page of paginationPages.pages">
+								<button
+									#paginationPageNumber
+									mat-raised-button
+									class="pagination-page-buttons"
+									[color]="getCurrentPage() + 1 === page ? 'primary' : ''"
+									(click)="goToPage(page - 1)"
+									attr.aria-label="{{ getCurrentPage() + 1 === page ? 'Current' : 'Go To' }} Page {{ page }}"
+									title="{{ getCurrentPage() + 1 === page ? 'Current' : 'Go To' }} Page {{ page }}"
 								>
-							</div>
-						</ng-container>
-					</div>
-					<!--
-					<div>
-						<create-new-organization-modal></create-new-organization-modal>
-					</div>
-					-->
-				</div>
-			</section>
+									{{ page }}
+								</button>
+							</span>
 
-			<section>
-				<heading-with-count title="My Projects" [count]="projectList.length"></heading-with-count>
-				<div class="dashboard-section">
-					<div class="dashboard-section-mid">
-						<ng-container *ngFor="let project of projectList">
-							<div class="section-list" *ngIf="project.name">
-								<span
-									[routerLink]=""
-									(click)="navigateToPage('/organization/' + project.edition.organization.id + '/edition/' + project.edition.id + '/projects/' + project.id + '/refsets')"
-									><a>{{ project.edition.organization.name }}/{{ project.name }}</a
-									><i *ngIf="project.privateProject" class="fa fa-lock ml-2 text-muted"></i
-								></span>
-							</div>
-						</ng-container>
-					</div>
-				</div>
-			</section>
+							<button
+								mat-button
+								*ngIf="paginationPages.totalPages - paginationPages.startPage > 5"
+								(click)="goToPage(paginationPages.startPage + 4)"
+								class="pagination-page-buttons w-min-32 p-0"
+								title="Go To Page {{ paginationPages.startPage + 5 }}"
+								attr.aria-label="Go To Page {{ paginationPages.startPage + 5 }}"
+								title="Go To Page {{ paginationPages.startPage + 5 }}"
+							>
+								...
+							</button>
 
-			<section>
-				<heading-with-count title="My Teams" [count]="teamList.length"></heading-with-count>
-				<div class="dashboard-section">
-					<div class="dashboard-section-mid">
-						<ng-container *ngFor="let team of teamList">
-							<div class="section-list" *ngIf="team.name">
-								<span [routerLink]="" (click)="navigateToPage('/organization/' + team.organizationId + '/teams/' + team.id + '/users')"
-									><a>{{ team.organization?.name }}/{{ team?.name }}</a></span
+							<button
+								mat-raised-button
+								*ngIf="paginationPages.totalPages - paginationPages.startPage > 5"
+								(click)="goToPage(paginationPages.totalPages)"
+								class="pagination-page-buttons"
+								attr.aria-label="Go To Page {{ paginationPages.totalPages }}"
+								title="Go To Page {{ paginationPages.totalPages }}"
+							>
+								{{ paginationPages.totalPages }}
+							</button>
+
+							<button
+								#paginationNextPage
+								mat-raised-button
+								(click)="refsetGridApi.paginationGoToNextPage()"
+								title="Go To Next Page {{ getCurrentPage() + 2 }}"
+								class="pagination-page-buttons"
+								[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
+								attr.aria-label="Go To Next Page {{ getCurrentPage() + 2 }}"
+							>
+								<mat-icon aria-hidden="false">arrow_right</mat-icon>
+							</button>
+
+							<button
+								#paginationLastPage
+								mat-raised-button
+								(click)="goToPage(paginationPages.totalPages)"
+								title="Go To Last Page ({{ paginationPages.totalPages }})"
+								class="pagination-page-buttons"
+								[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
+								attr.aria-label="Go To Last Page {{ paginationPages.totalPages }}"
+							>
+								<mat-icon aria-hidden="false">last_page</mat-icon>
+							</button>
+						</div>
+
+						<div class="mt2-pagination-bottom-row" *ngIf="showPaging">
+							<span *ngFor="let sizeOption of refsetGridPaging.pageSizeOptions">
+								<button
+									mat-raised-button
+									[color]="refsetGridPaging.pageSize === sizeOption ? 'secondary' : ''"
+									class="pagination-page-buttons unthemed"
+									(click)="setPageSize(sizeOption)"
+									[hidden]="sizeOption > numOfMembers"
+									title="{{ sizeOption }} Members per Page"
 								>
-							</div>
-						</ng-container>
+									{{ sizeOption }}
+								</button>
+							</span>
+						</div>
+					</div>
+					<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
+						<div *ngIf="searchInput === ''">
+							Showing
+							<span class="fw-bold p-l-5 p-r-5">
+								{{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }}
+							</span>
+							to
+							<span class="fw-bold p-l-5 p-r-5">
+								{{
+									numOfMembers < (getCurrentPage() + 1) * refsetGridPaging.pageSize
+										? numOfMembers
+										: (getCurrentPage() + 1) * refsetGridPaging.pageSize
+								}}
+							</span>
+							of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
+						</div>
+						<div *ngIf="searchInput !== ''">Showing {{ refsetGridApi.getDisplayedRowCount() }} search results</div>
 					</div>
 				</div>
-			</section>
-		</div>
-		<div class="col-md-8 col-12">
-			<section>
-				<heading-with-count title="Recent Reference Sets" [count]="data.length"></heading-with-count>
-				<div class="ag-theme-alpine">
-					<ag-grid-angular [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" class="w-100-pct h-638"> </ag-grid-angular>
-
-					<!-- Workflow Status Templates -->
-					<ng-template #dashboardWorkflowStatusSection let-params>
-						<workflow-status-badge [status]="params?.data?.workflowStatus"> </workflow-status-badge>
-					</ng-template>
+				<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging || !showTable">
+					No results to show
 				</div>
-			</section>
+			</div>
 		</div>
+		<!-- Workflow Status Templates -->
+		<ng-template #workflowStatusSection let-params>
+			<workflow-status-badge [status]="params?.value"> </workflow-status-badge>
+		</ng-template>
 	</div>
+
+	<!-- <ng-template #directoryVersionDate let-params> {{ formatVersionDate(params?.value) }} </ng-template> -->
 </div>

@@ -7,15 +7,18 @@ import { IToastButton } from '../components/notification/notification.component'
 	providedIn: 'root',
 })
 export class NotificationService {
-	constructor(private toastr: ToastrService, private readonly sanitizer: DomSanitizer) {}
+	constructor(
+		private toastr: ToastrService,
+		private readonly sanitizer: DomSanitizer,
+	) {}
 
 	show(message: string, title: string = null, type = 'info', config: any = {}, refsetId = '', buttons: IToastButton[] = []): ActiveToast<any> {
 		const additonalConfig = {
-			'timeOut': 25000,
-			'enableHtml': true,
-			'tapToDismiss': false,
-			'closeButton': true,
-			'toastClass': 'rt2-notification',
+			timeOut: 25000,
+			enableHtml: true,
+			tapToDismiss: false,
+			closeButton: true,
+			toastClass: 'mt2-notification',
 		};
 
 		const toast = this.toastr.show(message, title, { ...additonalConfig, ...config }, 'toast-' + type);
@@ -28,14 +31,21 @@ export class NotificationService {
 		return toast;
 	}
 
-	showProgress(message: string, title: string = null, progressFn: () => number = null, config: any = {}, refsetId = '', buttons: IToastButton[] = []): ActiveToast<any> {
+	showProgress(
+		message: string,
+		title: string = null,
+		progressFn: () => number = null,
+		config: any = {},
+		refsetId = '',
+		buttons: IToastButton[] = [],
+	): ActiveToast<any> {
 		const additonalConfig = {
-			'extendedTimeOut': 0,
-			'timeOut': 100000000, // we need to set a timeout otherwise ngx-toastr won't display the progressBar
-			'enableHtml': true,
-			'tapToDismiss': false,
-			'progressBar': true,
-			'progressAnimation': 'increasing',
+			extendedTimeOut: 0,
+			timeOut: 100000000, // we need to set a timeout otherwise ngx-toastr won't display the progressBar
+			enableHtml: true,
+			tapToDismiss: false,
+			progressBar: true,
+			progressAnimation: 'increasing',
 		};
 
 		const toast = this.show(message, title, 'info', { ...additonalConfig, ...config }, refsetId, buttons);

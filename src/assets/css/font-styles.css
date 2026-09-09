@@ -130,15 +130,15 @@
 	text-transform: capitalize;
 }
 
-.rt2-directory-column-workflow-status .ag-cell-value {
+.mt2-directory-column-workflow-status .ag-cell-value {
 	text-transform: capitalize;
 }
 
-.rt2-directory-column-version-status .ag-cell-value {
+.mt2-directory-column-version-status .ag-cell-value {
 	text-transform: capitalize;
 }
 
-.rt2-directory-column-advices {
+.mt2-directory-column-advices {
 	align-content: center;
 }
 
@@ -177,7 +177,6 @@ p,
 	font-size: var(--standard_font_size_text) !important;
 	font-weight: var(--standard_font_weight) !important;
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .btn-sm,
@@ -187,10 +186,9 @@ p,
 }
 
 .header-font {
-	font-size: var(--standard_font_size_h4) !important;
-	font-weight: var(--standard_font_weight) !important;
+	font-size: var(--standard_font_size_h2) !important;
+	font-weight: var(--standard_font_weight_heavy) !important;
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .header-icon-font,
@@ -207,7 +205,6 @@ p,
 	font-size: var(--standard_font_size_text) !important;
 	font-weight: var(--standard_font_weight_title) !important;
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .page-h2-font,
@@ -215,14 +212,12 @@ p,
 	font-size: var(--standard_font_size_h2) !important;
 	font-weight: var(--standard_font_weight) !important;
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .intro-header-font {
 	font-size: var(--standard_font_size_text) !important;
 	font-weight: var(--standard_font_weight) !important;
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .form-toggle-field,
@@ -231,14 +226,12 @@ p,
 	font-size: 13px;
 	font-weight: var(--standard_font_weight) !important;
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .project-role-font {
 	font-size: 12px;
 	font-weight: var(--standard_font_weight) !important;
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .breadcrumb-font,
@@ -250,21 +243,18 @@ p,
 	font-size: var(--standard_font_size_h4);
 	font-weight: var(--standard_font_weight);
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .modal-header-font {
 	font-size: var(--standard_font_size);
 	font-weight: 500;
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .col-header-font {
 	font-size: var(--standard_font_size_h3);
 	font-weight: var(--standard_font_weight_bold);
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .filter-font,
@@ -274,7 +264,6 @@ p,
 	font-size: var(--standard_font_size_text) !important;
 	font-weight: var(--standard_font_weight);
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .mat-form-field,
@@ -283,7 +272,6 @@ p,
 	font-size: var(--standard_font_size_text) !important;
 	font-weight: var(--standard_font_weight);
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .form-title,
@@ -292,7 +280,6 @@ p,
 	font-size: var(--standard_font_size_h1);
 	font-weight: var(--standard_font_weight);
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .feedback-topic-title-font,
@@ -301,7 +288,6 @@ p,
 	font-size: var(--standard_font_size_h3);
 	font-weight: var(--standard_font_weight);
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .sidebar-links-font,
@@ -310,6 +296,7 @@ p,
 	font-weight: var(--standard_font_weight);
 	font-family: var(--standard_font_family) !important;
 	font-weight: var(--standard_font_weight) !important;
+	color: var(--standard_table_data_color);
 }
 
 .sidebar-icon-font {
@@ -321,7 +308,6 @@ p,
 	font-size: var(--standard_font_size_h3);
 	font-weight: 700;
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .footer-font {
@@ -334,7 +320,6 @@ p,
 	font-size: smaller;
 	font-weight: var(--standard_font_weight);
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .close-icon-font,
@@ -342,7 +327,6 @@ p,
 	font-size: 2rem;
 	font-weight: var(--standard_font_weight);
 	font-family: var(--standard_font_family) !important;
-	font-weight: var(--standard_font_weight) !important;
 }
 
 .head-section-title-font {

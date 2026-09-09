@@ -20,11 +20,11 @@ export class BreadcrumbService {
 
 		for (const breadcrumb of breadcrumbs) {
 			breadcrumb.id = i;
-			breadcrumb.class = 'rt2-breadcrumb';
+			breadcrumb.class = 'mt2-breadcrumb';
 
 			if (breadcrumb.path != undefined) {
 				breadcrumb.selectable = true;
-				breadcrumb.class += ' rt2-breadcrumb-selectable';
+				breadcrumb.class += ' mt2-breadcrumb-selectable';
 			}
 
 			breadcrumbNav.push(breadcrumb);

@@ -12,7 +12,7 @@ import {
 	Renderer2,
 } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { PaginationChangedEvent } from 'ag-grid-community';
+import { PaginationChangedEvent, RowClassParams } from 'ag-grid-community';
 import { Subscription, Observable, OperatorFunction, of, map } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
@@ -35,6 +35,7 @@ import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { PaginationService } from 'src/app/services/pagination.service';
+import { MapWorkflow } from 'src/app/models/map-workflow.model';
 
 @Component({
 	standalone: false,
@@ -43,7 +44,8 @@ import { PaginationService } from 'src/app/services/pagination.service';
 	styleUrls: ['./batch-mapping.component.css'],
 })
 export class BatchMappingComponent implements OnInit {
-	user: User;
+	user!: User;
+	userRoles: any[] = [];
 	searchInput = '';
 	searchBrowserInput = '';
 	targetCodeInput = '';
@@ -72,7 +74,7 @@ export class BatchMappingComponent implements OnInit {
 	showTable = false;
 	mapsetResponse = [];
 	mapsetData = [];
-	dialog: DialogService;
+	dialog!: DialogService;
 	versionStatuses: any;
 	versions: any;
 	organizations: any;
@@ -82,27 +84,30 @@ export class BatchMappingComponent implements OnInit {
 	showLoadingSpinner = false;
 	toggleDropdown = false;
 	numOfResults = 0;
-	directUrl: string;
+	directUrl = '';
 	numOfMembers: any;
 	disableChannel = new BroadcastChannel('disable-button-channel');
 	originalGridParams: any;
 	searchCallArray = [];
 	showLoadingSearch = true;
-	toBeDevelopedModalRef: NgbModalRef;
-	confirmModalRef: NgbModalRef;
-	headerGroupModal: NgbModalRef;
+	toBeDevelopedModalRef!: NgbModalRef;
+	confirmModalRef!: NgbModalRef;
+	headerGroupModal!: NgbModalRef;
+	workFlowModalRef!: NgbModalRef;
 	isModalOpen = false;
+	isWFMapModalOpen = false;
+	conceptCode = '';
 	mapsetName = 'Mapset Name';
 	selectedMapset: any;
 	showConfigSection = true;
 	showBrowserSection = false;
-	mapsetCode: string;
+	mapsetCode = '';
 	mapsetInfo: any = {};
 	selectedVersion: any;
 	conceptCodes: [];
-	mapping: string;
-	routeParamsSubscription$: Subscription;
-	browserSubscription: Subscription;
+	mapping = '';
+	routeParamsSubscription$!: Subscription;
+	browserSubscription!: Subscription;
 	gridSelectAll = false;
 	popoverLocationY = 0;
 	popoverLocationX = 0;
@@ -116,7 +121,7 @@ export class BatchMappingComponent implements OnInit {
 	browserLoaded = false;
 	saving = false;
 	selectedFormat = {};
-	formats = [];
+	formats: any;
 	numOfGroups = 1;
 	foundConceptCode = false;
 	selectedTarget = '';
@@ -146,7 +151,7 @@ export class BatchMappingComponent implements OnInit {
 	gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
 	gridParams: any;
 	gridApi: any;
-	gridColumnDefs = [];
+	gridColumnDefs: any;
 	useDialog = false;
 	moduleMetadata: any;
 	internationalId = '449080006';
@@ -159,39 +164,50 @@ export class BatchMappingComponent implements OnInit {
 	browserPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
 	browserParams: any;
 	browserApi: any;
-	browserColumnDefs = [];
+	browserColumnDefs: any;
 	conceptDetail = false;
 	currentConcept: any;
+	manualStateRefresh = false;
+	rowClassRules: any;
+	batchEditEnabled = false;
+	userList: any;
+	selectedUser: any;
+	waitingForMapResponse = false;
+	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
+	workFlowMapNotesFC = new FormControl('');
+	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
+	reviewMapWF: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
-
-	@ViewChild('selectRelationship') private selectRelationship: MatSelect;
-	@ViewChild('selectRule') private selectRule: MatSelect;
-	@ViewChild('selectAdvice') private selectAdvice: MatSelect;
-	@ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
-	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
-	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
-	@ViewChild('headerGroupModal') headerGroup: TemplateRef<any>;
-	@ViewChild('directoryCheckSection') checkSection: TemplateRef<any>;
-	@ViewChild('browserCheckSection') checkBrowserSection: TemplateRef<any>;
-	@ViewChild('directoryCodeSection') codeSection: TemplateRef<any>;
-	@ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
-	@ViewChild('directoryToNameSection') toNameSection: TemplateRef<any>;
-	@ViewChild('targetAdviceSection') adviceSection: TemplateRef<any>;
-	@ViewChild('targetRuleSection') ruleSection: TemplateRef<any>;
-	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
-	@ViewChild('directoryPaging') paginationComponent: PaginationComponent;
-	@ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
-	@ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
-	@ViewChild('confirmationModal') confirmationModal: TemplateRef<any>;
-	@ViewChild('actions') private actions: MatSelect;
-	@ViewChild('groupInput') private groupInput: ElementRef;
-	@ViewChild('targetInput') private targetInput: ElementRef;
-	@ViewChild('directorySearchInput') private directorySearchInput: ElementRef;
-	@ViewChild('browserSearchInput') private browserSearchInput: ElementRef;
-	@ViewChild('searchMenuTrigger') searchMenuTrigger: MatMenuTrigger;
-	@ViewChild('secondWindow') secondWindow: ElementRef;
-	@ViewChild('browserWrapper') browserWrapper: ElementRef;
+	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
+	@ViewChild('selectRelationship') private selectRelationship!: MatSelect;
+	@ViewChild('selectRule') private selectRule!: MatSelect;
+	@ViewChild('selectAdvice') private selectAdvice!: MatSelect;
+	@ViewChild('directoryInfoDialog') infoDialog!: TemplateRef<any>;
+	@ViewChild('directoryFeedbackDialog') feedbackDialog!: TemplateRef<any>;
+	@ViewChild('toBeDevelopedModal') tbdModal!: TemplateRef<any>;
+	@ViewChild('headerGroupModal') headerGroup!: TemplateRef<any>;
+	@ViewChild('directoryCheckSection') checkSection!: TemplateRef<any>;
+	@ViewChild('browserCheckSection') checkBrowserSection!: TemplateRef<any>;
+	@ViewChild('workFlowModalNotes') private workflowModalNotes!: ElementRef;
+	@ViewChild('directoryCodeSection') codeSection!: TemplateRef<any>;
+	@ViewChild('directoryNameSection') nameSection!: TemplateRef<any>;
+	@ViewChild('directoryToNameSection') toNameSection!: TemplateRef<any>;
+	@ViewChild('targetAdviceSection') adviceSection!: TemplateRef<any>;
+	@ViewChild('targetRuleSection') ruleSection!: TemplateRef<any>;
+	@ViewChild('directoryActionSection') actionSection!: TemplateRef<any>;
+	@ViewChild('directoryPaging') paginationComponent!: PaginationComponent;
+	@ViewChild('directoryCategoryFilter') categoryFilter!: TemplateRef<any>;
+	@ViewChild('directoryWorkflowStatusSection') versionStatus!: TemplateRef<any>;
+	@ViewChild('confirmationModal') confirmationModal!: TemplateRef<any>;
+	@ViewChild('actions') private actions!: MatSelect;
+	@ViewChild('groupInput') private groupInput!: ElementRef;
+	@ViewChild('targetInput') private targetInput!: ElementRef;
+	@ViewChild('directorySearchInput') private directorySearchInput!: ElementRef;
+	@ViewChild('browserSearchInput') private browserSearchInput!: ElementRef;
+	@ViewChild('searchMenuTrigger') searchMenuTrigger!: MatMenuTrigger;
+	@ViewChild('secondWindow') secondWindow!: ElementRef;
+	@ViewChild('browserWrapper') browserWrapper!: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -209,6 +225,7 @@ export class BatchMappingComponent implements OnInit {
 		private pagerService: PaginationService,
 	) {
 		document.body.scrollTop = 0;
+		this.reviewMapWF = MapWorkflow.getWorkFlowForMap();
 		this.targetFC.valueChanges.pipe(debounceTime(600), distinctUntilChanged()).subscribe((res) => {
 			if (this.targetFC.dirty && !this.searchByTypeahead) {
 				this.foundConceptCode = false;
@@ -226,6 +243,7 @@ export class BatchMappingComponent implements OnInit {
 	//***** Framework Functions *****/
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
+		this.userRoles = this.authenticationService.getUserPrimaryRoles();
 		this.titleService.setTitle('Mapping Tool - Batch Edit Mappings');
 
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
@@ -286,14 +304,8 @@ export class BatchMappingComponent implements OnInit {
 			},
 			enableBrowserTooltips: true,
 			rowClassRules: {
-				refset_tool_grid_inactive_row: function (params) {
-					let inactivatedRow = false;
-
-					if (params.data) {
-						inactivatedRow = params.data.active == false;
-					}
-
-					return inactivatedRow;
+				'updated-row': (params: RowClassParams) => {
+					return params.data?.updated === true;
 				},
 			},
 		};
@@ -368,17 +380,6 @@ export class BatchMappingComponent implements OnInit {
 				suppressMovable: true,
 			},
 			enableBrowserTooltips: true,
-			rowClassRules: {
-				refset_tool_grid_inactive_row: function (params) {
-					let inactivatedRow = false;
-
-					if (params.data) {
-						inactivatedRow = params.data.active == false;
-					}
-
-					return inactivatedRow;
-				},
-			},
 		};
 		this.showTable = true;
 	}
@@ -415,7 +416,7 @@ export class BatchMappingComponent implements OnInit {
 				resizable: false,
 				sortable: false,
 				suppressSorting: true,
-				getQuickFilterText: (params) => {
+				getQuickFilterText: (params: any) => {
 					return '';
 				},
 			},
@@ -438,7 +439,7 @@ export class BatchMappingComponent implements OnInit {
 				headerTooltip: 'Source PT',
 				flex: 2,
 				resizable: true,
-				minWidth: 165,
+				minWidth: 155,
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.nameSection },
 				sortable: false,
@@ -450,7 +451,7 @@ export class BatchMappingComponent implements OnInit {
 				headerName: 'Target',
 				headerTooltip: 'Target',
 				flex: 1,
-				minWidth: 135,
+				minWidth: 125,
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: {
 					template: this.codeSection,
@@ -473,15 +474,15 @@ export class BatchMappingComponent implements OnInit {
 				cellRendererParams: { template: this.toNameSection },
 			},
 			{
+				colId: 'relation',
 				field: 'relation',
-				colId: 'relation-select',
-				cellClass: 'editCell',
 				tooltipField: 'relation',
 				headerName: 'Relationship',
 				headerTooltip: 'Relationship',
+				cellClass: 'editCell',
 				resizable: true,
 				cellEditor: 'agSelectCellEditor',
-				cellEditorParams: (params) =>
+				cellEditorParams: (params: any) =>
 					params.data.mapEntries.toCode === '[Empty Target]'
 						? { values: this.noTargetRelations, valueListGap: 1 }
 						: { values: this.targetRelations, valueListGap: 1 },
@@ -493,17 +494,15 @@ export class BatchMappingComponent implements OnInit {
 				width: 165,
 			},
 			{
+				colId: 'rule',
 				field: 'rule',
-				colId: 'rule-select',
-				cellClass: 'editCell',
 				tooltipField: 'rule',
 				headerName: 'Rule',
 				headerTooltip: 'Rule',
-				minWidth: 100,
-				width: 100,
+				cellClass: 'editCell',
+				minWidth: 90,
+				width: 90,
 				resizable: true,
-				//cellRenderer: TemplateRendererComponent,
-				//cellRendererParams: { template: this.ruleSection },
 				cellEditor: 'agSelectCellEditor',
 				cellEditorParams: {
 					values: this.ruleOptions,
@@ -514,10 +513,11 @@ export class BatchMappingComponent implements OnInit {
 				suppressSorting: true,
 			},
 			{
+				colId: 'advices',
 				field: 'mapEntries',
 				headerName: 'Advices',
-				headerTooltip: 'Advices',
-				cellClass: 'rt2-directory-column-advices',
+				headerTooltip: 'advices',
+				cellClass: 'mt2-directory-column-advices',
 				minWidth: 85,
 				width: 135,
 				resizable: true,
@@ -528,13 +528,40 @@ export class BatchMappingComponent implements OnInit {
 				suppressSorting: true,
 			},
 			{
+				colId: 'workflowStatus',
+				field: 'workflowStatus',
+				tooltipField: 'workflowStatus',
+				headerName: 'Workflow Status',
+				cellClass: 'mt2-directory-column-version-status',
+				minWidth: 165,
+				width: 200,
+				resizable: true,
+				cellRenderer: TemplateRendererComponent,
+				cellRendererParams: { template: this.workflowStatus },
+				unSortIcon: true,
+				hide: true,
+			},
+			{
+				colId: 'assignedUser',
+				field: 'assignedUser',
+				tooltipField: 'assignedUser',
+				headerName: 'Assigned to',
+				headerTooltip: 'Assigned to',
+				cellClass: 'mt2-directory-column-id',
+				width: 145,
+				resizable: true,
+				unSortIcon: true,
+				sortable: false,
+				suppressSorting: true,
+			},
+			{
 				field: 'modified',
 				tooltipValueGetter: UiUtility.gridDateValueGetter,
 				headerName: 'Last Modified',
 				headerTooltip: 'Last Modified',
-				cellClass: 'rt2-directory-column-modified-date',
+				cellClass: 'mt2-directory-column-modified-date',
 				minWidth: 65,
-				width: 135,
+				width: 155,
 				resizable: true,
 				valueGetter: UiUtility.gridDateValueGetter,
 				floatingFilterComponent: DateTextFilterComponent,
@@ -548,35 +575,76 @@ export class BatchMappingComponent implements OnInit {
 				colId: 'action-btns',
 				headerName: '',
 				width: 90,
-				cellClass: 'rt2-directory-column-actions',
+				cellClass: 'mt2-directory-column-actions',
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.actionSection },
 				sortable: false,
 				filter: false,
 				resizable: false,
 				suppressSorting: true,
-				getQuickFilterText: (params) => {
+				getQuickFilterText: (params: any) => {
 					return '';
 				},
 			},
 		];
 	}
 
-	onGridReady = (params) => {
-		this.gridParams = params;
-		this.gridApi = params.api;
+	onGridReady = (gridReadyParams: any) => {
+		if (gridReadyParams?.api && gridReadyParams.type === 'gridReady') {
+			this.gridApi = gridReadyParams.api;
+			this.gridParams = gridReadyParams;
+			if (this.mapsetBatchColumnStorage) {
+				if (!localStorage.getItem(this.mapsetBatchColumnStorage)) {
+					const columns: any = [];
+					const columnDefs = this.gridApi.getColumnDefs?.();
+					for (const column of columnDefs) {
+						const columnData: any = {};
 
+						if (!column.colId) {
+							columnData.colId = column.field;
+						} else {
+							columnData.colId = column.colId;
+						}
+						columnData.show = true;
+						if (columnData.colId !== 'action-btns' && columnData.colId !== 'checkbox') {
+							columns.push(columnData);
+						}
+					}
+
+					const state: any = [];
+					for (const column of columns) {
+						column.show = true;
+
+						if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
+							column.show = false;
+						}
+						this.manualStateRefresh = true;
+
+						state.push({ colId: column.colId, hide: !column.show });
+					}
+					this.gridApi.applyColumnState({ state: state });
+					localStorage.setItem(this.mapsetBatchColumnStorage, JSON.stringify(state));
+				} else {
+					this.gridApi.applyColumnState({ state: JSON.parse(localStorage.getItem(this.mapsetBatchColumnStorage)) });
+					this.manualStateRefresh = true;
+				}
+			}
+			if (localStorage.getItem(this.batchSearchInput)) {
+				this.searchInput = JSON.parse(localStorage.getItem(this.batchSearchInput));
+				this.gridApi.setGridOption('quickFilterText', this.searchInput);
+			}
+		}
 		const _window = window;
 		_window['checkboxHandleClick'] = () => {
 			this.checkboxAllClick();
 		};
 	};
 
-	onCellValueChanged = (event) => {
+	onCellValueChanged = (event: any) => {
 		this.userChanged = true;
 	};
 
-	onGridCellClick = (event) => {
+	onGridCellClick = (event: any) => {
 		if (
 			event.column.colId !== 'checkbox' &&
 			event.column.colId !== 'action-btns' &&
@@ -587,12 +655,12 @@ export class BatchMappingComponent implements OnInit {
 		}
 	};
 
-	onBrowserReady = (params) => {
+	onBrowserReady = (params: any) => {
 		this.browserParams = params;
 		this.browserApi = params.api;
 	};
 
-	onBrowserCellClick = (event) => {
+	onBrowserCellClick = (event: any) => {
 		if (
 			event.column.colId !== 'checkbox' &&
 			event.column.colId !== 'action-btns' &&
@@ -609,8 +677,9 @@ export class BatchMappingComponent implements OnInit {
 				this.currentConcept = results;
 				this.conceptDetail = true;
 			},
-			error: (error) => {
-				//
+			error: (error: any) => {
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+				console.log(' Error: ', error);
 			},
 		});
 	}
@@ -620,7 +689,7 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	getMapsetInfo() {
-		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
+		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe((results) => {
 			const mapsetVersions = Array.isArray(results) ? results : [results];
 
 			const getIsInDevelopment = (status: string): boolean => {
@@ -644,25 +713,36 @@ export class BatchMappingComponent implements OnInit {
 			});
 
 			this.mapsetInfo = mapsetVersions[0];
-			if (localStorage.getItem('mapsetVersion')) {
-				this.selectedVersion = JSON.parse(localStorage.getItem('mapsetVersion'));
-				this.mapsetInfo = mapsetVersions.filter((v) => {
+			if (localStorage.getItem('projects_mapsetVersion')) {
+				this.selectedVersion = JSON.parse(localStorage.getItem('projects_mapsetVersion')).trim();
+				const mapsetFound = mapsetVersions.filter((v) => {
 					const versionDate = v.versionDate || new Date();
 					const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
 					return mapsetVersionStatus === this.selectedVersion;
 				});
-				this.mapsetInfo = this.mapsetInfo[0];
+				if (mapsetFound.length > 0) {
+					this.mapsetInfo = mapsetFound[0];
+				}
+			} else {
+				const versionDate = this.mapsetInfo.versionDate || new Date();
+				this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
+				localStorage.setItem('projects_mapsetVersion', JSON.stringify(this.selectedVersion));
 			}
 			this.getMapsetData();
 			this.getMapProject();
 		});
-		this.refsetService.getMapsets().subscribe({
+		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe({
 			next: (results) => {
-				const thisResult = results.filter((res) => {
-					return res.refSetCode === this.mapsetCode;
-				});
-				this.mapsetName = thisResult[0]?.refSetName;
-				this.selectedMapset = thisResult[0];
+				if (results?.length > 0) {
+					this.mapsetName = results[0]?.refSetName;
+					this.selectedMapset = results[0];
+				} else {
+					this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+				}
+			},
+			error: (error: any) => {
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+				console.log(' Error: ', error);
 			},
 		});
 	}
@@ -713,12 +793,12 @@ export class BatchMappingComponent implements OnInit {
 						return res.name;
 					});
 				}
-				//this.getBrowserData();
 				this.loadGridColumns();
 			},
 			error: (err: any) => {
 				this.loadError = true;
-				console.log(' project loading error', err);
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+				console.log(' Error: ', err);
 			},
 		});
 	}
@@ -895,8 +975,9 @@ export class BatchMappingComponent implements OnInit {
 					this.targetToName = results.name;
 				}
 			},
-			error: (error) => {
-				//
+			error: (error: any) => {
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+				console.log(' Error: ', error);
 			},
 		});
 	}
@@ -904,7 +985,7 @@ export class BatchMappingComponent implements OnInit {
 	createDataSource() {
 		return {
 			rowCount: null,
-			getRows: (rowParams) => {
+			getRows: (rowParams: any) => {
 				const startRow = rowParams.startRow;
 				const endRow = rowParams.endRow;
 				const sortModel = rowParams.sortModel;
@@ -994,7 +1075,7 @@ export class BatchMappingComponent implements OnInit {
 								});
 								this.browserSubscription.unsubscribe();
 							},
-							error: (error) => {
+							error: (error: any) => {
 								this.showPaging = false;
 								this.browserApi.showNoRowsOverlay();
 								rowParams.successCallback([], 0);
@@ -1030,15 +1111,15 @@ export class BatchMappingComponent implements OnInit {
 							if (this.numOfGroups < results.mapEntries[b].group) {
 								this.numOfGroups = results.mapEntries[b].group;
 							}
-							results.mapEntries[b].advices = results.mapEntries[b].advices.filter(function (res) {
+							results.mapEntries[b].advices = results.mapEntries[b].advices.filter(function (res: any) {
 								return res !== '';
 							});
 							let adviceAlways = [];
-							adviceAlways = results.mapEntries[b].advices.filter(function (res) {
+							adviceAlways = results.mapEntries[b].advices.filter(function (res: any) {
 								return res.indexOf('ALWAYS') > -1;
 							});
 							let mapAdvices = [];
-							mapAdvices = results.mapEntries[b].advices.filter(function (res) {
+							mapAdvices = results.mapEntries[b].advices.filter(function (res: any) {
 								return res.indexOf('ALWAYS') === -1;
 							});
 							results.mapEntries[b].mapAdvices = mapAdvices;
@@ -1064,6 +1145,7 @@ export class BatchMappingComponent implements OnInit {
 								rule: results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
 								relation: results.mapEntries[b].relation.length > 0 ? this.titleCaseWord(results.mapEntries[b].relation) : '---',
 								modified: results.mapEntries[b].modified,
+								modifiedBy: results.mapEntries[b].modifiedBy,
 								advices: results.mapEntries[b].advices,
 								advices_open: false,
 								group: results.mapEntries[b].group,
@@ -1071,6 +1153,8 @@ export class BatchMappingComponent implements OnInit {
 								moduleId: results.mapEntries[b].moduleId,
 								modFlag: this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
 								modLang: this.getModuleLanguageName(results.mapEntries[b].moduleId),
+								workflowStatus: results.mappingWorkflow?.workflowStatus,
+								assignedUser: results.mappingWorkflow?.assignedUser,
 							};
 							count++;
 							batch.push(data);
@@ -1084,22 +1168,17 @@ export class BatchMappingComponent implements OnInit {
 					}, 400);
 
 					this.breadcrumbService.setBreadcrumbs([
-						{ path: '/library', label: 'Library' },
-						{ path: '/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
+						{ path: '/projects', label: 'Projects' },
+						{ path: '/projects/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
 						{ label: 'Batch Edit Mappings' },
 					]);
-					if (localStorage.getItem(this.batchSearchInput)) {
-						this.searchInput = JSON.parse(localStorage.getItem(this.batchSearchInput));
-						this.gridApi.setGridOption('quickFilterText', this.searchInput);
-					}
 				},
-				error: (error) => {
-					//
-					this.notificationService.show('Error loading map sets by id, please try again.');
+				error: (error: any) => {
+					console.log(' Error: ', error);
+					this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 					setTimeout(() => {
 						this.goToMappingsPage();
 					}, 1500);
-					console.log(' error', error);
 				},
 			});
 		}
@@ -1110,7 +1189,7 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	removeMapGroup(groupNum: number) {
-		this.mapsetData[0].mapEntries.forEach((entry, index) => {
+		this.mapsetData[0].mapEntries.forEach((entry: any, index: any) => {
 			if (entry.group === groupNum) {
 				this.mapsetData[0].mapEntries.splice(index, 1);
 			}
@@ -1122,10 +1201,10 @@ export class BatchMappingComponent implements OnInit {
 	addEmptyTargetToGroup(code: string, groupNum: number) {
 		let nextPriorityNum = 1;
 		let selectEntryIndex = 0;
-		let orginalFrom = { code: '', name: '' };
+		let orginalFrom = { code: '', name: '', status: '' };
 		for (let p = 0; p < this.mapsetData.length; p++) {
 			if (this.mapsetData[p].code == code) {
-				orginalFrom = { code: this.mapsetData[p].code, name: this.mapsetData[p].name };
+				orginalFrom = { code: this.mapsetData[p].code, name: this.mapsetData[p].name, status: this.mapsetData[p].workflowStatus };
 				if (this.mapsetData[p].group === groupNum) {
 					if (this.mapsetData[p].priority >= nextPriorityNum) {
 						selectEntryIndex = p;
@@ -1145,7 +1224,10 @@ export class BatchMappingComponent implements OnInit {
 			index: orginalFrom.code + this.mapsetData.length,
 			name: orginalFrom.name,
 			code: orginalFrom.code,
+			workflowStatus: orginalFrom.status,
+			assignedUser: this.user?.userName,
 			group: groupNum,
+			updated: true,
 			priority: nextPriorityNum,
 			relation: defaultRelationship,
 			rule: defaultRule,
@@ -1267,7 +1349,7 @@ export class BatchMappingComponent implements OnInit {
 		this.userChanged = true;
 	}
 
-	userChangeSelection(selectBox) {
+	userChangeSelection(selectBox: any) {
 		switch (selectBox) {
 			case 'norelation':
 				this.selectRelationship.value = '';
@@ -1284,6 +1366,7 @@ export class BatchMappingComponent implements OnInit {
 
 	saveMappings() {
 		this.saving = true;
+
 		for (let f = 0; f < this.mapsetResponse.length; f++) {
 			this.mapsetResponse[f].mapEntries = [];
 			for (let p = 0; p < this.mapsetData.length; p++) {
@@ -1312,17 +1395,28 @@ export class BatchMappingComponent implements OnInit {
 				}
 			}
 		}
-
+		this.mapsetResponse = this.mapsetResponse.filter((map: any) => {
+			if (this.checkMapEditStatus(map)) {
+				return map;
+			}
+		});
 		this.userChanged = false;
 		this.refsetService.getMapsetWorkflowStatus(this.mapsetInfo.id).subscribe((status) => {
 			if (status.workflowStatus === 'IN_EDIT') {
 				this.refsetService.updateMapsetMappingBulk(this.mapsetInfo.id, this.mapsetResponse).subscribe(
 					(status) => {
 						this.saving = false;
-						this.notificationService.show('The mappings have been saved.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+						this.notificationService.show('The mappings have been saved.', 'Success', 'success', { timeOut: 0, extendedTimeOut: 0 });
+						setTimeout(() => {
+							this.mapsetData.forEach((map: any) => {
+								map.updated = false;
+							});
+							this.gridApi.redrawRows();
+						}, 50);
 					},
-					(error) => {
-						//
+					(error: any) => {
+						this.notificationService.show('Error saving, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+						console.log(' Error: ', error);
 					},
 				);
 			} else {
@@ -1354,7 +1448,7 @@ export class BatchMappingComponent implements OnInit {
 			this.showAdvicePopover = false;
 			this.showTargetPopover = false;
 			setTimeout(() => {
-				this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+				this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('mt2-container')[0].scrollTop;
 				this.popoverLocationX = event.x - 190;
 				this.groupInput.nativeElement.focus();
 			}, 5);
@@ -1422,7 +1516,7 @@ export class BatchMappingComponent implements OnInit {
 			this.showAdvicePopover = false;
 			this.showGroupPopover = false;
 			setTimeout(() => {
-				this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+				this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('mt2-container')[0].scrollTop;
 				this.popoverLocationX = event.x - 210;
 				this.targetInput.nativeElement.focus();
 			}, 5);
@@ -1455,7 +1549,7 @@ export class BatchMappingComponent implements OnInit {
 			defaultRule = 'TRUE';
 		}
 		const defaultRelationship = this.getDefaultRelationship(true);
-		this.mapsetData.forEach((data) => {
+		this.mapsetData.forEach((data: any) => {
 			if (data.uuid === this.selectedTarget) {
 				data.mapEntries.toCode = '[Empty Target]';
 				data.toCode = data.mapEntries.group + '/' + data.mapEntries.priority + '#' + '[Empty Target]';
@@ -1497,7 +1591,7 @@ export class BatchMappingComponent implements OnInit {
 			defaultRule = 'TRUE';
 		}
 		const defaultRelationship = this.getDefaultRelationship(false);
-		this.mapsetData.forEach((data) => {
+		this.mapsetData.forEach((data: any) => {
 			if (data.uuid === this.selectedTarget) {
 				const targetValue = value;
 				if (targetValue['code'] === undefined) {
@@ -1540,7 +1634,7 @@ export class BatchMappingComponent implements OnInit {
 		this.showAdvicePopover = true;
 		this.showGroupPopover = false;
 		this.showTargetPopover = false;
-		this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('rt2-container')[0].scrollTop;
+		this.popoverLocationY = event.y + 15 - 395 + document.getElementsByClassName('mt2-container')[0].scrollTop;
 		this.popoverLocationX = event.x - 190;
 		this.popover_uuid = params.data.uuid;
 		this.popover_adviceToAdd = '';
@@ -1590,7 +1684,7 @@ export class BatchMappingComponent implements OnInit {
 
 	setAdvice() {
 		this.userChanged = true;
-		this.mapsetData.forEach((data) => {
+		this.mapsetData.forEach((data: any) => {
 			if (data.uuid === this.popover_uuid) {
 				data.mapEntries.mapAdvices = JSON.parse(JSON.stringify(this.popover_updateAdviceList));
 				data.mapEntries.advices = JSON.parse(JSON.stringify(data.mapEntries.mapAdvices));
@@ -1602,7 +1696,7 @@ export class BatchMappingComponent implements OnInit {
 		this.closePopover();
 	}
 
-	openToBeDevelopedModal(content) {
+	openToBeDevelopedModal(content: any) {
 		this.toBeDevelopedModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
 	}
@@ -1639,6 +1733,29 @@ export class BatchMappingComponent implements OnInit {
 		return UiUtility.dateFormatter(val);
 	}
 
+	checkMapEditStatus(map): boolean {
+		let editable = false;
+		const status = map.workflowStatus === undefined ? map.mappingWorkflow.workflowStatus : map.workflowStatus;
+		const assigned = map.assignedUser === undefined ? map.mappingWorkflow.assignedUser : map.assignedUser;
+		const availableActions = this.reviewMapWF.filter((wf: any) => {
+			if (!status.includes(wf.status) || wf.edit !== true) {
+				return false;
+			}
+
+			return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
+		});
+		if (availableActions.length > 0) {
+			if (assigned === this.user?.userName) {
+				editable = true;
+				return editable;
+			} else {
+				return editable;
+			}
+		} else {
+			return editable;
+		}
+	}
+
 	selectAction(action: string) {
 		let checkList;
 		let modal = false;
@@ -1649,13 +1766,13 @@ export class BatchMappingComponent implements OnInit {
 		}
 		switch (action) {
 			case 'add':
-				checkList = this.mapsetData.filter((map) => {
-					if (map.checked) {
+				checkList = this.mapsetData.filter((map: any) => {
+					if (map.checked && this.checkMapEditStatus(map)) {
 						return map;
 					}
 				});
 				if (checkList.length > 0) {
-					checkList.forEach((check) => {
+					checkList.forEach((check: any) => {
 						this.addEmptyTargetToGroup(check.code, check.group);
 					});
 					setTimeout(() => {
@@ -1673,12 +1790,13 @@ export class BatchMappingComponent implements OnInit {
 				}, 500);
 				break;
 			case 'set':
-				this.mapsetData.forEach((map) => {
-					if (map.checked) {
+				this.mapsetData.forEach((map: any) => {
+					if (map.checked && this.checkMapEditStatus(map)) {
 						map.mapEntries.toCode = '[Empty Target]';
 						map.toCode = map.mapEntries.group + '/' + map.mapEntries.priority + '#' + '[Empty Target]';
 						map.mapEntries.toName = '---';
 						map.toName = '---';
+						map.updated = true;
 						map.relation = this.noTargetRelations[0];
 						map.mapEntries.relation = this.noTargetRelations[0];
 						map.mapEntries.moduleId = this.tempModuleIdChangeBeforeRelease;
@@ -1706,8 +1824,8 @@ export class BatchMappingComponent implements OnInit {
 				break;
 			case 'remove':
 				this.userChanged = true;
-				this.mapsetData = this.mapsetData.filter((map) => {
-					return !map.checked;
+				this.mapsetData = this.mapsetData.filter((map: any) => {
+					return !map.checked || !this.checkMapEditStatus(map);
 				});
 				this.checkedNum = 0;
 				this.gridApi.redrawRows();
@@ -1715,6 +1833,17 @@ export class BatchMappingComponent implements OnInit {
 			case 'select':
 				//?selectedTarget
 				//(click)="setTarget(currentConcept.code)"
+				break;
+			case 'view':
+				if (this.checkedNum === 1) {
+					for (let c = 0; c < this.mapsetData.length; c++) {
+						if (this.mapsetData[c].checked === true) {
+							setTimeout(() => {
+								this.goToMappingPage(this.mapsetData[c].code);
+							}, 2);
+						}
+					}
+				}
 				break;
 			default:
 				this.openToBeDevelopedModal(this.tbdModal);
@@ -1729,7 +1858,7 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	unCheckAll() {
-		this.mapsetData.forEach((map) => {
+		this.mapsetData.forEach((map: any) => {
 			if (map.checked) {
 				map.checked = false;
 			}
@@ -1739,7 +1868,7 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	/* mappings table functions */
-	checkboxRowSelect(event, index) {
+	checkboxRowSelect(event: any, index: any) {
 		for (let d = 0; d < this.mapsetData.length; d++) {
 			if (this.mapsetData[d].index === index) {
 				if (this.mapsetData[d].checked === undefined) {
@@ -1759,21 +1888,62 @@ export class BatchMappingComponent implements OnInit {
 				this.checkedNum++;
 			}
 		}
+		if (this.checkedNum > 0) {
+			this.checkedStatusActions();
+		}
+	}
+
+	checkedStatusActions() {
+		let multiStatus = [];
+		let assigned = [];
+		for (let c = 0; c < this.mapsetData.length; c++) {
+			if (this.mapsetData[c].checked === true) {
+				assigned.push(this.mapsetData[c].assignedUser);
+				multiStatus.push(this.mapsetData[c].workflowStatus);
+			}
+		}
+		if (this.checkedNum > 0 && multiStatus.length > 0) {
+			this.batchEditEnabled = false;
+			this.workFlowMapActions = [];
+			this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
+				if (!multiStatus.includes(wf.status)) {
+					return false;
+				}
+
+				return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
+			});
+
+			const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+				return wfAction.edit === true;
+			});
+			if (foundEdit.length > 0) {
+				const thisUser = assigned.find((u) => {
+					return u === this.user?.userName;
+				});
+				if (thisUser !== undefined) {
+					this.batchEditEnabled = true;
+				}
+			}
+		}
 	}
 
 	checkboxAllClick() {
 		this.gridSelectAll == undefined || this.gridSelectAll ? (this.gridSelectAll = false) : (this.gridSelectAll = true);
-		this.mapsetData = this.mapsetData.map((set) => {
-			set.checked = this.gridSelectAll;
-			return set;
-		});
+		for (let data of this.mapsetData) {
+			data.checked = this.gridSelectAll;
+		}
 		this.gridApi.setGridOption('rowData', this.mapsetData);
+		this.gridApi.redrawRows();
 		this.checkedNum = this.gridSelectAll ? this.mapsetData.length : 0;
+		if (this.checkedNum > 0) {
+			this.checkedStatusActions();
+		}
 	}
 
 	setHeaderGroup() {
-		this.mapsetData.forEach((map) => {
-			if (map.checked) {
+		this.mapsetData.forEach((map: any) => {
+			if (map.checked && this.checkMapEditStatus(map)) {
+				map.updated = true;
 				map.mapEntries.group = this.headerGroupFC.value;
 				map.group = this.headerGroupFC.value;
 				map.toCode = this.headerGroupFC.value + '/' + map.mapEntries.priority + '#' + map.mapEntries.toCode;
@@ -1799,7 +1969,7 @@ export class BatchMappingComponent implements OnInit {
 
 	getModuleLanguageIcon(moduleId: string) {
 		let flag = '';
-		this.moduleMetadata?.module.forEach((data) => {
+		this.moduleMetadata?.module.forEach((data: any) => {
 			if (data.id === moduleId) {
 				flag = data.countryCode;
 			}
@@ -1809,7 +1979,7 @@ export class BatchMappingComponent implements OnInit {
 
 	getModuleLanguageName(moduleId: string) {
 		let lang = '';
-		this.moduleMetadata.module.forEach((data) => {
+		this.moduleMetadata.module.forEach((data: any) => {
 			if (data.id === moduleId) {
 				lang = data.name;
 			}
@@ -1817,7 +1987,7 @@ export class BatchMappingComponent implements OnInit {
 		return lang;
 	}
 
-	getValueLength(params): number {
+	getValueLength(params: any): number {
 		let number = 0;
 		const value = params.getValue();
 		if (value !== undefined) {
@@ -1828,7 +1998,7 @@ export class BatchMappingComponent implements OnInit {
 		return number;
 	}
 
-	getValueList(params): Array<any> {
+	getValueList(params: any): Array<any> {
 		let list = [];
 		const value = params.getValue();
 		if (value !== undefined) {
@@ -1839,12 +2009,52 @@ export class BatchMappingComponent implements OnInit {
 
 	/*end functions*/
 
-	goToMappingPage(code) {
-		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + code], { replaceUrl: false, skipLocationChange: false });
+	goToMappingPage(code: any) {
+		this.router.navigate(['/projects/mapset/' + this.mapsetCode + '/mapping/' + code], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	goToMappingsPage() {
 		this.router.navigate(['/mapset/' + this.mapsetCode + '/mappings'], { replaceUrl: false, skipLocationChange: false });
+	}
+
+	/* Map Workflow */
+
+	updateWorkFlowMapStatus(response: any) {
+		for (let c = 0; c < this.mapsetData.length; c++) {
+			if (this.mapsetData[c].checked === true) {
+				this.mapsetData[c].workflowStatus = response.workflowStatus;
+				this.mapsetData[c].modified = response.modified;
+				this.mapsetData[c].assignedUser = response.assignedUser;
+				this.mapsetData[c].checked = false;
+				this.mapsetData[c].updated = true;
+			} else {
+				this.mapsetData[c].updated = false;
+			}
+		}
+		this.gridApi.redrawRows();
+	}
+
+	closeWorkflowMapModal() {
+		this.isWFMapModalOpen = false;
+	}
+
+	reviewMapWorkflow(status: any) {
+		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
+			return status === review.value;
+		})[0];
+		if (this.checkedNum === 1) {
+			for (let c = 0; c < this.mapsetData.length; c++) {
+				if (this.mapsetData[c].checked === true) {
+					this.conceptCode = this.mapsetData[c].code;
+				}
+			}
+			for (let c = 0; c < this.mapsetData.length; c++) {
+				if (this.mapsetData[c].code === this.conceptCode) {
+					this.mapsetData[c].checked = true;
+				}
+			}
+		}
+		this.isWFMapModalOpen = true;
 	}
 
 	toggleSectionView(section: string) {
@@ -1859,10 +2069,10 @@ export class BatchMappingComponent implements OnInit {
 		}
 	}
 
-	onResize(event) {}
+	onResize(event: any) {}
 
 	@HostListener('window:scroll', ['$event'])
-	onScroll(event) {
+	onScroll(event: any) {
 		//this.closePopover();
 	}
 }

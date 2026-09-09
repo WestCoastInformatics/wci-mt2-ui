@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { CodeUtility } from 'src/app/utilities/code.utility';
@@ -13,7 +15,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { MapWorkflow } from 'src/app/models/map-workflow.model';
 
 @Component({
 	standalone: false,
@@ -22,65 +24,50 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 	styleUrls: ['./mapset-mapping.component.css'],
 })
 export class MapsetMappingComponent implements OnInit {
-	user: User;
+	user!: User;
+	userRoles: any[] = [];
+	libraryOnly: any;
 	searchInput = '';
 	viewOptions = [
 		{ value: 'all', display: 'All' },
 		{ value: 'public', display: 'Public' },
 		{ value: 'private', display: 'Private' },
 	];
-	selectedView = 'all';
 	refsetGridApi: any;
-	columnDefs = [];
-	refsetGridColumns = [
-		{ name: 'information', show: true },
-		{ name: 'refsetId', show: true },
-	];
-	rowSelection = 'multiple';
-	refsetGridOptions: any;
-	refsetGridPaging = {
-		pageSize: 10,
-		pageSizeOptions: [10, 25, 50, 100],
-		totalKnown: false,
-		totalRows: null,
-		manualStateRefresh: Boolean(true),
-	};
-	refsetGridLastFilter = '';
-	refsetGridLastSort = '';
-	showTable = false;
-	mapsetData = [];
-	dialog: DialogService;
+	mapsetData: any[] = [];
+	dialog!: DialogService;
 	versionStatuses: any;
 	versions: any;
 	organizations: any;
-	initialGridWidth: number;
 	showFullNarrativeText = false;
 	showFullNotesText = false;
 	showLoadingSpinner = false;
 	toggleDropdown = false;
 	numOfResults = 0;
-	directUrl: string;
+	directUrl: string | undefined;
 	numOfMembers: any;
 	disableChannel = new BroadcastChannel('disable-button-channel');
 	originalGridParams: any;
 	searchCallArray = [];
 	uiUtility = UiUtility;
 	showLoadingSearch = true;
-	toBeDevelopedModalRef: NgbModalRef;
-	downloadModalRef: NgbModalRef;
+	toBeDevelopedModalRef!: NgbModalRef;
+	downloadModalRef!: NgbModalRef;
 	isModalOpen = false;
+	isWFMapModalOpen = false;
 	mapsetName = 'Mapset Name';
-	mapsetCode: string;
-	conceptCode: string;
-	mapping: string;
-	routeParamsSubscription$: Subscription;
+	mapsetCode: string | undefined;
+	conceptCode = '';
+	mapping: string | undefined;
+	routeParamsSubscription$!: Subscription;
+	mapsetVersionStorage = 'mapsetVersion';
 	gridSelectAll = false;
 	internationalId = '449080006';
 	loaded = false;
 	downloadError = '';
 	downloading = false;
-	selectedFormat = {};
-	formats = [];
+	selectedFormat: { value?: string; display?: string } = {};
+	formats: { value: string; display: string }[] = [];
 	downloadTitle = 'Download';
 	mapsetInfo: any = {};
 	selectedVersion: any;
@@ -88,16 +75,22 @@ export class MapsetMappingComponent implements OnInit {
 	currentRowColor = 0;
 	moduleMetadata: any;
 	refsetData: any;
+	editEnabled = false;
+	currentStatus = '';
+	assignedUser = '';
+	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
+	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
+	reviewMapWF: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
-	@ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
-	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
-	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
-	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
-	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
-	@ViewChild('actions') private actions: MatSelect;
-	@ViewChild('directorySearchInput') private directorySearchInput: ElementRef;
+	@ViewChild('directoryInfoDialog') infoDialog!: TemplateRef<any>;
+	@ViewChild('directoryFeedbackDialog') feedbackDialog!: TemplateRef<any>;
+	@ViewChild('directoryActionSection') actionSection!: TemplateRef<any>;
+	@ViewChild('downloadModal') downloadModal!: TemplateRef<any>;
+	@ViewChild('toBeDevelopedModal') tbdModal!: TemplateRef<any>;
+	@ViewChild('actions') private actions!: MatSelect;
+	@ViewChild('directorySearchInput') private directorySearchInput!: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -107,45 +100,76 @@ export class MapsetMappingComponent implements OnInit {
 		private mt2Service: MT2Service,
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
+		private notificationService: NotificationService,
 		private modalService: NgbModal,
 	) {
 		document.body.scrollTop = 0;
+		this.reviewMapWF = MapWorkflow.getWorkFlowForMap();
 	}
 
 	//***** Framework Functions *****/
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
+		this.userRoles = this.authenticationService.getUserPrimaryRoles();
+		this.userRoles = Array.isArray(this.userRoles) ? this.userRoles : [this.userRoles];
+		//current status, user role, action
 		this.titleService.setTitle('Mapping Tool - Map');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
+			this.route.url.forEach((part) => {
+				part.forEach((value) => {
+					if (value.path === 'library') {
+						this.libraryOnly = true;
+					}
+					if (value.path === 'projects') {
+						this.libraryOnly = false;
+					}
+				});
+			});
+			const prefix = this.libraryOnly ? 'library_' : 'projects_';
+			this.mapsetVersionStorage = prefix + this.mapsetVersionStorage;
 			this.mapsetCode = routeParams.code;
 			this.conceptCode = routeParams.concept;
 			this.getMapsetInfo();
-
 			this.getModuleMetadata();
 		});
-
-		if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
-			this.formats.splice(1, 0, { value: 'rf2_with_names', display: 'RF2 With Names' });
-		}
-
-		if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
-			this.formats.splice(-1, 0, { value: 'freeset', display: 'Free Set' });
-		}
-
 		this.disableChannel.postMessage(false);
 	}
 
+	isWorkFlowMapEdit(): boolean {
+		const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+			return wfAction.edit === true;
+		});
+		return foundEdit.length > 0;
+	}
+
 	getMapsetInfo() {
-		this.refsetService.getMapsets().subscribe({
+		this.refsetService.getMappingWorkflowStatus(this.mapsetCode!, this.conceptCode).subscribe({
 			next: (results) => {
-				const thisResult = results.filter((res) => {
-					return res.refSetCode === this.mapsetCode;
+				this.currentStatus = results.workflowStatus;
+				this.assignedUser = results.assignedUser;
+				this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
+					if (results.workflowStatus !== wf.status) {
+						return false;
+					}
+					return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 				});
-				this.mapsetName = thisResult[0]?.refSetName;
+				this.editEnabled = false;
+				const editable = this.isWorkFlowMapEdit();
+				if (editable) {
+					if (this.assignedUser === this.user?.userName) {
+						this.editEnabled = true;
+					}
+				}
 			},
 		});
 
-		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
+		this.refsetService.getMapsetsByCode(this.mapsetCode!).subscribe((results) => {
+			if (results?.length > 0) {
+				this.mapsetName = results[0]?.refSetName;
+			} else {
+				console.error('no mapset found');
+				return;
+			}
 			const mapsetVersions = Array.isArray(results) ? results : [results];
 
 			const getIsInDevelopment = (status: string): boolean => {
@@ -169,14 +193,22 @@ export class MapsetMappingComponent implements OnInit {
 			});
 
 			this.mapsetInfo = mapsetVersions[0];
-			if (localStorage.getItem('mapsetVersion')) {
-				this.selectedVersion = JSON.parse(localStorage.getItem('mapsetVersion'));
-				this.mapsetInfo = mapsetVersions.filter((v) => {
+			const _storedVersion = localStorage.getItem(this.mapsetVersionStorage);
+
+			if (_storedVersion) {
+				this.selectedVersion = JSON.parse(_storedVersion);
+				const foundVersion = mapsetVersions.filter((v) => {
 					const versionDate = v.versionDate || new Date();
 					const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
 					return mapsetVersionStatus === this.selectedVersion;
 				});
-				this.mapsetInfo = this.mapsetInfo[0];
+				if (foundVersion.length > 0) {
+					this.mapsetInfo = foundVersion[0];
+				}
+			} else {
+				const versionDate = this.mapsetInfo.versionDate || new Date();
+				this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
+				localStorage.setItem(this.mapsetVersionStorage, JSON.stringify(this.selectedVersion));
 			}
 			this.getMapsetData();
 		});
@@ -196,7 +228,7 @@ export class MapsetMappingComponent implements OnInit {
 	}
 
 	getMapsetData() {
-		this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCode).subscribe({
+		this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCode || '').subscribe({
 			next: (response) => {
 				this.loaded = true;
 				const data = [];
@@ -251,8 +283,13 @@ export class MapsetMappingComponent implements OnInit {
 				this.mapsetData = data;
 
 				this.breadcrumbService.setBreadcrumbs([
-					{ path: '/library', label: 'Library' },
-					{ path: '/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
+					{ path: this.libraryOnly ? '/library/' : '/projects/', label: this.libraryOnly ? 'Library' : 'Projects' },
+					{
+						path: this.libraryOnly
+							? '/library' + '/mapset/' + this.mapsetCode + '/mappings'
+							: '/projects' + '/mapset/' + this.mapsetCode + '/mappings',
+						label: this.mapsetName,
+					},
 					{ label: this.mapsetData.length > 0 ? this.mapsetData[0]?.name : 'Map' },
 				]);
 			},
@@ -264,7 +301,7 @@ export class MapsetMappingComponent implements OnInit {
 
 	getModuleLanguageIcon(moduleId: string) {
 		let flag = '';
-		this.moduleMetadata.module.forEach((data) => {
+		this.moduleMetadata.module.forEach((data: any) => {
 			if (data.id === moduleId) {
 				flag = data.countryCode;
 			}
@@ -274,7 +311,7 @@ export class MapsetMappingComponent implements OnInit {
 
 	getModuleLanguageName(moduleId: string) {
 		let lang = '';
-		this.moduleMetadata.module.forEach((data) => {
+		this.moduleMetadata.module.forEach((data: any) => {
 			if (data.id === moduleId) {
 				lang = data.name;
 			}
@@ -294,9 +331,6 @@ export class MapsetMappingComponent implements OnInit {
 						this.goToEditMappingPage();
 					}, 2);
 				}
-				break;
-			case 'review':
-				this.openToBeDevelopedModal(this.tbdModal);
 				break;
 		}
 	}
@@ -318,7 +352,7 @@ export class MapsetMappingComponent implements OnInit {
 	}
 
 	goToEditMappingPage() {
-		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode + '/edit'], {
+		this.router.navigate(['/projects/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode + '/edit'], {
 			replaceUrl: false,
 			skipLocationChange: false,
 		});
@@ -358,7 +392,7 @@ export class MapsetMappingComponent implements OnInit {
 		}
 	}
 
-	openDownloadModal(content) {
+	openDownloadModal(content: any) {
 		this.downloadModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
 	}
@@ -370,9 +404,24 @@ export class MapsetMappingComponent implements OnInit {
 		this.isModalOpen = false;
 	}
 
+	updateWorkFlowMapStatus(response: any) {
+		this.getMapsetInfo();
+	}
+
+	closeWorkflowMapModal() {
+		this.isWFMapModalOpen = false;
+	}
+
+	reviewMapWorkflow(status: any) {
+		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
+			return status === review.value;
+		})[0];
+		this.isWFMapModalOpen = true;
+	}
+
 	//***** General Functions *****/
 
-	openToBeDevelopedModal(content) {
+	openToBeDevelopedModal(content: any) {
 		this.toBeDevelopedModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
 	}
@@ -390,11 +439,11 @@ export class MapsetMappingComponent implements OnInit {
 		return stringValue;
 	}
 
-	dateFormatter(val): any {
+	dateFormatter(val: any): any {
 		return UiUtility.dateFormatter(val);
 	}
 
-	onResize(event) {
+	onResize(event: any) {
 		const sectionWidth = $('.section-background').parent().width();
 		document.getElementsByClassName('ag-header')[0]?.setAttribute('style', `width: ${sectionWidth}px;`);
 		//this.resizeSectionView();

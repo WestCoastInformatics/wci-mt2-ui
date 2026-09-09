@@ -15,21 +15,23 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 })
 export class NavbarComponent implements OnInit {
 	environment: string;
-	user: User;
+	user?: User;
+	userRoles: any[] = [];
 	userSubscription: Subscription;
 	guestUser: string;
 	isUserLoggedIn = false;
 	uiUtility = UiUtility;
 	projectRole = '';
 	refsetRole = '';
+	formatedRoles = '';
 	@Input() breadcrumbs: any;
 
 	constructor(
 		private authenticationService: AuthenticationService,
 		private breadcrumbService: BreadcrumbService,
-		private router: Router,
+		public router: Router,
 		private changeDetectorRef: ChangeDetectorRef,
-		readonly refsetService: RefsetService
+		readonly refsetService: RefsetService,
 	) {
 		this.guestUser = authenticationService.GUEST_USER;
 		//this.environment = window.location.host.split(/[.]/)[0].split(/[-]/)[0];
@@ -58,7 +60,27 @@ export class NavbarComponent implements OnInit {
 
 	setUserInfo() {
 		this.user = this.authenticationService.getUser();
-		this.isUserLoggedIn = true; //this.user && this.user.userName != this.guestUser;
+		this.userRoles = this.authenticationService.getUserPrimaryRoles();
+		this.formatedRoles = this.getFormattedRoles();
+		this.isUserLoggedIn = !!this.user && this.user.userName != this.guestUser;
+	}
+
+	getFormattedRoles(): string {
+		if (!this.userRoles || this.userRoles.length === 0) {
+			return '';
+		}
+
+		const rolesArray = Array.isArray(this.userRoles) ? this.userRoles : [this.userRoles];
+		return rolesArray
+			.map((item) => {
+				if (!item) return '';
+
+				const str = String(item);
+
+				// Capitalize the first letter, and LOWERCASE the rest of the string
+				return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+			})
+			.join(', ');
 	}
 
 	showProjectRoleAndAssignee(): boolean {
@@ -73,9 +95,8 @@ export class NavbarComponent implements OnInit {
 		return this.router.url.includes('details') && this.refsetRole.length > 0;
 	}
 
-	navigate(breadcrumbId) {
+	navigate(breadcrumbId: string) {
 		const breadcrumb = this.breadcrumbs[breadcrumbId];
-
 		if (breadcrumb.selectable) {
 			this.router.navigate([breadcrumb.path], { replaceUrl: false, skipLocationChange: false });
 		}
@@ -86,7 +107,7 @@ export class NavbarComponent implements OnInit {
 	}
 
 	landing() {
-		const breadcrumbs = [];
+		const breadcrumbs: never[] = [];
 		this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 		this.router.navigate([''], { replaceUrl: false, skipLocationChange: false });
 	}
@@ -96,8 +117,7 @@ export class NavbarComponent implements OnInit {
 	}
 
 	login() {
-		localStorage.removeItem('loginReferralUrl');
-		this.router.navigate(['/login'], { replaceUrl: false, skipLocationChange: false });
+		this.authenticationService.login();
 	}
 
 	assignedUser(): string {
@@ -106,41 +126,21 @@ export class NavbarComponent implements OnInit {
 
 	breadcrumbsHasDir(): boolean {
 		if (this.breadcrumbs.length == 0) return false;
-		return this.breadcrumbs.find((bc) => bc.label == 'Map Set Library') != undefined;
+		return this.breadcrumbs.find((bc: { label: string }) => bc.label == 'Map Set Library') != undefined;
 	}
 
 	breadcrumbsHasProjects(): boolean {
 		if (this.breadcrumbs.length == 0) return false;
-		return this.breadcrumbs.find((bc) => bc.label == 'Projects') != undefined;
+		return this.breadcrumbs.find((bc: { label: string }) => bc.label == 'Projects') != undefined;
 	}
 
 	navigateToRoute(route: string): void {
-		if (!this.router.url.includes(route)) {
-			if (this.router.url.includes('projects') && route.includes('refsets')) {
-				const parts = this.router.url.split('/');
-				let organizationId = '';
-				let editionId = '';
-				for (let p = 0; p < parts.length; p++) {
-					if (parts[p].includes('organization')) {
-						if (parts[p + 1] != undefined) {
-							organizationId = parts[p + 1];
-						}
-					}
-					if (parts[p].includes('edition')) {
-						if (parts[p + 1] != undefined) {
-							editionId = parts[p + 1];
-						}
-					}
-				}
-				if (organizationId != '' && editionId != '') {
-					route = '/organization/' + organizationId + '/edition/' + editionId + '/projects/0/refsets';
-					this.router.navigate([route], { replaceUrl: false, skipLocationChange: false });
-				}
-			} else {
-				this.router.navigate([route], { replaceUrl: false, skipLocationChange: false });
-			}
-		} else {
-			window.location.reload();
+		if (this.router.url !== route) {
+			this.router.navigate([route], { replaceUrl: false, skipLocationChange: false });
 		}
+	}
+
+	isCurrentPage(page: string): boolean {
+		return this.router.url.includes(page);
 	}
 }

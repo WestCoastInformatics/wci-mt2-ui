@@ -1,90 +1,46 @@
+.workflow-status-badge {
+	height: 31px;
+	position: absolute;
+	background: inherit;
+	border-radius: 12px;
+	line-height: 2.3;
+	top: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
 .ready-for-publication-projects-button {
-height: 31px;
-position: absolute;
-background: inherit;
-border-radius: 12px;
-line-height: 2.3;
-top: 10px;
-padding-left: 10px;
-padding-right: 10px;
-color: white;
-background-color: rgba(150, 72, 176, 1);
+	color: var(--standard_default_button_color);
+	background-color: var(--wisteria);
 }
 
 .in-edit-projects-button {
-height: 31px;
-position: absolute;
-background: inherit;
-border-radius: 12px;
-line-height: 2.3;
-top: 10px;
-padding-left: 10px;
-padding-right: 10px;
-color: white;
-background-color: #937c01;
+	color: var(--standard_default_button_color);
+	background-color: var(--action_button_color);
 }
 
 .in-upgrade-projects-button {
-height: 31px;
-position: absolute;
-background: inherit;
-border-radius: 12px;
-line-height: 2.3;
-top: 10px;
-padding-left: 10px;
-padding-right: 10px;
-color: white;
-background-color: #029301;
+	color: var(--white);
+	background-color: var(--standard_green_button_color);
 }
 
 .ready-for-edit-projects-button {
-height: 31px;
-position: absolute;
-background: inherit;
-border-radius: 12px;
-line-height: 2.3;
-top: 10px;
-padding-left: 10px;
-padding-right: 10px;
-color: white;
-background-color: rgba(202, 176, 39, 1);
+	color: var(--white);
+	background-color: var(--mapset_review_color);
 }
 
-.review-completed-projects-button {
-height: 31px;
-position: absolute;
-background: inherit;
-border-radius: 12px;
-line-height: 2.3;
-top: 10px;
-padding-left: 10px;
-padding-right: 10px;
-color: white;
-background-color: #7b2232;
+.review-completed-projects-button,
+.published-projects-button {
+	color: var(--standard-font-color);
+	background-color: var(--ghost-grey);
 }
 
 .in-review-projects-button {
-height: 31px;
-position: absolute;
-background: inherit;
-border-radius: 12px;
-line-height: 2.3;
-top: 10px;
-padding-left: 10px;
-padding-right: 10px;
-color: white;
-background-color: #a4303f;
+	color: var(--white);
+	background-color: var(--mapset-hover);
 }
 
 .ready-for-review-projects-button {
-height: 31px;
-position: absolute;
-background: inherit;
-border-radius: 12px;
-line-height: 2.3;
-top: 10px;
-padding-left: 10px;
-padding-right: 10px;
-color: white;
-background-color: #c05d72;
+	color: var(--standard-font-color);
+	background-color: var(--candlelight);
 }

@@ -20,14 +20,17 @@ export class FooterComponent implements OnInit {
 	year: number = new Date().getFullYear();
 	isUserLoggedIn = false;
 
-	constructor(private router: Router, private authenticationService: AuthenticationService) {}
+	constructor(
+		private router: Router,
+		private authenticationService: AuthenticationService,
+	) {}
 
 	ngOnInit() {
 		this.router.events.subscribe((event: any) => {
 			if (event instanceof RoutesRecognized) {
-				if (event.url.split('/')[1] !== '') {
-					this.initiateFeedbackScript();
-				}
+				// if (event.url.split('/')[1] !== '') {
+				// 	this.initiateFeedbackScript();
+				// }
 				this.isUserLoggedIn = this.authenticationService.isAuthenticated();
 			}
 		});
@@ -42,7 +45,7 @@ export class FooterComponent implements OnInit {
 		});
 
 		window.ATL_JQ_PAGE_PROPS = {
-			'triggerFunction': function (showCollectorDialog) {
+			triggerFunction: function (showCollectorDialog) {
 				jQuery('#submit').on('click', function (e) {
 					e.preventDefault();
 					showCollectorDialog();

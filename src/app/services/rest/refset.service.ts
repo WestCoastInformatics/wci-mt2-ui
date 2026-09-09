@@ -345,24 +345,74 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + 'mapset');
 	}
 
-	getMapsetByCode(code: string): Observable<any> {
+	getMapsetsByStatus(status: string): Observable<any> {
+		return this.get(this.contextPath + 'mapset/?query=versionStatus:' + status);
+	}
+
+	getMapsetsByCode(code: string): Observable<any> {
 		return this.get(this.contextPath + `mapset/${code}`, '', false);
 	}
 
-	getMappingsByMapset(mapsetId: string, params): Observable<any> {
+	//mapset mappings list
+	getMappingsByMapset(mapsetId: string, params: any): Observable<any> {
 		return this.get(
-			this.contextPath + `mapset/${mapsetId}/mappings?limit=` + params.limit + `&offset=` + params.offset + `&filter=` + params.filter,
+			this.contextPath +
+				`mapset/${mapsetId}/mappings?limit=${params.limit}&offset=${params.offset}&filter=${params.filter}&includeWorkflowStatus=true`,
 			'',
 			false,
 		);
+	}
+
+	getMappingsRecentlyModified(): Observable<any> {
+		return this.get(this.contextPath + `mappings/workflow/recentlyModified`, '', false);
+	}
+
+	getMappingsCurrentlyAssigned(): Observable<any> {
+		return this.get(this.contextPath + `mappings/workflow/assigned?limit=25&offset=0&sort=assignedAt&sortAscending=false`, '', false);
 	}
 
 	getMapsetWorkflowStatus(mapsetId: string): Observable<any> {
 		return this.get(this.contextPath + `mapset/${mapsetId}/workflowStatus/`, '', false);
 	}
 
+	getMappingWorkflowStatus(mapsetId: string, conceptCode: string): Observable<any> {
+		return this.get(this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/workflowStatus`, '', false);
+	}
+
 	setMapsetWorkflowStatus(mapsetId: string, action: string, notes: string): Observable<any> {
 		return this.post(this.contextPath + `mapset/${mapsetId}/workflowStatus?action=${action}&notes=${notes}`, '');
+	}
+
+	setMappingWorkflowStatus(mapsetId: string, conceptCode: string, action: string, notes: string, assign: string): Observable<any> {
+		return this.post(
+			this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/workflowStatus?action=${action}&notes=${notes}&assignToUser=${assign}`,
+			'',
+		);
+	}
+
+	setMappingsWorkflowStatus(mapsetId: string, conceptCodes: any, action: string, notes: string, assign: string): Observable<any> {
+		const url = this.contextPath + `mapset/${mapsetId}/mappings/workflowStatus?action=${action}&notes=${notes}&assignToUser=${assign}`;
+		return this.post(url, conceptCodes);
+	}
+
+	/*Notes*/
+	getNotes(mapsetId: string, conceptCode: any): Observable<any> {
+		return this.get(this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/notes`, '', false);
+	}
+
+	saveNotes(mapsetId: string, conceptCode: any, notes: string): Observable<any> {
+		const url = this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/notes`;
+		return this.post(url, notes);
+	}
+
+	updateNotes(mapsetId: string, conceptCode: any, noteId: string, notes: string): Observable<any> {
+		const url = this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/notes/${noteId}`;
+		return this.put(url, notes);
+	}
+
+	removeNote(mapsetId: string, conceptCode: any, noteId: string): Observable<any> {
+		const url = this.contextPath + `mapset/${mapsetId}/mappings/${conceptCode}/notes/${noteId}`;
+		return this.delete(url);
 	}
 
 	//not used
@@ -371,7 +421,11 @@ export class RefsetService extends RestService {
 	}
 
 	getMappingByMapsetConceptList(mapsetId: string, concepts: string): Observable<any> {
-		return this.get(this.contextPath + `mapset/${mapsetId}/mappings?conceptCodes=${concepts}&showOverriddenEntries=false`, '', false);
+		return this.get(
+			this.contextPath + `mapset/${mapsetId}/mappings?conceptCodes=${concepts}&showOverriddenEntries=false&includeWorkflowStatus=true`,
+			'',
+			false,
+		);
 	}
 
 	getConceptByCode(terminology: string, version: string, code: string): Observable<any> {
@@ -392,6 +446,18 @@ export class RefsetService extends RestService {
 
 	updateMapsetMappingBulk(mapsetId: string, params): Observable<any> {
 		return this.put(this.contextPath + `mapset/${mapsetId}/bulk`, params);
+	}
+
+	requestReport_NRMR() {
+		return this.post(`${this.contextPath}report/norway/replacement-map`, '');
+	}
+
+	requestReport_NRTR() {
+		return this.post(`${this.contextPath}report/norway/replacement-translation`, '');
+	}
+
+	requestReport_HUR() {
+		return this.post(`${this.contextPath}report/norway/helsedirektoratet-untranslated`, '');
 	}
 
 	exportMapset(params: any): Observable<any> {

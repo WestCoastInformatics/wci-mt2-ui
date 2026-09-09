@@ -14,16 +14,16 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 	encapsulation: ViewEncapsulation.None,
 })
 export class ColumnChooserComponent {
-	dialog: DialogService;
+	dialog!: DialogService;
 
 	columns = [];
 	selectedColumns = [];
-	@Input() gridColumnApi;
+	@Input() gridColumnApi: any;
 	@Input() disabled = false;
 	@Input() useDialog = true;
 	@Input() manualStateRefresh = false;
-	@Input() columnStorage;
-	@ViewChild('columnChooserSection') columnChooserDialog: TemplateRef<any>;
+	@Input() columnStorage: any;
+	@ViewChild('columnChooserSection') columnChooserDialog!: TemplateRef<any>;
 
 	constructor(private dialogFactoryService: DialogFactoryService) {}
 
@@ -82,14 +82,14 @@ export class ColumnChooserComponent {
 			}
 
 			if (this.columnStorage) {
-				const columnSelection = sessionStorage.getItem(this.columnStorage);
+				const columnSelection = localStorage.getItem(this.columnStorage);
 
 				if (columnSelection) {
 					const columnsSelected = JSON.parse(columnSelection);
 					if (columnsSelected.hasOwnProperty('state')) {
 						this.gridColumnApi.applyColumnState(columnsSelected);
 						const storedState = columnsSelected.state;
-						storedState.forEach((selectCol) => {
+						storedState.forEach((selectCol: any) => {
 							this.columns.forEach((col) => {
 								if (selectCol.colId == col.colId) {
 									if (selectCol.hide) {
@@ -106,6 +106,29 @@ export class ColumnChooserComponent {
 			}
 			if (this.selectedColumns.length == 0) {
 				this.selectedColumns = JSON.parse(JSON.stringify(this.columns));
+			}
+		}
+		if (this.manualStateRefresh) {
+			if (this.columnStorage) {
+				const columnSelection = localStorage.getItem(this.columnStorage);
+				if (columnSelection) {
+					const columnsSelected = JSON.parse(columnSelection);
+					if (columnsSelected.length > 0) {
+						this.gridColumnApi.applyColumnState(columnsSelected);
+						columnsSelected.forEach((selectCol: any) => {
+							this.columns.forEach((col) => {
+								if (selectCol.colId == col.colId) {
+									if (selectCol.hide) {
+										col.show = false;
+									} else {
+										col.show = true;
+										this.selectedColumns.push(col);
+									}
+								}
+							});
+						});
+					}
+				}
 			}
 		}
 	}
@@ -140,7 +163,7 @@ export class ColumnChooserComponent {
 		});
 	}
 
-	valueCompare(column1, column2) {
+	valueCompare(column1: any, column2: any) {
 		return column1 && column2 ? column1.colId == column2.colId : column1 == column2;
 	}
 
@@ -161,7 +184,7 @@ export class ColumnChooserComponent {
 		const saveState = JSON.stringify({ state: state });
 		this.gridColumnApi.applyColumnState({ state: state });
 		if (this.columnStorage) {
-			sessionStorage.setItem(this.columnStorage, saveState);
+			localStorage.setItem(this.columnStorage, saveState);
 		}
 	}
 
@@ -188,7 +211,7 @@ export class ColumnChooserComponent {
 		const saveState = JSON.stringify({ state: state });
 		this.gridColumnApi.applyColumnState({ state: state });
 		if (this.columnStorage) {
-			sessionStorage.setItem(this.columnStorage, saveState);
+			localStorage.setItem(this.columnStorage, saveState);
 		}
 		// set placeholders on the grid floating filter fields
 		Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {

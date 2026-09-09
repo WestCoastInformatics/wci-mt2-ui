@@ -1,24 +1,21 @@
 <div *ngIf="showLoadingSpinner" class="loading"></div>
 
-<!-- Search Bar -->
+<!-- Heading -->
 <div class="top-search-bar content-header">
-	<div class="d-flex justify-content-end">
-		<div class="row d-flex">
+	<div class="d-flex">
+		<div class="row">
 			<div class="col-md-9 page-title">
-				<div class="rt2-wrap" *ngIf="loaded" title="Manage Inactivated Concepts for {{ mapsetName }}">
-					<span>Manage Inactivated Concepts for {{ mapsetName }}</span>
+				<div class="mt2-wrap" *ngIf="loaded" title="{{ mapsetName }}">
+					<span>{{ mapsetName }} </span>
 				</div>
-				<app-workflow-status
-					[workflowStatus]="mapsetInfo.workflowStatus !== null ? mapsetInfo.workflowStatus : mapsetInfo.versionStatus"
-					class="col-1"
-				>
-				</app-workflow-status>
 			</div>
-			<div *ngIf="loaded" class="col-md-3 list-font align-items-center">{{ selectedVersion }}</div>
+			<div *ngIf="loaded" class="col-md-3 d-flex header-menu">
+				<span class="list-font align-self-center m-r-10"> {{ selectedVersion }}</span>
+			</div>
 		</div>
-		<div class="col-md-auto d-flex ml-15">
+		<div class="col-md-auto d-flex m-r-10">
 			<div class="col">
-				<button class="library-app-refset-download mr-15" (click)="downloadReports()" [disabled]="!selectedVersion || numOfMembers === 0">
+				<button class="library-app-refset-download mr-5" (click)="downloadReports()" [disabled]="!selectedVersion || numOfMembers === 0">
 					<div class="mat-button-wrapper mapset-download-icon">
 						<i class="fa fa-download fa-lg" title="Download Report" aria-label="Download Report"></i>
 					</div>
@@ -33,7 +30,7 @@
 	</div>
 </div>
 
-<div class="rt2-container" (window:resize)="onResize($event)">
+<div class="mt2-container" (window:resize)="onResize($event)">
 	<div class="metadata-collapsible-container m-t-20">
 		<div class="switch-view" *ngIf="showMappingsSection && loaded" [hidden]="numOfMembers === 0">
 			<mat-label class="switch-label">view by</mat-label>
@@ -73,31 +70,51 @@
 			/>
 		</div>
 		<div class="d-flex dropdown-group" *ngIf="showMappingsSection && numOfMembers > 0">
-			<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable && showMapTable === 'table'">
+			<div class="col-md-auto mt2-directory-chooser-column" *ngIf="showTable && showMapTable === 'table'">
 				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridApi" [useDialog]="useDialog"> </app-column-chooser>
 			</div>
 
-			<div class="col-md-auto rt2-directory-chooser-column">
+			<div class="col-md-auto mt2-directory-chooser-column">
 				<mat-menu #searchMenu="matMenu" class="search-box">
 					<div class="dropdown directoryInput" (click)="$event.stopPropagation()">
-						<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
-							<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT (enter at least 3 characters)</mat-label>
-							<input
-								matInput
-								#directorySearchInput
-								id="directorySearchInput"
-								[(ngModel)]="searchInput"
-								(input)="onSearchChange()"
-								(click)="$event.stopPropagation()"
-							/>
-						</mat-form-field>
-						<span
-							class="clear-search"
-							*ngIf="searchInput.length > 0"
-							title="Clear Search"
-							(click)="$event.stopPropagation(); clearSearch()"
-							>&#10005;</span
-						>
+						<div class="d-flex align-items-center">
+							<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
+								<mat-label *ngIf="searchInput === ''" class="search-label"
+									>Search by Source PT (enter at least 3 characters)</mat-label
+								>
+								<input
+									matInput
+									#directorySearchInput
+									id="directorySearchInput"
+									[(ngModel)]="searchInput"
+									(keydown.enter)="onSearchChange()"
+									(click)="$event.stopPropagation()"
+								/>
+							</mat-form-field>
+							<span
+								class="clear-search"
+								*ngIf="searchInput.length > 0"
+								title="Clear Search"
+								(click)="$event.stopPropagation(); clearSearch()"
+							>
+								&#10005;
+							</span>
+						</div>
+						<div class="d-flex col-md-12">
+							<div class="col-10"></div>
+							<div class="col-2">
+								<button
+									type="button"
+									title="Search"
+									class="mt2-btn mt2-action-btn sm-inline-btn no-margin-top form-btn"
+									(click)="onSearchChange()"
+									[disabled]="searchInput === ''"
+									(ngClass)="({ disabled: searchInput === '' })"
+								>
+									Search
+								</button>
+							</div>
+						</div>
 					</div></mat-menu
 				>
 				<div class="menu-inline">
@@ -113,7 +130,7 @@
 					</button>
 				</div>
 			</div>
-			<div class="col-md-auto rt2-directory-chooser-column">
+			<div class="col-md-auto mt2-directory-chooser-column">
 				<div class="menu-inline">
 					<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="mapset-download-icon menu-button">
 						<mat-icon class="menu-icon">more_vert</mat-icon>
@@ -157,7 +174,7 @@
 							id="directoryTable"
 							#directoryTable
 							[hidden]="!loaded || numOfMembers === 0"
-							class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter"
+							class="ag-theme-alpine mt2-ag-grid mt2-ag-grid-no-filter"
 							style="width: 100%; height: 100%"
 							[columnDefs]="columnDefs"
 							[suppressRowTransform]="true"
@@ -171,9 +188,9 @@
 			</div>
 		</div>
 		<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
-		<div class="rt2-pagination-container" [hidden]="!loaded || numOfMembers === 0" *ngIf="showMappingsSection">
-			<div class="rt2-pagination-top-row">
-				<div *ngIf="paginationPages.totalPages > 1" class="rt2-pagination-buttons">
+		<div class="mt2-pagination-container" [hidden]="!loaded || numOfMembers === 0" *ngIf="showMappingsSection">
+			<div class="mt2-pagination-top-row">
+				<div *ngIf="paginationPages.totalPages > 1" class="mt2-pagination-buttons">
 					<button
 						#paginationFirstPage
 						mat-raised-button
@@ -260,7 +277,7 @@
 					</button>
 				</div>
 
-				<div class="rt2-pagination-bottom-row" *ngIf="showPaging">
+				<div class="mt2-pagination-bottom-row" *ngIf="showPaging">
 					<span *ngFor="let sizeOption of refsetGridPaging.pageSizeOptions">
 						<button
 							mat-raised-button
@@ -275,7 +292,7 @@
 					</span>
 				</div>
 			</div>
-			<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
+			<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
 				Showing
 				<span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }} </span> to
 				<span class="fw-bold p-l-5 p-r-5">
@@ -287,7 +304,7 @@
 				</span>
 				of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
 			</div>
-			<div class="rt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
+			<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
 		</div>
 	</div>
 	<div class="metadata-collapsible-container col-md-12 mb-10">
@@ -319,13 +336,13 @@
 
 	<!-- Information Templates -->
 	<ng-template #directoryInfoSection let-params>
-		<div class="d-flex rt2-wrap">
+		<div class="d-flex mt2-wrap">
 			<div class="col-6">
 				<button
 					mat-icon-button
 					aria-hidden="false"
 					#directoryInfoIcon
-					class="rt2-table-action-icon w-30 h-30"
+					class="mt2-table-action-icon w-30 h-30"
 					aria-label="View All Reference Set Metadata"
 					title="View Reference Set Metadata"
 					(click)="openInformation(params.data.refsetId)"
@@ -342,8 +359,8 @@
 	</ng-template>
 
 	<ng-template #directoryInfoDialog let-data>
-		<div class="container-fluid w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
-			<div class="row rt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
+		<div class="container-fluid w-min-350 mt2-refset-metadata-column" id="directoryInformationSection">
+			<div class="row mt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
 				<p class="fs-18 mb-0 ml-10">{{ data.name }}</p>
 				<p class="fs-16 ml-10">
 					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span
@@ -417,7 +434,7 @@
 			(load)="showFlagIcon($event, true)"
 			(error)="showFlagIcon($event, false)"
 			src="{{ params?.data?.flagIcon }}"
-			class="rt2-edition-flag"
+			class="mt2-edition-flag"
 			title="{{ params?.data?.editionName }} Flag"
 			aria-label="{{ params?.data?.editionName }} Flag"
 		/>
@@ -501,7 +518,7 @@
 	</ng-template>
 
 	<ng-template #toBeDevelopedModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<div class="modal-title">Coming Soon</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
 				<span aria-hidden="true">&times;</span>
@@ -510,13 +527,13 @@
 		<div class="modal-body">
 			<p>This feature is not yet available. Please check back later.</p>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
 		</div>
 	</ng-template>
 
 	<ng-template #downloadModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<div class="modal-title">Download Report</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeDownloadModal()">
 				<span aria-hidden="true">&times;</span>
@@ -530,7 +547,7 @@
 			<div class="modal-select">
 				<label class="modal-label">File Type: <span class="mandatory-field">*</span></label>
 				<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
-					<mat-select placeholder="Select a type" [ngModel]="types" [(value)]="selectedType" class="rt2-column-chooser-select">
+					<mat-select placeholder="Select a type" [ngModel]="types" [(value)]="selectedType" class="mt2-column-chooser-select">
 						<mat-select-trigger class="trigger"
 							><span *ngIf="!selectedType"> Select a type </span
 							><span *ngIf="selectedType">{{ selectedType.display }}</span></mat-select-trigger
@@ -545,7 +562,7 @@
 			<div class="modal-select">
 				<label class="modal-label">File Format: <span class="mandatory-field">*</span></label>
 				<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
-					<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="rt2-column-chooser-select">
+					<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="mt2-column-chooser-select">
 						<mat-select-trigger class="trigger"
 							><span *ngIf="!selectedFormat"> Select a format </span
 							><span *ngIf="selectedFormat">{{ selectedFormat.display }}</span></mat-select-trigger
@@ -558,14 +575,14 @@
 				</mat-form-field>
 			</div>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
-			<button type="button" title="Download" class="rt2-btn rt2-action-btn" (click)="startDownload()">Download</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" title="Cancel" class="mt2-btn mt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
+			<button type="button" title="Download" class="mt2-btn mt2-action-btn" (click)="startDownload()">Download</button>
 		</div>
 	</ng-template>
 
 	<ng-template #notesModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<div class="modal-title">Authoring Notes</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeNotesModal()">
 				<span aria-hidden="true">&times;</span>
@@ -593,14 +610,14 @@
 			>
 			</editor>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeNotesModal()">Cancel</button>
-			<button type="button" title="Save" class="rt2-btn rt2-action-btn" (click)="saveNotes()">Save</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" title="Cancel" class="mt2-btn mt2-action-btn" (click)="closeNotesModal()">Cancel</button>
+			<button type="button" title="Save" class="mt2-btn mt2-action-btn" (click)="saveNotes()">Save</button>
 		</div>
 	</ng-template>
 
 	<ng-template #feedbackModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<div class="modal-title">Authoring Communication</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeFeedbackModal()">
 				<span aria-hidden="true">&times;</span>
@@ -635,11 +652,9 @@
 				<mat-checkbox class="menu-checkbox" [(ngModel)]="selectFeedbackPrivate"></mat-checkbox>
 			</div>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeFeedbackModal()">Cancel</button>
-			<button type="button" title="Save" class="rt2-btn rt2-action-btn" (click)="saveFeedback()">Save</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" title="Cancel" class="mt2-btn mt2-action-btn" (click)="closeFeedbackModal()">Cancel</button>
+			<button type="button" title="Save" class="mt2-btn mt2-action-btn" (click)="saveFeedback()">Save</button>
 		</div>
 	</ng-template>
-
-	<scroll-top></scroll-top>
 </div>

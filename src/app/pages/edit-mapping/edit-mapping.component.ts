@@ -30,6 +30,7 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
+import { MapWorkflow } from 'src/app/models/map-workflow.model';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { PaginationService } from 'src/app/services/pagination.service';
 
@@ -40,7 +41,8 @@ import { PaginationService } from 'src/app/services/pagination.service';
 	styleUrls: ['./edit-mapping.component.css'],
 })
 export class EditMappingComponent implements OnInit {
-	user: User;
+	user!: User;
+	userRoles: any[] = [];
 	targetCodeInput = '';
 	targetNameInput = '';
 	ruleBased = false;
@@ -79,7 +81,7 @@ export class EditMappingComponent implements OnInit {
 	refsetGridLastSort = '';
 	showTable = false;
 	mapsetData = [];
-	dialog: DialogService;
+	dialog!: DialogService;
 	versionStatuses: any;
 	versions: any;
 	organizations: any;
@@ -89,27 +91,29 @@ export class EditMappingComponent implements OnInit {
 	showLoadingSpinner = false;
 	toggleDropdown = false;
 	numOfResults = 0;
-	directUrl: string;
+	directUrl = '';
 	numOfMembers: any;
 	disableChannel = new BroadcastChannel('disable-button-channel');
 	originalGridParams: any;
 	searchCallArray = [];
 	uiUtility = UiUtility;
 	showLoadingSearch = true;
-	toBeDevelopedModalRef: NgbModalRef;
-	confirmModalRef: NgbModalRef;
+	toBeDevelopedModalRef!: NgbModalRef;
+	confirmModalRef!: NgbModalRef;
+	workFlowModalRef!: NgbModalRef;
 	isModalOpen = false;
+	isWFMapModalOpen = false;
 	mapsetName = 'Mapset Name';
 	selectedMapset: any;
 	showConfigSection = true;
 	showBrowserSection = false;
-	mapsetCode: string;
+	mapsetCode = '';
 	mapsetInfo: any = {};
 	selectedVersion: any;
 	conceptCode: string;
 	mapping: string;
-	routeParamsSubscription$: Subscription;
-	browserSubscription: Subscription;
+	routeParamsSubscription$!: Subscription;
+	browserSubscription!: Subscription;
 	gridSelectAll = false;
 	advicePopoverLocation = 0;
 	removeId: any;
@@ -127,7 +131,6 @@ export class EditMappingComponent implements OnInit {
 	userChanged = false;
 	internationalId = '449080006';
 	tempModuleIdChangeBeforeRelease = '449080006';
-
 	targetFC = new FormControl('a');
 	groupFC = new FormControl('');
 
@@ -148,25 +151,30 @@ export class EditMappingComponent implements OnInit {
 	browserPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
 	browserParams: any;
 	browserApi: any;
-	browserColumnDefs = [];
+	browserColumnDefs: any;
 	conceptDetail = false;
 	currentConcept: any;
+	currentStatus = '';
+	assignedUser = '';
+	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
+	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
+	reviewMapWF: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
-	@ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
-	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
-	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
-	@ViewChild('confirmationModal') confirmationModal: TemplateRef<any>;
-	@ViewChild('toBeDevelopedModal') tbdModal: TemplateRef<any>;
-	@ViewChild('browserSearchInput') private browserSearchInput: ElementRef;
-	@ViewChild('actions') private actions: MatSelect;
-	@ViewChild('selectRelationship') private selectRelationship: MatSelect;
-	@ViewChild('selectRule') private selectRule: MatSelect;
-	@ViewChild('selectAdvice') private selectAdvice: MatSelect;
-	@ViewChild('groupInput') private groupInput: ElementRef;
-	@ViewChild('targetInput') private targetInput: ElementRef;
-	@ViewChild('secondWindow') secondWindow: ElementRef;
+	@ViewChild('directoryInfoDialog') infoDialog!: TemplateRef<any>;
+	@ViewChild('directoryFeedbackDialog') feedbackDialog!: TemplateRef<any>;
+	@ViewChild('directoryActionSection') actionSection!: TemplateRef<any>;
+	@ViewChild('confirmationModal') confirmationModal!: TemplateRef<any>;
+	@ViewChild('toBeDevelopedModal') tbdModal!: TemplateRef<any>;
+	@ViewChild('browserSearchInput') private browserSearchInput!: ElementRef;
+	@ViewChild('actions') private actions!: MatSelect;
+	@ViewChild('selectRelationship') private selectRelationship!: MatSelect;
+	@ViewChild('selectRule') private selectRule!: MatSelect;
+	@ViewChild('selectAdvice') private selectAdvice!: MatSelect;
+	@ViewChild('groupInput') private groupInput!: ElementRef;
+	@ViewChild('targetInput') private targetInput!: ElementRef;
+	@ViewChild('secondWindow') secondWindow!: ElementRef;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -184,6 +192,7 @@ export class EditMappingComponent implements OnInit {
 		private pagerService: PaginationService,
 	) {
 		document.body.scrollTop = 0;
+		this.reviewMapWF = MapWorkflow.getWorkFlowForMap();
 		this.targetFC.valueChanges.pipe(debounceTime(600), distinctUntilChanged()).subscribe((res) => {
 			if (this.targetFC.dirty && !this.searchByTypeahead) {
 				this.foundConceptCode = false;
@@ -200,12 +209,16 @@ export class EditMappingComponent implements OnInit {
 	//***** Framework Functions *****/
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
+		this.userRoles = this.authenticationService.getUserPrimaryRoles();
 		this.titleService.setTitle('Mapping Tool - Edit Map');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.conceptCode = routeParams.concept;
-			if (this.mapsetCode) {
+			if (this.mapsetCode && this.conceptCode) {
 				this.getMapsetInfo();
+			} else {
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+				console.error('no mapset found');
 			}
 			this.getModuleMetadata();
 			this.firstLoadBrowser();
@@ -227,8 +240,41 @@ export class EditMappingComponent implements OnInit {
 		this.targetFC.disable();
 	}
 
+	isWorkFlowMapEdit(): boolean {
+		const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+			return wfAction.edit === true;
+		});
+		return foundEdit.length > 0;
+	}
+
 	getMapsetInfo() {
-		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
+		this.refsetService.getMappingWorkflowStatus(this.mapsetCode!, this.conceptCode).subscribe({
+			next: (results) => {
+				this.currentStatus = results.workflowStatus;
+				this.assignedUser = results.assignedUser;
+				this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
+					if (results.workflowStatus !== wf.status) {
+						return false;
+					}
+					return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
+				});
+				const editable = this.isWorkFlowMapEdit();
+				let exit = false;
+				if (editable) {
+					if (this.assignedUser !== this.user?.userName) {
+						exit = true;
+					}
+				} else {
+					exit = true;
+				}
+				if (exit) {
+					this.notificationService.show('Editing is not permitted.', 'Warning', 'warning', { timeOut: 2500, extendedTimeOut: 0 });
+					this.selectActionMenu('view');
+				}
+			},
+		});
+
+		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe((results) => {
 			const mapsetVersions = Array.isArray(results) ? results : [results];
 
 			const getIsInDevelopment = (status: string): boolean => {
@@ -252,26 +298,33 @@ export class EditMappingComponent implements OnInit {
 			});
 
 			this.mapsetInfo = mapsetVersions[0];
-			if (localStorage.getItem('mapsetVersion')) {
-				this.selectedVersion = JSON.parse(localStorage.getItem('mapsetVersion'));
-				this.mapsetInfo = mapsetVersions.filter((v) => {
+			if (localStorage.getItem('projects_mapsetVersion')) {
+				this.selectedVersion = JSON.parse(localStorage.getItem('projects_mapsetVersion')).trim();
+				const mapsetFound = mapsetVersions.filter((v) => {
 					const versionDate = v.versionDate || new Date();
 					const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
 					return mapsetVersionStatus === this.selectedVersion;
 				});
-				this.mapsetInfo = this.mapsetInfo[0];
+				if (mapsetFound.length > 0) {
+					this.mapsetInfo = mapsetFound[0];
+				}
+			} else {
+				const versionDate = this.mapsetInfo.versionDate || new Date();
+				this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
+				localStorage.setItem('projects_mapsetVersion', JSON.stringify(this.selectedVersion));
 			}
 			this.getMapsetData();
 			this.getMapProject();
 		});
-
-		this.refsetService.getMapsets().subscribe({
+		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe({
 			next: (results) => {
-				const thisResult = results.filter((res) => {
-					return res.refSetCode === this.mapsetCode;
-				});
-				this.mapsetName = thisResult[0]?.refSetName;
-				this.selectedMapset = thisResult[0];
+				if (results?.length > 0) {
+					this.mapsetName = results[0]?.refSetName;
+					this.selectedMapset = results[0];
+				} else {
+					this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+					console.error('no mapset found');
+				}
 			},
 		});
 	}
@@ -325,6 +378,7 @@ export class EditMappingComponent implements OnInit {
 			error: (err: any) => {
 				this.loadError = true;
 				console.log(' project loading error', err);
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 			},
 		});
 	}
@@ -348,7 +402,7 @@ export class EditMappingComponent implements OnInit {
 
 	getModuleLanguageIcon(moduleId: string) {
 		let flag = '';
-		this.moduleMetadata.module.forEach((data) => {
+		this.moduleMetadata.module.forEach((data: any) => {
 			if (data.id === moduleId) {
 				flag = data.countryCode;
 			}
@@ -358,7 +412,7 @@ export class EditMappingComponent implements OnInit {
 
 	getModuleLanguageName(moduleId: string) {
 		let lang = '';
-		this.moduleMetadata.module.forEach((data) => {
+		this.moduleMetadata.module.forEach((data: any) => {
 			if (data.id === moduleId) {
 				lang = data.name;
 			}
@@ -386,7 +440,7 @@ export class EditMappingComponent implements OnInit {
 	}
 
 	sortEntries() {
-		this.mapsetData[0].mapEntries.sort((a, b) => {
+		this.mapsetData[0].mapEntries.sort((a: any, b: any) => {
 			if (a.group !== b.group) {
 				return a.group - b.group;
 			} else {
@@ -450,7 +504,7 @@ export class EditMappingComponent implements OnInit {
 		this.clearTargetInput();
 		this.getMapsetInfo();
 		setTimeout(() => {
-			this.notificationService.show('The changes have been removed.', null, 'success', { timeOut: 4500, extendedTimeOut: 0 });
+			this.notificationService.show('The changes have been removed.', 'Success', 'success', { timeOut: 4500, extendedTimeOut: 0 });
 		}, 250);
 	}
 
@@ -511,8 +565,9 @@ export class EditMappingComponent implements OnInit {
 					this.targetNameInput = results.name;
 				}
 			},
-			error: (error) => {
-				//
+			error: (error: any) => {
+				console.log(' Error: ', error);
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 			},
 		});
 	}
@@ -546,15 +601,15 @@ export class EditMappingComponent implements OnInit {
 					}
 
 					//remove advice ""
-					results.mapEntries[b].advices = results.mapEntries[b].advices.filter(function (res) {
+					results.mapEntries[b].advices = results.mapEntries[b].advices.filter(function (res: any) {
 						return res !== '';
 					});
 					let adviceAlways = [];
-					adviceAlways = results.mapEntries[b].advices.filter(function (res) {
+					adviceAlways = results.mapEntries[b].advices.filter(function (res: any) {
 						return res.indexOf('ALWAYS') > -1;
 					});
 					let mapAdvices = [];
-					mapAdvices = results.mapEntries[b].advices.filter(function (res) {
+					mapAdvices = results.mapEntries[b].advices.filter(function (res: any) {
 						return res.indexOf('ALWAYS') === -1;
 					});
 					results.mapEntries[b].mapAdvices = mapAdvices;
@@ -583,6 +638,7 @@ export class EditMappingComponent implements OnInit {
 							rule: results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
 							relation: results.mapEntries[b].relation.length > 0 ? results.mapEntries[b].relation.toUpperCase() : '---',
 							modified: results.mapEntries[b].modified,
+							modifiedBy: 'AAA',
 							advices: results.mapEntries[b].advices,
 							group: results.mapEntries[b].group,
 							groupTotal: results.mapEntries[b].group,
@@ -598,16 +654,15 @@ export class EditMappingComponent implements OnInit {
 				for (let i = 0; i < this.numOfGroups; i++) {
 					this.groupList.push('group' + i);
 				}
-
 				this.mapsetData = data;
 				this.breadcrumbService.setBreadcrumbs([
-					{ path: '/library', label: 'Library' },
-					{ path: '/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
+					{ path: '/projects', label: 'Projects' },
+					{ path: '/projects/mapset/' + this.mapsetCode + '/mappings', label: this.mapsetName },
 					{ label: 'Edit ' + (this.mapsetData.length > 0 ? this.mapsetData[0]?.name : 'Map') },
 				]);
 			},
 			error: (error) => {
-				//
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 			},
 		});
 	}
@@ -617,7 +672,7 @@ export class EditMappingComponent implements OnInit {
 		this.groupList.push('group' + this.numOfGroups);
 	}
 
-	getGroupTotal(group) {
+	getGroupTotal(group: any) {
 		let total = 0;
 
 		for (let u = 0; u < this.mapsetData[0].mapEntries.length; u++) {
@@ -629,7 +684,7 @@ export class EditMappingComponent implements OnInit {
 		return total;
 	}
 
-	getGroupEntriesById(group) {
+	getGroupEntriesById(group: any) {
 		//order by group then priority list then drag and drop will work...
 		const groupEntries = [];
 		for (let u = 0; u < this.mapsetData[0].mapEntries.length; u++) {
@@ -717,7 +772,7 @@ export class EditMappingComponent implements OnInit {
 			group: groupNum,
 			id: null,
 			modified: null,
-			modifiedBy: null,
+			modifiedBy: this.user?.userName,
 			moduleId: this.tempModuleIdChangeBeforeRelease,
 			modFlag: '',
 			modLang: '',
@@ -800,7 +855,7 @@ export class EditMappingComponent implements OnInit {
 				group: this.numOfGroups,
 				id: null,
 				modified: null,
-				modifiedBy: null,
+				modifiedBy: this.user?.userName,
 				moduleId: this.tempModuleIdChangeBeforeRelease,
 				modFlag: '',
 				modLang: '',
@@ -843,7 +898,7 @@ export class EditMappingComponent implements OnInit {
 		this.setTargetCode();
 	}
 
-	userChangeSelection(selectBox) {
+	userChangeSelection(selectBox: any) {
 		switch (selectBox) {
 			case 'norelation':
 				this.selectRelationship.value = '';
@@ -885,7 +940,7 @@ export class EditMappingComponent implements OnInit {
 				id: uiEntry.id,
 				modified: uiEntry.modified,
 				created: uiEntry.created,
-				modifiedBy: uiEntry.modifiedBy,
+				modifiedBy: this.user?.userName,
 			};
 			saveMapset.mapEntries.push(mapEntry);
 		}
@@ -899,15 +954,17 @@ export class EditMappingComponent implements OnInit {
 		this.refsetService.getMapsetWorkflowStatus(this.mapsetInfo.id).subscribe((status) => {
 			if (status.workflowStatus === 'IN_EDIT') {
 				this.refsetService.updateMapsetMapping(this.mapsetInfo.id, saveMapset).subscribe(
-					(status) => {
-						this.notificationService.show('The mapping has been saved.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+					(status: any) => {
+						console.log(' Status: ', status);
+						this.notificationService.show('The mapping has been saved.', 'Saved', 'success', { timeOut: 0, extendedTimeOut: 0 });
 					},
-					(error) => {
-						//
+					(error: any) => {
+						console.log(' Error: ', error);
+						this.notificationService.show('Error saving, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 					},
 				);
 			} else {
-				this.notificationService.show('Mapset workflow status is not in Edit mode.');
+				this.notificationService.show('Mapset workflow status is not in Edit mode.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 			}
 		});
 	}
@@ -921,7 +978,7 @@ export class EditMappingComponent implements OnInit {
 			this.closePopover();
 			this.groupFC.reset();
 			this.mapsetData.forEach((data) => {
-				data.mapEntries.forEach((entry) => {
+				data.mapEntries.forEach((entry: any) => {
 					if (entry.group_open) {
 						entry.group_open = false;
 					}
@@ -948,7 +1005,7 @@ export class EditMappingComponent implements OnInit {
 		this.groupFC.reset();
 	}
 
-	numberOnly(event): boolean {
+	numberOnly(event: any): boolean {
 		const charCode = event.which ? event.which : event.keyCode;
 		if (charCode > 31 && (charCode < 48 || charCode > 57)) {
 			event.preventDefault();
@@ -968,7 +1025,7 @@ export class EditMappingComponent implements OnInit {
 			} else {
 				this.userChanged = true;
 				this.mapsetData.forEach((data) => {
-					data.mapEntries.forEach((entry) => {
+					data.mapEntries.forEach((entry: any) => {
 						if (entry.uuid === uuid) {
 							entry.group = this.groupFC.value;
 							this.groupFC.reset();
@@ -985,7 +1042,7 @@ export class EditMappingComponent implements OnInit {
 	closeGroup() {
 		this.groupFC.reset();
 		this.mapsetData.forEach((data) => {
-			data.mapEntries.forEach((entry) => {
+			data.mapEntries.forEach((entry: any) => {
 				if (entry.group_open) {
 					entry.group_open = false;
 				}
@@ -996,7 +1053,7 @@ export class EditMappingComponent implements OnInit {
 	openPopover(event: any, uuid: string) {
 		this.closeGroup();
 		this.mapsetData.forEach((data) => {
-			data.mapEntries.forEach((entry) => {
+			data.mapEntries.forEach((entry: any) => {
 				if (entry.advices_open) {
 					entry.advices_open = false;
 				}
@@ -1006,7 +1063,7 @@ export class EditMappingComponent implements OnInit {
 						entry.updateAdviceList = JSON.parse(JSON.stringify(entry.mapAdvices));
 						this.mapAdvices.forEach((map) => {
 							let found = false;
-							entry.updateAdviceList.forEach((advice) => {
+							entry.updateAdviceList.forEach((advice: any) => {
 								if (map === advice) {
 									found = true;
 								}
@@ -1016,8 +1073,8 @@ export class EditMappingComponent implements OnInit {
 							}
 						});
 
-						entry.addAdviceList.sort((a, b) => (a > b ? 1 : -1));
-						entry.updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
+						entry.addAdviceList.sort((a: any, b: any) => (a > b ? 1 : -1));
+						entry.updateAdviceList.sort((a: any, b: any) => (a > b ? 1 : -1));
 						entry.advices_open = true;
 					}
 					entry.adviceToAdd = '';
@@ -1035,13 +1092,13 @@ export class EditMappingComponent implements OnInit {
 	addAdviceToList(uuid: string) {
 		this.userChanged = true;
 		this.mapsetData.forEach((data) => {
-			data.mapEntries.forEach((entry) => {
+			data.mapEntries.forEach((entry: any) => {
 				if (entry.uuid === uuid) {
 					if (entry.adviceToAdd !== '') {
 						entry.updateAdviceList.push(entry.adviceToAdd);
-						entry.updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
+						entry.updateAdviceList.sort((a: any, b: any) => (a > b ? 1 : -1));
 						entry.addAdviceList.splice(entry.addAdviceList.indexOf(entry.adviceToAdd), 1);
-						entry.addAdviceList.sort((a, b) => (a > b ? 1 : -1));
+						entry.addAdviceList.sort((a: any, b: any) => (a > b ? 1 : -1));
 						entry.adviceToAdd = null;
 						entry.adviceToAdd = '';
 					}
@@ -1054,7 +1111,7 @@ export class EditMappingComponent implements OnInit {
 	removeAdviceFromList(uuid: string, advice: string) {
 		this.userChanged = true;
 		this.mapsetData.forEach((data) => {
-			data.mapEntries.forEach((entry) => {
+			data.mapEntries.forEach((entry: any) => {
 				if (entry.uuid === uuid) {
 					entry.adviceToAdd = null;
 					entry.adviceToAdd = '';
@@ -1070,7 +1127,7 @@ export class EditMappingComponent implements OnInit {
 	setAdvice(uuid: string) {
 		this.userChanged = true;
 		this.mapsetData.forEach((data) => {
-			data.mapEntries.forEach((entry) => {
+			data.mapEntries.forEach((entry: any) => {
 				if (entry.uuid === uuid) {
 					entry.mapAdvices = JSON.parse(JSON.stringify(entry.updateAdviceList));
 					entry.advices = JSON.parse(JSON.stringify(entry.mapAdvices));
@@ -1085,7 +1142,7 @@ export class EditMappingComponent implements OnInit {
 
 	closePopover() {
 		this.mapsetData.forEach((data) => {
-			data.mapEntries.forEach((entry) => {
+			data.mapEntries.forEach((entry: any) => {
 				if (entry.advices_open) {
 					entry.adviceToAdd = null;
 					entry.adviceToAdd = '';
@@ -1095,7 +1152,7 @@ export class EditMappingComponent implements OnInit {
 		});
 	}
 
-	openConfirmationModal(removeId, removeType) {
+	openConfirmationModal(removeId: any, removeType: any) {
 		this.removeId = removeId;
 		this.removeType = removeType;
 		this.confirmModalRef = this.modalService.open(this.confirmationModal, { centered: true });
@@ -1122,7 +1179,7 @@ export class EditMappingComponent implements OnInit {
 	createDataSource() {
 		return {
 			rowCount: null,
-			getRows: (rowParams) => {
+			getRows: (rowParams: any) => {
 				const startRow = rowParams.startRow;
 				const endRow = rowParams.endRow;
 				const sortModel = rowParams.sortModel;
@@ -1289,17 +1346,6 @@ export class EditMappingComponent implements OnInit {
 				suppressMovable: true,
 			},
 			enableBrowserTooltips: true,
-			rowClassRules: {
-				refset_tool_grid_inactive_row: function (params) {
-					let inactivatedRow = false;
-
-					if (params.data) {
-						inactivatedRow = params.data.active == false;
-					}
-
-					return inactivatedRow;
-				},
-			},
 		};
 		this.showTable = true;
 	}
@@ -1356,12 +1402,12 @@ export class EditMappingComponent implements OnInit {
 		return current;
 	}
 
-	onBrowserReady = (params) => {
+	onBrowserReady = (params: any) => {
 		this.browserParams = params;
 		this.browserApi = params.api;
 	};
 
-	onBrowserCellClick = (event) => {
+	onBrowserCellClick = (event: any) => {
 		if (
 			event.column.colId !== 'checkbox' &&
 			event.column.colId !== 'action-btns' &&
@@ -1379,7 +1425,7 @@ export class EditMappingComponent implements OnInit {
 				this.conceptDetail = true;
 			},
 			error: (error) => {
-				//
+				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
 			},
 		});
 	}
@@ -1388,7 +1434,22 @@ export class EditMappingComponent implements OnInit {
 		this.conceptDetail = false;
 	}
 
-	openToBeDevelopedModal(content) {
+	updateWorkFlowMapStatus(response: any) {
+		this.getMapsetInfo();
+	}
+
+	closeWorkflowMapModal() {
+		this.isWFMapModalOpen = false;
+	}
+
+	reviewMapWorkflow(status: any) {
+		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
+			return status === review.value;
+		})[0];
+		this.isWFMapModalOpen = true;
+	}
+
+	openToBeDevelopedModal(content: any) {
 		this.toBeDevelopedModalRef = this.modalService.open(content, { centered: true });
 		this.isModalOpen = true;
 	}
@@ -1406,7 +1467,7 @@ export class EditMappingComponent implements OnInit {
 		return stringValue;
 	}
 
-	dateFormatter(val): any {
+	dateFormatter(val: any): any {
 		return UiUtility.dateFormatter(val);
 	}
 
@@ -1424,11 +1485,11 @@ export class EditMappingComponent implements OnInit {
 		switch (target) {
 			case '_blank':
 				this.router.navigate([]).then((result) => {
-					window.open('/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode, target);
+					window.open('/projects/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode, target);
 				});
 				break;
 			default:
-				this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode], {
+				this.router.navigate(['/projects/mapset/' + this.mapsetCode + '/mapping/' + this.conceptCode], {
 					replaceUrl: false,
 					skipLocationChange: false,
 				});
@@ -1447,12 +1508,12 @@ export class EditMappingComponent implements OnInit {
 		}
 	}
 
-	onResize(event) {
+	onResize(event: any) {
 		//this.closePopover();
 	}
 
 	@HostListener('window:scroll', ['$event'])
-	onScroll(event) {
+	onScroll(event: any) {
 		//this.closePopover();
 	}
 }

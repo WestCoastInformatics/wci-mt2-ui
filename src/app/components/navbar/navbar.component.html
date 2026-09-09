@@ -1,12 +1,12 @@
 <nav *ngIf="isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row jc-center p-b-5-imp">
-	<div class="rt2-nav-item-row">
-		<a class="rt2-nav-logo-section" routerLink="" (click)="landing()" title="Mapping Tool 2.0 Home" aria-label="Mapping Tool 2.0 home">
+	<div class="mt2-nav-item-row">
+		<a class="mt2-nav-logo-section" routerLink="" (click)="landing()" title="Mapping Tool 2.0 Home" aria-label="Mapping Tool 2.0 home">
 			<img class="mt2-logo mr-2 p-0" src="/assets/u316.png" />
-			<span class="text-ghost-grey rt2-nav-header-title">Mapping Tool 2.0</span>
+			<span class="text-ghost-grey mt2-nav-header-title">Mapping Tool 2.0</span>
 		</a>
 
 		<div
-			class="rt2-breadcrumb-bar text-ghost-grey"
+			class="mt2-breadcrumb-bar text-ghost-grey"
 			[class]="
 				breadcrumbs.length > 1 && projectRole.length > 8
 					? 'extended-breadcrumb-and-roles'
@@ -45,7 +45,12 @@
 			<span class="project-assignee" *ngIf="assignedUser() !== 'Unassigned'">Assignee: {{ assignedUser() }}</span>
 		</div>
 
-		<div class="navbar-div navbar-divider" (click)="navigateToRoute('/library')" [ngClass]="{ 'active-page': router.url.includes('library') }">
+		<div
+			*ngIf="isUserLoggedIn"
+			class="navbar-div navbar-divider"
+			(click)="navigateToRoute('/library/')"
+			[ngClass]="{ 'active-page': isCurrentPage('library') }"
+		>
 			<div class="navbar-icon"><img src="/assets/directory-icon.svg" /></div>
 			<div class="navbar-icon-label header-icon-font">Library</div>
 		</div>
@@ -53,8 +58,8 @@
 		<div
 			*ngIf="isUserLoggedIn"
 			class="navbar-div navbar-divider"
-			(click)="navigateToRoute('/library')"
-			[ngClass]="{ 'active-page': router.url.includes('projects') }"
+			(click)="navigateToRoute('/projects/')"
+			[ngClass]="{ 'active-page': isCurrentPage('projects') }"
 		>
 			<div class="navbar-icon"><img src="/assets/projects-icon.svg" /></div>
 			<div class="navbar-icon-label header-icon-font">Projects</div>
@@ -62,19 +67,9 @@
 
 		<div
 			*ngIf="isUserLoggedIn"
-			class="navbar-div navbar-divider hide"
-			(click)="navigateToRoute('/library')"
-			[ngClass]="{ 'active-page': router.url.includes('browsers') }"
-		>
-			<div class="navbar-icon"><i class="fa fa-earth-europe fa-lg navbar-icon-label navbar-fa-icon"></i></div>
-			<div class="navbar-icon-label header-icon-font">Browsers</div>
-		</div>
-
-		<div
-			*ngIf="isUserLoggedIn"
 			class="navbar-div navbar-divider"
-			(click)="navigateToRoute('/library')"
-			[ngClass]="{ 'active-page': router.url.includes('inbox') }"
+			(click)="navigateToRoute('/inbox')"
+			[ngClass]="{ 'active-page': isCurrentPage('inbox') }"
 		>
 			<div class="navbar-icon"><i class="fa fa-inbox fa-lg navbar-icon-label navbar-fa-icon"></i></div>
 			<div class="navbar-icon-label header-icon-font">Inbox</div>
@@ -83,14 +78,14 @@
 		<div
 			*ngIf="isUserLoggedIn"
 			class="navbar-div navbar-divider"
-			(click)="navigateToRoute('/library')"
-			[ngClass]="{ 'active-page': router.url.includes('dashboard') }"
+			(click)="navigateToRoute('/dashboard')"
+			[ngClass]="{ 'active-page': isCurrentPage('dashboard') }"
 		>
 			<div class="navbar-icon"><img src="/assets/dashboard-icon.svg" /></div>
 			<div class="navbar-icon-label header-icon-font">Dashboard</div>
 		</div>
 
-		<div *ngIf="isUserLoggedIn" class="navbar-divider float-right mr-2">
+		<div *ngIf="isUserLoggedIn" class="navbar-divider float-right mr-2 p-l-5">
 			<div class="dropdown navbar-icon-menu" id="userDropdownMenu">
 				<label
 					class="dropdown-toggle pointer text-ghost-grey btn-sm mb-0"
@@ -100,35 +95,36 @@
 					aria-haspopup="true"
 					aria-expanded="false"
 				>
-					<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="medium-icon-image mr-2" />
+					<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri || '')" class="medium-icon-image mr-2" />
 				</label>
 
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
 					<div class="dropdown-item pl-3">
 						<!--[routerLink]="" (click)="navigateToRoute('/personal/' + user?.id + '/landing')">-->
 						<div class="d-flex pointer">
-							<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="medium-icon-image mr-2" />
+							<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri || '')" class="medium-icon-image mr-2" />
 
 							<div class="profile-block">
-								<strong>{{ user?.userName }}</strong>
+								<strong [title]="user?.userName">{{ user?.name }}</strong>
 								<div class="text-sm-left">{{ user?.company }}</div>
+								<div *ngIf="userRoles.length > 0">({{ formatedRoles }})</div>
 							</div>
 						</div>
 					</div>
 					<div class="dropdown-divider hide"></div>
 					<a class="dropdown-item text-center pointer hide" (click)="resources()">Resources</a>
 					<div class="dropdown-divider"></div>
-					<a class="dropdown-item text-center" href="#" (click)="logoutUser()">Logout</a>
+					<a class="dropdown-item text-center" href="#" (click)="logoutUser(); $event.preventDefault()">Log Out</a>
 				</div>
 			</div>
 		</div>
 	</div>
 </nav>
 <nav *ngIf="!isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row jc-center p-b-5-imp" id="bg-landing-header">
-	<div class="rt2-nav-item-row">
-		<a class="rt2-nav-logo-section" routerLink="" (click)="landing()" title="Mapping Tool Home" aria-label="Reference set tool home">
+	<div class="mt2-nav-item-row">
+		<a class="mt2-nav-logo-section" routerLink="" (click)="landing()" title="Mapping Tool Home" aria-label="Reference set tool home">
 			<img class="mt2-logo mr-2 p-0" src="/assets/u316.png" />
-			<span class="text-ghost-grey rt2-nav-header-title">Mapping Tool 2.0</span>
+			<span class="text-ghost-grey mt2-nav-header-title">Mapping Tool 2.0</span>
 		</a>
 
 		<ng-container [ngSwitch]="environment">
@@ -140,12 +136,8 @@
 		</ng-container>
 	</div>
 	<div class="left-title-buttons">
-		<div class="navbar-div navbar-divider no-m-r m-l-auto" (click)="navigateToRoute('/library')">
-			<div class="navbar-icon"><img src="/assets/directory-icon.svg" /></div>
-			<div class="navbar-icon-label header-icon-font">Library</div>
-		</div>
 		<div class="navbar-divider">
-			<div class="navbar-menu-link"><a class="btn text-white m-r-10 rt2-nav-title" (click)="login()">Log In</a></div>
+			<div class="navbar-menu-link p-l-10"><a class="btn text-white m-r-10 mt2-nav-title" (click)="login()">Log In</a></div>
 		</div>
 	</div>
 </nav>
