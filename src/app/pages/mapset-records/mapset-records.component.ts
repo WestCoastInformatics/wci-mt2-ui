@@ -1827,6 +1827,10 @@ export class MapsetRecordsComponent implements OnInit {
 				this.mapsetData[c].updated = false;
 			}
 		}
+		if (this.gridSelectAll) {
+			window['checkbox-table-all'].click();
+		}
+		this.checkedNum = 0;
 		this.refsetGridApi.redrawRows();
 	}
 
@@ -1845,6 +1849,10 @@ export class MapsetRecordsComponent implements OnInit {
 				}
 			}
 		}
+		if (this.gridSelectAll) {
+			window['checkbox-table-all'].click();
+		}
+		this.checkedNum = 0;
 		this.refsetGridApi.redrawRows();
 	}
 

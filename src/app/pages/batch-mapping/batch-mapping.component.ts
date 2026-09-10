@@ -2202,6 +2202,10 @@ export class BatchMappingComponent implements OnInit {
 				this.mapsetData[c].updated = false;
 			}
 		}
+		if (this.gridSelectAll) {
+			window['checkbox-table-all'].click();
+		}
+		this.checkedNum = 0;
 		this.gridApi.redrawRows();
 	}
 
@@ -2221,6 +2225,10 @@ export class BatchMappingComponent implements OnInit {
 				}
 			}
 		}
+		if (this.gridSelectAll) {
+			window['checkbox-table-all'].click();
+		}
+		this.checkedNum = 0;
 		this.gridApi.redrawRows();
 	}
 
