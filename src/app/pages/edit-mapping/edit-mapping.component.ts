@@ -974,7 +974,6 @@ export class EditMappingComponent implements OnInit {
 				if (status.workflowStatus === 'IN_EDIT') {
 					this.refsetService.updateMapsetMapping(this.mapsetInfo.id, saveMapset).subscribe(
 						(status: any) => {
-							console.log(' Status: ', status);
 							this.notificationService.show('The mapping has been saved.', 'Saved', 'success', { timeOut: 0, extendedTimeOut: 0 });
 						},
 						(err) => {
@@ -1471,9 +1470,9 @@ export class EditMappingComponent implements OnInit {
 		this.isWFMapModalOpen = false;
 	}
 
-	reviewMapWorkflow(status: any) {
+	reviewMapWorkflow(value: string, status: string) {
 		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
-			return status === review.value;
+			return value === review.value && status === review.status;
 		})[0];
 		this.isWFMapModalOpen = true;
 	}

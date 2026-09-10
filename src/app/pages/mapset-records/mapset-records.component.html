@@ -358,7 +358,7 @@
 					</button>
 					<ng-container *ngIf="!libraryOnly && workFlowMapActions.length > 0 && mapsetInfo.workflowStatus === 'IN_EDIT'">
 						<span *ngFor="let action of workFlowMapActions">
-							<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value)">
+							<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value, action.status)">
 								<span> {{ action.label }}</span>
 							</button></span
 						>
