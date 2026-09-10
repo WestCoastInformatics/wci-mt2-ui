@@ -197,6 +197,7 @@ export class MapsetRecordsComponent implements OnInit {
 	workFlowMapNotesFC = new FormControl('');
 	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
 	reviewMapWF: any;
+	mapRecordsPage: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 	@ViewChild('workflowStatusSection')
@@ -242,6 +243,7 @@ export class MapsetRecordsComponent implements OnInit {
 	) {
 		document.body.scrollTop = 0;
 		this.reviewMapWF = MapWorkflow.getWorkFlowForMap();
+		this.mapRecordsPage = this;
 	}
 
 	//***** Framework Functions *****/
@@ -1731,7 +1733,6 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	updateNotesStatus(event: any) {
-		// console.log('updateNotesStatus event', event.hasNotes);
 		for (let c = 0; c < this.mapsetData.length; c++) {
 			if (this.mapsetData[c].code === event.conceptCode) {
 				this.mapsetData[c].hasNotes = event.hasNotes;

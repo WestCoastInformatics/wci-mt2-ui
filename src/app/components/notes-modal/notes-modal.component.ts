@@ -4,7 +4,6 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { MapsetRecordsComponent } from 'src/app/pages/mapset-records/mapset-records.component';
 
 @Component({
 	standalone: false,
@@ -28,13 +27,12 @@ export class NotesModalComponent {
 	@Input() mapSetId: any;
 	@Input() conceptCode: any;
 	@Input() hasNotes: any;
-	@Output() updateNotesStatus = new EventEmitter<any>();
+	@Input() parent: any;
 
 	constructor(
 		private refsetService: RefsetService,
 		private notificationService: NotificationService,
 		private modalService: NgbModal,
-		private mapsetRecordsPage: MapsetRecordsComponent,
 	) {}
 
 	getNotes() {
@@ -49,7 +47,7 @@ export class NotesModalComponent {
 					}));
 					if (this.notesList.length === 0) {
 						this.hasNotes = false;
-						this.mapsetRecordsPage.updateNotesStatus({ mapSetId: this.mapSetId, conceptCode: this.conceptCode, hasNotes: this.hasNotes });
+						this.parent.updateNotesStatus({ mapSetId: this.mapSetId, conceptCode: this.conceptCode, hasNotes: this.hasNotes });
 						return;
 					}
 					if (this.notesList.length > 0) {
@@ -59,7 +57,7 @@ export class NotesModalComponent {
 							return bd - ad;
 						});
 						this.hasNotes = true;
-						this.mapsetRecordsPage.updateNotesStatus({ mapSetId: this.mapSetId, conceptCode: this.conceptCode, hasNotes: this.hasNotes });
+						this.parent.updateNotesStatus({ mapSetId: this.mapSetId, conceptCode: this.conceptCode, hasNotes: this.hasNotes });
 					}
 				}
 			},

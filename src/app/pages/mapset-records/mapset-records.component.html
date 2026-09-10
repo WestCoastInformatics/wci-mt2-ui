@@ -731,7 +731,7 @@
 					[mapSetId]="mapsetInfo.id"
 					[conceptCode]="params?.data?.code ? params.data.code : params?.code"
 					[hasNotes]="params?.data?.hasNotes"
-					(updateNotesStatus)="updateNotesStatus($event)"
+					[parent]="mapRecordsPage"
 				></notes-modal>
 			</div>
 
