@@ -7,6 +7,7 @@
 	top: 5px;
 	padding-left: 10px;
 	padding-right: 10px;
+	justify-self: inherit;
 }
 
 .ready-for-publication-projects-button {

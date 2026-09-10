@@ -392,11 +392,16 @@
 .workflow-container {
 	width: fit-content;
 	white-space: nowrap;
+}
+
+.record-badge-container {
+	width: fit-content;
 	position: relative;
-	margin: 0 0 0 auto;
-	.workflow-status-badge {
-		position: relative !important;
-	}
+	margin-left: auto;
+}
+
+.record-badge {
+	justify-self: right;
 }
 
 .checkbox-column {
