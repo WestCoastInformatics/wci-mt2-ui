@@ -469,7 +469,7 @@
 									<div class="assigned-column" *ngIf="!libraryOnly && record?.assignedUser">
 										Assigned to: {{ record.assignedUser }}
 									</div>
-									<div *ngIf="!libraryOnly" class="workflow-container">
+									<div *ngIf="!libraryOnly" [ngClass]="{ 'record-badge-container': showMapTable === 'record' }" class="workflow-container">
 										<ng-container
 											[ngTemplateOutlet]="workflowStatusSection"
 											[ngTemplateOutletContext]="{ $implicit: record?.workflowStatus }"
@@ -735,7 +735,7 @@
 	</div>
 	<!-- Workflow Status Templates -->
 	<ng-template #workflowStatusSection let-params>
-		<workflow-status-badge [status]="typeof params === 'string' ? params : params.value"> </workflow-status-badge>
+		<workflow-status-badge [ngClass]="{ 'record-badge': showMapTable === 'record'}" [status]="typeof params === 'string' ? params : params.value"> </workflow-status-badge>
 	</ng-template>
 	<ng-template #directoryInfoDialog let-data>
 		<div class="container-fluid w-min-350 mt2-refset-metadata-column" id="directoryInformationSection">
