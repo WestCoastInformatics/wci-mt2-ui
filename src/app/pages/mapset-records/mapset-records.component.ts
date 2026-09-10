@@ -643,6 +643,14 @@ export class MapsetRecordsComponent implements OnInit {
 		for (const p of this.mapsetInfo.mapProject.mapPrinciples) {
 			this.assignedFilterOptions.push({ label: p.name, value: p.id });
 		}
+		const seenValues = new Set();
+		this.assignedFilterOptions = this.assignedFilterOptions.filter((option) => {
+			if (seenValues.has(option.value)) {
+				return false;
+			}
+			seenValues.add(option.value);
+			return true;
+		});
 		localStorage.setItem(this.mapsetVersionStorage, JSON.stringify(this.selectedVersion));
 		this.breadcrumbService.setBreadcrumbs([
 			{ path: this.libraryOnly ? '/library/' : '/projects/', label: this.libraryOnly ? 'Library' : 'Projects' },
@@ -1258,10 +1266,10 @@ export class MapsetRecordsComponent implements OnInit {
 			});
 			if (availableActions) {
 				const bulkActions = new Set(availableActions.map((item) => `${item.value}-${item.status}`));
-				this.isMultiple = bulkActions.size > 0;
-				if (this.isMultiple) {
+				if (bulkActions.size > 0) {
 					this.workFlowMapActions = availableActions;
 				}
+				this.isMultiple = this.checkedNum > 1;
 			}
 			const foundEdit = availableActions.filter((wfAction: Record<string, unknown>) => {
 				return wfAction.edit === true;
