@@ -1841,7 +1841,7 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 		for (const item of response.items) {
 			for (let c = 0; c < this.mapsetData.length; c++) {
-				if (item.conceptCode === this.mapsetData[c].code) {
+				if (item.conceptCode === this.mapsetData[c].code && item.success === true) {
 					this.mapsetData[c].workflowStatus = item.workflow.workflowStatus;
 					this.mapsetData[c].modified = item.workflow.modified;
 					this.mapsetData[c].assignedUser = item.workflow.assignedUser;
