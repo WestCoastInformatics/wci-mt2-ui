@@ -426,9 +426,9 @@ export class MapsetMappingComponent implements OnInit {
 		this.isWFMapModalOpen = false;
 	}
 
-	reviewMapWorkflow(status: any) {
+	reviewMapWorkflow(value: string, status: string) {
 		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
-			return status === review.value;
+			return value === review.value && status === review.status;
 		})[0];
 		this.isWFMapModalOpen = true;
 	}

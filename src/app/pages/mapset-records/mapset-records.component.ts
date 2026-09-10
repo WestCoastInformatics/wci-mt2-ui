@@ -643,6 +643,14 @@ export class MapsetRecordsComponent implements OnInit {
 		for (const p of this.mapsetInfo.mapProject.mapPrinciples) {
 			this.assignedFilterOptions.push({ label: p.name, value: p.id });
 		}
+		const seenValues = new Set();
+		this.assignedFilterOptions = this.assignedFilterOptions.filter((option) => {
+			if (seenValues.has(option.value)) {
+				return false;
+			}
+			seenValues.add(option.value);
+			return true;
+		});
 		localStorage.setItem(this.mapsetVersionStorage, JSON.stringify(this.selectedVersion));
 		this.breadcrumbService.setBreadcrumbs([
 			{ path: this.libraryOnly ? '/library/' : '/projects/', label: this.libraryOnly ? 'Library' : 'Projects' },
@@ -1258,10 +1266,10 @@ export class MapsetRecordsComponent implements OnInit {
 			});
 			if (availableActions) {
 				const bulkActions = new Set(availableActions.map((item) => `${item.value}-${item.status}`));
-				this.isMultiple = bulkActions.size > 0;
-				if (this.isMultiple) {
+				if (bulkActions.size > 0) {
 					this.workFlowMapActions = availableActions;
 				}
+				this.isMultiple = this.checkedNum > 1;
 			}
 			const foundEdit = availableActions.filter((wfAction: Record<string, unknown>) => {
 				return wfAction.edit === true;
@@ -1827,6 +1835,10 @@ export class MapsetRecordsComponent implements OnInit {
 				this.mapsetData[c].updated = false;
 			}
 		}
+		if (this.gridSelectAll) {
+			window['checkbox-table-all'].click();
+		}
+		this.checkedNum = 0;
 		this.refsetGridApi.redrawRows();
 	}
 
@@ -1837,7 +1849,7 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 		for (const item of response.items) {
 			for (let c = 0; c < this.mapsetData.length; c++) {
-				if (item.conceptCode === this.mapsetData[c].code) {
+				if (item.conceptCode === this.mapsetData[c].code && item.success === true) {
 					this.mapsetData[c].workflowStatus = item.workflow.workflowStatus;
 					this.mapsetData[c].modified = item.workflow.modified;
 					this.mapsetData[c].assignedUser = item.workflow.assignedUser;
@@ -1845,6 +1857,10 @@ export class MapsetRecordsComponent implements OnInit {
 				}
 			}
 		}
+		if (this.gridSelectAll) {
+			window['checkbox-table-all'].click();
+		}
+		this.checkedNum = 0;
 		this.refsetGridApi.redrawRows();
 	}
 
@@ -1852,9 +1868,9 @@ export class MapsetRecordsComponent implements OnInit {
 		this.isWFMapModalOpen = false;
 	}
 
-	reviewMapWorkflow(status: any) {
+	reviewMapWorkflow(value: string, status: string) {
 		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
-			return status === review.value;
+			return value === review.value && status === review.status;
 		})[0];
 		if (this.checkedNum === 1) {
 			this.isMultiple = false;

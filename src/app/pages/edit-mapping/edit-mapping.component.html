@@ -843,34 +843,6 @@
 		</div>
 
 		<div class="col">
-			<!-- <ng-container>
-				<span *ngFor="let review of reviewWF"
-					><button
-						*ngIf="mappingStatus.next === review.value"
-						class="library-app-refset-discussion-list mr-20 no-padding"
-						(click)="reviewWorkflow(review.value)"
-					>
-						<img
-							src="/assets/rate-review.svg"
-							title="{{ review.label }}"
-							aria-label="{{ review.label }}"
-							class="rate-review-icon"
-						/></button
-				></span>
-			</ng-container> -->
-			<!-- <ng-container *ngIf="mapsetInfo.workflowStatus === 'IN_EDIT'">
-				<span *ngFor="let action of workFlowMapActions">
-					<button class="library-app-refset-discussion-list mr-20 no-padding" (click)="reviewMapWorkflow(action.value)">
-						<span> {{ action.label }}</span>
-						<img
-							src="/assets/rate-review.svg"
-							title="{{ action.label }}"
-							aria-label="{{ action.label }}"
-							class="rate-review-icon"
-						/></button
-				></span>
-			</ng-container> -->
-			<!-- <div class="menu-inline"> -->
 			<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="library-app-refset-discussion-list mr-20 no-padding">
 				<img src="/assets/rate-review.svg" class="rate-review-icon" />
 			</button>
@@ -878,7 +850,7 @@
 			<mat-menu #actionMenu="matMenu">
 				<ng-container *ngIf="mapsetInfo.workflowStatus === 'IN_EDIT'">
 					<span *ngFor="let action of workFlowMapActions">
-						<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value)">
+						<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value, action.status)">
 							<span> {{ action.label }}</span>
 						</button></span
 					>
