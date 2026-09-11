@@ -276,6 +276,7 @@ export class MapsetMappingComponent implements OnInit {
 						group: results.mapEntries[b].group,
 						priority: results.mapEntries[b].priority,
 						moduleId: results.mapEntries[b].moduleId,
+						hasNotes: results.mapNotes?.length > 0 ? true : false,
 						modFlag: this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
 						modLang: this.getModuleLanguageName(results.mapEntries[b].moduleId),
 					});
