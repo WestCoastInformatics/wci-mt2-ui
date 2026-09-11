@@ -1511,7 +1511,6 @@ export class BatchMappingComponent implements OnInit {
 
 	saveMappings() {
 		this.saving = true;
-
 		for (let f = 0; f < this.mapsetResponse.length; f++) {
 			this.mapsetResponse[f].mapEntries = [];
 			for (let p = 0; p < this.mapsetData.length; p++) {
@@ -1537,6 +1536,8 @@ export class BatchMappingComponent implements OnInit {
 						modifiedBy: uiEntry.modifiedBy,
 					};
 					this.mapsetResponse[f].mapEntries.push(mapEntry);
+					this.mapsetResponse[f].workflowStatus = uiData.workflowStatus;
+					this.mapsetResponse[f].assignedUser = uiData.assignedUser;
 				}
 			}
 		}
@@ -1566,7 +1567,10 @@ export class BatchMappingComponent implements OnInit {
 						},
 					);
 				} else {
-					this.notificationService.show('Mapset workflow status is not in Edit mode.');
+					this.notificationService.show('Mapset workflow status is not in Edit mode.', null, 'warning', {
+						timeOut: 0,
+						extendedTimeOut: 0,
+					});
 				}
 			},
 			(err) => {
@@ -2243,6 +2247,9 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	reviewMapWorkflow(value: string, status: string) {
+		if (this.userChanged) {
+			this.notificationService.show('Save mappings before changing status.', 'Warning', 'warning', { timeOut: 0, extendedTimeOut: 0 });
+		}
 		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
 			return value === review.value && status === review.status;
 		})[0];
