@@ -1471,6 +1471,10 @@ export class EditMappingComponent implements OnInit {
 	}
 
 	reviewMapWorkflow(value: string, status: string) {
+		if (this.userChanged) {
+			this.notificationService.show('Save mappings before changing status.', 'Warning', 'warning', { timeOut: 0, extendedTimeOut: 0 });
+			return;
+		}
 		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
 			return value === review.value && status === review.status;
 		})[0];
