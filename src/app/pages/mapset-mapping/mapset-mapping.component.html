@@ -138,7 +138,13 @@
 					</button>
 				</div>
 				<div class="col">
-					<notes-modal [libraryOnly]="libraryOnly" [mapSetId]="mapsetInfo.id" [conceptCode]="conceptCode"></notes-modal>
+					<notes-modal 
+						[libraryOnly]="libraryOnly" 
+						[mapSetId]="mapsetInfo.id" 
+						[conceptCode]="conceptCode"
+						[hasNotes]="params?.data?.hasNotes ? params.data.hasNotes : params?.hasNotes"
+						[parent]="mapsetMappingPage"
+					></notes-modal>
 				</div>
 
 				<div class="col">

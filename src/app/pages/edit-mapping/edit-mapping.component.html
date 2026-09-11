@@ -817,7 +817,13 @@
 		</div>
 
 		<div class="col">
-			<notes-modal [libraryOnly]="false" [mapSetId]="mapsetInfo.id" [conceptCode]="mapsetData[0].code"></notes-modal>
+			<notes-modal 
+				[libraryOnly]="false" 
+				[mapSetId]="mapsetInfo.id" 
+				[conceptCode]="mapsetData[0].code"
+				[hasNotes]="params?.data?.hasNotes ? params.data.hasNotes : params?.hasNotes"
+				[parent]="editMappingsPage"
+			></notes-modal>
 		</div>
 
 		<div class="col">

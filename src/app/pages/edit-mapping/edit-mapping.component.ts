@@ -159,6 +159,7 @@ export class EditMappingComponent implements OnInit {
 	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
 	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
 	reviewMapWF: any;
+	editMappingsPage: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -193,6 +194,7 @@ export class EditMappingComponent implements OnInit {
 	) {
 		document.body.scrollTop = 0;
 		this.reviewMapWF = MapWorkflow.getWorkFlowForMap();
+		this.editMappingsPage = this;
 		this.targetFC.valueChanges.pipe(debounceTime(600), distinctUntilChanged()).subscribe((res) => {
 			if (this.targetFC.dirty && !this.searchByTypeahead) {
 				this.foundConceptCode = false;
@@ -644,6 +646,7 @@ export class EditMappingComponent implements OnInit {
 							groupTotal: results.mapEntries[b].group,
 							priority: results.mapEntries[b].priority,
 							moduleId: results.mapEntries[b].moduleId,
+							hasNotes: results.mapEntries[b].mapNotes?.lenght > 0 ? true : false,
 							modFlag: this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
 							modLang: this.getModuleLanguageName(results.mapEntries[b].moduleId),
 						});
@@ -1510,6 +1513,16 @@ export class EditMappingComponent implements OnInit {
 
 	onResize(event: any) {
 		//this.closePopover();
+	}
+
+	updateNotesStatus(event: any) {
+		console.log('updateNotesStatus', event);
+		for (let c = 0; c < this.mapsetData.length; c++) {
+			if (this.mapsetData[c].code === event.conceptCode) {
+				this.mapsetData[c].hasNotes = event.hasNotes;
+			}
+		}
+		this.refsetGridApi.redrawRows();
 	}
 
 	@HostListener('window:scroll', ['$event'])

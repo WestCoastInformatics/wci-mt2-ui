@@ -177,6 +177,7 @@ export class BatchMappingComponent implements OnInit {
 	workFlowMapNotesFC = new FormControl('');
 	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
 	reviewMapWF: any;
+	batchMappingsPage: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
@@ -226,6 +227,7 @@ export class BatchMappingComponent implements OnInit {
 	) {
 		document.body.scrollTop = 0;
 		this.reviewMapWF = MapWorkflow.getWorkFlowForMap();
+		this.batchMappingsPage = this;
 		this.targetFC.valueChanges.pipe(debounceTime(600), distinctUntilChanged()).subscribe((res) => {
 			if (this.targetFC.dirty && !this.searchByTypeahead) {
 				this.foundConceptCode = false;
@@ -2070,6 +2072,15 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	onResize(event: any) {}
+
+	updateNotesStatus(event: any) {
+		console.log('updateNotesStatus', event);
+		for (let c = 0; c < this.mapsetData.length; c++) {
+			if (this.mapsetData[c].code === event.conceptCode) {
+				this.mapsetData[c].hasNotes = event.hasNotes;
+			}
+		}
+	}
 
 	@HostListener('window:scroll', ['$event'])
 	onScroll(event: any) {

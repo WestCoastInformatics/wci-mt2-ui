@@ -81,6 +81,7 @@ export class MapsetMappingComponent implements OnInit {
 	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
 	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
 	reviewMapWF: any;
+	mapsetMappingPage: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -105,6 +106,7 @@ export class MapsetMappingComponent implements OnInit {
 	) {
 		document.body.scrollTop = 0;
 		this.reviewMapWF = MapWorkflow.getWorkFlowForMap();
+		this.mapsetMappingPage = this;
 	}
 
 	//***** Framework Functions *****/
@@ -317,6 +319,15 @@ export class MapsetMappingComponent implements OnInit {
 			}
 		});
 		return lang;
+	}
+
+	updateNotesStatus(event: any) {
+		console.log('updateNotesStatus', event);
+		for (let c = 0; c < this.mapsetData.length; c++) {
+			if (this.mapsetData[c].code === event.conceptCode) {
+				this.mapsetData[c].hasNotes = event.hasNotes;
+			}
+		}
 	}
 
 	menuOpened() {

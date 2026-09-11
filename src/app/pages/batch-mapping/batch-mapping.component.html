@@ -877,7 +877,13 @@
 	<ng-template #directoryActionSection let-params>
 		<div class="d-flex" *ngIf="params?.value === true">
 			<div class="col">
-				<notes-modal [libraryOnly]="false" [mapSetId]="mapsetInfo.id" [conceptCode]="params?.data?.code"></notes-modal>
+				<notes-modal 
+					[libraryOnly]="false" 
+					[mapSetId]="mapsetInfo.id" 
+					[conceptCode]="params?.data?.code"
+					[hasNotes]="params?.data?.hasNotes ? params.data.hasNotes : params?.hasNotes"
+					[parent]="batchMappingsPage"
+				></notes-modal>
 			</div>
 
 			<div class="col">
