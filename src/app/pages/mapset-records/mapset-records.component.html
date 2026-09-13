@@ -187,15 +187,83 @@
 		</div>
 		<div class="d-flex dropdown-group" *ngIf="showMappingsSection">
 			<div class="col-md-auto mt2-directory-chooser-column" *ngIf="showTable && showMapTable === 'table'">
-				<app-column-chooser
-					*ngIf="showPaging"
-					title="Select Columns to Display"
-					[gridColumnApi]="refsetGridApi"
-					[useDialog]="useDialog"
-					[columnStorage]="mapsetRecordsColumnStorage"
-					[manualStateRefresh]="manualStateRefresh"
-				>
-				</app-column-chooser>
+				<mat-menu #settingsMenu="matMenu" class="menu">
+					<div class="heading">TABLE SETTINGS</div>
+					<div class="mat-mdc-menu-content">
+						FILTER BY
+						<div class="d-flex mb-2 align-items-center">
+							<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
+								<mat-select
+									#filterWorkflowStatus
+									title="Filter by Workflow Status"
+									placeholder="Workflow Status"
+									[(value)]="workflowFilter"
+									(click)="$event.stopPropagation()"
+									(selectionChange)="filterSelection('workflow')"
+								>
+									<mat-option *ngFor="let workflow of workflowFilterOptions" value="{{ workflow.value }}" class="no-checkbox">{{
+										workflow.label
+									}}</mat-option>
+								</mat-select>
+							</mat-form-field>
+							<span
+								class="clear-search ml-20"
+								*ngIf="workflowFilter"
+								title="Clear Filter"
+								(click)="$event.stopPropagation(); workflowFilter = ''; filterSelection('workflow')"
+							>
+								&#10005;
+							</span>
+						</div>
+						<div class="d-flex mb-5 align-items-center">
+							<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
+								<mat-select
+									#filterAssignedUser
+									title="Filter by Assigned To"
+									placeholder="Assigned To"
+									[(value)]="assignedFilter"
+									(click)="$event.stopPropagation()"
+									(selectionChange)="filterSelection('assigned')"
+								>
+									<mat-option *ngFor="let assigned of assignedFilterOptions" value="{{ assigned.value }}" class="no-checkbox">{{
+										assigned.label
+									}}</mat-option>
+								</mat-select> </mat-form-field
+							><span
+								class="clear-search ml-20"
+								*ngIf="assignedFilter"
+								title="Clear Filter"
+								(click)="$event.stopPropagation(); assignedFilter = ''; filterSelection('assigned')"
+							>
+								&#10005;
+							</span>
+						</div>
+					</div>
+					<app-column-chooser
+						*ngIf="showPaging"
+						title="Select Columns to Display"
+						[gridColumnApi]="refsetGridApi"
+						[useDialog]="useDialog"
+						[columnStorage]="mapsetRecordsColumnStorage"
+						[manualStateRefresh]="manualStateRefresh"
+					>
+					</app-column-chooser
+				></mat-menu>
+
+				<div class="menu-inline">
+					<button
+						[matMenuTriggerFor]="settingsMenu"
+						[matBadgeHidden]="workflowFilter === '' && assignedFilter === ''"
+						matBadgeSize="small"
+						[matBadge]="'.'"
+						aria-label="Settings"
+						title="Settings"
+						class="mapset-download-icon menu-button"
+					>
+						<mat-icon class="menu-icon">settings</mat-icon>
+						<span class="menu-label">Settings</span>
+					</button>
+				</div>
 			</div>
 
 			<div class="col-md-auto mt2-directory-chooser-column">
@@ -288,9 +356,9 @@
 					<button *ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT'" mat-menu-item (click)="selectAction('list')">
 						<span>Batch Edit Maps By List</span>
 					</button>
-					<ng-container *ngIf="!libraryOnly && workFlowMapActions.length && checkedNum === 1 && mapsetInfo.workflowStatus === 'IN_EDIT'">
+					<ng-container *ngIf="!libraryOnly && workFlowMapActions.length > 0 && mapsetInfo.workflowStatus === 'IN_EDIT'">
 						<span *ngFor="let action of workFlowMapActions">
-							<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value)">
+							<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value, action.status)">
 								<span> {{ action.label }}</span>
 							</button></span
 						>
@@ -401,7 +469,7 @@
 									<div class="assigned-column" *ngIf="!libraryOnly && record?.assignedUser">
 										Assigned to: {{ record.assignedUser }}
 									</div>
-									<div *ngIf="!libraryOnly" class="workflow-container">
+									<div *ngIf="!libraryOnly" [ngClass]="{ 'record-badge-container': showMapTable === 'record' }" class="workflow-container">
 										<ng-container
 											[ngTemplateOutlet]="workflowStatusSection"
 											[ngTemplateOutletContext]="{ $implicit: record?.workflowStatus }"
@@ -667,7 +735,7 @@
 	</div>
 	<!-- Workflow Status Templates -->
 	<ng-template #workflowStatusSection let-params>
-		<workflow-status-badge [status]="typeof params === 'string' ? params : params.value"> </workflow-status-badge>
+		<workflow-status-badge [ngClass]="{ 'record-badge': showMapTable === 'record'}" [status]="typeof params === 'string' ? params : params.value"> </workflow-status-badge>
 	</ng-template>
 	<ng-template #directoryInfoDialog let-data>
 		<div class="container-fluid w-min-350 mt2-refset-metadata-column" id="directoryInformationSection">
@@ -945,10 +1013,13 @@
 	</ng-template>
 	<workflow-map-modal
 		(updateWorkFlowMapStatus)="updateWorkFlowMapStatus($event)"
+		(updateMultiWorkFlowMapStatus)="updateMultiWorkFlowMapStatus($event)"
 		(closeWorkflowMapModal)="closeWorkflowMapModal()"
 		[workFlowMapStatus]="workFlowMapStatus"
 		[mapsetInfo]="mapsetInfo"
 		[isWFMapModalOpen]="isWFMapModalOpen"
 		[conceptCode]="conceptCode"
+		[conceptCodeList]="conceptCodeList"
+		[multiple]="isMultiple"
 	></workflow-map-modal>
 </div>

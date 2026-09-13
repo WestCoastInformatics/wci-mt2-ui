@@ -1,6 +1,4 @@
 import { Component, Input, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
-import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 
 /**
@@ -14,8 +12,6 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 	encapsulation: ViewEncapsulation.None,
 })
 export class ColumnChooserComponent {
-	dialog!: DialogService;
-
 	columns = [];
 	selectedColumns = [];
 	@Input() gridColumnApi: any;
@@ -25,7 +21,7 @@ export class ColumnChooserComponent {
 	@Input() columnStorage: any;
 	@ViewChild('columnChooserSection') columnChooserDialog!: TemplateRef<any>;
 
-	constructor(private dialogFactoryService: DialogFactoryService) {}
+	constructor() {}
 
 	ngOnChanges() {
 		if (this.gridColumnApi !== undefined) {
@@ -131,40 +127,6 @@ export class ColumnChooserComponent {
 				}
 			}
 		}
-	}
-
-	openColumnChooser() {
-		const dialogId = 'columnChooserDialog';
-
-		const dialogData = {
-			dialogId: dialogId,
-			showCancel: false,
-			confirmText: 'Okay',
-			headerText: 'Select which columns to display:',
-			template: this.columnChooserDialog,
-			data: this.columns,
-			showCloseIcon: false,
-		};
-
-		const dialogOptions = {
-			id: dialogId,
-			width: '500px',
-			disableClose: false,
-		};
-
-		this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
-
-		this.dialog.confirmed().subscribe((data) => {
-			this.columns = data;
-
-			if (data) {
-				this.applyColumns();
-			}
-		});
-	}
-
-	valueCompare(column1: any, column2: any) {
-		return column1 && column2 ? column1.colId == column2.colId : column1 == column2;
 	}
 
 	selectColumns() {

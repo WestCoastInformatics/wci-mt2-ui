@@ -34,7 +34,7 @@ export class ErrorHandlingService {
 				this.notificationService.show(errorMessage, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
 			}
 		} else if (error.status >= 500 && error.status < 600) {
-			this.notificationService.show('Unexpected application error.', null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+			this.authenticationService.checkError(error);
 		}
 		return throwError(() => error);
 	}

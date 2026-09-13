@@ -423,9 +423,22 @@
 .workflow-container {
 	width: fit-content;
 	white-space: nowrap;
-	.workflow-status-badge {
-		position: relative !important;
-	}
+}
+
+.record-badge-container {
+	width: fit-content;
+	position: relative;
+	margin-left: auto;
+}
+
+.record-badge {
+	justify-self: right;
+}
+
+.filter-box {
+	padding-left: 2px;
+	padding-right: 2px;
+	width: 150px;
 }
 
 .checkbox-column {
@@ -452,7 +465,7 @@
 .action-btns {
 	width: 65px;
 	height: 25px;
-	margin-left: 145px;
+	margin-left: auto;
 }
 
 .odd-row {

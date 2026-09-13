@@ -138,6 +138,8 @@ export class MapsetRecordsComponent implements OnInit {
 	mapsetSearchInput = 'mapsetSearchInput';
 	mapsetGridCurrentPageNum = 'mapsetGridCurrentPageNum';
 	mapsetGridCurrentPageSize = 'mapsetGridCurrentPageSize';
+	mapsetRecordsWorkflowFilter = 'mapsetRecordsWorkflowFilter';
+	mapsetRecordsAssignedFilter = 'mapsetRecordsAssignedFilter';
 	moduleMetadata: any;
 	rowColors = [{ background: 'white' }, { background: '#f2f2f2' }];
 	currentRowColor = 0;
@@ -197,6 +199,20 @@ export class MapsetRecordsComponent implements OnInit {
 	workFlowMapNotesFC = new FormControl('');
 	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
 	reviewMapWF: any;
+	isMultiple = false;
+	conceptCodeList: any;
+	workflowFilter = '';
+	assignedFilter = '';
+	workflowFilterOptions = [
+		{ label: 'Published', value: 'PUBLISHED' },
+		{ label: 'New', value: 'NEW' },
+		{ label: 'Ready For Publication', value: 'READY_FOR_PUBLICATION' },
+		{ label: 'In Edit', value: 'EDITING_IN_PROGRESS' },
+		{ label: 'Edit Completed', value: 'EDITING_DONE' },
+		{ label: 'Ready For Review', value: 'REVIEW_NEEDED' },
+		{ label: 'In Review', value: 'REVIEW_IN_PROGRESS' },
+	];
+	assignedFilterOptions: any[] = [];
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 	@ViewChild('workflowStatusSection')
@@ -267,11 +283,15 @@ export class MapsetRecordsComponent implements OnInit {
 			this.mapsetSearchInput = prefix + this.mapsetSearchInput;
 			this.mapsetGridCurrentPageNum = prefix + this.mapsetGridCurrentPageNum;
 			this.mapsetGridCurrentPageSize = prefix + this.mapsetGridCurrentPageSize;
+			this.mapsetRecordsWorkflowFilter = prefix + this.mapsetRecordsWorkflowFilter;
+			this.mapsetRecordsAssignedFilter = prefix + this.mapsetRecordsAssignedFilter;
 			this.mapsetCode = routeParams.code;
 			this.mapsetRecordsColumnStorage += this.mapsetCode;
 			this.mapsetSearchInput += this.mapsetCode;
 			this.mapsetGridCurrentPageNum += this.mapsetCode;
 			this.mapsetGridCurrentPageSize += this.mapsetCode;
+			this.mapsetRecordsWorkflowFilter += this.mapsetCode;
+			this.mapsetRecordsAssignedFilter += this.mapsetCode;
 			this.clearSavedSelections();
 			this.getMapsetInfo();
 			this.getModuleMetadata();
@@ -298,267 +318,266 @@ export class MapsetRecordsComponent implements OnInit {
 		keysToRemove.forEach((key) => localStorage.removeItem(key));
 	}
 
-	isWorkFlowMapEdit(): boolean {
-		const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
-			return wfAction.edit === true;
-		});
-		return foundEdit.length > 0;
-	}
-
 	getMapsetInfo() {
-		this.refsetService.getMapsetsByCode(this.mapsetCode!).subscribe((results) => {
-			this.mapsetVersions = Array.isArray(results) ? results : [results];
-			if (this.libraryOnly) {
-				this.mapsetVersions = this.mapsetVersions.filter((mapset) => mapset.versionStatus === 'PUBLISHED');
-			} else {
-				this.mapsetVersions = this.mapsetVersions.filter((mapset) => mapset.versionStatus === 'IN DEVELOPMENT');
-			}
-			this.updateVersionDropdown();
+		this.refsetService.getMapsetsByCode(this.mapsetCode!).subscribe(
+			(results) => {
+				this.mapsetVersions = Array.isArray(results) ? results : [results];
+				if (this.libraryOnly) {
+					this.mapsetVersions = this.mapsetVersions.filter((mapset) => mapset.versionStatus === 'PUBLISHED');
+				} else {
+					this.mapsetVersions = this.mapsetVersions.filter((mapset) => mapset.versionStatus === 'IN DEVELOPMENT');
+				}
+				this.updateVersionDropdown();
 
-			const storedPageSize = localStorage.getItem(this.mapsetGridCurrentPageSize);
-			this.refsetGridPaging.pageSize = storedPageSize ? Number(JSON.parse(storedPageSize)) : 10;
+				const storedPageSize = localStorage.getItem(this.mapsetGridCurrentPageSize);
+				this.refsetGridPaging.pageSize = storedPageSize ? Number(JSON.parse(storedPageSize)) : 10;
 
-			this.columnDefs = [
-				{
-					field: 'index',
-					tooltipField: '',
-					colId: 'checkbox',
-					headerName: '',
-					headerTooltip: 'Check/Uncheck All',
-					minWidth: 55,
-					width: 55,
-					cellRenderer: TemplateRendererComponent,
-					cellRendererParams: { template: this.checkSection },
-					headerComponentParams: {
-						template:
-							'<div class="ag-cell-label-container" role="presentation">' +
-							'  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
-							'  <div ref="eLabel" class="ag-header-cell-label" role="presentation">' +
-							'    <span ref="eSortOrder" class="ag-header-icon ag-sort-order"></span>' +
-							'    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>' +
-							'    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>' +
-							'    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>' +
-							'    <label class="checkbox-override checkbox-header"><input type="checkbox" onclick="checkboxHandleClick()" id="checkbox-table-all" >' +
-							'    <span class="checkbox-container"></span></label>' +
-							'    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
-							'  </div>' +
-							'</div>',
+				this.columnDefs = [
+					{
+						field: 'index',
+						tooltipField: '',
+						colId: 'checkbox',
+						headerName: '',
+						headerTooltip: 'Check/Uncheck All',
+						minWidth: 55,
+						width: 55,
+						cellRenderer: TemplateRendererComponent,
+						cellRendererParams: { template: this.checkSection },
+						headerComponentParams: {
+							template:
+								'<div class="ag-cell-label-container" role="presentation">' +
+								'  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
+								'  <div ref="eLabel" class="ag-header-cell-label" role="presentation">' +
+								'    <span ref="eSortOrder" class="ag-header-icon ag-sort-order"></span>' +
+								'    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>' +
+								'    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>' +
+								'    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>' +
+								'    <label class="checkbox-override checkbox-header"><input type="checkbox" onclick="checkboxHandleClick()" id="checkbox-table-all" >' +
+								'    <span class="checkbox-container"></span></label>' +
+								'    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
+								'  </div>' +
+								'</div>',
+						},
+						unSortIcon: false,
+						filter: false,
+						resizable: false,
+						sortable: false,
+						suppressSorting: true,
+						getQuickFilterText: (params: any) => {
+							return '';
+						},
 					},
-					unSortIcon: false,
-					filter: false,
-					resizable: false,
-					sortable: false,
-					suppressSorting: true,
-					getQuickFilterText: (params: any) => {
-						return '';
+					{
+						field: 'code',
+						tooltipField: 'code',
+						headerName: 'Source',
+						headerTooltip: 'Source',
+						flex: 1,
+						minWidth: 125,
+						cellClass: 'blue-link',
+						resizable: true,
+						sortable: false,
+						suppressSorting: true,
 					},
-				},
-				{
-					field: 'code',
-					tooltipField: 'code',
-					headerName: 'Source',
-					headerTooltip: 'Source',
-					flex: 1,
-					minWidth: 125,
-					cellClass: 'blue-link',
-					resizable: true,
-					sortable: false,
-					suppressSorting: true,
-				},
-				{
-					field: 'name',
-					tooltipField: 'name',
-					headerName: 'Source PT',
-					headerTooltip: 'Source PT',
-					flex: 2,
-					resizable: true,
-					minWidth: 165,
-					cellRenderer: TemplateRendererComponent,
-					cellRendererParams: { template: this.nameSection },
-					sortable: false,
-					unSortIcon: false,
-					suppressSorting: true,
-				},
-				{
-					field: 'toCode',
-					headerName: 'Target',
-					headerTooltip: 'Target',
-					flex: 1,
-					minWidth: 135,
-					cellRenderer: TemplateRendererComponent,
-					cellRendererParams: {
-						template: this.codeSection,
+					{
+						field: 'name',
+						tooltipField: 'name',
+						headerName: 'Source PT',
+						headerTooltip: 'Source PT',
+						flex: 2,
+						resizable: true,
+						minWidth: 165,
+						cellRenderer: TemplateRendererComponent,
+						cellRendererParams: { template: this.nameSection },
+						sortable: false,
+						unSortIcon: false,
+						suppressSorting: true,
 					},
-					resizable: true,
-					unSortIcon: false,
-					sortable: false,
-					suppressSorting: true,
-				},
-				{
-					field: 'toName',
-					tooltipField: 'toName',
-					headerName: 'Target PT',
-					headerTooltip: 'Target PT',
-					resizable: true,
-					unSortIcon: true,
-					sortable: false,
-					suppressSorting: true,
-					cellRenderer: TemplateRendererComponent,
-					cellRendererParams: { template: this.toNameSection },
-				},
-				{
-					colId: 'relation',
-					field: 'relation',
-					tooltipField: 'relation',
-					headerName: 'Relationship',
-					headerTooltip: 'Relationship',
-					cellClass: 'mt2-directory-column-id',
-					resizable: true,
-					unSortIcon: true,
-					sortable: false,
-					suppressSorting: true,
-					flex: 1,
-					minWidth: 100,
-				},
-				{
-					colId: 'rule',
-					field: 'rule',
-					tooltipField: 'rule',
-					headerName: 'Rule',
-					headerTooltip: 'Rule',
-					cellClass: 'mt2-directory-column-id',
-					flex: 1,
-					minWidth: 85,
-					resizable: true,
-					unSortIcon: true,
-					sortable: false,
-					suppressSorting: true,
-				},
-				{
-					colId: 'advices',
-					field: 'advices',
-					headerName: 'Advices',
-					headerTooltip: 'Advices',
-					cellClass: 'mt2-directory-column-advices',
-					minWidth: 65,
-					width: 125,
-					resizable: true,
-					cellRenderer: TemplateRendererComponent,
-					cellRendererParams: { template: this.adviceSection },
-					unSortIcon: true,
-					sortable: false,
-					suppressSorting: true,
-				},
-				{
-					colId: 'workflowStatus',
-					field: 'workflowStatus',
-					tooltipField: 'workflowStatus',
-					headerName: 'Workflow Status',
-					cellClass: 'mt2-directory-column-version-status',
-					minWidth: 165,
-					width: 200,
-					resizable: true,
-					cellRenderer: TemplateRendererComponent,
-					cellRendererParams: { template: this.workflowStatus },
-					unSortIcon: true,
-				},
-				{
-					colId: 'assignedUser',
-					field: 'assignedUser',
-					tooltipField: 'assignedUser',
-					headerName: 'Assigned to',
-					headerTooltip: 'Assigned to',
-					cellClass: 'mt2-directory-column-id',
-					width: 145,
-					resizable: true,
-					unSortIcon: true,
-					sortable: false,
-					suppressSorting: true,
-				},
-				{
-					field: 'modified',
-					tooltipValueGetter: UiUtility.gridDateValueGetter,
-					headerName: 'Last Modified',
-					headerTooltip: 'Last Modified',
-					cellClass: 'mt2-directory-column-modified-date',
-					minWidth: 65,
-					width: 165,
-					resizable: true,
-					valueGetter: UiUtility.gridDateValueGetter,
-					floatingFilterComponent: DateTextFilterComponent,
-					floatingFilterComponentParams: { suppressFilterButton: true },
-					unSortIcon: true,
-					sortable: false,
-					suppressSorting: true,
-				},
-				{
-					field: 'downloadable',
-					colId: 'action-btns',
-					headerName: '',
-					width: 90,
-					cellClass: 'mt2-directory-column-actions',
-					cellRenderer: TemplateRendererComponent,
-					cellRendererParams: { template: this.actionSection },
-					sortable: false,
-					filter: false,
-					resizable: false,
-					suppressSorting: true,
-					getQuickFilterText: (params: any) => {
-						return '';
+					{
+						field: 'toCode',
+						headerName: 'Target',
+						headerTooltip: 'Target',
+						flex: 1,
+						minWidth: 135,
+						cellRenderer: TemplateRendererComponent,
+						cellRendererParams: {
+							template: this.codeSection,
+						},
+						resizable: true,
+						unSortIcon: false,
+						sortable: false,
+						suppressSorting: true,
 					},
-				},
-			];
+					{
+						field: 'toName',
+						tooltipField: 'toName',
+						headerName: 'Target PT',
+						headerTooltip: 'Target PT',
+						resizable: true,
+						unSortIcon: true,
+						sortable: false,
+						suppressSorting: true,
+						cellRenderer: TemplateRendererComponent,
+						cellRendererParams: { template: this.toNameSection },
+					},
+					{
+						colId: 'relation',
+						field: 'relation',
+						tooltipField: 'relation',
+						headerName: 'Relationship',
+						headerTooltip: 'Relationship',
+						cellClass: 'mt2-directory-column-id',
+						resizable: true,
+						unSortIcon: true,
+						sortable: false,
+						suppressSorting: true,
+						flex: 1,
+						minWidth: 100,
+					},
+					{
+						colId: 'rule',
+						field: 'rule',
+						tooltipField: 'rule',
+						headerName: 'Rule',
+						headerTooltip: 'Rule',
+						cellClass: 'mt2-directory-column-id',
+						flex: 1,
+						minWidth: 85,
+						resizable: true,
+						unSortIcon: true,
+						sortable: false,
+						suppressSorting: true,
+					},
+					{
+						colId: 'advices',
+						field: 'advices',
+						headerName: 'Advices',
+						headerTooltip: 'Advices',
+						cellClass: 'mt2-directory-column-advices',
+						minWidth: 65,
+						width: 125,
+						resizable: true,
+						cellRenderer: TemplateRendererComponent,
+						cellRendererParams: { template: this.adviceSection },
+						unSortIcon: true,
+						sortable: false,
+						suppressSorting: true,
+					},
+					{
+						colId: 'workflowStatus',
+						field: 'workflowStatus',
+						tooltipField: 'workflowStatus',
+						headerName: 'Workflow Status',
+						cellClass: 'mt2-directory-column-version-status',
+						minWidth: 165,
+						width: 200,
+						resizable: true,
+						cellRenderer: TemplateRendererComponent,
+						cellRendererParams: { template: this.workflowStatus },
+						unSortIcon: true,
+					},
+					{
+						colId: 'assignedUser',
+						field: 'assignedUser',
+						tooltipField: 'assignedUser',
+						headerName: 'Assigned To',
+						headerTooltip: 'Assigned To',
+						cellClass: 'mt2-directory-column-id',
+						width: 145,
+						resizable: true,
+						unSortIcon: true,
+						sortable: false,
+						suppressSorting: true,
+					},
+					{
+						field: 'modified',
+						tooltipValueGetter: UiUtility.gridDateValueGetter,
+						headerName: 'Last Modified',
+						headerTooltip: 'Last Modified',
+						cellClass: 'mt2-directory-column-modified-date',
+						minWidth: 65,
+						width: 165,
+						resizable: true,
+						valueGetter: UiUtility.gridDateValueGetter,
+						floatingFilterComponent: DateTextFilterComponent,
+						floatingFilterComponentParams: { suppressFilterButton: true },
+						unSortIcon: true,
+						sortable: false,
+						suppressSorting: true,
+					},
+					{
+						field: 'downloadable',
+						colId: 'action-btns',
+						headerName: '',
+						width: 90,
+						cellClass: 'mt2-directory-column-actions',
+						cellRenderer: TemplateRendererComponent,
+						cellRendererParams: { template: this.actionSection },
+						sortable: false,
+						filter: false,
+						resizable: false,
+						suppressSorting: true,
+						getQuickFilterText: (params: any) => {
+							return '';
+						},
+					},
+				];
 
-			this.refsetGridOptions = {
-				pagination: true,
-				rowModelType: 'infinite',
-				suppressScrollOnNewData: true,
-				suppressColumnMoveAnimation: true,
-				suppressDragLeaveHidesColumns: true,
-				debounceVerticalScrollbar: true,
-				animateRows: false,
-				cacheBlockSize: this.refsetGridPaging.pageSize,
-				debug: false,
-				cacheOverflowSize: 1,
-				maxBlocksInCache: 1,
-				maxConcurrentDatasourceRequests: 1,
-				paginationPageSize: this.refsetGridPaging.pageSize,
-				serverSideEnableClientSideSort: true,
-				paginationPageSizeSelector: this.refsetGridPaging.pageSizeOptions,
-				datasource: this.createDataSource(),
-				onPaginationChanged: (event: any) => this.onPaginationChanged(event),
-				context: { componentParent: this },
-				angularCompileHeaders: true,
-				suppressColumnVirtualisation: true,
-				suppressPaginationPanel: true,
-				enableCellTextSelection: true,
-				domLayout: 'autoHeight',
-				onCellDoubleClicked: this.onGridCellClick,
-				onGridReady: this.onGridReady,
-				frameworkComponents: {
-					templateRenderer: TemplateRendererComponent,
-					categoryFilterComponent: CategoryFilterComponent,
-					dateTextFilterComponent: DateTextFilterComponent,
-				},
-				defaultColDef: {
-					sortable: false,
-					filter: false,
-					sortingOrder: ['asc', 'desc'],
-					floatingFilter: false,
-					suppressMenu: true,
-					resizable: true,
-					suppressSorting: true,
-					suppressMovable: true,
-				},
-				enableBrowserTooltips: true,
-				rowClassRules: {
-					'updated-row': (params: RowClassParams) => {
-						return params.data?.updated === true;
+				this.refsetGridOptions = {
+					pagination: true,
+					rowModelType: 'infinite',
+					suppressScrollOnNewData: true,
+					suppressColumnMoveAnimation: true,
+					suppressDragLeaveHidesColumns: true,
+					debounceVerticalScrollbar: true,
+					animateRows: false,
+					cacheBlockSize: this.refsetGridPaging.pageSize,
+					debug: false,
+					cacheOverflowSize: 1,
+					maxBlocksInCache: 1,
+					maxConcurrentDatasourceRequests: 1,
+					paginationPageSize: this.refsetGridPaging.pageSize,
+					serverSideEnableClientSideSort: true,
+					paginationPageSizeSelector: this.refsetGridPaging.pageSizeOptions,
+					datasource: this.createDataSource(),
+					onPaginationChanged: (event: any) => this.onPaginationChanged(event),
+					context: { componentParent: this },
+					angularCompileHeaders: true,
+					suppressColumnVirtualisation: true,
+					suppressPaginationPanel: true,
+					enableCellTextSelection: true,
+					domLayout: 'autoHeight',
+					onCellDoubleClicked: this.onGridCellClick,
+					onGridReady: this.onGridReady,
+					frameworkComponents: {
+						templateRenderer: TemplateRendererComponent,
+						categoryFilterComponent: CategoryFilterComponent,
+						dateTextFilterComponent: DateTextFilterComponent,
 					},
-				},
-			};
-			this.showTable = true;
-		});
+					defaultColDef: {
+						sortable: false,
+						filter: false,
+						sortingOrder: ['asc', 'desc'],
+						floatingFilter: false,
+						suppressMenu: true,
+						resizable: true,
+						suppressSorting: true,
+						suppressMovable: true,
+					},
+					enableBrowserTooltips: true,
+					rowClassRules: {
+						'updated-row': (params: RowClassParams) => {
+							return params.data?.updated === true;
+						},
+					},
+				};
+				this.showTable = true;
+			},
+			(err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
+			},
+		);
 	}
 
 	private updateVersionDropdown(): void {
@@ -615,6 +634,23 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	setMapsetInfo() {
+		for (const u of this.mapsetInfo.mapProject.mapLeads) {
+			this.assignedFilterOptions.push({ label: u.name, value: u.id });
+		}
+		for (const s of this.mapsetInfo.mapProject.mapSpecialists) {
+			this.assignedFilterOptions.push({ label: s.name, value: s.id });
+		}
+		for (const p of this.mapsetInfo.mapProject.mapPrinciples) {
+			this.assignedFilterOptions.push({ label: p.name, value: p.id });
+		}
+		const seenValues = new Set();
+		this.assignedFilterOptions = this.assignedFilterOptions.filter((option) => {
+			if (seenValues.has(option.value)) {
+				return false;
+			}
+			seenValues.add(option.value);
+			return true;
+		});
 		localStorage.setItem(this.mapsetVersionStorage, JSON.stringify(this.selectedVersion));
 		this.breadcrumbService.setBreadcrumbs([
 			{ path: this.libraryOnly ? '/library/' : '/projects/', label: this.libraryOnly ? 'Library' : 'Projects' },
@@ -733,6 +769,10 @@ export class MapsetRecordsComponent implements OnInit {
 				next: (results) => {
 					this.mt2Service.setModuleMetadata(results);
 					this.moduleMetadata = results;
+				},
+				error: (err) => {
+					console.error(' Error: ', err);
+					this.authenticationService.checkError(err);
 				},
 			});
 		} else {
@@ -936,6 +976,25 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 	}
 
+	filterSelection(filter: string): void {
+		switch (filter) {
+			case 'workflow':
+				this.setPageSize(10);
+				this.goToPage(0);
+				this.loaded = false;
+				this.refsetGridApi.purgeInfiniteCache();
+				localStorage.setItem(this.mapsetRecordsWorkflowFilter, JSON.stringify(this.workflowFilter));
+				break;
+			case 'assigned':
+				this.setPageSize(10);
+				this.goToPage(0);
+				this.loaded = false;
+				this.refsetGridApi.purgeInfiniteCache();
+				localStorage.setItem(this.mapsetRecordsAssignedFilter, JSON.stringify(this.assignedFilter));
+				break;
+		}
+	}
+
 	createDataSource() {
 		return {
 			rowCount: null,
@@ -947,8 +1006,16 @@ export class MapsetRecordsComponent implements OnInit {
 				this.refsetGridApi.showLoadingOverlay();
 
 				const storedSearchInput = localStorage.getItem(this.mapsetSearchInput);
-				if (storedSearchInput) {
+				if (storedSearchInput !== null && storedSearchInput !== '') {
 					this.searchInput = JSON.parse(storedSearchInput);
+				}
+				const storedWorkflowFilter = localStorage.getItem(this.mapsetRecordsWorkflowFilter);
+				if (storedWorkflowFilter !== null && storedWorkflowFilter !== '') {
+					this.workflowFilter = JSON.parse(storedWorkflowFilter);
+				}
+				const storedAssignedFilter = localStorage.getItem(this.mapsetRecordsAssignedFilter);
+				if (storedAssignedFilter !== null && storedAssignedFilter !== '') {
+					this.assignedFilter = JSON.parse(storedAssignedFilter);
 				}
 
 				if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
@@ -978,8 +1045,16 @@ export class MapsetRecordsComponent implements OnInit {
 					} else {
 						restParams.filter = '';
 					}
+
+					let addFilters = '';
+					if (this.workflowFilter !== '') {
+						addFilters += `&workflowStatus=${this.workflowFilter}`;
+					}
+					if (this.assignedFilter !== '') {
+						addFilters += `&assignedUser=${this.assignedFilter}`;
+					}
 					this.searchLoading = true;
-					this.mapSetSubscription = this.refsetService.getMappingsByMapset(this.mapsetInfo.id, restParams).subscribe({
+					this.mapSetSubscription = this.refsetService.getMappingsByMapset(this.mapsetInfo.id, restParams, addFilters).subscribe({
 						next: (results) => {
 							if (results.total === 0) {
 								this.loaded = true;
@@ -1114,6 +1189,8 @@ export class MapsetRecordsComponent implements OnInit {
 						error: (error: any) => {
 							this.refsetGridApi.showNoRowsOverlay();
 							rowParams.successCallback([], 0);
+							//console.log(' Error: ', error);
+							this.authenticationService.checkError(error);
 						},
 					});
 				}
@@ -1164,7 +1241,10 @@ export class MapsetRecordsComponent implements OnInit {
 				}
 				return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 			});
-			const editable = this.isWorkFlowMapEdit();
+			const foundEdit = this.workFlowMapActions.filter((wfAction: Record<string, unknown>) => {
+				return wfAction.edit === true;
+			});
+			const editable = foundEdit.length > 0 ? true : false;
 			if (editable) {
 				const thisUser = assigned.find((u) => {
 					return u === this.user?.userName;
@@ -1176,7 +1256,7 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 		if (this.checkedNum > 1 && multiStatus.length > 1) {
 			this.batchEditEnabled = false;
-
+			this.workFlowMapActions = [];
 			const availableActions = this.reviewMapWF.filter((wf: any) => {
 				if (!multiStatus.includes(wf.status)) {
 					return false;
@@ -1184,7 +1264,13 @@ export class MapsetRecordsComponent implements OnInit {
 
 				return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 			});
-
+			if (availableActions) {
+				const bulkActions = new Set(availableActions.map((item) => `${item.value}-${item.status}`));
+				if (bulkActions.size > 0) {
+					this.workFlowMapActions = availableActions;
+				}
+				this.isMultiple = this.checkedNum > 1;
+			}
 			const foundEdit = availableActions.filter((wfAction: Record<string, unknown>) => {
 				return wfAction.edit === true;
 			});
@@ -1607,13 +1693,19 @@ export class MapsetRecordsComponent implements OnInit {
 			this.workFlowStatus.notes = this.workFlowNotesFC.value;
 		}
 		this.waitingForResponse = true;
-		this.refsetService.setMapsetWorkflowStatus(this.mapsetInfo.id, this.workFlowStatus.value, this.workFlowStatus.notes).subscribe((response) => {
-			if (response) {
-				this.mapsetInfo = response;
-				this.setWorkflowStatus();
-				this.getMapsetInfo();
-			}
-		});
+		this.refsetService.setMapsetWorkflowStatus(this.mapsetInfo.id, this.workFlowStatus.value, this.workFlowStatus.notes).subscribe(
+			(response) => {
+				if (response) {
+					this.mapsetInfo = response;
+					this.setWorkflowStatus();
+					this.getMapsetInfo();
+				}
+			},
+			(err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
+			},
+		);
 	}
 
 	setWorkflowStatus() {
@@ -1743,6 +1835,32 @@ export class MapsetRecordsComponent implements OnInit {
 				this.mapsetData[c].updated = false;
 			}
 		}
+		if (this.gridSelectAll) {
+			window['checkbox-table-all'].click();
+		}
+		this.checkedNum = 0;
+		this.refsetGridApi.redrawRows();
+	}
+
+	updateMultiWorkFlowMapStatus(response: any) {
+		for (let u = 0; u < this.mapsetData.length; u++) {
+			this.mapsetData[u].updated = false;
+			this.mapsetData[u].checked = false;
+		}
+		for (const item of response.items) {
+			for (let c = 0; c < this.mapsetData.length; c++) {
+				if (item.conceptCode === this.mapsetData[c].code && item.success === true) {
+					this.mapsetData[c].workflowStatus = item.workflow.workflowStatus;
+					this.mapsetData[c].modified = item.workflow.modified;
+					this.mapsetData[c].assignedUser = item.workflow.assignedUser;
+					this.mapsetData[c].updated = true;
+				}
+			}
+		}
+		if (this.gridSelectAll) {
+			window['checkbox-table-all'].click();
+		}
+		this.checkedNum = 0;
 		this.refsetGridApi.redrawRows();
 	}
 
@@ -1750,11 +1868,12 @@ export class MapsetRecordsComponent implements OnInit {
 		this.isWFMapModalOpen = false;
 	}
 
-	reviewMapWorkflow(status: any) {
+	reviewMapWorkflow(value: string, status: string) {
 		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
-			return status === review.value;
+			return value === review.value && status === review.status;
 		})[0];
 		if (this.checkedNum === 1) {
+			this.isMultiple = false;
 			for (let c = 0; c < this.mapsetData.length; c++) {
 				if (this.mapsetData[c].checked === true) {
 					this.conceptCode = this.mapsetData[c].code;
@@ -1763,6 +1882,24 @@ export class MapsetRecordsComponent implements OnInit {
 			for (let c = 0; c < this.mapsetData.length; c++) {
 				if (this.mapsetData[c].code === this.conceptCode) {
 					this.mapsetData[c].checked = true;
+				}
+			}
+		}
+		if (this.checkedNum > 1 && this.isMultiple === true) {
+			this.conceptCodeList = [];
+
+			for (let c = 0; c < this.mapsetData.length; c++) {
+				const currentItem = this.mapsetData[c];
+
+				if (currentItem.checked === true && !this.conceptCodeList.includes(currentItem.code)) {
+					this.conceptCodeList.push(currentItem.code);
+				}
+			}
+			for (let c = 0; c < this.mapsetData.length; c++) {
+				for (let d = 0; d < this.conceptCodeList.length; d++) {
+					if (this.mapsetData[c].code === this.conceptCodeList[d]) {
+						this.mapsetData[c].checked = true;
+					}
 				}
 			}
 		}
@@ -1798,7 +1935,6 @@ export class MapsetRecordsComponent implements OnInit {
 			case 'nrmr':
 				this.refsetService.requestReport_NRMR().subscribe(
 					(data) => {
-						// console.log(' data ', data);
 						this.notificationService.show('Report request successful, email will be sent shortly.', 'Success', 'success', {
 							timeOut: 0,
 							extendedTimeOut: 0,
@@ -1807,17 +1943,13 @@ export class MapsetRecordsComponent implements OnInit {
 					},
 					(err) => {
 						console.error(' Error: ', err);
-						this.notificationService.show('Error requesting report, please try again.', 'Error', 'error', {
-							timeOut: 2500,
-							extendedTimeOut: 0,
-						});
+						this.authenticationService.checkError(err);
 					},
 				);
 				break;
 			case 'nrtr':
 				this.refsetService.requestReport_NRTR().subscribe(
 					(data) => {
-						// console.log(' data ', data);
 						this.notificationService.show('Report request successful, email will be sent shortly.', 'Success', 'success', {
 							timeOut: 0,
 							extendedTimeOut: 0,
@@ -1826,17 +1958,13 @@ export class MapsetRecordsComponent implements OnInit {
 					},
 					(err) => {
 						console.error(' Error: ', err);
-						this.notificationService.show('Error requesting report, please try again.', 'Error', 'error', {
-							timeOut: 2500,
-							extendedTimeOut: 0,
-						});
+						this.authenticationService.checkError(err);
 					},
 				);
 				break;
 			case 'hur':
 				this.refsetService.requestReport_HUR().subscribe(
 					(data) => {
-						// console.log(' data ', data);
 						this.notificationService.show('Report request successful, email will be sent shortly.', 'Success', 'success', {
 							timeOut: 0,
 							extendedTimeOut: 0,
@@ -1845,10 +1973,7 @@ export class MapsetRecordsComponent implements OnInit {
 					},
 					(err) => {
 						console.error(' Error: ', err);
-						this.notificationService.show('Error requesting report, please try again.', 'Error', 'error', {
-							timeOut: 2500,
-							extendedTimeOut: 0,
-						});
+						this.authenticationService.checkError(err);
 					},
 				);
 				break;
@@ -1941,12 +2066,10 @@ export class MapsetRecordsComponent implements OnInit {
 						this.unCheckAll();
 						this.closeDownloadModal();
 					},
-					(err: any) => {
-						this.notificationService.show('Error downloading, please try again.', 'Error', 'error', {
-							timeOut: 2500,
-							extendedTimeOut: 0,
-						});
-						console.log(' Error: ', err);
+					(err) => {
+						this.downloading = false;
+						console.error(' Error: ', err);
+						this.authenticationService.checkError(err);
 					},
 				);
 			} else {
@@ -1971,13 +2094,10 @@ export class MapsetRecordsComponent implements OnInit {
 					(data) => {
 						this.getMapsetDownloadStatus(data.url);
 					},
-					(err: any) => {
+					(err) => {
 						this.downloading = false;
-						this.notificationService.show('Error downloading, please try again.', 'Error', 'error', {
-							timeOut: 2500,
-							extendedTimeOut: 0,
-						});
-						console.log(' Error: ', err);
+						console.error(' Error: ', err);
+						this.authenticationService.checkError(err);
 					},
 				);
 			} else {
@@ -2011,10 +2131,10 @@ export class MapsetRecordsComponent implements OnInit {
 						}, 200);
 				}
 			},
-			(err: any) => {
+			(err) => {
 				this.downloading = false;
-				this.notificationService.show('Error downloading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
-				console.log(' Error: ', err);
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
 			},
 		);
 	}
@@ -2294,10 +2414,11 @@ export class MapsetRecordsComponent implements OnInit {
 							this.historySubscription.unsubscribe();
 						},
 						error: (error: any) => {
-							console.log(' Error: ', error);
 							this.historyLoaded = true;
 							this.historyGridApi.showNoRowsOverlay();
 							rowParams.successCallback([], 0);
+							console.error(' Error: ', error);
+							this.authenticationService.checkError(error);
 						},
 					});
 				}

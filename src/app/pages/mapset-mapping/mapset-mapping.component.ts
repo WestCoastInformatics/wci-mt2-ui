@@ -6,7 +6,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
-import { NotificationService } from 'src/app/services/notification.service';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
@@ -100,7 +99,6 @@ export class MapsetMappingComponent implements OnInit {
 		private mt2Service: MT2Service,
 		private breadcrumbService: BreadcrumbService,
 		private authenticationService: AuthenticationService,
-		private notificationService: NotificationService,
 		private modalService: NgbModal,
 	) {
 		document.body.scrollTop = 0;
@@ -161,57 +159,67 @@ export class MapsetMappingComponent implements OnInit {
 					}
 				}
 			},
+			error: (err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
+			},
 		});
 
-		this.refsetService.getMapsetsByCode(this.mapsetCode!).subscribe((results) => {
-			if (results?.length > 0) {
-				this.mapsetName = results[0]?.refSetName;
-			} else {
-				console.error('no mapset found');
-				return;
-			}
-			const mapsetVersions = Array.isArray(results) ? results : [results];
-
-			const getIsInDevelopment = (status: string): boolean => {
-				return status === 'IN_DEVELOPMENT' || status === 'IN DEVELOPMENT';
-			};
-
-			mapsetVersions.sort((a, b) => {
-				const aInDev = getIsInDevelopment(a.versionStatus);
-				const bInDev = getIsInDevelopment(b.versionStatus);
-
-				if (aInDev && !bInDev) {
-					return -1;
+		this.refsetService.getMapsetsByCode(this.mapsetCode!).subscribe(
+			(results) => {
+				if (results?.length > 0) {
+					this.mapsetName = results[0]?.refSetName;
+				} else {
+					console.error('no mapset found');
+					return;
 				}
-				if (bInDev && !aInDev) {
-					return 1;
-				}
+				const mapsetVersions = Array.isArray(results) ? results : [results];
 
-				const ad = a.versionDate || 0;
-				const bd = b.versionDate || 0;
-				return bd - ad;
-			});
+				const getIsInDevelopment = (status: string): boolean => {
+					return status === 'IN_DEVELOPMENT' || status === 'IN DEVELOPMENT';
+				};
 
-			this.mapsetInfo = mapsetVersions[0];
-			const _storedVersion = localStorage.getItem(this.mapsetVersionStorage);
+				mapsetVersions.sort((a, b) => {
+					const aInDev = getIsInDevelopment(a.versionStatus);
+					const bInDev = getIsInDevelopment(b.versionStatus);
 
-			if (_storedVersion) {
-				this.selectedVersion = JSON.parse(_storedVersion);
-				const foundVersion = mapsetVersions.filter((v) => {
-					const versionDate = v.versionDate || new Date();
-					const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
-					return mapsetVersionStatus === this.selectedVersion;
+					if (aInDev && !bInDev) {
+						return -1;
+					}
+					if (bInDev && !aInDev) {
+						return 1;
+					}
+
+					const ad = a.versionDate || 0;
+					const bd = b.versionDate || 0;
+					return bd - ad;
 				});
-				if (foundVersion.length > 0) {
-					this.mapsetInfo = foundVersion[0];
+
+				this.mapsetInfo = mapsetVersions[0];
+				const _storedVersion = localStorage.getItem(this.mapsetVersionStorage);
+
+				if (_storedVersion) {
+					this.selectedVersion = JSON.parse(_storedVersion);
+					const foundVersion = mapsetVersions.filter((v) => {
+						const versionDate = v.versionDate || new Date();
+						const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
+						return mapsetVersionStatus === this.selectedVersion;
+					});
+					if (foundVersion.length > 0) {
+						this.mapsetInfo = foundVersion[0];
+					}
+				} else {
+					const versionDate = this.mapsetInfo.versionDate || new Date();
+					this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
+					localStorage.setItem(this.mapsetVersionStorage, JSON.stringify(this.selectedVersion));
 				}
-			} else {
-				const versionDate = this.mapsetInfo.versionDate || new Date();
-				this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
-				localStorage.setItem(this.mapsetVersionStorage, JSON.stringify(this.selectedVersion));
-			}
-			this.getMapsetData();
-		});
+				this.getMapsetData();
+			},
+			(err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
+			},
+		);
 	}
 
 	getModuleMetadata() {
@@ -220,6 +228,10 @@ export class MapsetMappingComponent implements OnInit {
 				next: (results) => {
 					this.mt2Service.setModuleMetadata(results);
 					this.moduleMetadata = results;
+				},
+				error: (err) => {
+					console.error(' Error: ', err);
+					this.authenticationService.checkError(err);
 				},
 			});
 		} else {
@@ -293,8 +305,9 @@ export class MapsetMappingComponent implements OnInit {
 					{ label: this.mapsetData.length > 0 ? this.mapsetData[0]?.name : 'Map' },
 				]);
 			},
-			error: (error) => {
-				//
+			error: (err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
 			},
 		});
 	}
@@ -384,7 +397,8 @@ export class MapsetMappingComponent implements OnInit {
 					this.closeDownloadModal();
 				},
 				(err) => {
-					console.error(err);
+					console.error(' Error: ', err);
+					this.authenticationService.checkError(err);
 				},
 			);
 		} else {
@@ -412,9 +426,9 @@ export class MapsetMappingComponent implements OnInit {
 		this.isWFMapModalOpen = false;
 	}
 
-	reviewMapWorkflow(status: any) {
+	reviewMapWorkflow(value: string, status: string) {
 		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
-			return status === review.value;
+			return value === review.value && status === review.status;
 		})[0];
 		this.isWFMapModalOpen = true;
 	}

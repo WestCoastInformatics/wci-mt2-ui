@@ -22,7 +22,7 @@
 <div [hidden]="loaded" class="section-loading">Loading...</div>
 <div class="mt2-container">
 	<div class="d-flex justify-content-end heading-inbetween m-r-30" *ngIf="!libraryOnly && loaded">
-		<div class="action-column mappings-section m-r-20" [hidden]="!assignedUser">Assigned to: {{ assignedUser }}</div>
+		<div class="action-column mappings-section m-r-20" [hidden]="!assignedUser">Assigned To: {{ assignedUser }}</div>
 		<div class="workflow-container m-b-10 justify-content-end m-t-5">
 			<workflow-status-badge [status]="currentStatus"></workflow-status-badge>
 		</div>
@@ -52,7 +52,12 @@
 							</button>
 							<ng-container *ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT'">
 								<span *ngFor="let action of workFlowMapActions">
-									<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value)">
+									<button
+										type="button"
+										[title]="action.label"
+										mat-menu-item
+										(click)="reviewMapWorkflow(action.value, action.status)"
+									>
 										<span> {{ action.label }}</span>
 									</button></span
 								>
