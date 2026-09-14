@@ -268,10 +268,14 @@ export class AuthenticationService {
 				);
 				break;
 			default:
-				this.notificationService.show('Unexpected application error, please try again.', 'Error', 'error', {
-					timeOut: 2500,
-					extendedTimeOut: 0,
-				});
+				if (error instanceof TypeError) {
+					console.log('an application TypeError has occurred: ', error);
+				} else {
+					this.notificationService.show('Unexpected application error, please try again.', 'Error', 'error', {
+						timeOut: 2500,
+						extendedTimeOut: 0,
+					});
+				}
 		}
 	}
 
