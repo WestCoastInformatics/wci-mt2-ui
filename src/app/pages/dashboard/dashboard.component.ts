@@ -308,7 +308,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 			restParams.query = query;
 		}
 
-		// this.refsetService.getMapsetsByStatus('PUBLISHED').subscribe({
 		this.refsetService.getMappingsRecentlyModified().subscribe({
 			next: (results) => {
 				this.showLoadingSearch = false;

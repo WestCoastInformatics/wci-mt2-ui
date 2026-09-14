@@ -41,25 +41,17 @@ import { MatRadioModule } from '@angular/material/radio';
 import { AngularSplitModule } from 'angular-split';
 
 // COMPONENT IMPORTS
-import { SidebarComponent } from 'src/app/components/sidebar/sidebar.component';
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 import { FooterComponent } from 'src/app/components/footer/footer.component';
 import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
-import { RefsetDownloadComponent } from 'src/app/components/refsetDownload/refset-download.component';
 import { ColumnChooserComponent } from 'src/app/components/column-chooser/column-chooser.component';
 import { NotificationComponent } from 'src/app/components/notification/notification.component';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { GridHeaderFilterComponent } from 'src/app/components/grid-header-filter/grid-header-filter.component';
-import { ImportFromFileModalComponent } from 'src/app/components/import-from-file-modal/import-from-file-modal.component';
-import { ImportFromListModalComponent } from 'src/app/components/import-from-list-modal/import-from-list-modal.component';
-import { BulkUpgradeModalComponent } from 'src/app/components/bulk-upgrade-modal/bulk-upgrade-modal.component';
-import { HeadingWithCountComponent } from 'src/app/components/heading-with-count/heading-with-count.component';
 import { PageContainerComponent } from 'src/app/components/page-container/page-container.component';
 import { WorkflowStatusBadgeComponent } from './components/workflow-status-badge/workflow-status-badge.component';
 import { NotesModalComponent } from './components/notes-modal/notes-modal.component';
-import { ArtifactsModule } from './components/artifacts/artifacts.module';
-import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
 import { WorkflowStatusComponent } from './components/workflow-status/workflow-status.component';
 
 // PAGE IMPORTS
@@ -72,14 +64,10 @@ import { EditMappingComponent } from './pages/edit-mapping/edit-mapping.componen
 import { BatchMappingComponent } from './pages/batch-mapping/batch-mapping.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { InboxComponent } from './pages/inbox/inbox.component';
-import { PersonalComponent } from './pages/personal/personal.component';
-import { PersonalLandingComponent } from './pages/personal/landing/landing.component';
-import { PersonalConfigurationComponent } from './pages/personal/configuration/configuration.component';
 
 // SERVICE IMPORTS
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { RestService } from 'src/app/services/rest/rest.service';
-import { ConceptsService } from 'src/app/services/rest/concepts.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { MT2Service } from 'src/app/services/mt2.service';
 import { PaginationService } from 'src/app/services/pagination.service';
@@ -87,23 +75,17 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { RouterExtentionService } from 'src/app/services/routerExtention.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { ErrorHandlingService } from 'src/app/services/error-handling.service';
-import { PersonalComponentService } from './pages/personal/personal-component.service';
 
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
 import { ReadonlyTextModalComponent } from 'src/app/components/readonly-text-modal/readonly-text-modal.component';
 import { AuthGuardGuard } from 'src/app/services/authentication/auth-guard.guard';
 import { LoginComponent } from 'src/app/auth/login/login.component';
-import { InviteComponent } from 'src/app/auth/invite/invite.component';
 import { WorkflowMapModalComponent } from 'src/app/components/workflow-map-modal/workflow-map-modal.component';
-import { UsersService } from './services/rest/users.service';
-import { RefsetFeedbackListComponent } from './components/refset-feedback-list/refset-feedback-list.component';
 import { DomService } from './services/dom.service';
 import { PaginationModule } from './components/pagination/pagination.module';
-import { ArtifactsService } from './services/rest/artifacts.service';
-import { AuditService } from './services/rest/audit.service';
 import { DirectivesModule } from './directives/directives.module';
-import { RefsetMetaTableComponent } from './components/refset-meta-table/refset-meta-table.component';
+import { MapsetMetaTableComponent } from './components/mapset-meta-table/mapset-meta-table.component';
 import { LandingComponent } from './pages/landing/landing-page.component';
 import { ConflictComponent } from './pages/conflict/conflict.component';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -179,23 +161,18 @@ const appRoutes: Routes = [
 		NavbarComponent,
 		FooterComponent,
 		TemplateRendererComponent,
-		RefsetDownloadComponent,
 		ColumnChooserComponent,
 		NotificationComponent,
 		SafeUrlPipe,
 		CategoryFilterComponent,
 		DateTextFilterComponent,
 		GridHeaderFilterComponent,
-		ImportFromFileModalComponent,
-		ImportFromListModalComponent,
 		ReadonlyTextModalComponent,
 		WorkflowMapModalComponent,
 		LoginComponent,
-		InviteComponent,
 		LandingComponent,
 		DashboardComponent,
 		InboxComponent,
-		SidebarComponent,
 		MapsetLibraryComponent,
 		MapsetProjectsComponent,
 		MapsetRecordsComponent,
@@ -203,16 +180,10 @@ const appRoutes: Routes = [
 		MapsetMappingComponent,
 		EditMappingComponent,
 		BatchMappingComponent,
-		RefsetFeedbackListComponent,
-		BulkUpgradeModalComponent,
-		HeadingWithCountComponent,
 		PageContainerComponent,
-		PersonalComponent,
-		PersonalLandingComponent,
-		PersonalConfigurationComponent,
 		WorkflowStatusBadgeComponent,
 		NotesModalComponent,
-		RefsetMetaTableComponent,
+		MapsetMetaTableComponent,
 		WorkflowStatusComponent,
 	],
 	bootstrap: [AppComponent],
@@ -263,26 +234,20 @@ const appRoutes: Routes = [
 		ReactiveFormsModule,
 		MatSlideToggleModule,
 		CommonModule,
-		ArtifactsModule,
-		AuditTrailModule,
 		PaginationModule,
 		DirectivesModule,
 	],
 	providers: [
-		ArtifactsService,
-		AuditService,
+		AuthenticationService,
 		EnvServiceProvider,
 		RestService,
-		ConceptsService,
 		RefsetService,
 		MT2Service,
 		PaginationService,
 		BreadcrumbService,
 		RouterExtentionService,
-		UsersService,
 		NotificationService,
 		ErrorHandlingService,
-		PersonalComponentService,
 		DomService,
 		{ provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
 		{
