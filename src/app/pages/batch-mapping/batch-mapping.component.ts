@@ -1156,6 +1156,7 @@ export class BatchMappingComponent implements OnInit {
 								modFlag: this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
 								modLang: this.getModuleLanguageName(results.mapEntries[b].moduleId),
 								workflowStatus: results.mappingWorkflow?.workflowStatus,
+								hasNotes: results.mapNotes?.length > 0 ? true : false,
 								assignedUser: results.mappingWorkflow?.assignedUser,
 							};
 							count++;
@@ -2080,6 +2081,8 @@ export class BatchMappingComponent implements OnInit {
 				this.mapsetData[c].hasNotes = event.hasNotes;
 			}
 		}
+		this.gridApi.refreshCells(this.gridParams);
+		this.gridApi.redrawRows();
 	}
 
 	@HostListener('window:scroll', ['$event'])
