@@ -11,7 +11,7 @@
 			<span aria-hidden="true">&times;</span>
 		</button>
 	</div>
-	<p class="p-l-30 p-t-10 p-b-0">{{ workFlowMapStatus.message }}</p>
+	<p class="p-l-30 p-t-10 p-b-0">{{ multiple ? workFlowMapStatus.batch : workFlowMapStatus.message }}</p>
 	<div class="modal-body m-t-5">
 		<textarea
 			#workFlowMapModalNotes

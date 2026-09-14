@@ -180,6 +180,7 @@ export class BatchMappingComponent implements OnInit {
 	workFlowMapNotesFC = new FormControl('');
 	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
 	reviewMapWF: any;
+	batchMappingsPage: any;
 	isMultiple = false;
 	conceptCodeList: any;
 	workflowFilter = '';
@@ -243,6 +244,7 @@ export class BatchMappingComponent implements OnInit {
 	) {
 		document.body.scrollTop = 0;
 		this.reviewMapWF = MapWorkflow.getWorkFlowForMap();
+		this.batchMappingsPage = this;
 		this.targetFC.valueChanges.pipe(debounceTime(600), distinctUntilChanged()).subscribe((res) => {
 			if (this.targetFC.dirty && !this.searchByTypeahead) {
 				this.foundConceptCode = false;
@@ -1266,6 +1268,7 @@ export class BatchMappingComponent implements OnInit {
 								modFlag: this.getModuleLanguageIcon(results.mapEntries[b].moduleId),
 								modLang: this.getModuleLanguageName(results.mapEntries[b].moduleId),
 								workflowStatus: results.mappingWorkflow?.workflowStatus,
+								hasNotes: results.mapNotes?.length > 0 ? true : false,
 								assignedUser: results.mappingWorkflow?.assignedUser,
 								editable: this.isMapEditable(results.mappingWorkflow?.workflowStatus, results.mappingWorkflow?.assignedUser),
 							};
@@ -2301,6 +2304,17 @@ export class BatchMappingComponent implements OnInit {
 	}
 
 	onResize(event: any) {}
+
+	updateNotesStatus(event: any) {
+		console.log('updateNotesStatus', event);
+		for (let c = 0; c < this.mapsetData.length; c++) {
+			if (this.mapsetData[c].code === event.conceptCode) {
+				this.mapsetData[c].hasNotes = event.hasNotes;
+			}
+		}
+		this.gridApi.refreshCells(this.gridParams);
+		this.gridApi.redrawRows();
+	}
 
 	@HostListener('window:scroll', ['$event'])
 	onScroll(event: any) {

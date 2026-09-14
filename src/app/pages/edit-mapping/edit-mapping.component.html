@@ -14,7 +14,50 @@
 			</div>
 		</div>
 		<div class="col-md-auto d-flex m-r-10 align-self-center" *ngIf="loaded">
-			<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: mapsetData }"></template>
+			<div class="d-flex">
+				<div class="col">
+					<button class="library-app-refset-notes mr-20 no-padding" (click)="selectActionMenu('view')">
+						<img src="/assets/preview-icon.svg" title="View Maps" aria-label="View Maps" class="mapset-notes-icon mapset-view-icon" />
+					</button>
+				</div>
+
+				<div class="col">
+					<notes-modal 
+						[libraryOnly]="false" 
+						[mapSetId]="mapsetInfo.id" 
+						[conceptCode]="mapsetData[0].code"
+						[hasNotes]="mapsetData[0].hasNotes"
+						[parent]="editMappingsPage"
+					></notes-modal>
+				</div>
+
+				<div class="col">
+					<button class="library-app-refset-discussion-list mr-15 no-padding" (click)="selectActionMenu('comm')">
+						<img
+							src="/assets/comment-dots-regular.svg"
+							title="View or Add Authoring Communication"
+							aria-label="View or Add Authoring Communication"
+							class="discussion-icon"
+						/>
+					</button>
+				</div>
+
+				<div class="col">
+					<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="library-app-refset-discussion-list mr-20 no-padding">
+						<img src="/assets/rate-review.svg" class="rate-review-icon" />
+					</button>
+					<!-- </div> -->
+					<mat-menu #actionMenu="matMenu">
+						<ng-container *ngIf="mapsetInfo.workflowStatus === 'IN_EDIT'">
+							<span *ngFor="let action of workFlowMapActions">
+								<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value)">
+									<span> {{ action.label }}</span>
+								</button></span
+							>
+						</ng-container>
+					</mat-menu>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -815,48 +858,6 @@
 <ng-template #rt let-r="result" let-t="term">
 	<div class="type-head-overflow" title="{{ r.code + ': ' + r.name }}">
 		<ngb-highlight [result]="r.code + ': ' + r.name" [term]="t"></ngb-highlight>
-	</div>
-</ng-template>
-
-<!-- Action Templates -->
-<ng-template #directoryActionSection let-params>
-	<div class="d-flex">
-		<div class="col">
-			<button class="library-app-refset-notes mr-20 no-padding" (click)="selectActionMenu('view')">
-				<img src="/assets/preview-icon.svg" title="View Maps" aria-label="View Maps" class="mapset-notes-icon mapset-view-icon" />
-			</button>
-		</div>
-
-		<div class="col">
-			<notes-modal [libraryOnly]="false" [mapSetId]="mapsetInfo.id" [conceptCode]="mapsetData[0].code"></notes-modal>
-		</div>
-
-		<div class="col">
-			<button class="library-app-refset-discussion-list mr-15 no-padding" (click)="selectActionMenu('comm')">
-				<img
-					src="/assets/comment-dots-regular.svg"
-					title="View or Add Authoring Communication"
-					aria-label="View or Add Authoring Communication"
-					class="discussion-icon"
-				/>
-			</button>
-		</div>
-
-		<div class="col">
-			<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="library-app-refset-discussion-list mr-20 no-padding">
-				<img src="/assets/rate-review.svg" class="rate-review-icon" />
-			</button>
-			<!-- </div> -->
-			<mat-menu #actionMenu="matMenu">
-				<ng-container *ngIf="mapsetInfo.workflowStatus === 'IN_EDIT'">
-					<span *ngFor="let action of workFlowMapActions">
-						<button type="button" [title]="action.label" mat-menu-item (click)="reviewMapWorkflow(action.value, action.status)">
-							<span> {{ action.label }}</span>
-						</button></span
-					>
-				</ng-container>
-			</mat-menu>
-		</div>
 	</div>
 </ng-template>
 
