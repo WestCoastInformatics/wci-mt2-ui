@@ -54,9 +54,9 @@
 
 <div [hidden]="loaded" class="section-loading">Loading...</div>
 <div class="mt2-container">
-	<div class="d-flex justify-content-end heading-inbetween m-r-30" *ngIf="!libraryOnly && loaded">
-		<div class="action-column mappings-section m-r-20" [hidden]="!assignedUser">Assigned To: {{ assignedUser }}</div>
-		<div class="workflow-container m-b-10 justify-content-end m-t-5">
+	<div class="d-flex justify-content-end heading-inbetween" *ngIf="!libraryOnly && loaded">
+		<div class="action-column mappings-section m-r-15 align-self-center" [hidden]="!assignedUser">Assigned To: {{ assignedUser }}</div>
+		<div class="workflow-container m-b-10 justify-content-end m-t-5 record-badge-container">
 			<workflow-status-badge [status]="currentStatus"></workflow-status-badge>
 		</div>
 	</div>

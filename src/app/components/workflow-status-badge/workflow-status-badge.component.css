@@ -1,6 +1,6 @@
 .workflow-status-badge {
 	height: 31px;
-	position: absolute;
+	width: fit-content;
 	background: inherit;
 	border-radius: 12px;
 	line-height: 2.3;
@@ -8,6 +8,23 @@
 	padding-left: 10px;
 	padding-right: 10px;
 	justify-self: inherit;
+	font-family: ArialMT, Arial, sans-serif;
+	font-size: 14px;
+	font-weight: 300;
+	line-height: 32.2px;
+	color: rgb(102, 102, 102);
+}
+
+.table-badge {
+	position: absolute;
+}
+
+.record-badge {
+	position: relative;
+	margin-left: auto;
+	justify-self: right;
+	/* text-align: right; */
+	/* justify-content: right; */
 }
 
 .ready-for-publication-projects-button {
