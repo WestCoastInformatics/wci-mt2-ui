@@ -67,9 +67,19 @@
 
 .workflow-container {
 	white-space: nowrap;
-	.workflow-status-badge {
+	/* .workflow-status-badge {
 		position: relative !important;
-	}
+	} */
+}
+
+.record-badge-container {
+	/* width: fit-content;
+	position: relative;
+	margin-left: auto; */
+}
+
+.record-badge {
+	justify-self: right;
 }
 
 .popup-handle-bottom {

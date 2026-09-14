@@ -120,11 +120,13 @@ export class RestService {
 	}
 
 	giveErrorNotification(error: any, ignoreErrors = false, returnErrorOnIgnore = false) {
-		console.log(' show err rnot ', error);
 		if (
-			error?.error?.status === 500 &&
-			error?.error?.message.includes('The Token has expired') &&
-			error?.error?.error === 'Internal Server Error'
+			(error?.error?.status === 500 &&
+				error?.error?.message.includes('The Token has expired') &&
+				error?.error?.error === 'Internal Server Error') ||
+			(error?.error?.status === 503 &&
+				error?.error?.message.includes('The map index is still updating') &&
+				error?.error?.error === 'Service Unavailable')
 		) {
 			ignoreErrors = true;
 			return error?.error;
