@@ -251,18 +251,31 @@ export class AuthenticationService {
 	}
 
 	checkError(error: any): void {
-		if (
-			error?.error?.status === 500 &&
-			error?.error?.message.includes('The Token has expired') &&
-			error?.error?.error === 'Internal Server Error'
-		) {
-			this.notificationService.show('Your session has expired and you have been logged out', null, 'error');
-			this.logoutUser();
-		} else {
-			this.notificationService.show('Unexpected application error, please try again.', 'Error', 'error', {
-				timeOut: 2500,
-				extendedTimeOut: 0,
-			});
+		switch (true) {
+			case error?.error?.status === 500 &&
+				error?.error?.message.includes('The Token has expired') &&
+				error?.error?.error === 'Internal Server Error':
+				this.notificationService.show('Your session has expired and you have been logged out', null, 'error');
+				this.logoutUser();
+				break;
+			case error?.error?.status === 503 &&
+				error?.error?.message.includes('The map index is still updating') &&
+				error?.error?.error === 'Service Unavailable':
+				this.notificationService.show(
+					'The map index is still updating after a recent save. Please try the search again in a minute.',
+					null,
+					'error',
+				);
+				break;
+			default:
+				if (error instanceof TypeError) {
+					console.log('an application TypeError has occurred: ', error);
+				} else {
+					this.notificationService.show('Unexpected application error, please try again.', 'Error', 'error', {
+						timeOut: 2500,
+						extendedTimeOut: 0,
+					});
+				}
 		}
 	}
 

@@ -22,9 +22,9 @@
 				</div>
 
 				<div class="col">
-					<notes-modal 
-						[libraryOnly]="false" 
-						[mapSetId]="mapsetInfo.id" 
+					<notes-modal
+						[libraryOnly]="false"
+						[mapSetId]="mapsetInfo.id"
 						[conceptCode]="mapsetData[0].code"
 						[hasNotes]="mapsetData[0].hasNotes"
 						[parent]="editMappingsPage"
@@ -43,7 +43,12 @@
 				</div>
 
 				<div class="col">
-					<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="library-app-refset-discussion-list mr-20 no-padding">
+					<button
+						[matMenuTriggerFor]="actionMenu"
+						aria-label="Actions"
+						title="Actions"
+						class="library-app-refset-discussion-list mr-20 no-padding"
+					>
 						<img src="/assets/rate-review.svg" class="rate-review-icon" />
 					</button>
 					<!-- </div> -->
@@ -65,7 +70,7 @@
 <div [hidden]="!loadError || !loaded" class="section-loading m-b-20">Error loading, please contact support.</div>
 <div class="dropdown-group row edit-actions" *ngIf="loaded && !loadError">
 	<div class="col-10 d-flex justify-content-end">
-		<div class="assigned-column mappings-section align-self-center m-r-20" *ngIf="assignedUser">Assigned To: {{ assignedUser }}</div>
+		<div class="assigned-column mappings-section align-self-center m-r-15 m-t-5" *ngIf="assignedUser">Assigned To: {{ assignedUser }}</div>
 		<div class="workflow-container">
 			<workflow-status-badge [status]="currentStatus"></workflow-status-badge>
 		</div>

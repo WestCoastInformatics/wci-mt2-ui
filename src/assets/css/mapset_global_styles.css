@@ -2714,10 +2714,6 @@ input[type='number']::-webkit-inner-spin-button {
 	margin-right: 0.25em !important;
 }
 
-heading-with-count {
-	width: 100%;
-}
-
 .hide {
 	display: none !important;
 }

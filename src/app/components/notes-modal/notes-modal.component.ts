@@ -4,6 +4,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
 	standalone: false,
@@ -32,6 +33,7 @@ export class NotesModalComponent {
 	constructor(
 		private refsetService: RefsetService,
 		private notificationService: NotificationService,
+		private authenticationService: AuthenticationService,
 		private modalService: NgbModal,
 	) {}
 
@@ -61,9 +63,9 @@ export class NotesModalComponent {
 					}
 				}
 			},
-			(error: any) => {
-				console.log(' Error: ', error);
-				this.notificationService.show('Error saving, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+			(err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
 			},
 		);
 	}
@@ -110,9 +112,9 @@ export class NotesModalComponent {
 			(response) => {
 				//response
 			},
-			(error: any) => {
-				console.log(' Error: ', error);
-				this.notificationService.show('Error removing, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+			(err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
 			},
 		);
 
@@ -133,9 +135,9 @@ export class NotesModalComponent {
 						this.getNotes();
 					}
 				},
-				(error: any) => {
-					console.log(' Error: ', error);
-					this.notificationService.show('Error saving, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+				(err) => {
+					console.error(' Error: ', err);
+					this.authenticationService.checkError(err);
 				},
 			);
 		}

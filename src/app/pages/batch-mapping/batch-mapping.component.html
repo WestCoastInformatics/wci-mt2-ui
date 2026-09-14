@@ -899,13 +899,13 @@
 					><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
 				</p>
 			</div>
-			<refset-meta [refset]="data"></refset-meta>
+			<mapset-meta [refset]="data"></mapset-meta>
 		</div>
 	</ng-template>
 
 	<!-- Workflow Status Templates -->
 	<ng-template #workflowStatusSection let-params>
-		<workflow-status-badge [status]="params?.value"> </workflow-status-badge>
+		<workflow-status-badge [status]="params?.value" [table]="true"> </workflow-status-badge>
 	</ng-template>
 	<ng-template #directoryInfoDialog let-data>
 		<div class="container-fluid w-min-350 mt2-refset-metadata-column" id="directoryInformationSection">
@@ -916,7 +916,7 @@
 					><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
 				</p>
 			</div>
-			<refset-meta [refset]="data"></refset-meta>
+			<mapset-meta [refset]="data"></mapset-meta>
 		</div>
 	</ng-template>
 	<!-- Workflow Status Templates -->
@@ -949,9 +949,9 @@
 	<ng-template #directoryActionSection let-params>
 		<div class="d-flex" *ngIf="params?.value === true">
 			<div class="col">
-				<notes-modal 
-					[libraryOnly]="false" 
-					[mapSetId]="mapsetInfo.id" 
+				<notes-modal
+					[libraryOnly]="false"
+					[mapSetId]="mapsetInfo.id"
 					[conceptCode]="params?.data?.code"
 					[hasNotes]="params?.data?.hasNotes ? params.data.hasNotes : params?.hasNotes"
 					[parent]="batchMappingsPage"

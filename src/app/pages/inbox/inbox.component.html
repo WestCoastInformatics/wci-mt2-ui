@@ -159,7 +159,7 @@
 
 	<!-- Workflow Status Templates -->
 	<ng-template #dashboardWorkflowStatusSection let-params>
-		<workflow-status-badge [status]="params?.data?.workflowStatus"> </workflow-status-badge>
+		<workflow-status-badge [status]="params?.data?.workflowStatus" [table]="true"> </workflow-status-badge>
 	</ng-template>
 
 	<!-- Information Templates -->
@@ -194,13 +194,13 @@
 					><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
 				</p>
 			</div>
-			<refset-meta [refset]="data"></refset-meta>
+			<mapset-meta [refset]="data"></mapset-meta>
 		</div>
 	</ng-template>
 
 	<!-- Workflow Status Templates -->
 	<ng-template #workflowStatusSection let-params>
-		<workflow-status-badge [status]="params?.value"> </workflow-status-badge>
+		<workflow-status-badge [status]="params?.value" [table]="true"> </workflow-status-badge>
 	</ng-template>
 
 	<!-- Name Templates -->
