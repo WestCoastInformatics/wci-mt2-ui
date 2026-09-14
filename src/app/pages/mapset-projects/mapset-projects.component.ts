@@ -19,7 +19,6 @@ import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import {startsWith} from 'node_modules/cypress/types/lodash';
 
 @Component({
 	standalone: false,

@@ -1,24 +1,29 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { RefsetUtility } from '../../utilities/refset.utility';
 import { Constants } from '../../utilities/constants.utility';
-import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 @Component({
 	standalone: false,
-	selector: 'refset-meta',
-	templateUrl: './refset-meta-table.component.html',
-	styleUrls: ['refset-meta-table.component.css'],
+	selector: 'mapset-meta',
+	templateUrl: './mapset-meta-table.component.html',
+	styleUrls: ['mapset-meta-table.component.css'],
 })
-export class RefsetMetaTableComponent implements OnInit {
+export class MapsetMetaTableComponent implements OnInit {
 	@Input() refset: any;
 	loggedIn = false;
 
-	constructor(private router: Router, private authenticationService: AuthenticationService) {}
+	constructor(private authenticationService: AuthenticationService) {}
 
 	get directUrl(): string {
 		return this.refset?.refsetId
-			? window.location.protocol + '//' + window.location.host + '/details/' + this.refset.refsetId + '/' + RefsetUtility.getVersionDateForRefsetApiCall(this.refset)
+			? window.location.protocol +
+					'//' +
+					window.location.host +
+					'/details/' +
+					this.refset.refsetId +
+					'/' +
+					RefsetUtility.getVersionDateForRefsetApiCall(this.refset)
 			: '';
 	}
 
