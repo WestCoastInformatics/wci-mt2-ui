@@ -16,13 +16,29 @@
 			<div class="metadata-section-background">
 				<div class="row d-flex dropdown-group">
 					<div class="col-md-auto mt2-directory-chooser-column" *ngIf="showTable">
-						<app-column-chooser
-							title="Select Columns to Display"
-							[gridColumnApi]="refsetGridApi"
-							[useDialog]="useDialog"
-							[columnStorage]="mapsetLibraryColumnStorage"
-						>
-						</app-column-chooser>
+						<mat-menu #settingsMenu="matMenu" class="menu">
+							<div class="heading">TABLE SETTINGS</div>
+							<app-column-chooser
+								*ngIf="showPaging"
+								title="Select Columns to Display"
+								[gridColumnApi]="refsetGridApi"
+								[useDialog]="false"
+								[columnStorage]="mapsetProjectsColumnStorage"
+							>
+							</app-column-chooser
+						></mat-menu>
+
+						<div class="menu-inline">
+							<button
+								[matMenuTriggerFor]="settingsMenu"
+								aria-label="Settings"
+								title="Settings"
+								class="mapset-download-icon menu-button"
+							>
+								<mat-icon class="menu-icon">settings</mat-icon>
+								<span class="menu-label">Settings</span>
+							</button>
+						</div>
 					</div>
 					<div class="col-md-auto mt2-directory-chooser-column" *ngIf="showTable">
 						<mat-menu #searchMenu="matMenu" class="search-box">

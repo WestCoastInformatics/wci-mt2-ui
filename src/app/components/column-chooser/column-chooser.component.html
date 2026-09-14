@@ -1,55 +1,11 @@
-<!-- 
-<button *ngIf="useDialog" (click)="openColumnChooser()" aria-hidden="false" class="mt2-btn mt2-action-btn outer-table-button" aria-label="Open Column Chooser" title="Open Column Chooser">
-	Choose Columns
-</button>
-
-<mat-form-field floatLabel="never" *ngIf="!useDialog" appearance="fill" class="mt2-column-chooser-select-field form-field-header">
-	<mat-select
-		#detailsLanguageSelect
-		placeholder="Select Columns"
-		[ngModel]="columns"
-		[(value)]="selectedColumns"
-		multiple
-		[compareWith]="valueCompare"
-		[disabled]="disabled"
-		(selectionChange)="applyColumns()"
-		class="mt2-column-chooser-select"
-		panelClass="mt2-column-chooser-select-panel">
-		<mat-select-trigger class="trigger"> Select Columns </mat-select-trigger>
-
-		<mat-option *ngFor="let column of columns" [value]="column">
-			{{ column.name }}
-		</mat-option>
-	</mat-select>
-</mat-form-field>
-
-
-<ng-template #columnChooserSection let-data>
-	<div class="mt2-column-chooser-dialog-container" *ngFor="let column of data">
-		<mat-checkbox class="mt2-column-chooser-dialog-checkbox" [(ngModel)]="column.show">
-			{{ column.name }}
-		</mat-checkbox>
-	</div>
-</ng-template>-->
-
-<mat-menu #columnChooser="matMenu" class="menu">
-	<div class="heading">TABLE SETTINGS</div>
-	COLUMNS (Show/Hide)
-	<mat-checkbox
-		class="menu-checkbox"
-		*ngFor="let column of columns; let i = index"
-		[(ngModel)]="column.show"
-		(click)="$event.stopPropagation()"
-		(change)="selectColumns()"
-		[disabled]="selectedColumns.length === 1 && column.show"
-	>
-		{{ column.name }}
-	</mat-checkbox>
-</mat-menu>
-
-<div class="menu-inline">
-	<button [matMenuTriggerFor]="columnChooser" aria-label="Settings" title="Settings" class="mapset-download-icon menu-button">
-		<mat-icon class="menu-icon">settings</mat-icon>
-		<span class="menu-label">Settings</span>
-	</button>
-</div>
+<div class="heading-margin">COLUMNS (Show/Hide)</div>
+<mat-checkbox
+	class="menu-checkbox"
+	*ngFor="let column of columns; let i = index"
+	[(ngModel)]="column.show"
+	(click)="$event.stopPropagation()"
+	(change)="selectColumns()"
+	[disabled]="selectedColumns.length === 1 && column.show"
+>
+	{{ column.name }}
+</mat-checkbox>

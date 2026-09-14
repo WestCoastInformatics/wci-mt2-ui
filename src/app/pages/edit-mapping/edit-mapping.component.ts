@@ -274,50 +274,60 @@ export class EditMappingComponent implements OnInit {
 					this.selectActionMenu('view');
 				}
 			},
+			error: (err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
+			},
 		});
 
-		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe((results) => {
-			const mapsetVersions = Array.isArray(results) ? results : [results];
+		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe(
+			(results) => {
+				const mapsetVersions = Array.isArray(results) ? results : [results];
 
-			const getIsInDevelopment = (status: string): boolean => {
-				return status === 'IN_DEVELOPMENT' || status === 'IN DEVELOPMENT';
-			};
+				const getIsInDevelopment = (status: string): boolean => {
+					return status === 'IN_DEVELOPMENT' || status === 'IN DEVELOPMENT';
+				};
 
-			mapsetVersions.sort((a, b) => {
-				const aInDev = getIsInDevelopment(a.versionStatus);
-				const bInDev = getIsInDevelopment(b.versionStatus);
+				mapsetVersions.sort((a, b) => {
+					const aInDev = getIsInDevelopment(a.versionStatus);
+					const bInDev = getIsInDevelopment(b.versionStatus);
 
-				if (aInDev && !bInDev) {
-					return -1;
-				}
-				if (bInDev && !aInDev) {
-					return 1;
-				}
+					if (aInDev && !bInDev) {
+						return -1;
+					}
+					if (bInDev && !aInDev) {
+						return 1;
+					}
 
-				const ad = a.versionDate || 0;
-				const bd = b.versionDate || 0;
-				return bd - ad;
-			});
-
-			this.mapsetInfo = mapsetVersions[0];
-			if (localStorage.getItem('projects_mapsetVersion')) {
-				this.selectedVersion = JSON.parse(localStorage.getItem('projects_mapsetVersion')).trim();
-				const mapsetFound = mapsetVersions.filter((v) => {
-					const versionDate = v.versionDate || new Date();
-					const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
-					return mapsetVersionStatus === this.selectedVersion;
+					const ad = a.versionDate || 0;
+					const bd = b.versionDate || 0;
+					return bd - ad;
 				});
-				if (mapsetFound.length > 0) {
-					this.mapsetInfo = mapsetFound[0];
+
+				this.mapsetInfo = mapsetVersions[0];
+				if (localStorage.getItem('projects_mapsetVersion')) {
+					this.selectedVersion = JSON.parse(localStorage.getItem('projects_mapsetVersion')).trim();
+					const mapsetFound = mapsetVersions.filter((v) => {
+						const versionDate = v.versionDate || new Date();
+						const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
+						return mapsetVersionStatus === this.selectedVersion;
+					});
+					if (mapsetFound.length > 0) {
+						this.mapsetInfo = mapsetFound[0];
+					}
+				} else {
+					const versionDate = this.mapsetInfo.versionDate || new Date();
+					this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
+					localStorage.setItem('projects_mapsetVersion', JSON.stringify(this.selectedVersion));
 				}
-			} else {
-				const versionDate = this.mapsetInfo.versionDate || new Date();
-				this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
-				localStorage.setItem('projects_mapsetVersion', JSON.stringify(this.selectedVersion));
-			}
-			this.getMapsetData();
-			this.getMapProject();
-		});
+				this.getMapsetData();
+				this.getMapProject();
+			},
+			(err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
+			},
+		);
 		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe({
 			next: (results) => {
 				if (results?.length > 0) {
@@ -328,6 +338,10 @@ export class EditMappingComponent implements OnInit {
 					console.error('no mapset found');
 				}
 			},
+			error: (err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
+			},
 		});
 	}
 
@@ -337,6 +351,10 @@ export class EditMappingComponent implements OnInit {
 				next: (results) => {
 					this.mt2Service.setModuleMetadata(results);
 					this.moduleMetadata = results;
+				},
+				error: (err) => {
+					console.error(' Error: ', err);
+					this.authenticationService.checkError(err);
 				},
 			});
 		} else {
@@ -379,8 +397,8 @@ export class EditMappingComponent implements OnInit {
 			},
 			error: (err: any) => {
 				this.loadError = true;
-				console.log(' project loading error', err);
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
 			},
 		});
 	}
@@ -569,7 +587,7 @@ export class EditMappingComponent implements OnInit {
 			},
 			error: (error: any) => {
 				console.log(' Error: ', error);
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+				this.authenticationService.checkError(error);
 			},
 		});
 	}
@@ -665,7 +683,7 @@ export class EditMappingComponent implements OnInit {
 				]);
 			},
 			error: (error) => {
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+				this.authenticationService.checkError(error);
 			},
 		});
 	}
@@ -954,22 +972,30 @@ export class EditMappingComponent implements OnInit {
 		};
 
 		this.userChanged = false;
-		this.refsetService.getMapsetWorkflowStatus(this.mapsetInfo.id).subscribe((status) => {
-			if (status.workflowStatus === 'IN_EDIT') {
-				this.refsetService.updateMapsetMapping(this.mapsetInfo.id, saveMapset).subscribe(
-					(status: any) => {
-						console.log(' Status: ', status);
-						this.notificationService.show('The mapping has been saved.', 'Saved', 'success', { timeOut: 0, extendedTimeOut: 0 });
-					},
-					(error: any) => {
-						console.log(' Error: ', error);
-						this.notificationService.show('Error saving, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
-					},
-				);
-			} else {
-				this.notificationService.show('Mapset workflow status is not in Edit mode.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
-			}
-		});
+		this.refsetService.getMapsetWorkflowStatus(this.mapsetInfo.id).subscribe(
+			(status) => {
+				if (status.workflowStatus === 'IN_EDIT') {
+					this.refsetService.updateMapsetMapping(this.mapsetInfo.id, saveMapset).subscribe(
+						(status: any) => {
+							this.notificationService.show('The mapping has been saved.', 'Saved', 'success', { timeOut: 0, extendedTimeOut: 0 });
+						},
+						(err) => {
+							console.error(' Error: ', err);
+							this.authenticationService.checkError(err);
+						},
+					);
+				} else {
+					this.notificationService.show('Mapset workflow status is not in Edit mode.', 'Error', 'error', {
+						timeOut: 2500,
+						extendedTimeOut: 0,
+					});
+				}
+			},
+			(err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
+			},
+		);
 	}
 
 	showDropdown(): void {
@@ -1275,6 +1301,7 @@ export class EditMappingComponent implements OnInit {
 								this.showPaging = false;
 								this.browserApi.showNoRowsOverlay();
 								rowParams.successCallback([], 0);
+								this.authenticationService.checkError(error);
 							},
 						});
 				}
@@ -1427,8 +1454,9 @@ export class EditMappingComponent implements OnInit {
 				this.currentConcept = results;
 				this.conceptDetail = true;
 			},
-			error: (error) => {
-				this.notificationService.show('Error loading, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+			error: (err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
 			},
 		});
 	}
@@ -1445,9 +1473,13 @@ export class EditMappingComponent implements OnInit {
 		this.isWFMapModalOpen = false;
 	}
 
-	reviewMapWorkflow(status: any) {
+	reviewMapWorkflow(value: string, status: string) {
+		if (this.userChanged) {
+			this.notificationService.show('Save mappings before changing status.', 'Warning', 'warning', { timeOut: 0, extendedTimeOut: 0 });
+			return;
+		}
 		this.workFlowMapStatus = this.reviewMapWF.filter((review: any) => {
-			return status === review.value;
+			return value === review.value && status === review.status;
 		})[0];
 		this.isWFMapModalOpen = true;
 	}

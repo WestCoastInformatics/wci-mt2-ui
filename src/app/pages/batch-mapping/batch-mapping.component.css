@@ -412,6 +412,12 @@
 	padding: 2px;
 }
 
+.filter-box {
+	padding-left: 2px;
+	padding-right: 2px;
+	width: 150px;
+}
+
 .dropdown-group {
 	background-color: #fff;
 	border: 1px solid #f0f0f0;

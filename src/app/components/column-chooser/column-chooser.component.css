@@ -2,43 +2,46 @@
 @import 'src/assets/css/button-styles.css';
 @import 'src/assets/css/core-styles.css';
 
+.heading-margin {
+	margin-left: 7px;
+}
 .menu {
-padding: 5px 17px 5px 17px !important;
-font-size: 14px;
-color: #666666;
+	padding: 5px 5px 5px 8px !important;
+	font-size: 14px;
+	color: #666666;
 }
 
 .heading {
-font-weight: 700;
-margin-bottom: 32px;
+	font-weight: 700;
+	margin-bottom: 32px;
 }
 
 .menu-button {
-display: flex;
-flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 .menu-icon {
-text-align: center;
-width: 100% !important;
-background-color: #fff;
+	text-align: center;
+	width: 100% !important;
+	background-color: #fff;
 }
 
 .menu-label {
-font-size: 9px;
+	font-size: 9px;
 }
 
 .menu-inline {
-display: inline-block;
+	display: inline-block;
 }
 
 .menu-checkbox {
-display: block !important;
+	display: block !important;
 }
 
 .mapset-download-icon {
-cursor: pointer;
-color: var(--mapset-blue);
-font-size: 1.25em;
-background-color: #fff;
+	cursor: pointer;
+	color: var(--mapset-blue);
+	font-size: 1.25em;
+	background-color: #fff;
 }

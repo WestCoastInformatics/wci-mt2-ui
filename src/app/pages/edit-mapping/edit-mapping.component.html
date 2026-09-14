@@ -65,7 +65,7 @@
 <div [hidden]="!loadError || !loaded" class="section-loading m-b-20">Error loading, please contact support.</div>
 <div class="dropdown-group row edit-actions" *ngIf="loaded && !loadError">
 	<div class="col-10 d-flex justify-content-end">
-		<div class="assigned-column mappings-section align-self-center m-r-20" *ngIf="assignedUser">Assigned to: {{ assignedUser }}</div>
+		<div class="assigned-column mappings-section align-self-center m-r-20" *ngIf="assignedUser">Assigned To: {{ assignedUser }}</div>
 		<div class="workflow-container">
 			<workflow-status-badge [status]="currentStatus"></workflow-status-badge>
 		</div>
@@ -473,7 +473,18 @@
 		</div>
 		<div class="row d-flex dropdown-group" *ngIf="showBrowserSection && !loadError">
 			<div class="col-md-auto mt2-directory-chooser-column m-l-20">
-				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="browserApi" [useDialog]="useDialog"> </app-column-chooser>
+				<mat-menu #settingsMenu="matMenu" class="menu">
+					<div class="heading">TABLE SETTINGS</div>
+					<app-column-chooser *ngIf="showPaging" title="Select Columns to Display" [gridColumnApi]="browserApi" [useDialog]="false">
+					</app-column-chooser
+				></mat-menu>
+
+				<div class="menu-inline">
+					<button [matMenuTriggerFor]="settingsMenu" aria-label="Settings" title="Settings" class="mapset-download-icon menu-button">
+						<mat-icon class="menu-icon">settings</mat-icon>
+						<span class="menu-label">Settings</span>
+					</button>
+				</div>
 			</div>
 			<div class="col-md-auto mt2-directory-chooser-column">
 				<mat-menu #browserSearchMenu="matMenu" class="search-box">
