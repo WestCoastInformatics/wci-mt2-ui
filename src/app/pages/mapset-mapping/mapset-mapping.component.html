@@ -14,7 +14,40 @@
 			</div>
 		</div>
 		<div class="col-md-auto d-flex m-r-10" *ngIf="loaded">
-			<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: mapsetData }"></template>
+			<div class="d-flex">
+				<div class="col" *ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && editEnabled">
+					<button class="library-app-refset-notes m-r-15 no-padding" (click)="selectAction('edit')">
+						<img src="/assets/edit-icon.svg" title="Edit Maps" aria-label="Edit Maps" class="mapset-notes-icon mapset-edit-icon" />
+					</button>
+				</div>
+				<div class="col">
+					<button class="library-app-refset-download m-r-20 no-padding" (click)="downloadMapsets()">
+						<div class="mat-button-wrapper mapset-download-icon">
+							<i class="fa fa-download fa-lg" title="Download Maps" aria-label="Download Maps"></i>
+						</div>
+					</button>
+				</div>
+				<div class="col">
+					<notes-modal
+						[libraryOnly]="libraryOnly"
+						[mapSetId]="mapsetInfo.id"
+						[conceptCode]="conceptCode"
+						[hasNotes]="mapsetData[0].hasNotes"
+						[parent]="mapsetMappingPage"
+					></notes-modal>
+				</div>
+
+				<div class="col">
+					<button class="library-app-refset-discussion-list m-r-20 no-padding" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+						<img
+							src="/assets/comment-dots-regular.svg"
+							title="{{ `${libraryOnly ? 'View' : 'Add'} Feedback` }}"
+							aria-label="{{ `${libraryOnly ? 'View' : 'Add'} Feedback` }}"
+							class="discussion-icon"
+						/>
+					</button>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -126,38 +159,6 @@
 				</div>
 			</div>
 		</div>
-
-		<!-- Action Templates -->
-		<ng-template #directoryActionSection let-params>
-			<div class="d-flex">
-				<div class="col" *ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && editEnabled">
-					<button class="library-app-refset-notes m-r-15 no-padding" (click)="selectAction('edit')">
-						<img src="/assets/edit-icon.svg" title="Edit Maps" aria-label="Edit Maps" class="mapset-notes-icon mapset-edit-icon" />
-					</button>
-				</div>
-				<div class="col">
-					<button class="library-app-refset-download m-r-20 no-padding" (click)="downloadMapsets()">
-						<div class="mat-button-wrapper mapset-download-icon">
-							<i class="fa fa-download fa-lg" title="Download Maps" aria-label="Download Maps"></i>
-						</div>
-					</button>
-				</div>
-				<div class="col">
-					<notes-modal [libraryOnly]="libraryOnly" [mapSetId]="mapsetInfo.id" [conceptCode]="conceptCode"></notes-modal>
-				</div>
-
-				<div class="col">
-					<button class="library-app-refset-discussion-list m-r-20 no-padding" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-						<img
-							src="/assets/comment-dots-regular.svg"
-							title="{{ `${libraryOnly ? 'View' : 'Add'} Feedback` }}"
-							aria-label="{{ `${libraryOnly ? 'View' : 'Add'} Feedback` }}"
-							class="discussion-icon"
-						/>
-					</button>
-				</div>
-			</div>
-		</ng-template>
 
 		<ng-template #toBeDevelopedModal let-modal>
 			<div class="modal-header mt2-modal-header">

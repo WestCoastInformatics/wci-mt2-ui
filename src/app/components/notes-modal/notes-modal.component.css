@@ -21,6 +21,10 @@
 	filter: invert(10%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 
+.no-notes {
+	filter: invert(10%) sepia(90%) saturate(25%) hue-rotate(211deg) brightness(175%) contrast(91%) !important;
+}
+
 .none {
 	margin-left: 40%;
 }
