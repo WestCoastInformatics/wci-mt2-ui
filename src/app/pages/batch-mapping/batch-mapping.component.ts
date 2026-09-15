@@ -1561,7 +1561,8 @@ export class BatchMappingComponent implements OnInit {
 								this.mapsetData.forEach((map: any) => {
 									map.updated = false;
 								});
-								this.gridApi.redrawRows();
+								//this.gridApi.redrawRows();
+								this.getMapsetData();
 							}, 50);
 						},
 						(error: any) => {
