@@ -125,6 +125,7 @@ export class InboxComponent implements OnInit, AfterViewInit {
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
 		this.titleService.setTitle('Mapping Tool - Inbox');
+		localStorage.setItem('unsavedChanges', 'false');
 		this.breadcrumbService.setBreadcrumbs([{ label: 'Inbox' }]);
 		this.clearSavedSelections();
 		this.getModuleMetadata();

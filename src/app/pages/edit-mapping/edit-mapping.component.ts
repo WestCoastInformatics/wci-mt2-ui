@@ -10,6 +10,7 @@ import {
 	ViewChild,
 	HostListener,
 	Renderer2,
+	OnDestroy,
 } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { PaginationChangedEvent } from 'ag-grid-community';
@@ -40,7 +41,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 	templateUrl: './edit-mapping.component.html',
 	styleUrls: ['./edit-mapping.component.css'],
 })
-export class EditMappingComponent implements OnInit {
+export class EditMappingComponent implements OnInit, OnDestroy {
 	user!: User;
 	userRoles: any[] = [];
 	targetCodeInput = '';
@@ -213,6 +214,7 @@ export class EditMappingComponent implements OnInit {
 		this.user = this.authenticationService.getUser();
 		this.userRoles = this.authenticationService.getUserPrimaryRoles();
 		this.titleService.setTitle('Mapping Tool - Edit Map');
+		localStorage.setItem('unsavedChanges', 'false');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.conceptCode = routeParams.concept;
@@ -471,6 +473,7 @@ export class EditMappingComponent implements OnInit {
 
 	drop(event: CdkDragDrop<string[]>) {
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
 			if (this.mapsetData[0].mapEntries[p].group - 1 === event.previousIndex) {
 				this.mapsetData[0].mapEntries[p].group = 'next';
@@ -492,6 +495,7 @@ export class EditMappingComponent implements OnInit {
 
 	dropT(event: CdkDragDrop<string[]>) {
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		const newGroup = [];
 		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
 			if (this.mapsetData[0].mapEntries[p].group === event.item.data.group) {
@@ -519,6 +523,7 @@ export class EditMappingComponent implements OnInit {
 	reloadMapping() {
 		this.loaded = false;
 		this.userChanged = false;
+		localStorage.setItem('unsavedChanges', 'false');
 		this.targetFC.disable();
 		this.selectedTarget.id = '';
 		this.clearTargetInput();
@@ -726,6 +731,7 @@ export class EditMappingComponent implements OnInit {
 		this.numOfGroups--;
 		this.groupList.pop();
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 	}
 
 	searchBrowser() {
@@ -744,6 +750,7 @@ export class EditMappingComponent implements OnInit {
 	setEmptyTarget() {
 		this.clearTargetInput();
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		let defaultRule = '';
 		if (!this.ruleBased) {
 			defaultRule = 'TRUE';
@@ -810,6 +817,7 @@ export class EditMappingComponent implements OnInit {
 		this.mapsetData[0].mapEntries.push(newMapEntry);
 		this.setSelectedTarget(newMapEntry.uuid, newMapEntry.toCode, newMapEntry.toName, newMapEntry.group, newMapEntry.priority);
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 	}
 
 	removeTarget() {
@@ -831,6 +839,7 @@ export class EditMappingComponent implements OnInit {
 			}
 		}
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 	}
 
 	setSelectedTarget(uuid: string, code: string, name: string, group: number, priority: number) {
@@ -911,6 +920,7 @@ export class EditMappingComponent implements OnInit {
 		this.foundConceptCode = false;
 		this.clearTargetInput();
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 	}
 
 	setTarget(currentConcept: any) {
@@ -932,6 +942,7 @@ export class EditMappingComponent implements OnInit {
 				break;
 		}
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 	}
 
 	saveMapping() {
@@ -972,6 +983,7 @@ export class EditMappingComponent implements OnInit {
 		};
 
 		this.userChanged = false;
+		localStorage.setItem('unsavedChanges', 'false');
 		this.refsetService.getMapsetWorkflowStatus(this.mapsetInfo.id).subscribe(
 			(status) => {
 				if (status.workflowStatus === 'IN_EDIT') {
@@ -1053,6 +1065,7 @@ export class EditMappingComponent implements OnInit {
 				this.addMapGroup();
 			} else {
 				this.userChanged = true;
+				localStorage.setItem('unsavedChanges', 'true');
 				this.mapsetData.forEach((data) => {
 					data.mapEntries.forEach((entry: any) => {
 						if (entry.uuid === uuid) {
@@ -1120,6 +1133,7 @@ export class EditMappingComponent implements OnInit {
 
 	addAdviceToList(uuid: string) {
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		this.mapsetData.forEach((data) => {
 			data.mapEntries.forEach((entry: any) => {
 				if (entry.uuid === uuid) {
@@ -1139,6 +1153,7 @@ export class EditMappingComponent implements OnInit {
 
 	removeAdviceFromList(uuid: string, advice: string) {
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		this.mapsetData.forEach((data) => {
 			data.mapEntries.forEach((entry: any) => {
 				if (entry.uuid === uuid) {
@@ -1155,6 +1170,7 @@ export class EditMappingComponent implements OnInit {
 
 	setAdvice(uuid: string) {
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		this.mapsetData.forEach((data) => {
 			data.mapEntries.forEach((entry: any) => {
 				if (entry.uuid === uuid) {
@@ -1548,7 +1564,6 @@ export class EditMappingComponent implements OnInit {
 	}
 
 	updateNotesStatus(event: any) {
-		console.log('updateNotesStatus', event);
 		for (let c = 0; c < this.mapsetData.length; c++) {
 			if (this.mapsetData[c].code === event.conceptCode) {
 				this.mapsetData[c].hasNotes = event.hasNotes;
@@ -1559,5 +1574,17 @@ export class EditMappingComponent implements OnInit {
 	@HostListener('window:scroll', ['$event'])
 	onScroll(event: any) {
 		//this.closePopover();
+	}
+
+	@HostListener('window:beforeunload', ['$event'])
+	onBeforeUnload($event: BeforeUnloadEvent) {
+		if (localStorage.getItem('unsavedChanges') === 'true') {
+			$event.returnValue = true;
+		}
+	}
+
+	ngOnDestroy() {
+		this.userChanged = false;
+		localStorage.setItem('unsavedChanges', 'false');
 	}
 }

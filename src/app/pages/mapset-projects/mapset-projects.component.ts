@@ -125,6 +125,7 @@ export class MapsetProjectsComponent implements OnInit {
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
 		this.titleService.setTitle('Mapping Tool - Map Set Projects');
+		localStorage.setItem('unsavedChanges', 'false');
 		this.breadcrumbService.setBreadcrumbs([{ label: 'Map Set Projects' }]);
 		this.clearSavedSelections();
 		this.getMapsetData();
