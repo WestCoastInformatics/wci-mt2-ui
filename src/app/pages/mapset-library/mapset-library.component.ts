@@ -125,6 +125,7 @@ export class MapsetLibraryComponent implements OnInit {
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
 		this.titleService.setTitle('Mapping Tool - Map Set Library');
+		localStorage.setItem('unsavedChanges', 'false');
 		this.breadcrumbService.setBreadcrumbs([{ label: 'Map Set Library' }]);
 		this.clearSavedSelections();
 		this.getMapsetData();

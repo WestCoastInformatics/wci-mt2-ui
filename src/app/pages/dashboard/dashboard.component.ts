@@ -105,6 +105,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
 		this.titleService.setTitle('Mapping Tool - Dashboard');
+		localStorage.setItem('unsavedChanges', 'false');
 		this.breadcrumbService.setBreadcrumbs([{ label: 'Dashboard' }]);
 		this.clearSavedSelections();
 		this.getModuleMetadata();

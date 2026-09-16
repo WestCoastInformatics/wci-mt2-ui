@@ -10,6 +10,7 @@ import {
 	ViewChild,
 	HostListener,
 	Renderer2,
+	OnDestroy,
 } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { PaginationChangedEvent, RowClassParams } from 'ag-grid-community';
@@ -43,7 +44,7 @@ import { MapWorkflow } from 'src/app/models/map-workflow.model';
 	templateUrl: './batch-mapping.component.html',
 	styleUrls: ['./batch-mapping.component.css'],
 })
-export class BatchMappingComponent implements OnInit {
+export class BatchMappingComponent implements OnInit, OnDestroy {
 	user!: User;
 	userRoles: any[] = [];
 	searchInput = '';
@@ -264,7 +265,7 @@ export class BatchMappingComponent implements OnInit {
 		this.user = this.authenticationService.getUser();
 		this.userRoles = this.authenticationService.getUserPrimaryRoles();
 		this.titleService.setTitle('Mapping Tool - Batch Edit Mappings');
-
+		localStorage.setItem('unsavedChanges', 'false');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.conceptCodes = routeParams.concepts.split('_');
@@ -714,6 +715,7 @@ export class BatchMappingComponent implements OnInit {
 		}
 		this.gridApi.redrawRows();
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 	};
 
 	onGridCellClick = (event: any) => {
@@ -994,6 +996,7 @@ export class BatchMappingComponent implements OnInit {
 	reloadMapping() {
 		this.loaded = false;
 		this.userChanged = false;
+		localStorage.setItem('unsavedChanges', 'false');
 		this.selectedTarget = '';
 		this.clearTargetInput();
 		this.getMapsetInfo();
@@ -1343,6 +1346,7 @@ export class BatchMappingComponent implements OnInit {
 		});
 		this.numOfGroups--;
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 	}
 
 	addEmptyTargetToGroup(code: string, groupNum: number) {
@@ -1426,6 +1430,7 @@ export class BatchMappingComponent implements OnInit {
 			}
 		}
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 	}
 
 	setSelectedTarget(uuid: string, code: string, name: string) {
@@ -1495,6 +1500,7 @@ export class BatchMappingComponent implements OnInit {
 		this.foundConceptCode = false;
 		this.clearTargetInput();
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 	}
 
 	userChangeSelection(selectBox: any) {
@@ -1510,6 +1516,7 @@ export class BatchMappingComponent implements OnInit {
 				break;
 		}
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 	}
 
 	saveMappings() {
@@ -1550,6 +1557,7 @@ export class BatchMappingComponent implements OnInit {
 			}
 		});
 		this.userChanged = false;
+		localStorage.setItem('unsavedChanges', 'false');
 		this.refsetService.getMapsetWorkflowStatus(this.mapsetInfo.id).subscribe(
 			(status) => {
 				if (status.workflowStatus === 'IN_EDIT') {
@@ -1645,6 +1653,7 @@ export class BatchMappingComponent implements OnInit {
 
 	setGroup() {
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		this.mapsetData.forEach((data) => {
 			if (data.uuid === this.selectedTarget) {
 				data.updated = true;
@@ -1706,6 +1715,7 @@ export class BatchMappingComponent implements OnInit {
 	setEmptyTarget() {
 		this.foundConceptCode = false;
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		let defaultRule = '';
 		if (!this.ruleBased) {
 			defaultRule = 'TRUE';
@@ -1751,6 +1761,7 @@ export class BatchMappingComponent implements OnInit {
 		this.targetCodeInput = value;
 		this.targetToName = name;
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		let defaultRule = '';
 		if (!this.ruleBased) {
 			defaultRule = 'TRUE';
@@ -1829,6 +1840,7 @@ export class BatchMappingComponent implements OnInit {
 
 	addAdviceToList(uuid: string) {
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		if (this.popover_adviceToAdd !== '') {
 			this.popover_updateAdviceList.push(this.popover_adviceToAdd);
 			this.popover_updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
@@ -1842,6 +1854,7 @@ export class BatchMappingComponent implements OnInit {
 
 	removeAdviceFromList(advice: string) {
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		this.popover_adviceToAdd = null;
 		this.popover_adviceToAdd = '';
 		this.popover_addAdviceList.push(advice);
@@ -1852,6 +1865,7 @@ export class BatchMappingComponent implements OnInit {
 
 	setAdvice() {
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		this.mapsetData.forEach((data: any) => {
 			if (data.uuid === this.popover_uuid) {
 				data.mapEntries.mapAdvices = JSON.parse(JSON.stringify(this.popover_updateAdviceList));
@@ -1953,6 +1967,7 @@ export class BatchMappingComponent implements OnInit {
 					setTimeout(() => {
 						this.gridApi.setGridOption('rowData', this.mapsetData);
 						this.userChanged = true;
+						localStorage.setItem('unsavedChanges', 'true');
 					}, 500);
 				}
 				break;
@@ -1995,10 +2010,12 @@ export class BatchMappingComponent implements OnInit {
 					}
 				});
 				this.userChanged = true;
+				localStorage.setItem('unsavedChanges', 'true');
 				this.gridApi.refreshCells(this.gridParams);
 				break;
 			case 'remove':
 				this.userChanged = true;
+				localStorage.setItem('unsavedChanges', 'true');
 				this.mapsetData = this.mapsetData.filter((map: any) => {
 					return !map.checked || !this.checkMapEditStatus(map);
 				});
@@ -2135,6 +2152,7 @@ export class BatchMappingComponent implements OnInit {
 		});
 		//want to sort group entries?
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		this.gridApi.refreshCells(this.gridParams);
 		this.gridApi.redrawRows();
 		this.closeHeaderGroupModal();
@@ -2307,7 +2325,6 @@ export class BatchMappingComponent implements OnInit {
 	onResize(event: any) {}
 
 	updateNotesStatus(event: any) {
-		console.log('updateNotesStatus', event);
 		for (let c = 0; c < this.mapsetData.length; c++) {
 			if (this.mapsetData[c].code === event.conceptCode) {
 				this.mapsetData[c].hasNotes = event.hasNotes;
@@ -2320,5 +2337,18 @@ export class BatchMappingComponent implements OnInit {
 	@HostListener('window:scroll', ['$event'])
 	onScroll(event: any) {
 		//this.closePopover();
+	}
+
+	@HostListener('window:beforeunload', ['$event'])
+	onBeforeUnload($event: BeforeUnloadEvent) {
+		if (localStorage.getItem('unsavedChanges') === 'true') {
+			$event.preventDefault(); // Required for modern browsers
+			$event.returnValue = ''; // Triggers the native prompt
+		}
+	}
+
+	ngOnDestroy() {
+		this.userChanged = false;
+		localStorage.setItem('unsavedChanges', 'false');
 	}
 }

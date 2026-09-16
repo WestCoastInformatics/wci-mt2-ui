@@ -158,6 +158,7 @@ export class MapsetInactivesComponent implements OnInit {
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
 		this.titleService.setTitle('Mapping Tool - Manage Inactives');
+		localStorage.setItem('unsavedChanges', 'false');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.getMapsetInfo();
@@ -977,8 +978,6 @@ export class MapsetInactivesComponent implements OnInit {
 	saveNotes() {
 		this.notesError = '';
 		if (this.notesEditor !== '' && this.notesEditor !== null) {
-			console.log('notes entry ', this.notesEditor);
-
 			this.closeNotesModal();
 			this.openToBeDevelopedModal(this.tbdModal);
 		} else {
@@ -997,9 +996,9 @@ export class MapsetInactivesComponent implements OnInit {
 	saveFeedback() {
 		this.feedbackError = '';
 		if (this.feedbackEditor !== '' && this.feedbackEditor !== null && this.feedbackSubject !== '' && this.feedbackSubject !== null) {
-			console.log('feedback entry ', this.feedbackEditor);
-			console.log('feedback subject ', this.feedbackSubject);
-			console.log('feedback selectFeedbackPrivate ', this.selectFeedbackPrivate);
+			// console.log('feedback entry ', this.feedbackEditor);
+			// console.log('feedback subject ', this.feedbackSubject);
+			// console.log('feedback selectFeedbackPrivate ', this.selectFeedbackPrivate);
 			this.closeFeedbackModal();
 			this.openToBeDevelopedModal(this.tbdModal);
 		} else {

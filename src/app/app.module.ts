@@ -140,12 +140,16 @@ const appRoutes: Routes = [
 		component: BatchMappingComponent,
 		data: { breadcrumbLabel: 'Batch Edit Mappings' },
 		canActivate: [AuthGuardGuard],
+		canDeactivate: [AuthGuardGuard],
+		runGuardsAndResolvers: 'always',
 	},
 	{
 		path: 'projects/mapset/:code/mapping/:concept/edit',
 		component: EditMappingComponent,
 		data: { breadcrumbLabel: 'Edit Map' },
 		canActivate: [AuthGuardGuard],
+		canDeactivate: [AuthGuardGuard],
+		runGuardsAndResolvers: 'always',
 	},
 	{ path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
 	{ path: 'inbox', component: InboxComponent, data: { breadcrumbLabel: 'Inbox' }, canActivate: [AuthGuardGuard] },
@@ -193,7 +197,6 @@ const appRoutes: Routes = [
 		RouterModule.forRoot(
 			appRoutes,
 			{
-				onSameUrlNavigation: 'reload',
 				scrollPositionRestoration: 'top',
 				canceledNavigationResolution: 'computed',
 			},

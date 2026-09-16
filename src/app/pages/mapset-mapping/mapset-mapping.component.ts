@@ -114,6 +114,7 @@ export class MapsetMappingComponent implements OnInit {
 		this.userRoles = Array.isArray(this.userRoles) ? this.userRoles : [this.userRoles];
 		//current status, user role, action
 		this.titleService.setTitle('Mapping Tool - Map');
+		localStorage.setItem('unsavedChanges', 'false');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.route.url.forEach((part) => {
 				part.forEach((value) => {
@@ -336,7 +337,6 @@ export class MapsetMappingComponent implements OnInit {
 	}
 
 	updateNotesStatus(event: any) {
-		console.log('updateNotesStatus', event);
 		for (let c = 0; c < this.mapsetData.length; c++) {
 			if (this.mapsetData[c].code === event.conceptCode) {
 				this.mapsetData[c].hasNotes = event.hasNotes;
