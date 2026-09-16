@@ -1579,7 +1579,8 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 	@HostListener('window:beforeunload', ['$event'])
 	onBeforeUnload($event: BeforeUnloadEvent) {
 		if (localStorage.getItem('unsavedChanges') === 'true') {
-			$event.returnValue = true;
+			$event.preventDefault(); // Required for modern browsers
+			$event.returnValue = ''; // Triggers the native prompt
 		}
 	}
 

@@ -1,0 +1,16 @@
+<div class="modal-header mt2-modal-header">
+	<div class="modal-title">Unsaved Changes</div>
+	<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="activeModal.close(false)">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+<div class="modal-body m-t-20">
+	<p>Are you sure you want to leave? Changes made will not be saved.</p>
+</div>
+<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+	<!-- Passes 'false' to cancel navigation -->
+	<button type="button" class="mt2-btn mt2-action-btn" (click)="activeModal.close(false)">Cancel</button>
+
+	<!-- Passes 'true' to allow navigation -->
+	<button type="button" class="mt2-btn mt2-action-btn" (click)="activeModal.close(true)">Leave</button>
+</div>
