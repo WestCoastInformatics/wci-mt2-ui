@@ -53,7 +53,7 @@ export class RefsetService extends RestService {
 
 	createRefset(params: any): Observable<any> {
 		const self = this;
-		return this.post(this.contextPath + 'refset/', params, false, (err) => {
+		return this.post(this.contextPath + 'refset', params, false, (err) => {
 			if (err.status === 504) {
 				err.error = `Refset creation is taking longer than expected.  Please come back to the project page in the future to see the created refset.`;
 				return self.giveWarningNotification(err);
@@ -346,7 +346,7 @@ export class RefsetService extends RestService {
 	}
 
 	getMapsetsByStatus(status: string): Observable<any> {
-		return this.get(this.contextPath + 'mapset/?query=versionStatus:' + status);
+		return this.get(this.contextPath + 'mapset?query=versionStatus:' + status);
 	}
 
 	getMapsetsByCode(code: string): Observable<any> {
@@ -372,7 +372,7 @@ export class RefsetService extends RestService {
 	}
 
 	getMapsetWorkflowStatus(mapsetId: string): Observable<any> {
-		return this.get(this.contextPath + `mapset/${mapsetId}/workflowStatus/`, '', false);
+		return this.get(this.contextPath + `mapset/${mapsetId}/workflowStatus`, '', false);
 	}
 
 	getMappingWorkflowStatus(mapsetId: string, conceptCode: string): Observable<any> {
