@@ -324,6 +324,11 @@
 	padding-top: 0 !important;
 }
 
+.mt2-project {
+	min-height: calc(100vh - 244px);
+	max-height: calc(100vh - 244px);
+}
+
 .mt2-btn:hover {
 	background-color: var(--mapset-blue) !important;
 	color: #ffffff !important;

@@ -146,7 +146,7 @@
 		</span>
 	</div>
 </div>
-<div class="mt2-container" (window:resize)="onResize($event)" [ngClass]="{ 'm-t-20': libraryOnly }">
+<div class="mt2-container" (window:resize)="onResize($event)" [ngClass]="{ 'm-t-20': libraryOnly, 'mt2-project': !libraryOnly }">
 	<div class="metadata-collapsible-container">
 		<div class="switch-view" *ngIf="showMappingsSection && loaded" [hidden]="numOfMembers === 0">
 			<mat-label class="switch-label">view by</mat-label>
