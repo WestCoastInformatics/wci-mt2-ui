@@ -859,6 +859,13 @@
 	color: var(--mapset-blue);
 	font-size: 1.25em;
 	background-color: transparent;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.menu-label {
+	font-size: .9rem;
 }
 
 .mapset-notes-icon {
