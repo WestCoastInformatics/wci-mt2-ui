@@ -479,7 +479,6 @@
 		<div class="row d-flex dropdown-group" *ngIf="showBrowserSection && !loadError">
 			<div class="col-md-auto mt2-directory-chooser-column m-l-20">
 				<mat-menu #settingsMenu="matMenu" class="menu">
-					<div class="settings-heading mb-5">TABLE SETTINGS</div>
 					<app-column-chooser *ngIf="showPaging" title="Select Columns to Display" [gridColumnApi]="browserApi" [useDialog]="false">
 					</app-column-chooser
 				></mat-menu>

@@ -188,7 +188,6 @@
 		<div class="d-flex dropdown-group" *ngIf="showMappingsSection">
 			<div class="col-md-auto mt2-directory-chooser-column">
 				<mat-menu #settingsMenu="matMenu" class="menu">
-					<div class="settings-heading">TABLE SETTINGS</div>
 					<div class="mat-mdc-menu-content menu m-t-10">
 						<div>LANGUAGE</div>
 						<div class="d-flex mb-5 align-items-center">
@@ -199,6 +198,7 @@
 									[placeholder]="selectedLanguage"
 									(click)="$event.stopPropagation()"
 									(selectionChange)="changeLanguage()"
+									[disabled]="!showPaging"
 								>
 									<mat-option *ngFor="let option of languageOptions" [value]="option.value" class="no-checkbox">
 										{{ option.display }}
@@ -222,7 +222,7 @@
 									}}</mat-option>
 								</mat-select>
 							</mat-form-field>
-							<div class="clear-search ml-20">
+							<div class="clear-search ml-20 clear-dd-search">
 								<span
 									*ngIf="workflowFilter"
 									title="Clear Filter"
@@ -247,7 +247,7 @@
 									}}</mat-option>
 								</mat-select>
 							</mat-form-field>
-							<div class="clear-search ml-20">
+							<div class="clear-search ml-20 clear-dd-search">
 								<span
 									*ngIf="assignedFilter"
 									title="Clear Filter"
@@ -430,7 +430,7 @@
 					</div>
 				</div>
 
-				<div [hidden]="!loaded" *ngIf="showMapTable !== 'table'" class="content-wrapper">
+				<div [hidden]="!loaded" *ngIf="showMapTable === 'record'" class="content-wrapper">
 					<div *ngFor="let record of mapsetData; index as i">
 						<div class="record-row" [ngClass]="{ 'odd-row': 0 === i % 2 }" *ngIf="!record.spanned">
 							<div class="col-12 row">
