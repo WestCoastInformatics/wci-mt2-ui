@@ -446,6 +446,10 @@
 	width: 150px;
 }
 
+.heading-margin {
+	margin-left: 7px;
+}
+
 .checkbox-column {
 	margin-left: 18px;
 	width: 30px;
