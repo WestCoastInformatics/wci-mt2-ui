@@ -963,6 +963,18 @@
 					<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
 				</div>
 			</div>
+
+			<div class="col">
+				<div class="library-app-refset-notes m-r-15 no-padding">
+					<img 
+						src="/assets/edit-icon.svg" 
+						title="Map has been edited" 
+						aria-label="Map has been edited" 
+						class="mapset-edit-icon"
+						[hidden]="!params.data.showChanged || params.data?.showChanged === false"
+					/>
+				</div>
+			</div>
 		</div>
 	</ng-template>
 
