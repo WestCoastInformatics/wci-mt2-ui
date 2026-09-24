@@ -620,7 +620,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				field: 'feedback',
 				colId: 'action-btns',
 				headerName: '',
-				width: 90,
+				width: 145,
 				cellClass: 'mt2-directory-column-actions',
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.actionSection },
@@ -709,6 +709,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		for (let c of this.mapsetData) {
 			if (c.index === event.data.index) {
 				c.updated = true;
+				c.showChanged = true;
 			} else {
 				c.updated = false;
 			}
@@ -1274,6 +1275,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 								hasNotes: results.mapNotes?.length > 0 ? true : false,
 								assignedUser: results.mappingWorkflow?.assignedUser,
 								editable: this.isMapEditable(results.mappingWorkflow?.workflowStatus, results.mappingWorkflow?.assignedUser),
+								showChanged: this.userChanged,
 							};
 							const assignedUser = results.mappingWorkflow?.assignedUser;
 							if (assignedUser !== null && assignedUser !== undefined) {
@@ -1386,6 +1388,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			toCode: groupNum + '/' + nextPriorityNum + '#' + '[Empty Target]',
 			toName: '---',
 			uuid: groupNum + nextPriorityNum + Date.now(),
+			showChanged: true,
 			mapEntries: {
 				id: null,
 				modified: null,
@@ -1412,6 +1415,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		this.mapsetData.splice(selectEntryIndex + 1, 0, newMapEntry);
 	}
 
+	// Currently not being used?
 	removeTarget(uuid: string) {
 		let changedPriority = 0;
 		let groupNum = 0;
@@ -1426,6 +1430,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			if (this.mapsetData[0].mapEntries[c].group === groupNum) {
 				if (this.mapsetData[0].mapEntries[c].priority > changedPriority) {
 					this.mapsetData[0].mapEntries[c].priority--;
+					this.mapsetData[0].mapEntries[c].showChanged = true;
 				}
 			}
 		}
@@ -1441,6 +1446,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		this.targetFC.setValue(this.targetCodeInput);
 	}
 
+	// Currently not being used?
 	setTargetCode() {
 		if (this.selectedTarget === '') {
 			let nextPriorityNum = 1;
@@ -1448,6 +1454,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				if (this.mapsetData[0].mapEntries[p].group === this.numOfGroups) {
 					if (this.mapsetData[0].mapEntries[p].priority >= nextPriorityNum) {
 						nextPriorityNum++;
+						this.mapsetData[0].mapEntries[p].showChanged = true;
 					}
 				}
 			}
@@ -1662,6 +1669,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				data.mapEntries.priority = this.priorityFC.value;
 				data.priority = this.priorityFC.value;
 				data.toCode = this.groupFC.value + '/' + data.mapEntries.priority + '#' + data.mapEntries.toCode;
+				data.showChanged = true;
 			} else {
 				data.updated = false;
 			}
@@ -1748,6 +1756,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				data.advices = [];
 				data.descriptions = [];
 				data.updated = true;
+				data.showChanged = true;
 			} else {
 				data.updated = false;
 			}
@@ -1799,6 +1808,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				data.adviceAlways = [];
 				data.advices = [];
 				data.descriptions = [];
+				data.showChanged = true;
 				data.updated = true;
 			} else {
 				data.updated = false;
@@ -1848,6 +1858,11 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			this.popover_addAdviceList.sort((a, b) => (a > b ? 1 : -1));
 			this.popover_adviceToAdd = null;
 			this.popover_adviceToAdd = '';
+			this.mapsetData.forEach((data: any) => {
+				if (data.uuid === this.selectedTarget) {
+					data.showChanged = true;
+				}
+			});
 		}
 		this.selectAdvice.value = '';
 	}
@@ -1861,6 +1876,11 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		this.popover_addAdviceList.sort((a, b) => (a > b ? 1 : -1));
 		this.popover_updateAdviceList.splice(this.popover_updateAdviceList.indexOf(advice), 1);
 		this.popover_updateAdviceList.sort((a, b) => (a > b ? 1 : -1));
+		this.mapsetData.forEach((data: any) => {
+			if (data.uuid === this.selectedTarget) {
+				data.showChanged = true;
+			}
+		});
 	}
 
 	setAdvice() {
@@ -1873,6 +1893,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				if (data.mapEntries.adviceAlways.length > 0) {
 					data.mapEntries.advices.unshift(data.mapEntries.adviceAlways[0]);
 				}
+				data.showChanged = true;
 				data.updated = true;
 			} else {
 				data.updated = false;
@@ -2007,6 +2028,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 						map.adviceAlways = [];
 						map.advices = [];
 						map.descriptions = [];
+						map.showChanged = true;
 					}
 				});
 				this.userChanged = true;
@@ -2148,6 +2170,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				map.mapEntries.group = this.headerGroupFC.value;
 				map.group = this.headerGroupFC.value;
 				map.toCode = this.headerGroupFC.value + '/' + map.mapEntries.priority + '#' + map.mapEntries.toCode;
+				map.showChanged = true;
 			}
 		});
 		//want to sort group entries?

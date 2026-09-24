@@ -743,8 +743,14 @@
 	cursor: pointer;
 	width: 24px;
 	height: 24px;
-
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
+}
+
+.mapset-edit-icon {
+	margin-top: -0.2em;
+	width: 24px;
+	height: 24px;
+	filter: invert(60%) sepia(75%) saturate(2420%) hue-rotate(209deg) brightness(90%) contrast(100%);
 }
 
 .mapset-name {
@@ -770,7 +776,6 @@
 	margin-top: -0.2em;
 	width: 24px;
 	height: 24px;
-
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 
