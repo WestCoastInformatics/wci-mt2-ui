@@ -35,24 +35,24 @@ export class MapsetLibraryComponent implements OnInit {
 		{ value: 'private', display: 'Private' },
 	];
 	selectedView = 'all';
-	refsetGridApi: any;
+	gridApi: any;
 	columnDefs: any;
-	refsetGridColumns = [
+	gridColumns = [
 		{ name: 'information', show: true },
-		{ name: 'refsetId', show: true },
+		{ name: 'mapsetId', show: true },
 	];
-	refsetGridOptions: any;
-	refsetGridPaging = {
+	gridOptions: any;
+	gridPaging = {
 		pageSize: 10,
 		pageSizeOptions: [10, 25, 50, 100],
 		totalKnown: false,
 		totalRows: null,
 		manualStateRefresh: Boolean(true),
 	};
-	refsetGridLastFilter = '';
-	refsetGridLastSort = '';
+	gridLastFilter = '';
+	gridLastSort = '';
 	showTable = false;
-	refsetData: any;
+	mapsetData: any;
 	dialog!: DialogService;
 	versionStatuses: any;
 	versions: any;
@@ -146,6 +146,7 @@ export class MapsetLibraryComponent implements OnInit {
 				key?.startsWith('library_mapsetGridCurrentPageSize') ||
 				key?.startsWith('library_mapsetGridCurrentPageNum') ||
 				key?.startsWith('library_mapsetRecordsColumns') ||
+				key?.startsWith('library_mapsetRecordsLanguage') ||
 				key?.startsWith('library_batchSearchInput')
 			) {
 				keysToRemove.push(key);
@@ -254,19 +255,19 @@ export class MapsetLibraryComponent implements OnInit {
 						},
 					},
 				];
-				this.refsetGridOptions = {
+				this.gridOptions = {
 					context: { componentParent: this },
 					pagination: true,
 					animateRows: false,
 					rowModelType: 'clientSide',
 					suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
 					suppressPaginationPanel: true,
-					paginationPageSize: this.refsetGridPaging.pageSize,
+					paginationPageSize: this.gridPaging.pageSize,
 					rowSelection: 'single',
 					enableCellTextSelection: true,
 					onCellDoubleClicked: this.onGridCellClick,
 					onGridReady: this.onGridReady,
-					frameworkComponents: {
+					components: {
 						templateRenderer: TemplateRendererComponent,
 						categoryFilterComponent: CategoryFilterComponent,
 						dateTextFilterComponent: DateTextFilterComponent,
@@ -277,7 +278,7 @@ export class MapsetLibraryComponent implements OnInit {
 						sortingOrder: ['asc', 'desc'],
 						floatingFilter: false,
 						floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false },
-						suppressMenu: true,
+						suppressHeaderMenuButton: true,
 						resizable: true,
 					},
 					enableBrowserTooltips: true,
@@ -304,11 +305,11 @@ export class MapsetLibraryComponent implements OnInit {
 	//***** AG Grid Functions *****/
 	onGridReady = (gridReadyParams: any) => {
 		this.originalGridParams = gridReadyParams;
-		this.refsetGridApi = gridReadyParams.api;
-		this.refsetGridApi.setFilterModel(null);
+		this.gridApi = gridReadyParams.api;
+		this.gridApi.setFilterModel(null);
 		this.onResize(undefined);
 
-		this.refsetGridApi.showLoadingOverlay();
+		this.gridApi.setGridOption('loading', true);
 		let query = '';
 
 		if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
@@ -316,9 +317,9 @@ export class MapsetLibraryComponent implements OnInit {
 		}
 
 		const pageNumber = 1;
-		this.refsetGridPaging.totalRows = null;
-		this.refsetGridPaging.totalKnown = false;
-		this.refsetGridApi?.api?.paginationGoToPage(0);
+		this.gridPaging.totalRows = null;
+		this.gridPaging.totalKnown = false;
+		this.gridApi?.api?.paginationGoToPage(0);
 
 		const restParams: any = {
 			displayType: 'list',
@@ -339,7 +340,7 @@ export class MapsetLibraryComponent implements OnInit {
 
 				const data = results;
 
-				this.refsetData = data;
+				this.mapsetData = data;
 				this.numOfMembers = results.length;
 				this.numOfResults = results.total;
 
@@ -348,13 +349,13 @@ export class MapsetLibraryComponent implements OnInit {
 				document.getElementById('directoryHeader').appendChild(child);
 
 				if (results.length == 0) {
-					this.refsetGridPaging.totalKnown = true;
-					this.refsetGridApi.showNoRowsOverlay();
-					this.refsetGridApi.setGridOption('rowData', []);
+					this.gridPaging.totalKnown = true;
+					this.gridApi.showNoRowsOverlay();
+					this.gridApi.setGridOption('rowData', []);
 
 					if (pageNumber > 1) {
-						this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
-						this.refsetGridPaging.totalKnown = true;
+						this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);
+						this.gridPaging.totalKnown = true;
 						this.paginationComponent.goToPage(pageNumber - 1);
 					}
 					this.showPaging = false;
@@ -364,15 +365,15 @@ export class MapsetLibraryComponent implements OnInit {
 				}
 				if (localStorage.getItem('librarySearchInput')) {
 					this.searchInput = JSON.parse(localStorage.getItem('librarySearchInput'));
-					this.refsetGridApi.setGridOption('quickFilterText', this.searchInput);
+					this.gridApi.setGridOption('quickFilterText', this.searchInput);
 				}
 
-				UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
+				UiUtility.applyServerPagedGridResults(results, this.gridApi, this.gridPaging, pageNumber, null, false);
 			},
 			error: (error: any) => {
 				console.log(' Error: ', error);
-				this.refsetGridApi.showNoRowsOverlay();
-				this.refsetGridApi.setGridOption('rowData', []);
+				this.gridApi.showNoRowsOverlay();
+				this.gridApi.setGridOption('rowData', []);
 				this.authenticationService.checkError(error);
 			},
 		});
@@ -392,8 +393,8 @@ export class MapsetLibraryComponent implements OnInit {
 
 	getCurrentPage() {
 		let current = 1;
-		if (this.refsetGridApi) {
-			current = this.refsetGridApi.paginationGetCurrentPage();
+		if (this.gridApi) {
+			current = this.gridApi.paginationGetCurrentPage();
 		}
 		return current;
 	}
@@ -419,7 +420,7 @@ export class MapsetLibraryComponent implements OnInit {
 		if (event.column.colId === 'information' || event.column.colId === 'actions') {
 			//
 		} else {
-			const selectedRows = this.refsetGridApi.getSelectedRows();
+			const selectedRows = this.gridApi.getSelectedRows();
 			let selectedId: string;
 			let selectedVersionDate: string;
 			let selectedCode: string;
@@ -454,7 +455,7 @@ export class MapsetLibraryComponent implements OnInit {
 		this.searchInput = this.searchInput.trim();
 
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-			this.refsetGridApi.setGridOption('quickFilterText', this.searchInput);
+			this.gridApi.setGridOption('quickFilterText', this.searchInput);
 			localStorage.setItem('librarySearchInput', JSON.stringify(this.searchInput));
 		}
 	}
@@ -590,28 +591,28 @@ export class MapsetLibraryComponent implements OnInit {
 		this.isModalOpen = false;
 	}
 
-	goToDetailsPage(refsetId: any, versionDate: any) {
+	goToDetailsPage(mapsetId: any, versionDate: any) {
 		const url = new URL(window.location.href);
 		url.searchParams.set('reload', 'true');
 		window.history.pushState({}, '', url.href);
-		this.router.navigate(['/details', refsetId, versionDate], { replaceUrl: false, skipLocationChange: false });
+		this.router.navigate(['/details', mapsetId, versionDate], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	goToMapRecordsPage(code: any) {
 		this.router.navigate(['library/mapset/' + code + '/mappings'], { replaceUrl: false, skipLocationChange: false });
 	}
 
-	getRefsetRow(refsetId: string) {
-		let refset;
+	getRefsetRow(mapsetId: string) {
+		let mapset;
 
-		for (let i = 0; i < this.refsetData.length; i++) {
-			if (this.refsetData[i].refsetId == refsetId) {
-				refset = this.refsetData[i];
+		for (let i = 0; i < this.mapsetData.length; i++) {
+			if (this.mapsetData[i].refsetId == mapsetId) {
+				mapset = this.mapsetData[i];
 				break;
 			}
 		}
 
-		return refset;
+		return mapset;
 	}
 
 	formatVersionDate(date: any): string {
@@ -659,14 +660,14 @@ export class MapsetLibraryComponent implements OnInit {
 		}
 	}
 
-	openFeedback(refsetId: string) {
-		const refset = this.getRefsetRow(refsetId);
+	openFeedback(mapsetId: string) {
+		const mapset = this.getRefsetRow(mapsetId);
 		const dialogId = 'directoryFeedbackDialog';
 
 		const dialogData = {
-			headerText: `Reference Set Feedback for ${refset.name} (${refset.refsetId})`,
+			headerText: `Reference Set Feedback for ${mapset.name} (${mapset.refsetId})`,
 			template: this.feedbackDialog,
-			data: refset,
+			data: mapset,
 		};
 
 		const dialogOptions = {
@@ -678,7 +679,7 @@ export class MapsetLibraryComponent implements OnInit {
 
 		this.dialog.confirmed().subscribe((data) => {
 			if (data) {
-				refset.feedback = data.feedback;
+				mapset.feedback = data.feedback;
 			}
 		});
 	}
@@ -704,8 +705,8 @@ export class MapsetLibraryComponent implements OnInit {
 		document.getElementsByClassName('ag-header')[0]?.setAttribute('style', `width: ${gridWidth}px;`);
 	}
 
-	setDescriptions(refsetData: any): Array<string> {
-		return refsetData?.descriptions;
+	setDescriptions(mapsetData: any): Array<string> {
+		return mapsetData?.descriptions;
 	}
 
 	showFlagIcon(event: any, show: any) {
@@ -716,8 +717,8 @@ export class MapsetLibraryComponent implements OnInit {
 		}
 	}
 
-	latestDate(refset: any, versionList: any[]): string {
-		if (refset.versionStatus === Constants.IN_DEVELOPMENT) {
+	latestDate(mapset: any, versionList: any[]): string {
+		if (mapset.versionStatus === Constants.IN_DEVELOPMENT) {
 			return 'Latest';
 		}
 		return versionList && versionList[0] ? `${versionList[0].date}` : '';

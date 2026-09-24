@@ -17,11 +17,11 @@
 				<div class="row d-flex dropdown-group">
 					<div class="col-md-auto mt2-directory-chooser-column" *ngIf="showTable">
 						<mat-menu #settingsMenu="matMenu" class="menu">
-							<div class="heading">TABLE SETTINGS</div>
+							<div class="settings-heading mb-5">TABLE SETTINGS</div>
 							<app-column-chooser
 								*ngIf="showPaging"
 								title="Select Columns to Display"
-								[gridColumnApi]="refsetGridApi"
+								[gridColumnApi]="gridApi"
 								[useDialog]="false"
 								[columnStorage]="mapsetProjectsColumnStorage"
 							>
@@ -108,7 +108,7 @@
 					class="ag-theme-alpine mt2-ag-grid mt2-ag-grid-filter w-100-pct"
 					[rowHeight]="51"
 					[columnDefs]="columnDefs"
-					[gridOptions]="refsetGridOptions"
+					[gridOptions]="gridOptions"
 				>
 				</ag-grid-angular>
 
@@ -131,7 +131,7 @@
 							<button
 								#paginationPreviousPage
 								mat-raised-button
-								(click)="refsetGridApi.paginationGoToPreviousPage()"
+								(click)="gridApi.paginationGoToPreviousPage()"
 								title="Go To Previous Page {{ getCurrentPage() }}"
 								class="pagination-page-buttons"
 								[ngClass]="{ disabled: getCurrentPage() === 0 }"
@@ -180,7 +180,7 @@
 							<button
 								#paginationNextPage
 								mat-raised-button
-								(click)="refsetGridApi.paginationGoToNextPage()"
+								(click)="gridApi.paginationGoToNextPage()"
 								title="Go To Next Page {{ getCurrentPage() + 2 }}"
 								class="pagination-page-buttons"
 								[ngClass]="{ disabled: getCurrentPage() === paginationPages.totalPages }"
@@ -203,10 +203,10 @@
 						</div>
 
 						<div class="mt2-pagination-bottom-row" *ngIf="showPaging">
-							<span *ngFor="let sizeOption of refsetGridPaging.pageSizeOptions">
+							<span *ngFor="let sizeOption of gridPaging.pageSizeOptions">
 								<button
 									mat-raised-button
-									[color]="refsetGridPaging.pageSize === sizeOption ? 'secondary' : ''"
+									[color]="gridPaging.pageSize === sizeOption ? 'secondary' : ''"
 									class="pagination-page-buttons unthemed"
 									(click)="setPageSize(sizeOption)"
 									[hidden]="sizeOption > numOfMembers"
@@ -221,19 +221,19 @@
 						<div *ngIf="searchInput === ''">
 							Showing
 							<span class="fw-bold p-l-5 p-r-5">
-								{{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }}
+								{{ (getCurrentPage() + 1) * gridPaging.pageSize - gridPaging.pageSize + 1 }}
 							</span>
 							to
 							<span class="fw-bold p-l-5 p-r-5">
 								{{
-									numOfMembers < (getCurrentPage() + 1) * refsetGridPaging.pageSize
+									numOfMembers < (getCurrentPage() + 1) * gridPaging.pageSize
 										? numOfMembers
-										: (getCurrentPage() + 1) * refsetGridPaging.pageSize
+										: (getCurrentPage() + 1) * gridPaging.pageSize
 								}}
 							</span>
 							of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
 						</div>
-						<div *ngIf="searchInput !== ''">Showing {{ refsetGridApi.getDisplayedRowCount() }} search results</div>
+						<div *ngIf="searchInput !== ''">Showing {{ gridApi.getDisplayedRowCount() }} search results</div>
 					</div>
 				</div>
 				<div
@@ -283,7 +283,7 @@
 					><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
 				</p>
 			</div>
-			<mapset-meta [refset]="data"></mapset-meta>
+			<mapset-meta [mapset]="data"></mapset-meta>
 		</div>
 	</ng-template>
 
