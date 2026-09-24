@@ -709,6 +709,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		for (let c of this.mapsetData) {
 			if (c.index === event.data.index) {
 				c.updated = true;
+				c.showChanged = true;
 			} else {
 				c.updated = false;
 			}
