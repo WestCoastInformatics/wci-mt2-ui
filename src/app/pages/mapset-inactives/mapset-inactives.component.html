@@ -72,7 +72,6 @@
 		<div class="d-flex dropdown-group" *ngIf="showMappingsSection && numOfMembers > 0">
 			<div class="col-md-auto mt2-directory-chooser-column" *ngIf="showTable && showMapTable === 'table'">
 				<mat-menu #settingsMenu="matMenu" class="menu">
-					<div class="settings-heading mb-5">TABLE SETTINGS</div>
 					<app-column-chooser *ngIf="showPaging" title="Select Columns to Display" [gridColumnApi]="gridApi" [useDialog]="useDialog">
 					</app-column-chooser
 				></mat-menu>

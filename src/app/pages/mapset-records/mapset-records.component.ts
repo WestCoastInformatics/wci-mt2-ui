@@ -787,7 +787,13 @@ export class MapsetRecordsComponent implements OnInit {
 
 		this.gridOptions.useFsn = this.selectedLanguage.replace(/^.*:/, '').toLowerCase() == 'fsn';
 		this.gridOptions.language = this.selectedLanguage.replace(/:.*$/, '');
+		this.changeMappingsView('reset');
+		this.showPaging = false;
 		this.getMapsetInfo();
+		setTimeout(() => {
+			this.showPaging = true;
+			this.changeMappingsView('table');
+		}, 1000);
 	}
 
 	getLanguageNameValue(mapset: any) {

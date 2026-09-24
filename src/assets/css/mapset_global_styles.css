@@ -1110,6 +1110,9 @@ mt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 	left: -15px;
 	top: 0.05em;
 	cursor: pointer;
+}
+
+.clear-dd-search {
 	min-width: 24px;
 }
 
@@ -1784,11 +1787,6 @@ input[type='checkbox'] {
 	font-weight: 700;
 	margin-bottom: 32px;
 	padding: 5px 8px 5px 8px !important;
-	color: #666666;
-}
-
-.settings-heading {
-	font-weight: 700;
 	color: #666666;
 }
 
