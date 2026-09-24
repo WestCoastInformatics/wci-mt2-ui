@@ -23,7 +23,7 @@ export class ReadonlyTextModalComponent implements OnInit {
 		}
 	}
 
-	openCreateRefsetModal(refsetVersionNotes: NgbModal) {
-		this.modalService.open(refsetVersionNotes, { size: 'lg', windowClass: 'refset-version-notes' });
+	openCreateRefsetModal(mapsetVersionNotes: NgbModal) {
+		this.modalService.open(mapsetVersionNotes, { size: 'lg', windowClass: 'refset-version-notes' });
 	}
 }

@@ -31,24 +31,24 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		{ value: 'private', display: 'Private' },
 	];
 	selectedView = 'all';
-	refsetGridApi: any;
+	gridApi: any;
 	columnDefs: any;
-	refsetGridColumns = [
+	gridColumns = [
 		{ name: 'information', show: true },
-		{ name: 'refsetId', show: true },
+		{ name: 'mapsetId', show: true },
 	];
-	refsetGridOptions: any;
-	refsetGridPaging = {
+	gridOptions: any;
+	gridPaging = {
 		pageSize: 10,
 		pageSizeOptions: [10, 25, 50, 100],
 		totalKnown: false,
 		totalRows: null,
 		manualStateRefresh: Boolean(true),
 	};
-	refsetGridLastFilter = '';
-	refsetGridLastSort = '';
+	gridLastFilter = '';
+	gridLastSort = '';
 	showTable = false;
-	refsetData: any;
+	mapsetData: any;
 	dialog!: DialogService;
 	versionStatuses: any;
 	versions: any;
@@ -144,6 +144,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				key?.startsWith('library_mapsetGridCurrentPageSize') ||
 				key?.startsWith('library_mapsetGridCurrentPageNum') ||
 				key?.startsWith('library_mapsetRecordsColumns') ||
+				key?.startsWith('library_mapsetRecordsLanguage') ||
 				key?.startsWith('library_batchSearchInput') ||
 				key?.startsWith('projects_mapsetSearchInput') ||
 				key?.startsWith('projects_showMapTable') ||
@@ -151,6 +152,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				key?.startsWith('projects_mapsetGridCurrentPageSize') ||
 				key?.startsWith('projects_mapsetGridCurrentPageNum') ||
 				key?.startsWith('projects_mapsetRecordsColumns') ||
+				key?.startsWith('projects_mapsetRecordsLanguage') ||
 				key?.startsWith('projects_batchSearchInput')
 			) {
 				keysToRemove.push(key);
@@ -171,7 +173,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				resizable: true,
 				sortable: false,
 				unSortIcon: false,
-				suppressSorting: true,
 			},
 			{
 				field: 'mapSetName',
@@ -184,7 +185,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				sort: 'asc',
 				sortable: false,
 				unSortIcon: false,
-				suppressSorting: true,
 			},
 			{
 				field: 'conceptCode',
@@ -196,7 +196,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				cellClass: 'blue-link',
 				resizable: true,
 				sortable: false,
-				suppressSorting: true,
 			},
 			{
 				field: 'conceptName',
@@ -209,7 +208,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				sort: 'asc',
 				sortable: false,
 				unSortIcon: false,
-				suppressSorting: true,
 			},
 			{
 				field: 'workflowStatus',
@@ -237,22 +235,21 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				floatingFilterComponentParams: { suppressFilterButton: true },
 				sortable: false,
 				unSortIcon: false,
-				suppressSorting: true,
 			},
 		];
-		this.refsetGridOptions = {
+		this.gridOptions = {
 			context: { componentParent: this },
 			pagination: true,
 			animateRows: false,
 			rowModelType: 'clientSide',
 			suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
 			suppressPaginationPanel: true,
-			paginationPageSize: this.refsetGridPaging.pageSize,
+			paginationPageSize: this.gridPaging.pageSize,
 			rowSelection: 'single',
 			enableCellTextSelection: true,
 			onCellDoubleClicked: this.onGridCellClick,
 			onGridReady: this.onGridReady,
-			frameworkComponents: {
+			components: {
 				templateRenderer: TemplateRendererComponent,
 				categoryFilterComponent: CategoryFilterComponent,
 				dateTextFilterComponent: DateTextFilterComponent,
@@ -263,7 +260,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				sortingOrder: ['asc', 'desc'],
 				floatingFilter: false,
 				floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false },
-				suppressMenu: true,
+				suppressHeaderMenuButton: true,
 				resizable: true,
 			},
 			enableBrowserTooltips: true,
@@ -280,11 +277,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	//***** AG Grid Functions *****/
 	onGridReady = (gridReadyParams: any) => {
 		this.originalGridParams = gridReadyParams;
-		this.refsetGridApi = gridReadyParams.api;
-		this.refsetGridApi.setFilterModel(null);
+		this.gridApi = gridReadyParams.api;
+		this.gridApi.setFilterModel(null);
 		this.onResize(undefined);
 
-		this.refsetGridApi.showLoadingOverlay();
+		this.gridApi.setGridOption('loading', true);
 		let query = '';
 
 		if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
@@ -292,9 +289,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		}
 
 		const pageNumber = 1;
-		this.refsetGridPaging.totalRows = null;
-		this.refsetGridPaging.totalKnown = false;
-		this.refsetGridApi?.api?.paginationGoToPage(0);
+		this.gridPaging.totalRows = null;
+		this.gridPaging.totalKnown = false;
+		this.gridApi?.api?.paginationGoToPage(0);
 
 		const restParams: any = {
 			displayType: 'list',
@@ -314,7 +311,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				this.showLoadingSearch = false;
 				const data = results;
 				let mappings = [];
-				this.refsetData = [];
+				this.mapsetData = [];
 
 				for (const item of data.items) {
 					let mapping = {
@@ -342,16 +339,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 												amp.conceptName = results.items[0].name;
 											}
 										}
-										this.refsetData = mappings;
-										results.items = this.refsetData;
-										UiUtility.applyServerPagedGridResults(
-											results,
-											this.refsetGridApi,
-											this.refsetGridPaging,
-											pageNumber,
-											null,
-											false,
-										);
+										this.mapsetData = mappings;
+										results.items = this.mapsetData;
+										UiUtility.applyServerPagedGridResults(results, this.gridApi, this.gridPaging, pageNumber, null, false);
 									} else {
 										console.error('no mapset found');
 									}
@@ -364,21 +354,21 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 						}
 					}
 				}
-				this.refsetData = mappings;
+				this.mapsetData = mappings;
 				this.numOfMembers = results.total;
 				this.numOfResults = results.total;
-				results.items = this.refsetData;
+				results.items = this.mapsetData;
 				const lastIndex = document.getElementsByClassName('ag-header').length - 1;
 				const child = document.getElementsByClassName('ag-header')[lastIndex];
 				document.getElementById('directoryHeader').appendChild(child);
 
 				if (results.total == 0) {
-					this.refsetGridPaging.totalKnown = true;
-					this.refsetGridApi.showNoRowsOverlay();
-					this.refsetGridApi.setGridOption('rowData', []);
+					this.gridPaging.totalKnown = true;
+					this.gridApi.showNoRowsOverlay();
+					this.gridApi.setGridOption('rowData', []);
 					if (pageNumber > 1) {
-						this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
-						this.refsetGridPaging.totalKnown = true;
+						this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);
+						this.gridPaging.totalKnown = true;
 					}
 					this.showPaging = false;
 					return;
@@ -386,11 +376,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					this.showPaging = true;
 				}
 
-				UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
+				UiUtility.applyServerPagedGridResults(results, this.gridApi, this.gridPaging, pageNumber, null, false);
 			},
 			error: (err: any) => {
-				this.refsetGridApi.showNoRowsOverlay();
-				this.refsetGridApi.setGridOption('rowData', []);
+				this.gridApi.showNoRowsOverlay();
+				this.gridApi.setGridOption('rowData', []);
 				this.authenticationService.checkError(err);
 			},
 		});
@@ -410,8 +400,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 	getCurrentPage() {
 		let current = 1;
-		if (this.refsetGridApi) {
-			current = this.refsetGridApi.paginationGetCurrentPage();
+		if (this.gridApi) {
+			current = this.gridApi.paginationGetCurrentPage();
 		}
 		return current;
 	}
@@ -437,7 +427,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		if (event.column.colId === 'information' || event.column.colId === 'actions') {
 			//
 		} else {
-			const selectedRow = this.refsetGridApi.getSelectedRows()[0];
+			const selectedRow = this.gridApi.getSelectedRows()[0];
 			if (selectedRow) {
 				this.goToMappingPage(selectedRow.mapSetCode, selectedRow.conceptCode);
 			}
@@ -470,7 +460,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		this.searchInput = this.searchInput.trim();
 
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-			this.refsetGridApi.setGridOption('quickFilterText', this.searchInput);
+			this.gridApi.setGridOption('quickFilterText', this.searchInput);
 			localStorage.setItem('librarySearchInput', JSON.stringify(this.searchInput));
 		}
 	}
@@ -488,17 +478,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		this.router.navigate(['library/mapset/' + code + '/mappings'], { replaceUrl: false, skipLocationChange: false });
 	}
 
-	getRefsetRow(refsetId: string) {
-		let refset;
+	getRefsetRow(mapsetId: string) {
+		let mapset;
 
-		for (let i = 0; i < this.refsetData.length; i++) {
-			if (this.refsetData[i].refsetId == refsetId) {
-				refset = this.refsetData[i];
+		for (let i = 0; i < this.mapsetData.length; i++) {
+			if (this.mapsetData[i].refsetId == mapsetId) {
+				mapset = this.mapsetData[i];
 				break;
 			}
 		}
 
-		return refset;
+		return mapset;
 	}
 
 	formatVersionDate(date: any): string {
@@ -567,8 +557,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		document.getElementsByClassName('ag-header')[0]?.setAttribute('style', `width: ${gridWidth}px;`);
 	}
 
-	setDescriptions(refsetData: any): Array<string> {
-		return refsetData?.descriptions;
+	setDescriptions(mapsetData: any): Array<string> {
+		return mapsetData?.descriptions;
 	}
 
 	showFlagIcon(event: any, show: any) {
@@ -579,8 +569,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	latestDate(refset: any, versionList: any[]): string {
-		if (refset.versionStatus === Constants.IN_DEVELOPMENT) {
+	latestDate(mapset: any, versionList: any[]): string {
+		if (mapset.versionStatus === Constants.IN_DEVELOPMENT) {
 			return 'Latest';
 		}
 		return versionList && versionList[0] ? `${versionList[0].date}` : '';

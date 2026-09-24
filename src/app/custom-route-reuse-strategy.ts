@@ -9,7 +9,10 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
 	back = false;
 	previousBreadcrumbLabel: any;
 
-	constructor(location: LocationStrategy, private breadcrumbService: BreadcrumbService) {
+	constructor(
+		location: LocationStrategy,
+		private breadcrumbService: BreadcrumbService,
+	) {
 		location.onPopState(() => {
 			this.back = true;
 		});
@@ -61,13 +64,7 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
 
 	private setBreadcrumbs(route: ActivatedRouteSnapshot): void {
 		if (route.url[0]) {
-			if (this.previousBreadcrumbLabel != null && route.url[0].path === 'details' && this.previousBreadcrumbLabel.includes('Map Set Library')) {
-				this.breadcrumbService.setBreadcrumbs([{ path: '/library', label: 'Map Set Library' }, { label: 'Reference Set Details' }]);
-			} else if (this.previousBreadcrumbLabel != null && route.url[0].path === 'details' && this.previousBreadcrumbLabel.includes('Projects')) {
-				this.breadcrumbService.setBreadcrumbs([{ path: '/projects', label: 'Projects' }, { label: 'Reference Set Details' }]);
-			} else {
-				this.breadcrumbService.setBreadcrumbs([{ label: route.data['breadcrumbLabel'] }]);
-			}
+			this.breadcrumbService.setBreadcrumbs([{ label: route.data['breadcrumbLabel'] }]);
 		}
 	}
 }

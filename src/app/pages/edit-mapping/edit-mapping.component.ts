@@ -63,23 +63,23 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 	];
 	selectedView = 'all';
 	selectedBrowser = '';
-	refsetGridApi: any;
+	gridApi: any;
 	columnDefs = [];
-	refsetGridColumns = [
+	gridColumns = [
 		{ name: 'information', show: true },
-		{ name: 'refsetId', show: true },
+		{ name: 'mapsetId', show: true },
 	];
 	rowSelection = 'multiple';
-	refsetGridOptions: any;
-	refsetGridPaging = {
+	gridOptions: any;
+	gridPaging = {
 		pageSize: 10,
 		pageSizeOptions: [10, 25, 50, 100],
 		totalKnown: false,
 		totalRows: null,
 		manualStateRefresh: Boolean(true),
 	};
-	refsetGridLastFilter = '';
-	refsetGridLastSort = '';
+	gridLastFilter = '';
+	gridLastSort = '';
 	showTable = false;
 	mapsetData = [];
 	dialog!: DialogService;
@@ -143,7 +143,6 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 	rowColors = [{ background: 'white' }, { background: '#f2f2f2' }];
 	currentRowColor = 0;
 	moduleMetadata: any;
-	refsetData: any;
 	loadedBrowser = false;
 	isNewPageSize = false;
 	paginationPages: any = {};
@@ -1228,7 +1227,7 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 				const startRow = rowParams.startRow;
 				const endRow = rowParams.endRow;
 				const sortModel = rowParams.sortModel;
-				this.browserApi.showLoadingOverlay();
+				this.browserApi.setGridOption('loading', true);
 
 				let query = this.searchBrowserInput;
 				if (this.searchBrowserInput === '') {
@@ -1279,7 +1278,7 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 
 								if (this.browserData?.length > 0) {
 									this.showPaging = true;
-									this.browserApi.hideOverlay();
+									this.browserApi.setGridOption('loading', false);
 									this.paginationPages = Math.ceil(this.numOfMembers / this.browserPaging.pageSize)
 										? this.pagerService.getPager(
 												Math.ceil(this.numOfMembers / this.browserPaging.pageSize),
@@ -1337,7 +1336,6 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 				cellClass: 'blue-link',
 				resizable: false,
 				sortable: false,
-				suppressSorting: true,
 			},
 			{
 				field: 'name',
@@ -1348,13 +1346,11 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 				minWidth: 165,
 				resizable: false,
 				sortable: false,
-				suppressSorting: true,
 			},
 		];
 		this.browserOptions = {
 			context: { componentParent: this },
 			pagination: true,
-			angularCompileHeaders: true,
 			suppressColumnVirtualisation: true,
 			suppressPaginationPanel: true,
 			rowModelType: 'infinite',
@@ -1378,7 +1374,7 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 			onCellClicked: this.onBrowserCellClick,
 			onPaginationChanged: (event: any) => this.onPaginationChanged(event),
 			domLayout: 'autoHeight',
-			frameworkComponents: {
+			components: {
 				templateRenderer: TemplateRendererComponent,
 			},
 			defaultColDef: {
@@ -1386,9 +1382,8 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 				filter: false,
 				sortingOrder: ['asc', 'desc'],
 				floatingFilter: false,
-				suppressMenu: true,
+				suppressHeaderMenuButton: true,
 				resizable: true,
-				suppressSorting: true,
 				suppressMovable: true,
 			},
 			enableBrowserTooltips: true,

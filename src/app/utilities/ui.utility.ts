@@ -877,7 +877,7 @@ export class UiUtility {
 		}
 
 		if (results.items.length > 0) {
-			gridApi.hideOverlay();
+			gridApi.setGridOption('loading', false);
 			let lastRow = -1;
 
 			if (results.totalKnown || results.items.length < gridApi.paginationGetPageSize() || pagingParams.totalKnown) {

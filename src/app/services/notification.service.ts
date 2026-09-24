@@ -12,7 +12,7 @@ export class NotificationService {
 		private readonly sanitizer: DomSanitizer,
 	) {}
 
-	show(message: string, title: string = null, type = 'info', config: any = {}, refsetId = '', buttons: IToastButton[] = []): ActiveToast<any> {
+	show(message: string, title: string = null, type = 'info', config: any = {}, mapsetId = '', buttons: IToastButton[] = []): ActiveToast<any> {
 		const additonalConfig = {
 			timeOut: 25000,
 			enableHtml: true,
@@ -22,7 +22,7 @@ export class NotificationService {
 		};
 
 		const toast = this.toastr.show(message, title, { ...additonalConfig, ...config }, 'toast-' + type);
-		toast.toastRef.componentInstance.refsetId = refsetId;
+		toast.toastRef.componentInstance.refsetId = mapsetId;
 
 		if (buttons.length > 0) {
 			toast.toastRef.componentInstance.buttons = buttons;
@@ -36,7 +36,7 @@ export class NotificationService {
 		title: string = null,
 		progressFn: () => number = null,
 		config: any = {},
-		refsetId = '',
+		mapsetId = '',
 		buttons: IToastButton[] = [],
 	): ActiveToast<any> {
 		const additonalConfig = {
@@ -48,7 +48,7 @@ export class NotificationService {
 			progressAnimation: 'increasing',
 		};
 
-		const toast = this.show(message, title, 'info', { ...additonalConfig, ...config }, refsetId, buttons);
+		const toast = this.show(message, title, 'info', { ...additonalConfig, ...config }, mapsetId, buttons);
 
 		this.setProgressLength(toast, 0);
 		return toast;
@@ -143,7 +143,7 @@ export class NotificationService {
 		return newToast;
 	}
 
-	getNotificationsForRefset(refsetId: string, title: string) {
+	getNotificationsForRefset(mapsetId: string, title: string) {
 		const allToasts: ActiveToast<any>[] = this.toastr.toasts;
 		const toastInstances: ActiveToast<any>[] = [];
 
@@ -151,7 +151,7 @@ export class NotificationService {
 			const toast = allToasts[i];
 			const instance = toast.toastRef.componentInstance;
 
-			if (instance.refsetId == refsetId && toast.title == title) {
+			if (instance.refsetId == mapsetId && toast.title == title) {
 				toastInstances.push(toast);
 			}
 		}

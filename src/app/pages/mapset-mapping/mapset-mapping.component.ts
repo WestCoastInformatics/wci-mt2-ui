@@ -32,7 +32,7 @@ export class MapsetMappingComponent implements OnInit {
 		{ value: 'public', display: 'Public' },
 		{ value: 'private', display: 'Private' },
 	];
-	refsetGridApi: any;
+	gridApi: any;
 	mapsetData: any[] = [];
 	dialog!: DialogService;
 	versionStatuses: any;
@@ -73,7 +73,6 @@ export class MapsetMappingComponent implements OnInit {
 	rowColors = [{ background: 'white' }, { background: '#f2f2f2' }];
 	currentRowColor = 0;
 	moduleMetadata: any;
-	refsetData: any;
 	editEnabled = false;
 	currentStatus = '';
 	assignedUser = '';

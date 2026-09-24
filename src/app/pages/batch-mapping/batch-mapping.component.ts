@@ -70,8 +70,8 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 	];
 	selectedView = 'all';
 	rowSelection = 'multiple';
-	refsetGridLastFilter = '';
-	refsetGridLastSort = '';
+	gridLastFilter = '';
+	gridLastSort = '';
 	showTable = false;
 	mapsetResponse: any[] = [];
 	mapsetData: any;
@@ -299,7 +299,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		this.gridOptions = {
 			context: { componentParent: this },
 			pagination: false,
-			angularCompileHeaders: true,
 			suppressColumnVirtualisation: true,
 			suppressPaginationPanel: true,
 			paginationPageSize: this.gridPaging.pageSize,
@@ -310,7 +309,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			onGridReady: this.onGridReady,
 			onCellDoubleClicked: this.onGridCellClick,
 			onCellValueChanged: this.onCellValueChanged,
-			frameworkComponents: {
+			components: {
 				templateRenderer: TemplateRendererComponent,
 				categoryFilterComponent: CategoryFilterComponent,
 				dateTextFilterComponent: DateTextFilterComponent,
@@ -320,9 +319,8 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				filter: false,
 				sortingOrder: ['asc', 'desc'],
 				floatingFilter: false,
-				suppressMenu: true,
+				suppressHeaderMenuButton: true,
 				resizable: true,
-				suppressSorting: true,
 				suppressMovable: true,
 			},
 			enableBrowserTooltips: true,
@@ -348,7 +346,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				cellClass: 'blue-link',
 				resizable: false,
 				sortable: false,
-				suppressSorting: true,
 			},
 			{
 				field: 'name',
@@ -359,13 +356,11 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				minWidth: 165,
 				resizable: false,
 				sortable: false,
-				suppressSorting: true,
 			},
 		];
 		this.browserOptions = {
 			context: { componentParent: this },
 			pagination: true,
-			angularCompileHeaders: true,
 			suppressColumnVirtualisation: true,
 			suppressPaginationPanel: true,
 			rowModelType: 'infinite',
@@ -389,7 +384,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			onCellClicked: this.onBrowserCellClick,
 			onPaginationChanged: (event: any) => this.onPaginationChanged(event),
 			domLayout: 'autoHeight',
-			frameworkComponents: {
+			components: {
 				templateRenderer: TemplateRendererComponent,
 			},
 			defaultColDef: {
@@ -397,9 +392,8 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				filter: false,
 				sortingOrder: ['asc', 'desc'],
 				floatingFilter: false,
-				suppressMenu: true,
+				suppressHeaderMenuButton: true,
 				resizable: true,
-				suppressSorting: true,
 				suppressMovable: true,
 			},
 			enableBrowserTooltips: true,
@@ -438,7 +432,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				filter: false,
 				resizable: false,
 				sortable: false,
-				suppressSorting: true,
 				getQuickFilterText: (params: any) => {
 					return '';
 				},
@@ -453,7 +446,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				cellClass: 'blue-link',
 				resizable: true,
 				sortable: false,
-				suppressSorting: true,
 			},
 			{
 				field: 'name',
@@ -467,7 +459,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				cellRendererParams: { template: this.nameSection },
 				sortable: false,
 				unSortIcon: false,
-				suppressSorting: true,
 			},
 			{
 				field: 'toCode',
@@ -482,7 +473,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				resizable: true,
 				unSortIcon: false,
 				sortable: false,
-				suppressSorting: true,
 			},
 			{
 				field: 'toName',
@@ -492,7 +482,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				resizable: true,
 				unSortIcon: true,
 				sortable: false,
-				suppressSorting: true,
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.toNameSection },
 			},
@@ -519,7 +508,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				},
 				unSortIcon: true,
 				sortable: false,
-				suppressSorting: true,
 				minWidth: 165,
 				width: 165,
 				editable: (params: any) => {
@@ -556,7 +544,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				},
 				unSortIcon: true,
 				sortable: false,
-				suppressSorting: true,
 			},
 			{
 				colId: 'advices',
@@ -571,7 +558,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				cellRendererParams: { template: this.adviceSection },
 				unSortIcon: true,
 				sortable: false,
-				suppressSorting: true,
 			},
 			{
 				colId: 'workflowStatus',
@@ -585,6 +571,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.workflowStatus },
 				unSortIcon: true,
+				sortable: false,
 				hide: true,
 			},
 			{
@@ -598,7 +585,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				resizable: true,
 				unSortIcon: true,
 				sortable: false,
-				suppressSorting: true,
 			},
 			{
 				field: 'modified',
@@ -614,7 +600,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				floatingFilterComponentParams: { suppressFilterButton: true },
 				unSortIcon: true,
 				sortable: false,
-				suppressSorting: true,
 			},
 			{
 				field: 'feedback',
@@ -627,7 +612,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				sortable: false,
 				filter: false,
 				resizable: false,
-				suppressSorting: true,
 				getQuickFilterText: (params: any) => {
 					return '';
 				},
@@ -1089,7 +1073,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				const startRow = rowParams.startRow;
 				const endRow = rowParams.endRow;
 				const sortModel = rowParams.sortModel;
-				this.browserApi.showLoadingOverlay();
+				this.browserApi.setGridOption('loading', true);
 
 				let query = this.searchBrowserInput;
 				if (this.searchBrowserInput === '') {
@@ -1156,7 +1140,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 
 								if (this.browserData?.length > 0) {
 									this.showPaging = true;
-									this.browserApi.hideOverlay();
+									this.browserApi.setGridOption('loading', false);
 									this.paginationPages = Math.ceil(this.numOfMembers / this.browserPaging.pageSize)
 										? this.pagerService.getPager(
 												Math.ceil(this.numOfMembers / this.browserPaging.pageSize),
