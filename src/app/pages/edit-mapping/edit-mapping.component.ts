@@ -990,6 +990,9 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 					this.refsetService.updateMapsetMapping(this.mapsetInfo.id, saveMapset).subscribe(
 						(status: any) => {
 							this.notificationService.show('The mapping has been saved.', 'Saved', 'success', { timeOut: 0, extendedTimeOut: 0 });
+							setTimeout(() => {
+								this.getMapsetData();
+							}, 50);
 						},
 						(err) => {
 							console.error(' Error: ', err);

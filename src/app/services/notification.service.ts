@@ -71,10 +71,6 @@ export class NotificationService {
 			toast.toastRef.componentInstance.options = { ...toast.toastRef.componentInstance.options, ...options };
 		}
 
-		// if (options != null && options['closeButton'] != null) {
-		//     toast.toastRef.componentInstance.closeButton = options.closeButton;
-		// }
-
 		if (progress != null) {
 			this.setProgressLength(toast, progress);
 		}
