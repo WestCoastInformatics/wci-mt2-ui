@@ -78,7 +78,7 @@ export class MapsetMappingComponent implements OnInit {
 	currentStatus = '';
 	assignedUser = '';
 	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
-	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
+	workFlowMapActions = [];
 	reviewMapWF: any;
 	mapsetMappingPage: any;
 
