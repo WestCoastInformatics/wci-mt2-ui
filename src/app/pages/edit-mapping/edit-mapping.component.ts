@@ -158,7 +158,7 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 	currentStatus = '';
 	assignedUser = '';
 	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
-	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
+	workFlowMapActions = [];
 	reviewMapWF: any;
 	editMappingsPage: any;
 

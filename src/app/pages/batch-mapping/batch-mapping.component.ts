@@ -179,7 +179,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 	waitingForMapResponse = false;
 	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
 	workFlowMapNotesFC = new FormControl('');
-	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
+	workFlowMapActions = [];
 	reviewMapWF: any;
 	batchMappingsPage: any;
 	isMultiple = false;
@@ -2103,13 +2103,13 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				this.checkedNum++;
 			}
 		}
-		if (this.checkedNum > 0) {
-			this.checkedStatusActions();
-		}
+		this.checkedStatusActions();
 	}
 
 	checkedStatusActions() {
 		this.singleEditEnabled = false;
+		this.batchEditEnabled = false;
+		this.workFlowMapActions = [];
 		let multiStatus = [];
 		let assigned = [];
 		for (let c = 0; c < this.mapsetData.length; c++) {
@@ -2119,8 +2119,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			}
 		}
 		if (this.checkedNum > 0 && multiStatus.length > 0) {
-			this.batchEditEnabled = false;
-			this.workFlowMapActions = [];
 			const availableActions = this.reviewMapWF.filter((wf: any) => {
 				if (!multiStatus.includes(wf.status)) {
 					return false;
@@ -2158,9 +2156,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		this.gridApi.setGridOption('rowData', this.mapsetData);
 		this.gridApi.redrawRows();
 		this.checkedNum = this.gridSelectAll ? this.mapsetData.length : 0;
-		if (this.checkedNum > 0) {
-			this.checkedStatusActions();
-		}
+		this.checkedStatusActions();
 	}
 
 	setHeaderGroup() {

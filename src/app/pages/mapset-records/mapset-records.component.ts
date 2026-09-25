@@ -197,7 +197,7 @@ export class MapsetRecordsComponent implements OnInit {
 	waitingForMapResponse = false;
 	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
 	workFlowMapNotesFC = new FormControl('');
-	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
+	workFlowMapActions = [];
 	reviewMapWF: any;
 	mapRecordsPage: any;
 	isMultiple = false;
@@ -914,9 +914,7 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 		this.refsetGridApi.redrawRows();
 		this.checkedNum = this.gridSelectAll ? this.mapsetData.length : 0;
-		if (this.checkedNum > 0) {
-			this.checkedStatusActions();
-		}
+		this.checkedStatusActions();
 	}
 
 	onGridReady = (gridReadyParams: any) => {
@@ -1222,13 +1220,13 @@ export class MapsetRecordsComponent implements OnInit {
 				this.checkedNum++;
 			}
 		}
-		if (this.checkedNum > 0) {
-			this.checkedStatusActions();
-		}
+		this.checkedStatusActions();
 	}
 
 	checkedStatusActions() {
 		this.singleEditEnabled = false;
+		this.batchEditEnabled = false;
+		this.workFlowMapActions = [];
 		let multiStatus = [];
 		let assigned = [];
 		for (let c = 0; c < this.mapsetData.length; c++) {
@@ -1238,7 +1236,6 @@ export class MapsetRecordsComponent implements OnInit {
 			}
 		}
 		if (this.checkedNum === 1 && multiStatus.length === 1) {
-			this.workFlowMapActions = [];
 			this.workFlowMapActions = this.reviewMapWF.filter((wf: any) => {
 				if (multiStatus[0] !== wf.status) {
 					return false;
@@ -1259,13 +1256,10 @@ export class MapsetRecordsComponent implements OnInit {
 			}
 		}
 		if (this.checkedNum > 1 && multiStatus.length > 1) {
-			this.batchEditEnabled = false;
-			this.workFlowMapActions = [];
 			const availableActions = this.reviewMapWF.filter((wf: any) => {
 				if (!multiStatus.includes(wf.status)) {
 					return false;
 				}
-
 				return Array.isArray(wf.roles) && wf.roles.some((role: string) => this.userRoles.includes(role));
 			});
 			if (availableActions) {
