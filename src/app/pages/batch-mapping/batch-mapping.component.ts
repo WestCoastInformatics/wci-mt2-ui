@@ -2314,7 +2314,11 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			for (let c = 0; c < this.mapsetData.length; c++) {
 				const currentItem = this.mapsetData[c];
 
-				if (currentItem.checked === true && !this.conceptCodeList.includes(currentItem.code)) {
+				if (
+					currentItem.checked === true &&
+					this.workFlowMapStatus.status === currentItem.workflowStatus &&
+					!this.conceptCodeList.includes(currentItem.code)
+				) {
 					this.conceptCodeList.push(currentItem.code);
 				}
 			}
