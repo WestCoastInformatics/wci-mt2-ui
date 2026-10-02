@@ -907,7 +907,7 @@
 	</ng-template>
 
 	<ng-template #reportModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<div class="modal-title">{{ report?.title }}</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeReportModal()">
 				<span aria-hidden="true">&times;</span>
@@ -916,9 +916,9 @@
 		<div class="modal-body m-t-10">
 			<p class="p-l-30 p-t-10 p-b-0">Are you sure you want to request this report?</p>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeReportModal()">Cancel</button>
-			<button type="button" title="Edit" class="rt2-btn rt2-action-btn" (click)="requestReport()">Submit</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeReportModal()">Cancel</button>
+			<button type="button" title="Edit" class="mt2-btn mt2-action-btn" (click)="requestReport()">Submit</button>
 		</div>
 	</ng-template>
 
