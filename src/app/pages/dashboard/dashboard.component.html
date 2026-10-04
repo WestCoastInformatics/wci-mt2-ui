@@ -29,7 +29,7 @@
 				<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
 				<div class="mt2-pagination-container" [hidden]="showLoadingSearch || numOfMembers === 0">
 					<div class="mt2-pagination-top-row">
-						<div *ngIf="paginationPages.totalPages > 1" class="mt2-pagination-buttons no-wrap">
+						<div *ngIf="false" class="mt2-pagination-buttons no-wrap">
 							<button
 								#paginationFirstPage
 								mat-raised-button
@@ -116,7 +116,7 @@
 							</button>
 						</div>
 
-						<div class="mt2-pagination-bottom-row" *ngIf="showPaging">
+						<div class="mt2-pagination-bottom-row" *ngIf="false">
 							<span *ngFor="let sizeOption of gridPaging.pageSizeOptions">
 								<button
 									mat-raised-button
@@ -137,14 +137,7 @@
 							<span class="fw-bold p-l-5 p-r-5">
 								{{ (getCurrentPage() + 1) * gridPaging.pageSize - gridPaging.pageSize + 1 }}
 							</span>
-							to
-							<span class="fw-bold p-l-5 p-r-5">
-								{{
-									numOfMembers < (getCurrentPage() + 1) * gridPaging.pageSize
-										? numOfMembers
-										: (getCurrentPage() + 1) * gridPaging.pageSize
-								}}
-							</span>
+
 							of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
 						</div>
 						<div *ngIf="searchInput !== ''">Showing {{ gridApi.getDisplayedRowCount() }} search results</div>

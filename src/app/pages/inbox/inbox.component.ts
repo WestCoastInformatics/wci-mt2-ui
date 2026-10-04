@@ -43,9 +43,9 @@ export class InboxComponent implements OnInit, AfterViewInit {
 	];
 	gridOptions: any;
 	gridPaging = {
-		pageSize: 10,
-		pageSizeOptions: [10, 25, 50, 100],
-		totalKnown: false,
+		pageSize: 1000,
+		pageSizeOptions: [1000],
+		totalKnown: true,
 		totalRows: null,
 		manualStateRefresh: Boolean(true),
 	};
@@ -259,7 +259,7 @@ export class InboxComponent implements OnInit, AfterViewInit {
 		];
 		this.gridOptions = {
 			context: { componentParent: this },
-			pagination: true,
+			pagination: false,
 			animateRows: false,
 			rowModelType: 'clientSide',
 			suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
@@ -401,14 +401,16 @@ export class InboxComponent implements OnInit, AfterViewInit {
 					this.showPaging = false;
 					return;
 				} else {
+					this.gridPaging.totalRows = results.total;
+					this.gridPaging.totalKnown = true;
+					this.gridPaging.pageSize = results.total;
 					this.showPaging = true;
 				}
 				if (localStorage.getItem('librarySearchInput')) {
 					this.searchInput = JSON.parse(localStorage.getItem('librarySearchInput'));
 					this.gridApi.setGridOption('quickFilterText', this.searchInput);
 				}
-
-				UiUtility.applyServerPagedGridResults(results, this.gridApi, this.gridPaging, pageNumber, null, false);
+				this.gridApi.setGridOption('rowData', this.mapsetData);
 			},
 			error: (error: any) => {
 				//console.log(' Error: ', error);

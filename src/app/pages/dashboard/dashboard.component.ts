@@ -40,8 +40,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	gridOptions: any;
 	gridPaging = {
 		pageSize: 10,
-		pageSizeOptions: [10, 25, 50, 100],
-		totalKnown: false,
+		pageSizeOptions: [10],
+		totalKnown: true,
 		totalRows: null,
 		manualStateRefresh: Boolean(true),
 	};
@@ -239,7 +239,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		];
 		this.gridOptions = {
 			context: { componentParent: this },
-			pagination: true,
+			pagination: false,
 			animateRows: false,
 			rowModelType: 'clientSide',
 			suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
@@ -355,8 +355,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					}
 				}
 				this.mapsetData = mappings;
-				this.numOfMembers = results.total;
-				this.numOfResults = results.total;
+				this.numOfMembers = results.limit;
+				this.numOfResults = results.limit;
 				results.items = this.mapsetData;
 				const lastIndex = document.getElementsByClassName('ag-header').length - 1;
 				const child = document.getElementsByClassName('ag-header')[lastIndex];
@@ -373,10 +373,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					this.showPaging = false;
 					return;
 				} else {
+					this.gridPaging.totalRows = results.limit;
+					this.gridPaging.totalKnown = true;
+					this.gridPaging.pageSize = results.limit;
 					this.showPaging = true;
 				}
-
-				UiUtility.applyServerPagedGridResults(results, this.gridApi, this.gridPaging, pageNumber, null, false);
+				this.gridApi.setGridOption('rowData', this.mapsetData);
 			},
 			error: (err: any) => {
 				this.gridApi.showNoRowsOverlay();
