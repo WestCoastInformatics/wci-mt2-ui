@@ -27,6 +27,7 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { Constants } from 'src/app/utilities/constants.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
@@ -160,6 +161,15 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 	workFlowMapActions = [];
 	reviewMapWF: any;
 	editMappingsPage: any;
+	languageOptions = [
+		{
+			value: Constants.DEFAULT_ACCEPT_LANGUAGE + ':' + Constants.DEFAULT_LANGUAGE_TYPE,
+			display: Constants.DEFAULT_LANGUAGE_CODE + ' (' + Constants.DEFAULT_LANGUAGE_TYPE + ')',
+		},
+	];
+	selectedLanguage: string = Constants.DEFAULT_ACCEPT_LANGUAGE + ':' + Constants.DEFAULT_LANGUAGE_TYPE;
+	selectedLanguageIndex = 0;
+	mapsetLanguageStorage = 'mapsetLanguage';
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -321,6 +331,27 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 					this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
 					localStorage.setItem('projects_mapsetVersion', JSON.stringify(this.selectedVersion));
 				}
+				const languages = this.mapsetInfo?.mapProject.edition?.fullyQualifiedLanguageRefsets;
+				const languageRefsetOptions = [];
+				const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
+				if (languageStorage) {
+					this.selectedLanguage = languageStorage;
+				}
+				for (const language of languages) {
+					let type = 'PT';
+					if (language.qualifiedLanguageCode.indexOf('FSN') >= 0) {
+						type = 'FSN';
+					}
+					const languageValue = language.languageCode + '-X-' + language.languageRefset + ':' + type;
+					if (CodeUtility.testBoolean(language.default) && !this.selectedLanguage && !languageStorage) {
+						this.selectedLanguage = languageValue;
+					}
+					languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageDialectCode + ' (' + type + ')' });
+				}
+				if (languageRefsetOptions.length > 0) {
+					this.languageOptions = languageRefsetOptions;
+				}
+				this.loadLanguageStorage();
 				this.getMapsetData();
 				this.getMapProject();
 			},
@@ -419,6 +450,59 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 			}
 		}
 		return '';
+	}
+
+	changeLanguage() {
+		const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
+
+		this.selectedLanguageIndex = this.languageOptions.findIndex((option) => option.value === this.selectedLanguage);
+		if (this.selectedLanguage !== languageStorage) {
+			localStorage.setItem(this.mapsetLanguageStorage, this.selectedLanguage);
+		}
+		this.getMapsetInfo();
+	}
+
+	getLanguageNameValue(mapset: any) {
+		if (!CodeUtility.hasValue(mapset)) {
+			return '';
+		}
+		let text = '';
+		const choosenDescription = mapset.descriptions[this.selectedLanguageIndex];
+
+		if (choosenDescription != null) {
+			text = choosenDescription.term;
+		} else if (mapset.descriptions[0] != null) {
+			text = mapset.descriptions[0].term;
+		} else {
+			text = mapset.name;
+		}
+		return text;
+	}
+
+	languageNameValueGetter(params: any) {
+		if (!CodeUtility.hasValue(params.data)) {
+			return '';
+		}
+		const mapset = params.data;
+		let text = '';
+		const choosenDescription = mapset.descriptions[this.selectedLanguageIndex];
+
+		if (choosenDescription != null) {
+			text = choosenDescription.term;
+		} else if (mapset.descriptions[0] != null) {
+			text = mapset.descriptions[0].term;
+		} else {
+			text = mapset.name;
+		}
+		return text;
+	}
+
+	loadLanguageStorage() {
+		const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
+		if (languageStorage) {
+			this.selectedLanguage = languageStorage;
+		}
+		this.selectedLanguageIndex = this.languageOptions.findIndex((option) => option.value === this.selectedLanguage);
 	}
 
 	getModuleLanguageIcon(moduleId: string) {
