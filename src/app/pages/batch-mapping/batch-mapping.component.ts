@@ -27,6 +27,7 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { Constants } from 'src/app/utilities/constants.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
@@ -133,6 +134,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 	showTargetPopover = false;
 	tempModuleIdChangeBeforeRelease = '449080006';
 	mapsetBatchColumnStorage = 'mapsetBatchColumnStorage';
+	mapsetLanguageStorage = 'mapsetLanguage';
 	batchSearchInput = 'batchSearchInput';
 	mapsetBatchWorkflowFilter = 'mapsetBatchWorkflowFilter';
 	mapsetBatchAssignedFilter = 'mapsetBatchAssignedFilter';
@@ -196,6 +198,14 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		{ label: 'In Review', value: 'REVIEW_IN_PROGRESS' },
 	];
 	assignedFilterOptions: any[] = [];
+	languageOptions = [
+		{
+			value: Constants.DEFAULT_ACCEPT_LANGUAGE + ':' + Constants.DEFAULT_LANGUAGE_TYPE,
+			display: Constants.DEFAULT_LANGUAGE_CODE + ' (' + Constants.DEFAULT_LANGUAGE_TYPE + ')',
+		},
+	];
+	selectedLanguage: string = Constants.DEFAULT_ACCEPT_LANGUAGE + ':' + Constants.DEFAULT_LANGUAGE_TYPE;
+	selectedLanguageIndex = 0;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
@@ -450,11 +460,12 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			{
 				field: 'name',
 				tooltipField: 'name',
-				headerName: 'Source PT',
-				headerTooltip: 'Source PT',
+				headerName: `Source ${this.selectedLanguage.split(':')[1]}`,
+				headerTooltip: `Source ${this.selectedLanguage.split(':')[1]}`,
 				flex: 2,
 				resizable: true,
 				minWidth: 155,
+				valueGetter: this.languageNameValueGetter.bind(this),
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.nameSection },
 				sortable: false,
@@ -605,7 +616,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				field: 'feedback',
 				colId: 'action-btns',
 				headerName: '',
-				width: 145,
+				width: 125,
 				cellClass: 'mt2-directory-column-actions',
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.actionSection },
@@ -623,43 +634,8 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		if (gridReadyParams?.api && gridReadyParams.type === 'gridReady') {
 			this.gridApi = gridReadyParams.api;
 			this.gridParams = gridReadyParams;
-			if (this.mapsetBatchColumnStorage) {
-				if (!localStorage.getItem(this.mapsetBatchColumnStorage)) {
-					const columns: any = [];
-					const columnDefs = this.gridApi.getColumnDefs?.();
-					for (const column of columnDefs) {
-						const columnData: any = {};
-
-						if (!column.colId) {
-							columnData.colId = column.field;
-						} else {
-							columnData.colId = column.colId;
-						}
-						columnData.show = true;
-						if (columnData.colId !== 'action-btns' && columnData.colId !== 'checkbox') {
-							columns.push(columnData);
-						}
-					}
-
-					const state: any = [];
-					for (const column of columns) {
-						column.show = true;
-
-						if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
-							column.show = false;
-						}
-						this.manualStateRefresh = true;
-
-						state.push({ colId: column.colId, hide: !column.show });
-					}
-					this.gridApi.applyColumnState({ state: state });
-					localStorage.setItem(this.mapsetBatchColumnStorage, JSON.stringify(state));
-				} else {
-					this.gridApi.applyColumnState({ state: JSON.parse(localStorage.getItem(this.mapsetBatchColumnStorage)) });
-					this.manualStateRefresh = true;
-				}
-			}
-
+			this.checkColumnSettings();
+			this.loadLanguageStorage();
 			setTimeout(() => {
 				this.checkSearchFilters();
 			}, 500);
@@ -669,6 +645,56 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			this.checkboxAllClick();
 		};
 	};
+
+	checkColumnSettings() {
+		if (this.mapsetBatchColumnStorage) {
+			if (!localStorage.getItem(this.mapsetBatchColumnStorage)) {
+				const columns: any = [];
+				const columnDefs = this.gridApi.getColumnDefs?.();
+				for (const column of columnDefs) {
+					const columnData: any = {};
+
+					if (!column.colId) {
+						columnData.colId = column.field;
+					} else {
+						columnData.colId = column.colId;
+					}
+					columnData.show = true;
+					if (columnData.colId !== 'action-btns' && columnData.colId !== 'checkbox') {
+						columns.push(columnData);
+					}
+				}
+
+				const state: any = [];
+				for (const column of columns) {
+					column.show = true;
+
+					if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
+						column.show = false;
+					}
+					this.manualStateRefresh = true;
+
+					state.push({ colId: column.colId, hide: !column.show });
+				}
+				this.gridApi.applyColumnState({ state: state });
+				localStorage.setItem(this.mapsetBatchColumnStorage, JSON.stringify(state));
+			} else {
+				this.gridApi.applyColumnState({ state: JSON.parse(localStorage.getItem(this.mapsetBatchColumnStorage)) });
+				this.manualStateRefresh = true;
+			}
+		}
+	}
+
+	loadLanguageStorage() {
+		const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
+		if (languageStorage) {
+			this.selectedLanguage = languageStorage;
+		}
+		this.selectedLanguageIndex = this.languageOptions.findIndex((option) => option.value === this.selectedLanguage);
+		this.gridOptions.useFsn = this.selectedLanguage.replace(/^.*:/, '').toLowerCase() == 'fsn';
+		this.gridOptions.language = this.selectedLanguage.replace(/:.*$/, '');
+		this.gridApi?.refreshCells();
+	}
 
 	checkSearchFilters() {
 		const filters: string[] = [];
@@ -788,7 +814,26 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 					this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
 					localStorage.setItem('projects_mapsetVersion', JSON.stringify(this.selectedVersion));
 				}
-
+				const languages = this.mapsetInfo?.mapProject.edition?.fullyQualifiedLanguageRefsets;
+				const languageRefsetOptions = [];
+				const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
+				if (languageStorage) {
+					this.selectedLanguage = languageStorage;
+				}
+				for (const language of languages) {
+					let type = 'PT';
+					if (language.qualifiedLanguageCode.indexOf('FSN') >= 0) {
+						type = 'FSN';
+					}
+					const languageValue = language.languageCode + '-X-' + language.languageRefset + ':' + type;
+					if (CodeUtility.testBoolean(language.default) && !this.selectedLanguage && !languageStorage) {
+						this.selectedLanguage = languageValue;
+					}
+					languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageDialectCode + ' (' + type + ')' });
+				}
+				if (languageRefsetOptions.length > 0) {
+					this.languageOptions = languageRefsetOptions;
+				}
 				this.getMapsetData();
 				this.getMapProject();
 			},
@@ -811,6 +856,59 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				this.authenticationService.checkError(err);
 			},
 		});
+	}
+
+	changeLanguage() {
+		const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
+
+		this.selectedLanguageIndex = this.languageOptions.findIndex((option) => option.value === this.selectedLanguage);
+
+		if (this.selectedLanguage !== languageStorage) {
+			localStorage.setItem(this.mapsetLanguageStorage, this.selectedLanguage);
+		}
+
+		this.gridOptions.useFsn = this.selectedLanguage.replace(/^.*:/, '').toLowerCase() == 'fsn';
+		this.gridOptions.language = this.selectedLanguage.replace(/:.*$/, '');
+		this.showPaging = false;
+		this.getMapsetInfo();
+		setTimeout(() => {
+			this.showPaging = true;
+		}, 1000);
+	}
+
+	getLanguageNameValue(mapset: any) {
+		if (!CodeUtility.hasValue(mapset)) {
+			return '';
+		}
+		let text = '';
+		const choosenDescription = mapset.descriptions[this.selectedLanguageIndex];
+
+		if (choosenDescription != null) {
+			text = choosenDescription.term;
+		} else if (mapset.descriptions[0] != null) {
+			text = mapset.descriptions[0].term;
+		} else {
+			text = mapset.name;
+		}
+		return text;
+	}
+
+	languageNameValueGetter(params: any) {
+		if (!CodeUtility.hasValue(params.data)) {
+			return '';
+		}
+		const mapset = params.data;
+		let text = '';
+		const choosenDescription = mapset.descriptions[this.selectedLanguageIndex];
+
+		if (choosenDescription != null) {
+			text = choosenDescription.term;
+		} else if (mapset.descriptions[0] != null) {
+			text = mapset.descriptions[0].term;
+		} else {
+			text = mapset.name;
+		}
+		return text;
 	}
 
 	getModuleMetadata() {
@@ -1232,7 +1330,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 								active: results.active,
 								feedback: true,
 								mapEntries: results.mapEntries[b],
-								descriptions: results.descriptions[b],
+								descriptions: results?.descriptions,
 								entries: results.mapEntries.length,
 								code: results.code,
 								name: results.name,
