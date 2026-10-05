@@ -453,7 +453,7 @@
 											<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
 											<div class="record-code col-2">{{ entry.toCode }}</div>
 											<div class="record-name col-8">
-												{{ entry.toName }}
+												{{ entry.toName.length > 0 && entry.toName !== ' DOES NOT EXIST' ? entry.toName : '---' }}
 												<span *ngIf="getModuleLanguageIcon(entry.moduleId) !== ''">
 													<img
 														class="mapset-mod-icon"

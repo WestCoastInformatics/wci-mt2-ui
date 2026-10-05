@@ -135,7 +135,7 @@ export class MapsetRecordsComponent implements OnInit {
 	showMapTableStorage = 'showMapTable';
 	mapsetVersionStorage = 'mapsetVersion';
 	mapsetRecordsColumnStorage = 'mapsetRecordsColumns';
-	mapsetRecordsLanguageStorage = 'mapsetRecordsLanguage';
+	mapsetLanguageStorage = 'mapsetLanguage';
 	mapsetSearchInput = 'mapsetSearchInput';
 	mapsetGridCurrentPageNum = 'mapsetGridCurrentPageNum';
 	mapsetGridCurrentPageSize = 'mapsetGridCurrentPageSize';
@@ -289,7 +289,6 @@ export class MapsetRecordsComponent implements OnInit {
 			this.showMapTableStorage = prefix + this.showMapTableStorage;
 			this.mapsetVersionStorage = prefix + this.mapsetVersionStorage;
 			this.mapsetRecordsColumnStorage = prefix + this.mapsetRecordsColumnStorage;
-			this.mapsetRecordsLanguageStorage = prefix + this.mapsetRecordsLanguageStorage;
 			this.mapsetSearchInput = prefix + this.mapsetSearchInput;
 			this.mapsetGridCurrentPageNum = prefix + this.mapsetGridCurrentPageNum;
 			this.mapsetGridCurrentPageSize = prefix + this.mapsetGridCurrentPageSize;
@@ -297,7 +296,6 @@ export class MapsetRecordsComponent implements OnInit {
 			this.mapsetRecordsAssignedFilter = prefix + this.mapsetRecordsAssignedFilter;
 			this.mapsetCode = routeParams.code;
 			this.mapsetRecordsColumnStorage += this.mapsetCode;
-			this.mapsetRecordsLanguageStorage += this.mapsetCode;
 			this.mapsetSearchInput += this.mapsetCode;
 			this.mapsetGridCurrentPageNum += this.mapsetCode;
 			this.mapsetGridCurrentPageSize += this.mapsetCode;
@@ -659,7 +657,7 @@ export class MapsetRecordsComponent implements OnInit {
 
 		const languages = this.mapsetInfo?.mapProject.edition?.fullyQualifiedLanguageRefsets;
 		const languageRefsetOptions = [];
-		const languageStorage = localStorage.getItem(this.mapsetRecordsLanguageStorage);
+		const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
 		if (languageStorage) {
 			this.selectedLanguage = languageStorage;
 		}
@@ -777,12 +775,12 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	changeLanguage() {
-		const languageStorage = localStorage.getItem(this.mapsetRecordsLanguageStorage);
+		const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
 
 		this.selectedLanguageIndex = this.languageOptions.findIndex((option) => option.value === this.selectedLanguage);
 
 		if (this.selectedLanguage !== languageStorage) {
-			localStorage.setItem(this.mapsetRecordsLanguageStorage, this.selectedLanguage);
+			localStorage.setItem(this.mapsetLanguageStorage, this.selectedLanguage);
 		}
 
 		this.gridOptions.useFsn = this.selectedLanguage.replace(/^.*:/, '').toLowerCase() == 'fsn';
@@ -1043,7 +1041,7 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	loadLanguageStorage() {
-		const languageStorage = localStorage.getItem(this.mapsetRecordsLanguageStorage);
+		const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
 		if (languageStorage) {
 			this.selectedLanguage = languageStorage;
 		}
