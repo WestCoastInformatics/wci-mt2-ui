@@ -485,12 +485,15 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 		}
 		const mapset = params.data;
 		let text = '';
-		const choosenDescription = mapset.descriptions[this.selectedLanguageIndex];
-
-		if (choosenDescription != null) {
-			text = choosenDescription.term;
-		} else if (mapset.descriptions[0] != null) {
-			text = mapset.descriptions[0].term;
+		if (mapset?.description) {
+			const choosenDescription = mapset.descriptions[this.selectedLanguageIndex];
+			if (choosenDescription != null) {
+				text = choosenDescription.term;
+			} else if (mapset.descriptions[0] != null) {
+				text = mapset.descriptions[0].term;
+			} else {
+				text = mapset.name;
+			}
 		} else {
 			text = mapset.name;
 		}
