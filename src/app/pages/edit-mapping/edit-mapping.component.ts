@@ -818,6 +818,9 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 	}
 
 	searchBrowser() {
+		if (this.showConfigSection) {
+			this.toggleSectionView('showConfigSection');
+		}
 		if (!this.showBrowserSection) {
 			this.toggleSectionView('showBrowserSection');
 			this.secondWindow.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1007,6 +1010,12 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 	}
 
 	setTarget(currentConcept: any) {
+		if (!this.showConfigSection) {
+			this.toggleSectionView('showConfigSection');
+		}
+		if (this.showBrowserSection) {
+			this.toggleSectionView('showBrowserSection');
+		}
 		this.targetCodeInput = currentConcept.code;
 		this.targetNameInput = currentConcept.name;
 		this.setTargetCode();
@@ -1488,6 +1497,7 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 
 	@Debounce()
 	onBrowserSearchChange() {
+		this.closeConceptDetails();
 		this.searchBrowserInput = this.searchBrowserInput.trim();
 
 		if (!CodeUtility.hasValue(this.searchBrowserInput) || (CodeUtility.hasValue(this.searchBrowserInput) && this.searchBrowserInput.length > 2)) {

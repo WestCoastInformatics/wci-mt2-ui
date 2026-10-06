@@ -537,7 +537,24 @@
 		</div>
 		<div class="row d-flex dropdown-group" *ngIf="showBrowserSection && !saving">
 			<div class="col-md-auto mt2-directory-chooser-column m-l-20">
-				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="browserApi" [useDialog]="useDialog"> </app-column-chooser>
+				<mat-menu #settingsMenu="matMenu" class="menu"
+					>\
+					<app-column-chooser *ngIf="showPaging" title="Select Columns to Display" [gridColumnApi]="browserApi" [useDialog]="false">
+					</app-column-chooser
+				></mat-menu>
+
+				<div class="menu-inline">
+					<button
+						[matMenuTriggerFor]="settingsMenu"
+						aria-label="Settings"
+						title="Settings"
+						class="mapset-download-icon menu-button"
+						[disabled]="!showPaging"
+					>
+						<mat-icon class="menu-icon">settings</mat-icon>
+						<span class="menu-label">Settings</span>
+					</button>
+				</div>
 			</div>
 			<div class="col-md-auto mt2-directory-chooser-column">
 				<mat-menu #browserSearchMenu="matMenu" class="search-box">

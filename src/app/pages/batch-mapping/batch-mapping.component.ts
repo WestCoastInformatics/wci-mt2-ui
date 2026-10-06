@@ -1042,6 +1042,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 
 	@Debounce()
 	onBrowserSearchChange() {
+		this.closeConceptDetails();
 		this.searchBrowserInput = this.searchBrowserInput.trim();
 
 		if (!CodeUtility.hasValue(this.searchBrowserInput) || (CodeUtility.hasValue(this.searchBrowserInput) && this.searchBrowserInput.length > 2)) {
@@ -1792,6 +1793,9 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 	}
 
 	searchBrowser() {
+		if (this.showConfigSection) {
+			this.toggleSectionView('showConfigSection');
+		}
 		if (!this.showBrowserSection) {
 			this.toggleSectionView('showBrowserSection');
 			this.secondWindow.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1849,6 +1853,12 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 	}
 
 	setTarget(value: string, name: string) {
+		if (!this.showConfigSection) {
+			this.toggleSectionView('showConfigSection');
+		}
+		if (this.showBrowserSection) {
+			this.toggleSectionView('showBrowserSection');
+		}
 		this.targetCodeInput = value;
 		this.targetToName = name;
 		this.userChanged = true;

@@ -523,7 +523,13 @@
 				></mat-menu>
 
 				<div class="menu-inline">
-					<button [matMenuTriggerFor]="settingsMenu" aria-label="Settings" title="Settings" class="mapset-download-icon menu-button">
+					<button
+						[matMenuTriggerFor]="settingsMenu"
+						aria-label="Settings"
+						title="Settings"
+						class="mapset-download-icon menu-button"
+						[disabled]="!showPaging"
+					>
 						<mat-icon class="menu-icon">settings</mat-icon>
 						<span class="menu-label">Settings</span>
 					</button>
@@ -608,7 +614,7 @@
 						</div>
 
 						<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
-						<div class="mt2-pagination-container" [hidden]="!browserLoaded || !loadError" *ngIf="showBrowserSection">
+						<div class="mt2-pagination-container" [hidden]="!browserLoaded" *ngIf="showBrowserSection && !saving">
 							<div class="mt2-pagination-top-row" *ngIf="showPaging">
 								<div *ngIf="paginationPages.totalPages > 1" class="mt2-pagination-buttons no-wrap">
 									<button
