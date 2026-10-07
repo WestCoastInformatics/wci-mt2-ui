@@ -220,7 +220,8 @@ export class MapsetRecordsComponent implements OnInit {
 		},
 	];
 	selectedLanguage: string = Constants.DEFAULT_ACCEPT_LANGUAGE + ':' + Constants.DEFAULT_LANGUAGE_TYPE;
-	selectedLanguageIndex = 0;
+	headerNameColumnName = '';
+	headerToNameColumnName = '';
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
@@ -389,8 +390,8 @@ export class MapsetRecordsComponent implements OnInit {
 					{
 						field: 'name',
 						tooltipField: 'name',
-						headerName: `Source ${this.selectedLanguage.split(':')[1]}`,
-						headerTooltip: `Source ${this.selectedLanguage.split(':')[1]}`,
+						headerName: 'Source PT',
+						headerTooltip: 'Source Name',
 						flex: 2,
 						resizable: true,
 						minWidth: 165,
@@ -402,6 +403,7 @@ export class MapsetRecordsComponent implements OnInit {
 					},
 					{
 						field: 'toCode',
+						tooltipField: 'toCode',
 						headerName: 'Target',
 						headerTooltip: 'Target',
 						flex: 1,
@@ -418,10 +420,11 @@ export class MapsetRecordsComponent implements OnInit {
 						field: 'toName',
 						tooltipField: 'toName',
 						headerName: 'Target PT',
-						headerTooltip: 'Target PT',
+						headerTooltip: 'Target Name',
 						resizable: true,
 						unSortIcon: true,
 						sortable: false,
+						valueGetter: this.languageToNameValueGetter.bind(this),
 						cellRenderer: TemplateRendererComponent,
 						cellRendererParams: { template: this.toNameSection },
 					},
@@ -777,20 +780,19 @@ export class MapsetRecordsComponent implements OnInit {
 	changeLanguage() {
 		const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
 
-		this.selectedLanguageIndex = this.languageOptions.findIndex((option) => option.value === this.selectedLanguage);
-
 		if (this.selectedLanguage !== languageStorage) {
 			localStorage.setItem(this.mapsetLanguageStorage, this.selectedLanguage);
 		}
 
 		this.gridOptions.useFsn = this.selectedLanguage.replace(/^.*:/, '').toLowerCase() == 'fsn';
 		this.gridOptions.language = this.selectedLanguage.replace(/:.*$/, '');
-		this.changeMappingsView('reset');
+		// this.changeMappingsView('reset');
 		this.showPaging = false;
 		this.getMapsetInfo();
 		setTimeout(() => {
 			this.showPaging = true;
-			this.changeMappingsView('table');
+			this.changeHeaderTitle();
+			// this.changeMappingsView('table');
 		}, 1000);
 	}
 
@@ -799,15 +801,54 @@ export class MapsetRecordsComponent implements OnInit {
 			return '';
 		}
 		let text = '';
-		const choosenDescription = mapset.descriptions[this.selectedLanguageIndex];
-
-		if (choosenDescription != null) {
-			text = choosenDescription.term;
-		} else if (mapset.descriptions[0] != null) {
-			text = mapset.descriptions[0].term;
+		let label = 'PT';
+		const selectedLang = this.selectedLanguage.split(':')[0].split('-')[0].toLowerCase();
+		const selectedType = this.selectedLanguage.split(':')[1];
+		if (mapset?.descriptions) {
+			const choosenDescription = mapset.descriptions.filter((description: any) => {
+				return description.typeName === selectedType && description.language === selectedLang;
+			})[0];
+			if (choosenDescription != null) {
+				text = choosenDescription.term;
+				label = mapset.toDescription[0].typeName;
+			} else if (mapset.descriptions[0] != null) {
+				text = mapset.descriptions[0].term;
+				label = mapset.toDescription[0].typeName;
+			} else {
+				text = mapset.name;
+			}
 		} else {
 			text = mapset.name;
 		}
+		this.headerNameColumnName = 'Source ' + label;
+		return text;
+	}
+
+	getLanguageToNameValue(mapset: any) {
+		if (!CodeUtility.hasValue(mapset)) {
+			return '';
+		}
+		let text = '';
+		let label = 'PT';
+		const selectedLang = this.selectedLanguage.split(':')[0].split('-')[0].toLowerCase();
+		const selectedType = this.selectedLanguage.split(':')[1];
+		if (mapset?.toDescription) {
+			const choosenDescription = mapset.toDescription.filter((description: any) => {
+				return description.typeName === selectedType && description.language === selectedLang;
+			})[0];
+			if (choosenDescription != null) {
+				text = choosenDescription.term;
+				label = mapset.toDescription[0].typeName;
+			} else if (mapset.toDescription[0] != null) {
+				text = mapset.toDescription[0].term;
+				label = mapset.toDescription[0].typeName;
+			} else {
+				text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
+			}
+		} else {
+			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
+		}
+		this.headerToNameColumnName = 'Target ' + label;
 		return text;
 	}
 
@@ -817,19 +858,70 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 		const mapset = params.data;
 		let text = '';
+		let label = 'PT';
+		const selectedLang = this.selectedLanguage.split(':')[0].split('-')[0].toLowerCase();
+		const selectedType = this.selectedLanguage.split(':')[1];
 		if (mapset?.description) {
-			const choosenDescription = mapset.descriptions[this.selectedLanguageIndex];
+			const choosenDescription = mapset.descriptions.filter((description: any) => {
+				return description.typeName === selectedType && description.language === selectedLang;
+			})[0];
 			if (choosenDescription != null) {
 				text = choosenDescription.term;
+				label = choosenDescription.typeName;
 			} else if (mapset.descriptions[0] != null) {
 				text = mapset.descriptions[0].term;
+				label = mapset.toDescription[0].typeName;
 			} else {
 				text = mapset.name;
 			}
 		} else {
 			text = mapset.name;
 		}
+		this.headerNameColumnName = 'Source ' + label;
 		return text;
+	}
+
+	languageToNameValueGetter(params: any) {
+		if (!CodeUtility.hasValue(params.data)) {
+			return '';
+		}
+		const mapset = params.data;
+
+		let text = '';
+		let label = 'PT';
+		const selectedLang = this.selectedLanguage.split(':')[0].split('-')[0].toLowerCase();
+		const selectedType = this.selectedLanguage.split(':')[1];
+		if (mapset?.toDescription) {
+			const choosenDescription = mapset.toDescription.filter((description: any) => {
+				return description.typeName === selectedType && description.language === selectedLang;
+			})[0];
+			if (choosenDescription != null) {
+				text = choosenDescription.term;
+				label = choosenDescription.typeName;
+			} else if (mapset.toDescription[0] != null) {
+				text = mapset.toDescription[0].term;
+				label = mapset.toDescription[0].typeName;
+			} else {
+				text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
+			}
+		} else {
+			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
+		}
+		this.headerToNameColumnName = 'Target ' + label;
+		return text;
+	}
+
+	changeHeaderTitle() {
+		const updatedDefs = this.columnDefs.map((col: any) => {
+			if (col.field === 'name') {
+				return { ...col, headerName: this.headerNameColumnName };
+			}
+			if (col.field === 'toName') {
+				return { ...col, headerName: this.headerToNameColumnName };
+			}
+			return col;
+		});
+		this.gridApi.setGridOption('columnDefs', updatedDefs); //
 	}
 
 	getModuleMetadata() {
@@ -1048,7 +1140,6 @@ export class MapsetRecordsComponent implements OnInit {
 		if (languageStorage) {
 			this.selectedLanguage = languageStorage;
 		}
-		this.selectedLanguageIndex = this.languageOptions.findIndex((option) => option.value === this.selectedLanguage);
 		this.gridOptions.useFsn = this.selectedLanguage.replace(/^.*:/, '').toLowerCase() == 'fsn';
 		this.gridOptions.language = this.selectedLanguage.replace(/:.*$/, '');
 		this.gridApi?.refreshCells();
@@ -1167,6 +1258,13 @@ export class MapsetRecordsComponent implements OnInit {
 									for (let i = 0; i < results[a].mapEntries[b].advices.length; i++) {
 										adviceArray.push(results[a].mapEntries[b].advices[i]);
 									}
+									const toDescription = [];
+									for (let i = 0; i < results[a].mapEntries[b].descriptions?.length; i++) {
+										toDescription.push(results[a].mapEntries[b].descriptions[i]);
+									}
+									if (toDescription.length > 0) {
+										results[a].mapEntries[b].toDescription = toDescription;
+									}
 
 									data.push({
 										index: results[a].code !== '' ? a + results[a].code + count : count,
@@ -1178,6 +1276,7 @@ export class MapsetRecordsComponent implements OnInit {
 										entries: results[a].mapEntries.length,
 										code: results[a].code,
 										name: results[a].name,
+										toDescription: toDescription,
 										toName:
 											results[a].mapEntries[b].toName.length > 0 && results[a].mapEntries[b].toName !== ' DOES NOT EXIST'
 												? results[a].mapEntries[b].toName
@@ -1209,7 +1308,6 @@ export class MapsetRecordsComponent implements OnInit {
 									count++;
 								}
 							}
-
 							this.mapsetData = data;
 							mapsetResults.items = this.mapsetData;
 							this.maxTotal = mapsetResults.total;
@@ -1217,6 +1315,7 @@ export class MapsetRecordsComponent implements OnInit {
 							if (this.numOfMembers > 10000) {
 								this.numOfMembers = 10000;
 							}
+
 							this.searchLoading = false;
 							setTimeout(() => {
 								const lastIndexH = document.getElementsByClassName('ag-header').length - 1;
@@ -1225,6 +1324,7 @@ export class MapsetRecordsComponent implements OnInit {
 								const lastIndexP = document.getElementsByClassName('ag-paging-panel').length - 1;
 								const childP = document.getElementsByClassName('ag-paging-panel')[lastIndexP];
 								document.getElementById('directoryPaging').appendChild(childP);
+								this.changeHeaderTitle();
 							}, 400);
 
 							this.showPaging = true;
@@ -1573,7 +1673,7 @@ export class MapsetRecordsComponent implements OnInit {
 			?.replaceAll(' ', ',')
 			.replaceAll('\n', ',')
 			.replaceAll(commaRegex, ',')
-			.replaceAll(/[^,\-\_a-zA-Z0-9]/g, '')
+			.replaceAll(/[^,\-\._a-zA-Z0-9]/g, '')
 			.trim();
 
 		this.goToBatchMappingsPage(allIdsString.split(','));

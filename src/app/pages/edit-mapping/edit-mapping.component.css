@@ -865,7 +865,7 @@
 }
 
 .menu-label {
-	font-size: .9rem;
+	font-size: 0.9rem;
 }
 
 .mapset-notes-icon {
@@ -977,10 +977,6 @@
 .dialog-close-x-dark {
 	color: #666666 !important;
 	font-size: 20px;
-}
-
-.no-wrap {
-	text-wrap: nowrap;
 }
 
 .mt2-pagination-container {

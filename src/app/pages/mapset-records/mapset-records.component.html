@@ -430,7 +430,7 @@
 					</div>
 				</div>
 
-				<div [hidden]="!loaded" *ngIf="showMapTable === 'record'" class="content-wrapper">
+				<div [hidden]="!loaded" *ngIf="showMapTable === 'record' && showPaging" class="content-wrapper">
 					<div *ngFor="let record of mapsetData; index as i">
 						<div class="record-row" [ngClass]="{ 'odd-row': 0 === i % 2 }" *ngIf="!record.spanned">
 							<div class="col-12 row">
@@ -449,11 +449,11 @@
 									</div>
 
 									<div *ngFor="let entry of record.mapEntries; index as x" class="row col-12 second-row">
-										<div class="col-4 row mb-3">
+										<div class="col-5 row mb-3">
 											<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
-											<div class="record-code col-2">{{ entry.toCode }}</div>
-											<div class="record-name col-8">
-												{{ entry.toName.length > 0 && entry.toName !== ' DOES NOT EXIST' ? entry.toName : '---' }}
+											<div class="record-code col-2 ellipsis-text" [title]="entry.toCode">{{ entry.toCode }}</div>
+											<div class="record-name col-8 no-wrap">
+												{{ getLanguageToNameValue(entry) }}
 												<span *ngIf="getModuleLanguageIcon(entry.moduleId) !== ''">
 													<img
 														class="mapset-mod-icon"
@@ -464,8 +464,8 @@
 												/></span>
 											</div>
 										</div>
-										<div class="col-8 row mb-3">
-											<div class="info-box">
+										<div class="col-7 row mb-3">
+											<div class="info-box" *ngIf="entry.relation">
 												<i class="fa-regular fa-handshake relation-icon"></i
 												><span class="info-message">{{ entry.relation }}</span>
 											</div>
