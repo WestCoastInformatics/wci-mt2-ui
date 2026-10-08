@@ -501,13 +501,13 @@
 	<div class="metadata-collapsible-container col-md-12 mb-10" *ngIf="loaded && !loadError" #secondWindow>
 		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showBrowserSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
-				<span>{{mapsetInfo.mapProject.destinationTerminology}} Terminology Browser</span>
+				<span>{{ mapsetInfo.mapProject.destinationTerminology }} Terminology Browser</span>
 			</div>
 			<img
 				src="assets/caret-up-solid.svg"
 				*ngIf="!showBrowserSection"
 				alt="Collapse Button"
-				title="Collapse ICD10 Terminology Browser"
+				[title]="`Collapse ${mapsetInfo.mapProject.destinationTerminology} Terminology Browser`"
 				aria-label="Collapse Button"
 				class="caret-up-solid"
 			/>
@@ -515,7 +515,7 @@
 				src="assets/caret-down-solid.svg"
 				*ngIf="showBrowserSection"
 				alt="Expand Button"
-				title="Expand ICD10 Terminology Browser"
+				[title]="`Expand ${mapsetInfo.mapProject.destinationTerminology} Terminology Browser`"
 				aria-label="Expand Button"
 				class="caret-down-solid"
 			/>
