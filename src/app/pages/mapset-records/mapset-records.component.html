@@ -195,6 +195,7 @@
 							<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
 								<mat-select
 									#filterWorkflowStatus
+									[panelClass]="workflowFilter ? '' : 'filter-empty-panel'"
 									title="Filter by Workflow Status"
 									placeholder="Workflow Status"
 									[(value)]="workflowFilter"
@@ -219,6 +220,7 @@
 							<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
 								<mat-select
 									#filterAssignedUser
+									[panelClass]="assignedFilter ? '' : 'filter-empty-panel'"
 									title="Filter by Assigned To"
 									placeholder="Assigned To"
 									[(value)]="assignedFilter"
