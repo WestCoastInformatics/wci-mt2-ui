@@ -153,7 +153,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				key?.startsWith('projects_mapsetGridCurrentPageNum') ||
 				key?.startsWith('projects_mapsetRecordsColumns') ||
 				key?.startsWith('projects_mapsetRecordsLanguage') ||
-				key?.startsWith('projects_batchSearchInput')
+				key?.startsWith('projects_batchSearchInput') ||
+				key?.startsWith('mapsetLanguage') ||
+				key?.startsWith('mapsetToLanguage')
 			) {
 				keysToRemove.push(key);
 			}

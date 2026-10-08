@@ -469,8 +469,23 @@
 										<div class="col-5 row mb-3">
 											<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
 											<div class="record-code col-2 ellipsis-text" [title]="entry.toCode">{{ entry.toCode }}</div>
-											<div class="record-name col-8 no-wrap">
-												{{ getLanguageToNameValue(entry) ? getLanguageToNameValue(entry) : entry.toName }}
+											<div
+												class="record-name col-8 no-wrap"
+												title="{{
+													getLanguageToNameValue(entry)
+														? `${getLanguageToNameValue(entry)} ${headerToNameColumnName.split('Target ')[1]}`
+														: entry.toName === ''
+															? '[NO TARGET]'
+															: entry.toName
+												}}"
+											>
+												{{
+													getLanguageToNameValue(entry)
+														? `${getLanguageToNameValue(entry)} ${headerToNameColumnName.split('Target ')[1]}`
+														: entry.toName === ''
+															? '[NO TARGET]'
+															: entry.toName
+												}}
 												<span *ngIf="getModuleLanguageIcon(entry.moduleId) !== ''">
 													<img
 														class="mapset-mod-icon"

@@ -152,7 +152,9 @@ export class MapsetProjectsComponent implements OnInit {
 				key?.startsWith('projects_batchSearchInput') ||
 				key?.startsWith('mapsetBatchWorkflowFilter') ||
 				key?.startsWith('mapsetBatchAssignedFilter') ||
-				key?.startsWith('mapsetBatchColumnStorage')
+				key?.startsWith('mapsetBatchColumnStorage') ||
+				key?.startsWith('mapsetLanguage') ||
+				key?.startsWith('mapsetToLanguage')
 			) {
 				keysToRemove.push(key);
 			}

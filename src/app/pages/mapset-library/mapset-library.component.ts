@@ -147,7 +147,9 @@ export class MapsetLibraryComponent implements OnInit {
 				key?.startsWith('library_mapsetGridCurrentPageNum') ||
 				key?.startsWith('library_mapsetRecordsColumns') ||
 				key?.startsWith('library_mapsetRecordsLanguage') ||
-				key?.startsWith('library_batchSearchInput')
+				key?.startsWith('library_batchSearchInput') ||
+				key?.startsWith('mapsetLanguage') ||
+				key?.startsWith('mapsetToLanguage')
 			) {
 				keysToRemove.push(key);
 			}
