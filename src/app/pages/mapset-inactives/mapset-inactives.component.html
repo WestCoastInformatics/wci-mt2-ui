@@ -176,7 +176,7 @@
 			<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showMappingsSection || !loaded || numOfMembers === 0"></div>
 			<div [hidden]="!showMappingsSection" class="section-background mappings-section">
 				<div *ngIf="showMapTable === 'table'" [hidden]="loaded" class="section-loading">Loading...</div>
-				<div [hidden]="!loaded" *ngIf="numOfMembers === 0" class="status-no-results">No Results to Show</div>
+				<div [hidden]="!loaded" *ngIf="numOfMembers === 0" class="status-no-results">No result found</div>
 				<div class="content-wrapper" [hidden]="!loaded">
 					<div class="grid-wrapper">
 						<ag-grid-angular
@@ -310,7 +310,7 @@
 				</span>
 				of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
 			</div>
-			<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
+			<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No result found</div>
 		</div>
 	</div>
 	<div class="metadata-collapsible-container col-md-12 mb-10">

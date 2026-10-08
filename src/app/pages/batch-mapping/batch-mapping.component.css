@@ -609,8 +609,7 @@
 }
 
 .status-no-results {
-	float: right;
-	margin-right: 145px;
+	text-align: center;
 	color: #7f7f7f;
 	font-size: 14px;
 }

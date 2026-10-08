@@ -733,8 +733,11 @@
 								</span>
 								of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
 							</div>
-							<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine text-center" [hidden]="showPaging">
-								No results to show
+							<div
+								class="mt2-pagination-total-label directory-new-paging ag-theme-alpine text-center status-no-results"
+								[hidden]="showPaging"
+							>
+								No result found
 							</div>
 						</div>
 					</as-split-area>
