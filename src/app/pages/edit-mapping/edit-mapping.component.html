@@ -156,7 +156,7 @@
 						<div class="d-flex col-12 row mt-5">
 							<div class="col-3 align-right mb-10 m-t-5">Target Code:</div>
 							<div class="col-9 d-flex">
-								<span class="m-r-5 m-t-5"> ICD10, </span>
+								<span class="m-r-5 m-t-5"> {{ mapsetInfo.mapProject.destinationTerminology }} </span>
 								<form (ngSubmit)="onKeyPress($event)" class="max-width m-t-5 type-ahead-form">
 									<span class="type-head-append">
 										<i class="fa-solid fa-magnifying-glass svg-inline"></i>
@@ -457,13 +457,13 @@
 	<div class="metadata-collapsible-container col-md-12 mb-10" #secondWindow>
 		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showBrowserSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
-				<span>ICD10 Terminology Browser</span>
+				<span>{{ mapsetInfo.mapProject.destinationTerminology }} Terminology Browser</span>
 			</div>
 			<img
 				src="assets/caret-up-solid.svg"
 				*ngIf="!showBrowserSection"
 				alt="Collapse Button"
-				title="Collapse ICD10 Terminology Browser"
+				[title]="`Collapse ${mapsetInfo.mapProject.destinationTerminology} Terminology Browser`"
 				aria-label="Collapse Button"
 				class="caret-up-solid"
 			/>
@@ -471,7 +471,7 @@
 				src="assets/caret-down-solid.svg"
 				*ngIf="showBrowserSection"
 				alt="Expand Button"
-				title="Expand ICD10 Terminology Browser"
+				[title]="`Expand ${mapsetInfo.mapProject.destinationTerminology} Terminology Browser`"
 				aria-label="Expand Button"
 				class="caret-down-solid"
 			/>
