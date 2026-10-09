@@ -736,6 +736,7 @@
 	cursor: pointer;
 	color: var(--mapset-blue);
 	font-size: 1.25em;
+    background-color: #fff;
 }
 
 .mapset-notes-icon {
