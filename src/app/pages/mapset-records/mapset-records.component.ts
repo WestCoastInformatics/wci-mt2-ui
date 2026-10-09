@@ -86,6 +86,8 @@ export class MapsetRecordsComponent implements OnInit {
 	workFlowModalRef!: NgbModalRef;
 	downloadModalRef!: NgbModalRef;
 	batchListModalRef!: NgbModalRef;
+	automapModalRef!: NgbModalRef;
+	automapListModalRef!: NgbModalRef;
 	reportModalRef!: NgbModalRef;
 	isModalOpen = false;
 	isWFMapModalOpen = false;
@@ -155,6 +157,13 @@ export class MapsetRecordsComponent implements OnInit {
 	workFlowStatus = { label: '', value: '', message: '', notes: '' };
 	workFlowNotesFC = new FormControl('');
 	batchListFC = new FormControl('');
+	automapListFC = new FormControl('');
+	automapListTypeFC = new FormControl('');
+	automapListConfidenceFC = new FormControl('');
+	automapTypeFC = new FormControl('');
+	automapConfidenceFC = new FormControl('');
+	entityType = 'condition';
+	minConfidence = '0.8';
 	showEdit = true;
 	editStatus = true;
 	rowClassRules: any;
@@ -229,9 +238,12 @@ export class MapsetRecordsComponent implements OnInit {
 	@ViewChild('workFlowMapModal') workflowMapModal!: TemplateRef<any>;
 	@ViewChild('workFlowMapModalNotes') private workflowMapModalNotes!: ElementRef;
 	@ViewChild('batchListModal') batchListModal!: TemplateRef<any>;
+	@ViewChild('automapListModal') automapListModal!: TemplateRef<any>;
+	@ViewChild('automapModal') automapModal!: TemplateRef<any>;
 	@ViewChild('reportModal') reportModal!: TemplateRef<any>;
 	@ViewChild('workFlowModalNotes') private workflowModalNotes!: ElementRef;
 	@ViewChild('batchModalList') private batchModalList!: ElementRef;
+	@ViewChild('automapModalList') private automapModalList!: ElementRef;
 	@ViewChild('directoryCheckSection') checkSection!: TemplateRef<any>;
 	@ViewChild('directoryCodeSection') codeSection!: TemplateRef<any>;
 	@ViewChild('directoryNameSection') nameSection!: TemplateRef<any>;
@@ -1595,6 +1607,12 @@ export class MapsetRecordsComponent implements OnInit {
 
 	selectAction(selectedAction: string) {
 		switch (selectedAction) {
+			case 'automap':
+				this.openAutomapModal(this.automapModal);
+				break;
+			case 'automap-list':
+				this.openAutomapListModal(this.automapListModal);
+				break;
 			case 'batch':
 				if (this.checkedNum > 1) {
 					const codes = [];
@@ -1656,6 +1674,87 @@ export class MapsetRecordsComponent implements OnInit {
 				this.openReportModal('hur', this.reportModal);
 				break;
 		}
+	}
+
+	openAutomapModal(content: any) {
+		this.automapTypeFC.setValue(this.entityType);
+		this.automapConfidenceFC.setValue(this.minConfidence);
+		this.automapModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+	}
+
+	submitAutomap() {
+		if (this.automapTypeFC.dirty) {
+			this.entityType = this.automapTypeFC.value ? this.automapTypeFC.value : this.entityType;
+		}
+		if (this.automapConfidenceFC.dirty) {
+			this.minConfidence = this.automapConfidenceFC.value ? this.automapConfidenceFC.value : this.minConfidence;
+		}
+
+		if (this.checkedNum > 0) {
+			const codes = [];
+			for (let c = 0; c < this.mapsetData.length; c++) {
+				if (this.mapsetData[c].checked === true) {
+					codes.push(this.mapsetData[c].code);
+				}
+			}
+			if (codes.length > 0) {
+				setTimeout(() => {
+					this.goToAutomapMappingsPage(codes);
+				}, 2);
+			}
+		}
+		this.closeAutomapModal();
+	}
+
+	closeAutomapModal() {
+		this.automapModalRef.close();
+		this.isModalOpen = false;
+	}
+
+	openAutomapListModal(content: any) {
+		this.automapListFC.setValue('');
+		this.automapListFC.reset();
+		this.automapListTypeFC.setValue(this.entityType);
+		this.automapListConfidenceFC.setValue(this.minConfidence);
+		this.automapListModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+		setTimeout(() => {
+			this.automapModalList.nativeElement.focus();
+		}, 50);
+	}
+
+	submitAutomapList() {
+		let listOfIds = undefined;
+		if (this.automapListFC.dirty) {
+			listOfIds = this.automapListFC.value;
+		}
+		if (this.automapTypeFC.dirty) {
+			this.entityType = this.automapTypeFC.value ? this.automapTypeFC.value : this.entityType;
+		}
+		if (this.automapListConfidenceFC.dirty) {
+			this.minConfidence = this.automapConfidenceFC.value ? this.automapConfidenceFC.value : this.minConfidence;
+		}
+
+		if (!listOfIds?.length) {
+			return;
+		}
+		const commaRegex = /,+/gi;
+		/* eslint-disable no-useless-escape */
+		const allIdsString = listOfIds
+			?.replaceAll(' ', ',')
+			.replaceAll('\n', ',')
+			.replaceAll(commaRegex, ',')
+			.replaceAll(/[^,\-\._a-zA-Z0-9]/g, '')
+			.trim();
+
+		this.goToAutomapMappingsPage(allIdsString.split(','));
+		this.closeAutomapListModal();
+	}
+
+	closeAutomapListModal() {
+		this.automapListModalRef.close();
+		this.isModalOpen = false;
 	}
 
 	openBatchListModal(content: any) {
@@ -2377,6 +2476,26 @@ export class MapsetRecordsComponent implements OnInit {
 			replaceUrl: false,
 			skipLocationChange: false,
 		});
+	}
+
+	goToAutomapMappingsPage(codes: any) {
+		this.router.navigate(
+			[
+				'/projects/mapset/' +
+					this.mapsetCode +
+					'/mappings/' +
+					codes.join('_') +
+					'/type/' +
+					this.entityType +
+					'/confidence/' +
+					this.minConfidence +
+					'/automap',
+			],
+			{
+				replaceUrl: false,
+				skipLocationChange: false,
+			},
+		);
 	}
 
 	goToBatchMappingsPage(codes: any) {

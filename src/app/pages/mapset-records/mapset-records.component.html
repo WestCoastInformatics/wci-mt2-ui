@@ -386,6 +386,29 @@
 						<span>Edit Selected Mapping</span>
 					</button>
 					<button
+						*ngIf="
+							!libraryOnly &&
+							checkedNum > 0 &&
+							mapsetInfo.workflowStatus === 'IN_EDIT' &&
+							mapsetInfo.refSetName.includes('Automap Demo Conditions to SNOMED CT')
+						"
+						mat-menu-item
+						(click)="selectAction('automap')"
+					>
+						<span>Automap Selected Mappings</span>
+					</button>
+					<button
+						*ngIf="
+							!libraryOnly &&
+							mapsetInfo.workflowStatus === 'IN_EDIT' &&
+							mapsetInfo.refSetName.includes('Automap Demo Conditions to SNOMED CT')
+						"
+						mat-menu-item
+						(click)="selectAction('automap-list')"
+					>
+						<span>Automap Maps By List</span>
+					</button>
+					<button
 						*ngIf="!libraryOnly && checkedNum > 1 && mapsetInfo.workflowStatus === 'IN_EDIT' && batchEditEnabled"
 						mat-menu-item
 						(click)="selectAction('batch')"
@@ -403,13 +426,23 @@
 						>
 					</ng-container>
 					<div class="dropdown-divider"></div>
+					<button mat-menu-item [matMenuTriggerFor]="downloadMenu" aria-label="Download" title="Download">
+						<span>Download</span>
+					</button>
+					<div class="dropdown-divider"></div>
+					<button mat-menu-item [matMenuTriggerFor]="reportMenu" aria-label="Reports" title="Reports">
+						<span>Reports</span>
+					</button>
+				</mat-menu>
+				<mat-menu #downloadMenu="matMenu">
 					<button mat-menu-item (click)="selectAction('selected')" [disabled]="checkedNum < 1">
 						<span>Download Selected Mappings</span>
 					</button>
 					<button mat-menu-item (click)="selectAction('all')">
 						<span>Download Entire Map Set</span>
 					</button>
-					<div class="dropdown-divider"></div>
+				</mat-menu>
+				<mat-menu #reportMenu="matMenu">
 					<button mat-menu-item (click)="selectAction('report_nrmr')">
 						<span>Norway Replacement Map Report</span>
 					</button>
@@ -954,6 +987,60 @@
 		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
 			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeBatchListModal()">Cancel</button>
 			<button type="button" title="Edit" class="mt2-btn mt2-action-btn" (click)="submitBatchList()">Edit</button>
+		</div>
+	</ng-template>
+
+	<ng-template #automapListModal let-modal>
+		<div class="modal-header mt2-modal-header">
+			<div class="modal-title">Automap Maps By List</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeAutomapListModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body m-t-10">
+			<textarea
+				#automapModalList
+				class="form-field-value notes-text"
+				type="text"
+				name="idList"
+				placeholder="Enter a list of IDs. Use a comma, whitespace, or newline delimited Mapping Ids."
+				[formControl]="automapListFC"
+			></textarea>
+			<div class="modal-select">
+				<label class="modal-label">Entity Type:</label>
+				<input matInput type="text" [formControl]="automapListTypeFC" placeholder="Entity Type" />
+			</div>
+			<div class="modal-select">
+				<label class="modal-label">Min Confidence:</label>
+				<input matInput type="text" [formControl]="automapListConfidenceFC" placeholder="Min Confidence" />
+			</div>
+		</div>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeAutomapListModal()">Cancel</button>
+			<button type="button" title="Edit" class="mt2-btn mt2-action-btn" (click)="submitAutomapList()">Submit</button>
+		</div>
+	</ng-template>
+
+	<ng-template #automapModal let-modal>
+		<div class="modal-header mt2-modal-header">
+			<div class="modal-title">Automap Maps Config</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeAutomapModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body m-t-10">
+			<div class="modal-select">
+				<label class="modal-label">Entity Type:</label>
+				<input matInput type="text" [formControl]="automapTypeFC" placeholder="Entity Type" />
+			</div>
+			<div class="modal-select">
+				<label class="modal-label">Min Confidence:</label>
+				<input matInput type="text" [formControl]="automapConfidenceFC" placeholder="Min Confidence" />
+			</div>
+		</div>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeAutomapModal()">Cancel</button>
+			<button type="button" title="Edit" class="mt2-btn mt2-action-btn" (click)="submitAutomap()">Submit</button>
 		</div>
 	</ng-template>
 
