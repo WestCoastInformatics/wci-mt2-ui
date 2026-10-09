@@ -86,6 +86,7 @@ export class MapsetRecordsComponent implements OnInit {
 	workFlowModalRef!: NgbModalRef;
 	downloadModalRef!: NgbModalRef;
 	batchListModalRef!: NgbModalRef;
+	automapListModalRef!: NgbModalRef;
 	reportModalRef!: NgbModalRef;
 	isModalOpen = false;
 	isWFMapModalOpen = false;
@@ -155,6 +156,7 @@ export class MapsetRecordsComponent implements OnInit {
 	workFlowStatus = { label: '', value: '', message: '', notes: '' };
 	workFlowNotesFC = new FormControl('');
 	batchListFC = new FormControl('');
+	automapListFC = new FormControl('');
 	showEdit = true;
 	editStatus = true;
 	rowClassRules: any;
@@ -232,6 +234,7 @@ export class MapsetRecordsComponent implements OnInit {
 	@ViewChild('reportModal') reportModal!: TemplateRef<any>;
 	@ViewChild('workFlowModalNotes') private workflowModalNotes!: ElementRef;
 	@ViewChild('batchModalList') private batchModalList!: ElementRef;
+	@ViewChild('automapModalList') private automapModalList!: ElementRef;
 	@ViewChild('directoryCheckSection') checkSection!: TemplateRef<any>;
 	@ViewChild('directoryCodeSection') codeSection!: TemplateRef<any>;
 	@ViewChild('directoryNameSection') nameSection!: TemplateRef<any>;
@@ -1595,6 +1598,24 @@ export class MapsetRecordsComponent implements OnInit {
 
 	selectAction(selectedAction: string) {
 		switch (selectedAction) {
+			case 'automap':
+				if (this.checkedNum > 1) {
+					const codes = [];
+					for (let c = 0; c < this.mapsetData.length; c++) {
+						if (this.mapsetData[c].checked === true) {
+							codes.push(this.mapsetData[c].code);
+						}
+					}
+					if (codes.length > 0) {
+						setTimeout(() => {
+							this.goToAutomapMappingsPage(codes);
+						}, 2);
+					}
+				}
+				break;
+			case 'automap-list':
+				this.openAutomapListModal(this.batchListModal);
+				break;
 			case 'batch':
 				if (this.checkedNum > 1) {
 					const codes = [];
@@ -1656,6 +1677,42 @@ export class MapsetRecordsComponent implements OnInit {
 				this.openReportModal('hur', this.reportModal);
 				break;
 		}
+	}
+
+	openAutomapListModal(content: any) {
+		this.automapListFC.setValue('');
+		this.automapListFC.reset();
+		this.automapListModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+		setTimeout(() => {
+			this.automapModalList.nativeElement.focus();
+		}, 50);
+	}
+
+	submitAutomapList() {
+		let listOfIds = undefined;
+		if (this.automapListFC.dirty) {
+			listOfIds = this.automapListFC.value;
+		}
+		if (!listOfIds?.length) {
+			return;
+		}
+		const commaRegex = /,+/gi;
+		/* eslint-disable no-useless-escape */
+		const allIdsString = listOfIds
+			?.replaceAll(' ', ',')
+			.replaceAll('\n', ',')
+			.replaceAll(commaRegex, ',')
+			.replaceAll(/[^,\-\._a-zA-Z0-9]/g, '')
+			.trim();
+
+		this.goToAutomapMappingsPage(allIdsString.split(','));
+		this.closeAutomapListModal();
+	}
+
+	closeAutomapListModal() {
+		this.automapListModalRef.close();
+		this.isModalOpen = false;
 	}
 
 	openBatchListModal(content: any) {
@@ -2374,6 +2431,13 @@ export class MapsetRecordsComponent implements OnInit {
 
 	goToEditMappingPage(code: any) {
 		this.router.navigate(['/projects/mapset/' + this.mapsetCode + '/mapping/' + code + '/edit'], {
+			replaceUrl: false,
+			skipLocationChange: false,
+		});
+	}
+
+	goToAutomapMappingsPage(codes: any) {
+		this.router.navigate(['/projects/mapset/' + this.mapsetCode + '/mappings/' + codes.join('_') + '/automap'], {
 			replaceUrl: false,
 			skipLocationChange: false,
 		});

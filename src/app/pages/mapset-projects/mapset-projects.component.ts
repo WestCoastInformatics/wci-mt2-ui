@@ -153,6 +153,10 @@ export class MapsetProjectsComponent implements OnInit {
 				key?.startsWith('mapsetBatchWorkflowFilter') ||
 				key?.startsWith('mapsetBatchAssignedFilter') ||
 				key?.startsWith('mapsetBatchColumnStorage') ||
+				key?.startsWith('projects_automapSearchInput') ||
+				key?.startsWith('mapsetAutomapWorkflowFilter') ||
+				key?.startsWith('mapsetAutomapAssignedFilter') ||
+				key?.startsWith('mapsetAutomapColumnStorage') ||
 				key?.startsWith('mapsetLanguage') ||
 				key?.startsWith('mapsetToLanguage')
 			) {
