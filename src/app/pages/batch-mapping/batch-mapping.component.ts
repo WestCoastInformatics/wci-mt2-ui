@@ -459,9 +459,9 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			{
 				field: 'name',
 				tooltipField: 'name',
-				headerName: 'Source (PT)',
+				headerValueGetter: (params: any) => `${this.headerNameColumnName}`,
 				headerTooltip: 'Source Name',
-				flex: 2,
+				flex: 1,
 				resizable: true,
 				minWidth: 155,
 				valueGetter: this.languageNameValueGetter.bind(this),
@@ -488,7 +488,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			{
 				field: 'toName',
 				tooltipField: 'toName',
-				headerName: 'Target (PT)',
+				headerValueGetter: (params: any) => `${this.headerToNameColumnName}`,
 				headerTooltip: 'Target Name',
 				resizable: true,
 				unSortIcon: true,
@@ -572,7 +572,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				sortable: false,
 			},
 			{
-				colId: 'workflowStatus',
+				colId: 'workFlowStatus',
 				field: 'workflowStatus',
 				tooltipField: 'workflowStatus',
 				headerName: 'Workflow Status',
@@ -1012,16 +1012,45 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 	}
 
 	changeHeaderTitle() {
-		const updatedDefs = this.gridColumnDefs.map((col: any) => {
-			if (col.field === 'name' && col.headerName !== this.headerNameColumnName) {
-				return { ...col, headerName: this.headerNameColumnName };
+		const columns: any = [];
+		const updatedDefs = this.gridApi.getColumnDefs?.();
+		for (let column of updatedDefs) {
+			const columnData: any = {};
+			if (!column.colId) {
+				columnData.colId = column.field;
+			} else {
+				columnData.colId = column.colId;
 			}
-			if (col.field === 'toName' && col.headerName !== this.headerToNameColumnName) {
-				return { ...col, headerName: this.headerToNameColumnName };
+			if (columnData.field === 'name' && columnData.headerName !== this.headerNameColumnName) {
+				columnData.headerName = this.headerNameColumnName;
 			}
-			return col;
-		});
+			if (columnData.field === 'toName' && columnData.headerName !== this.headerToNameColumnName) {
+				columnData.headerName = this.headerToNameColumnName;
+			}
+			if (columnData.colId !== 'action-btns' && columnData.colId !== 'checkbox') {
+				columns.push(columnData);
+			}
+		}
 		this.gridApi.setGridOption('columnDefs', updatedDefs);
+		const state: any = [];
+		if (this.mapsetBatchColumnStorage) {
+			if (localStorage.getItem(this.mapsetBatchColumnStorage)) {
+				this.gridApi.applyColumnState({ state: JSON.parse(localStorage.getItem(this.mapsetBatchColumnStorage)) });
+			}
+		} else {
+			for (const column of columns) {
+				column.show = true;
+				if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
+					column.show = false;
+				}
+				this.manualStateRefresh = true;
+				state.push({ colId: column.colId, hide: !column.show });
+			}
+			this.gridApi.applyColumnState({ state: state });
+			if (this.mapsetBatchColumnStorage) {
+				localStorage.setItem(this.mapsetBatchColumnStorage, JSON.stringify(state));
+			}
+		}
 	}
 
 	getModuleMetadata() {
@@ -1175,19 +1204,16 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				paginationPageSize: this.browserPaging.pageSize,
 				cacheBlockSize: this.browserPaging.pageSize,
 			});
-			// this.getBrowserData();
 		}
 	}
 
 	setPageSize(size: number) {
-		// this.browserApi.paginationGoToFirstPage();
 		this.goToPage(0);
 		this.browserApi.setGridOption('paginationPageSize', size);
 	}
 
 	goToPage(number: number) {
 		this.browserApi.paginationGoToPage(number);
-		//this.getBrowserData();
 	}
 
 	reloadMapping() {
@@ -1787,7 +1813,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 								this.mapsetData.forEach((map: any) => {
 									map.updated = false;
 								});
-								//this.gridApi.redrawRows();
 								this.getMapsetData();
 							}, 50);
 						},
