@@ -6,6 +6,7 @@
 	(click)="$event.stopPropagation()"
 	(change)="selectColumns()"
 	[disabled]="selectedColumns.length === 1 && column.show"
+	[ngClass]="{ disabled: disabled }"
 >
 	{{ column.name }}
 </mat-checkbox>

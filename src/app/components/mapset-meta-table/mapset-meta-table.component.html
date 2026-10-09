@@ -6,9 +6,9 @@
 				<tr>
 					<td class="mt2-refset-metadata-label" aria-label="Reference ID:">Reference ID:</td>
 					<td class="mt2-refset-metadata-value">
-						{{ refset?.refsetId }}
+						{{ mapset?.refsetId }}
 						<mat-icon
-							*ngIf="refset?.privateRefset"
+							*ngIf="mapset?.privateRefset"
 							aria-hidden="false"
 							class="mt2-table-action-icon mt2-table-action-form-icon text-muted default-cursor"
 							aria-label="Private Refset"
@@ -17,7 +17,7 @@
 							lock
 						</mat-icon>
 						<mat-icon
-							*ngIf="refset?.localSet"
+							*ngIf="mapset?.localSet"
 							aria-hidden="false"
 							class="mt2-table-action-icon mt2-table-action-form-icon text-muted default-cursor"
 							aria-label="Local Set"
@@ -30,23 +30,23 @@
 				<tr>
 					<td class="mt2-refset-metadata-label" aria-label="Module ID">Module ID:</td>
 					<td class="mt2-refset-metadata-value">
-						{{ refset?.moduleId + ' - ' + refset?.project?.edition?.moduleNames[refset?.moduleId] }}
+						{{ mapset?.moduleId + ' - ' + mapset?.project?.edition?.moduleNames[mapset?.moduleId] }}
 					</td>
 				</tr>
 
 				<tr>
 					<td class="mt2-refset-metadata-label" aria-label="Edition/Extension:">Edition/Extension:</td>
 					<td class="mt2-refset-metadata-value">
-						<span *ngIf="!loggedIn">{{ refset?.editionName }}</span>
-						<a *ngIf="loggedIn" href="{{ getEditionUrl() }}">{{ refset?.editionName }}</a
+						<span *ngIf="!loggedIn">{{ mapset?.editionName }}</span>
+						<a *ngIf="loggedIn" href="{{ getEditionUrl() }}">{{ mapset?.editionName }}</a
 						>&nbsp;
 						<img
-							*ngIf="refset?.flagIcon !== null"
+							*ngIf="mapset?.flagIcon !== null"
 							(error)="showFlagIcon($event)"
-							src="{{ refset?.flagIcon }}"
+							src="{{ mapset?.flagIcon }}"
 							class="mt2-edition-flag"
-							title="{{ refset?.editionName }} Flag"
-							aria-label="{{ refset?.editionName }} Flag"
+							title="{{ mapset?.editionName }} Flag"
+							aria-label="{{ mapset?.editionName }} Flag"
 						/>
 					</td>
 				</tr>
@@ -54,33 +54,33 @@
 				<tr>
 					<td class="mt2-refset-metadata-label" aria-label="Type:">Type:</td>
 					<td class="mt2-refset-metadata-value text-capitalize">
-						{{ capitalizeFirstLetterOfString(refset?.type) }}
+						{{ capitalizeFirstLetterOfString(mapset?.type) }}
 					</td>
 				</tr>
 
 				<tr>
 					<td class="mt2-refset-metadata-label" aria-label="Type:">Status:</td>
-					<td class="mt2-refset-metadata-value text-capitalize" [class.refset_tool_inactive_row]="refset !== undefined && !refset?.active">
-						{{ refset === undefined || refset?.active ? 'Active' : 'Inactive' }}
+					<td class="mt2-refset-metadata-value text-capitalize" [class.refset_tool_inactive_row]="mapset !== undefined && !mapset?.active">
+						{{ mapset === undefined || mapset?.active ? 'Active' : 'Inactive' }}
 					</td>
 				</tr>
 
-				<tr *ngIf="refset?.tags[0]">
+				<tr *ngIf="mapset?.tags[0]">
 					<td class="mt2-refset-metadata-label" aria-label="Tags:">Tags:</td>
 					<td class="mt2-refset-metadata-value tag-container">
 						<mat-chip-list>
-							<mat-chip *ngFor="let tag of refset?.tags" class="mat-elevation-z5 bg-white">
+							<mat-chip *ngFor="let tag of mapset?.tags" class="mat-elevation-z5 bg-white">
 								{{ tag }}
 							</mat-chip>
 						</mat-chip-list>
 					</td>
 				</tr>
 
-				<tr *ngIf="refset?.narrative">
+				<tr *ngIf="mapset?.narrative">
 					<td class="mt2-refset-metadata-label" aria-label="Narrative:">Narrative:</td>
 					<td class="mt2-refset-metadata-value">
 						<ng-container>
-							<readonly-text-modal [shortText]="refset?.narrativeShortText" [longText]="refset?.narrative" [title]="'Narrative'">
+							<readonly-text-modal [shortText]="mapset?.narrativeShortText" [longText]="mapset?.narrative" [title]="'Narrative'">
 							</readonly-text-modal>
 						</ng-container>
 					</td>
@@ -89,15 +89,15 @@
 				<tr>
 					<td class="mt2-refset-metadata-label" aria-label="Project:">Project:</td>
 					<td class="mt2-refset-metadata-value">
-						<span *ngIf="!loggedIn">{{ refset?.project?.name }}</span>
-						<a *ngIf="loggedIn" href="{{ getProjectUrl() }}">{{ refset?.project?.name }}</a>
+						<span *ngIf="!loggedIn">{{ mapset?.project?.name }}</span>
+						<a *ngIf="loggedIn" href="{{ getProjectUrl() }}">{{ mapset?.project?.name }}</a>
 					</td>
 				</tr>
 
 				<tr>
 					<td class="mt2-refset-metadata-label" aria-label="Reference Names:">Reference Names:</td>
 					<td class="mt2-refset-metadata-value">
-						<span *ngFor="let description of setDescriptions(refset)">
+						<span *ngFor="let description of setDescriptions(mapset)">
 							{{ description?.term }} {{ description?.languageName }}
 							<img
 								*ngIf="description?.flagIcon !== null"
@@ -110,10 +110,10 @@
 						/></span>
 					</td>
 				</tr>
-				<tr *ngIf="refset?.externalUrl">
+				<tr *ngIf="mapset?.externalUrl">
 					<td class="mt2-refset-metadata-label" aria-label="External URL/URI:">External URL/URI:</td>
 					<td class="mt2-refset-metadata-value">
-						<a href="{{ refset.externalUrl }}">{{ refset.externalUrl }}</a>
+						<a href="{{ refset.externalUrl }}">{{ mapset.externalUrl }}</a>
 					</td>
 				</tr>
 			</tbody>
@@ -127,23 +127,23 @@
 				<!-- Version Date with default if empty -->
 				<tr>
 					<td class="mt2-refset-metadata-label" aria-label="Version Date:">Reference Version Date:</td>
-					<td *ngIf="refset?.versionDate" class="mt2-refset-metadata-value">
-						{{ refset?.versionDate }}
+					<td *ngIf="mapset?.versionDate" class="mt2-refset-metadata-value">
+						{{ mapset?.versionDate }}
 					</td>
-					<td *ngIf="!refset?.versionDate" class="mt2-refset-metadata-value">Not yet published</td>
+					<td *ngIf="!mapset?.versionDate" class="mt2-refset-metadata-value">Not yet published</td>
 				</tr>
 
 				<tr>
 					<td class="mt2-refset-metadata-label" aria-label="Owner/Organization:">Owner/Organization:</td>
 					<td class="mt2-refset-metadata-value">
-						{{ refset?.organizationName }}
+						{{ mapset?.organizationName }}
 						<img
-							*ngIf="refset?.flagIcon !== null"
+							*ngIf="mapset?.flagIcon !== null"
 							(error)="showFlagIcon($event)"
-							src="{{ refset?.flagIcon }}"
+							src="{{ mapset?.flagIcon }}"
 							class="mt2-edition-flag"
-							title="{{ refset?.editionName }} Flag"
-							aria-label="{{ refset?.editionName }} Flag"
+							title="{{ mapset?.editionName }} Flag"
+							aria-label="{{ mapset?.editionName }} Flag"
 						/>
 					</td>
 				</tr>
@@ -151,23 +151,23 @@
 				<tr>
 					<td class="mt2-refset-metadata-label" aria-label="Version Status:">Version Status:</td>
 					<td class="mt2-refset-metadata-value">
-						{{ toTitleCase(refset?.versionStatus) }}
+						{{ toTitleCase(mapset?.versionStatus) }}
 					</td>
 				</tr>
 
-				<tr *ngIf="refset?.type !== 'EXTERNAL'">
+				<tr *ngIf="mapset?.type !== 'EXTERNAL'">
 					<td class="mt2-refset-metadata-label" aria-label="Publishing">Publishing:</td>
 					<td class="mt2-refset-metadata-value">
-						<span *ngIf="refset?.localSet">Local Set</span>
-						<span *ngIf="!refset?.localSet">Within Edition</span>
+						<span *ngIf="mapset?.localSet">Local Set</span>
+						<span *ngIf="!mapset?.localSet">Within Edition</span>
 					</td>
 				</tr>
 
 				<tr>
 					<td class="mt2-refset-metadata-label" aria-label="Terminology Version:">Terminology Version:</td>
 					<td class="mt2-refset-metadata-value">
-						{{ refset?.editionShortName }}
-						{{ refset?.versionDate ? '(' + refset?.terminologyVersionDate + ')' : 'In Development' }}
+						{{ mapset?.editionShortName }}
+						{{ mapset?.versionDate ? '(' + mapset?.terminologyVersionDate + ')' : 'In Development' }}
 					</td>
 				</tr>
 
@@ -183,8 +183,8 @@
 					<td class="mt2-refset-metadata-value">
 						<ng-container>
 							<readonly-text-modal
-								[shortText]="refset?.versionNotesShortText"
-								[longText]="refset?.versionNotes"
+								[shortText]="mapset?.versionNotesShortText"
+								[longText]="mapset?.versionNotes"
 								[title]="'Version Notes'"
 							>
 							</readonly-text-modal>
@@ -192,10 +192,10 @@
 					</td>
 				</tr>
 
-				<tr *ngIf="refset?.definitionClauses && refset?.type === 'INTENSIONAL'">
+				<tr *ngIf="mapset?.definitionClauses && mapset?.type === 'INTENSIONAL'">
 					<td class="mt2-refset-metadata-label" aria-label="Definition:">Definition:</td>
 					<td class="mt2-refset-metadata-value">
-						<div *ngFor="let definitionClause of refset?.definitionClauses">
+						<div *ngFor="let definitionClause of mapset?.definitionClauses">
 							<span *ngIf="definitionClause.negated">MINUS </span>
 							{{ definitionClause?.value }}
 						</div>

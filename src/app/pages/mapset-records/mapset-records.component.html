@@ -186,11 +186,44 @@
 			/>
 		</div>
 		<div class="d-flex dropdown-group" *ngIf="showMappingsSection">
-			<div class="col-md-auto mt2-directory-chooser-column" *ngIf="showTable && showMapTable === 'table'">
+			<div class="col-md-auto mt2-directory-chooser-column">
 				<mat-menu #settingsMenu="matMenu" class="menu">
-					<div class="heading">TABLE SETTINGS</div>
-					<div class="mat-mdc-menu-content">
-						FILTER BY
+					<div class="mat-mdc-menu-content menu m-t-10">
+						<div>SOURCE LANGUAGE</div>
+						<div class="d-flex mb-5 align-items-center">
+							<mat-form-field floatLabel="never" appearance="fill" class="filter-box">
+								<mat-select
+									[(value)]="selectedLanguage"
+									[title]="selectedLanguage"
+									[placeholder]="selectedLanguage"
+									(click)="$event.stopPropagation()"
+									(selectionChange)="changeLanguage()"
+									[disabled]="!showPaging"
+								>
+									<mat-option *ngFor="let option of languageOptions" [value]="option.value" class="no-checkbox">
+										{{ option.display }}
+									</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+						<div>TARGET LANGUAGE</div>
+						<div class="d-flex mb-5 align-items-center">
+							<mat-form-field floatLabel="never" appearance="fill" class="filter-box">
+								<mat-select
+									[(value)]="selectedToLanguage"
+									[title]="selectedToLanguage"
+									[placeholder]="selectedToLanguage"
+									(click)="$event.stopPropagation()"
+									(selectionChange)="changeLanguage()"
+									[disabled]="!showPaging"
+								>
+									<mat-option *ngFor="let option of languageOptions" [value]="option.value" class="no-checkbox">
+										{{ option.display }}
+									</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+						<div>FILTER BY</div>
 						<div class="d-flex mb-2 align-items-center">
 							<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
 								<mat-select
@@ -207,14 +240,15 @@
 									}}</mat-option>
 								</mat-select>
 							</mat-form-field>
-							<span
-								class="clear-search ml-20"
-								*ngIf="workflowFilter"
-								title="Clear Filter"
-								(click)="$event.stopPropagation(); workflowFilter = ''; filterSelection('workflow')"
-							>
-								&#10005;
-							</span>
+							<div class="clear-search ml-20 clear-dd-search">
+								<span
+									*ngIf="workflowFilter"
+									title="Clear Filter"
+									(click)="$event.stopPropagation(); workflowFilter = ''; filterSelection('workflow')"
+								>
+									&#10005;
+								</span>
+							</div>
 						</div>
 						<div class="d-flex mb-5 align-items-center">
 							<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
@@ -230,24 +264,27 @@
 									<mat-option *ngFor="let assigned of assignedFilterOptions" value="{{ assigned.value }}" class="no-checkbox">{{
 										assigned.label
 									}}</mat-option>
-								</mat-select> </mat-form-field
-							><span
-								class="clear-search ml-20"
-								*ngIf="assignedFilter"
-								title="Clear Filter"
-								(click)="$event.stopPropagation(); assignedFilter = ''; filterSelection('assigned')"
-							>
-								&#10005;
-							</span>
+								</mat-select>
+							</mat-form-field>
+							<div class="clear-search ml-20 clear-dd-search">
+								<span
+									*ngIf="assignedFilter"
+									title="Clear Filter"
+									(click)="$event.stopPropagation(); assignedFilter = ''; filterSelection('assigned')"
+								>
+									&#10005;
+								</span>
+							</div>
 						</div>
 					</div>
 					<app-column-chooser
-						*ngIf="showPaging"
+						*ngIf="showTable && showMapTable === 'table'"
 						title="Select Columns to Display"
-						[gridColumnApi]="refsetGridApi"
+						[gridColumnApi]="gridApi"
 						[useDialog]="useDialog"
 						[columnStorage]="mapsetRecordsColumnStorage"
 						[manualStateRefresh]="manualStateRefresh"
+						[disabled]="!showPaging"
 					>
 					</app-column-chooser
 				></mat-menu>
@@ -404,7 +441,7 @@
 							style="width: 100%; height: 100%"
 							[columnDefs]="columnDefs"
 							[suppressRowTransform]="true"
-							[gridOptions]="refsetGridOptions"
+							[gridOptions]="gridOptions"
 							[rowSelection]="rowSelection"
 							(firstDataRendered)="onResize(500)"
 						>
@@ -412,7 +449,7 @@
 					</div>
 				</div>
 
-				<div [hidden]="!loaded" *ngIf="showMapTable !== 'table'" class="content-wrapper">
+				<div [hidden]="!loaded" *ngIf="showMapTable === 'record' && showPaging" class="content-wrapper">
 					<div *ngFor="let record of mapsetData; index as i">
 						<div class="record-row" [ngClass]="{ 'odd-row': 0 === i % 2 }" *ngIf="!record.spanned">
 							<div class="col-12 row">
@@ -426,15 +463,31 @@
 										></label>
 									</div>
 									<div class="col-11 code-name">
-										{{ record.name }}, <span class="code-link" (click)="goToMappingPage(record.code)">{{ record.code }}</span>
+										{{ getLanguageNameValue(record) ? getLanguageNameValue(record) : record.name }},
+										<span class="code-link" (click)="goToMappingPage(record.code)">{{ record.code }}</span>
 									</div>
 
 									<div *ngFor="let entry of record.mapEntries; index as x" class="row col-12 second-row">
-										<div class="col-4 row mb-3">
+										<div class="col-5 row mb-3">
 											<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
-											<div class="record-code col-2">{{ entry.toCode }}</div>
-											<div class="record-name col-8">
-												{{ entry.toName }}
+											<div class="record-code col-2 ellipsis-text" [title]="entry.toCode">{{ entry.toCode }}</div>
+											<div
+												class="record-name col-8 no-wrap"
+												title="{{
+													getLanguageToNameValue(entry)
+														? `${getLanguageToNameValue(entry)} ${headerToNameColumnName.split('Target ')[1]}`
+														: entry.toName === ''
+															? '[NO TARGET]'
+															: entry.toName
+												}}"
+											>
+												{{
+													getLanguageToNameValue(entry)
+														? `${getLanguageToNameValue(entry)} ${headerToNameColumnName.split('Target ')[1]}`
+														: entry.toName === ''
+															? '[NO TARGET]'
+															: entry.toName
+												}}
 												<span *ngIf="getModuleLanguageIcon(entry.moduleId) !== ''">
 													<img
 														class="mapset-mod-icon"
@@ -445,8 +498,8 @@
 												/></span>
 											</div>
 										</div>
-										<div class="col-8 row mb-3">
-											<div class="info-box">
+										<div class="col-7 row mb-3">
+											<div class="info-box" *ngIf="entry.relation">
 												<i class="fa-regular fa-handshake relation-icon"></i
 												><span class="info-message">{{ entry.relation }}</span>
 											</div>
@@ -574,10 +627,10 @@
 				</div>
 
 				<div class="mt2-pagination-bottom-row" *ngIf="showPaging">
-					<span *ngFor="let sizeOption of refsetGridPaging.pageSizeOptions">
+					<span *ngFor="let sizeOption of gridPaging.pageSizeOptions">
 						<button
 							mat-raised-button
-							[color]="refsetGridPaging.pageSize === sizeOption ? 'secondary' : ''"
+							[color]="gridPaging.pageSize === sizeOption ? 'secondary' : ''"
 							class="pagination-page-buttons unthemed"
 							(click)="setPageSize(sizeOption)"
 							[hidden]="sizeOption > numOfMembers"
@@ -590,18 +643,14 @@
 			</div>
 			<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
 				Showing
-				<span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }} </span> to
+				<span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * gridPaging.pageSize - gridPaging.pageSize + 1 }} </span> to
 				<span class="fw-bold p-l-5 p-r-5">
-					{{
-						numOfMembers < (getCurrentPage() + 1) * refsetGridPaging.pageSize
-							? numOfMembers
-							: (getCurrentPage() + 1) * refsetGridPaging.pageSize
-					}}
+					{{ numOfMembers < (getCurrentPage() + 1) * gridPaging.pageSize ? numOfMembers : (getCurrentPage() + 1) * gridPaging.pageSize }}
 				</span>
 				of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span
 				><span class="p-r-5" *ngIf="numOfMembers === 10000">maximum </span> results
 			</div>
-			<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
+			<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No result found</div>
 		</div>
 	</div>
 	<div class="metadata-collapsible-container">
@@ -717,7 +766,7 @@
 		</div>
 
 		<div [hidden]="!showHistorySection" class="history-section">
-			<div [hidden]="!historyLoaded" *ngIf="numOfRecords === 0" class="status-no-results">No Results to Show</div>
+			<div [hidden]="!historyLoaded" *ngIf="numOfRecords === 0" class="status-no-results">No result found</div>
 			<div class="content-wrapper" [hidden]="!showHistoryTable">
 				<div #gridWrapperHistory class="grid-wrapper-history">
 					<ag-grid-angular
@@ -749,7 +798,7 @@
 					><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
 				</p>
 			</div>
-			<mapset-meta [refset]="data"></mapset-meta>
+			<mapset-meta [mapset]="data"></mapset-meta>
 		</div>
 	</ng-template>
 
@@ -770,7 +819,7 @@
 	<!-- Name Templates -->
 	<ng-template #directoryNameSection let-params>
 		<span class="blue-link">{{ params?.value }}</span>
-		<span *ngIf="params?.data?.modFlag !== ''">
+		<span *ngIf="params?.data?.modFlag !== '' && params?.value">
 			<img
 				class="mapset-mod-icon"
 				*ngIf="params?.data?.moduleId !== internationalId"

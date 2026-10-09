@@ -5,8 +5,18 @@
 	<div class="d-flex">
 		<div class="row">
 			<div class="col-md-9 page-title" *ngIf="loaded">
-				<div class="mt2-wrap" *ngIf="loaded" title="{{ mapsetData[0].code + ' ' + mapsetData[0].name }}">
-					<span>{{ mapsetData[0].code + ' ' + mapsetData[0].name }} </span>
+				<div
+					class="mt2-wrap"
+					*ngIf="loaded"
+					title="{{
+						`${mapsetData[0].code} ${getLanguageNameValue(mapsetData[0]) ? getLanguageNameValue(mapsetData[0]) + ' ' + headerNameColumnName : mapsetData[0].name}`
+					}}"
+				>
+					<span
+						>{{
+							`${mapsetData[0].code}  ${getLanguageNameValue(mapsetData[0]) ? getLanguageNameValue(mapsetData[0]) + ' ' + headerNameColumnName : mapsetData[0].name}`
+						}}
+					</span>
 				</div>
 			</div>
 			<div *ngIf="loaded" class="col-md-3 d-flex header-menu">
@@ -102,10 +112,61 @@
 	<div class="edit-container m-t-10">
 		<div class="metadata-collapsible-container col">
 			<div class="metadata-collapsible-container-group-header row no-hover">
-				<div class="metadata-collapsible-container-title page-header-font">
-					<span>Source Concept</span>
-				</div>
+				<div class="col-12 no-wrap d-flex justify-content-between">
+					<div class="metadata-collapsible-container-title page-header-font justify-content-start">
+						<span>Source Concept</span>
+					</div>
+					<div class="mt2-directory-chooser-column justify-content-end align-items-center">
+						<mat-menu #settingsMenu="matMenu" class="menu">
+							<div class="mat-mdc-menu-content menu m-t-10">
+								<div>SOURCE LANGUAGE</div>
+								<div class="d-flex mb-5 align-items-center">
+									<mat-form-field floatLabel="never" appearance="fill" class="filter-box">
+										<mat-select
+											[(value)]="selectedLanguage"
+											[title]="selectedLanguage"
+											[placeholder]="selectedLanguage"
+											(click)="$event.stopPropagation()"
+											(selectionChange)="changeLanguage()"
+										>
+											<mat-option *ngFor="let option of languageOptions" [value]="option.value" class="no-checkbox">
+												{{ option.display }}
+											</mat-option>
+										</mat-select>
+									</mat-form-field>
+								</div>
+								<div>TARGET LANGUAGE</div>
+								<div class="d-flex mb-5 align-items-center">
+									<mat-form-field floatLabel="never" appearance="fill" class="filter-box">
+										<mat-select
+											[(value)]="selectedToLanguage"
+											[title]="selectedToLanguage"
+											[placeholder]="selectedToLanguage"
+											(click)="$event.stopPropagation()"
+											(selectionChange)="changeLanguage()"
+										>
+											<mat-option *ngFor="let option of languageOptions" [value]="option.value" class="no-checkbox">
+												{{ option.display }}
+											</mat-option>
+										</mat-select>
+									</mat-form-field>
+								</div>
+							</div>
+						</mat-menu>
 
+						<div class="menu-inline">
+							<button
+								[matMenuTriggerFor]="settingsMenu"
+								aria-label="Settings"
+								title="Settings"
+								class="mapset-download-icon menu-button"
+							>
+								<mat-icon class="menu-icon">settings</mat-icon>
+								<span class="menu-label">Settings</span>
+							</button>
+						</div>
+					</div>
+				</div>
 				<div class="section-background mappings-section" *ngIf="loaded && selectedMapset && !loadError">
 					<div class="col-12">
 						<div class="d-flex col-12 row mt-5">
@@ -117,8 +178,15 @@
 								></span>
 							</div>
 							<div class="col-2 align-right">Name:</div>
-							<div class="col-10">
-								{{ mapsetData[0].name }}
+							<div
+								class="col-10"
+								title="{{
+									`${getLanguageNameValue(mapsetData[0]) ? getLanguageNameValue(mapsetData[0]) + ' ' + headerNameColumnName : mapsetData[0].name} `
+								}}"
+							>
+								{{
+									`${getLanguageNameValue(mapsetData[0]) ? getLanguageNameValue(mapsetData[0]) + ' ' + headerNameColumnName : mapsetData[0].name} `
+								}}
 							</div>
 						</div>
 					</div>
@@ -329,14 +397,27 @@
 										(click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName, entry.group, entry.priority)"
 										>{{ entry.toCode }}</span
 									><span
-										title="{{ entry.toName === '' ? '[NO TARGET]' : entry.toName }}"
-										class="p-l-5 p-r-5"
+										title="{{
+											getLanguageToNameValue(entry)
+												? `${getLanguageToNameValue(entry)} ${headerToNameColumnName}`
+												: entry.toName === ''
+													? '[NO TARGET]'
+													: entry.toName
+										}}"
+										class="p-l-5 p-r-5 no-wrap"
 										[ngClass]="{
 											'code-icon': mapsetInfo.workflowStatus === 'IN_EDIT',
 											'unlink-icon': mapsetInfo.workflowStatus !== 'IN_EDIT',
 										}"
 										(click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName, entry.group, entry.priority)"
-										>{{ entry.toName === '' ? '[NO TARGET]' : entry.toName }}
+									>
+										{{
+											getLanguageToNameValue(entry)
+												? `${getLanguageToNameValue(entry)} ${headerToNameColumnName}`
+												: entry.toName === ''
+													? '[NO TARGET]'
+													: entry.toName
+										}}
 										<span *ngIf="entry.modFlag !== ''">
 											<img
 												class="mapset-mod-icon"
@@ -479,13 +560,18 @@
 		<div class="row d-flex dropdown-group" *ngIf="showBrowserSection && !loadError">
 			<div class="col-md-auto mt2-directory-chooser-column m-l-20">
 				<mat-menu #settingsMenu="matMenu" class="menu">
-					<div class="heading">TABLE SETTINGS</div>
 					<app-column-chooser *ngIf="showPaging" title="Select Columns to Display" [gridColumnApi]="browserApi" [useDialog]="false">
 					</app-column-chooser
 				></mat-menu>
 
 				<div class="menu-inline">
-					<button [matMenuTriggerFor]="settingsMenu" aria-label="Settings" title="Settings" class="mapset-download-icon menu-button">
+					<button
+						[matMenuTriggerFor]="settingsMenu"
+						aria-label="Settings"
+						title="Settings"
+						class="mapset-download-icon menu-button"
+						[disabled]="!showPaging"
+					>
 						<mat-icon class="menu-icon">settings</mat-icon>
 						<span class="menu-label">Settings</span>
 					</button>
@@ -570,7 +656,7 @@
 						</div>
 
 						<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
-						<div class="mt2-pagination-container" [hidden]="!browserLoaded || !loadError" *ngIf="showBrowserSection">
+						<div class="mt2-pagination-container" [hidden]="!browserLoaded" *ngIf="showBrowserSection && !saving">
 							<div class="mt2-pagination-top-row" *ngIf="showPaging">
 								<div *ngIf="paginationPages.totalPages > 1" class="mt2-pagination-buttons no-wrap">
 									<button
@@ -689,8 +775,11 @@
 								</span>
 								of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
 							</div>
-							<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine text-center" [hidden]="showPaging">
-								No results to show
+							<div
+								class="mt2-pagination-total-label directory-new-paging ag-theme-alpine text-center status-no-results"
+								[hidden]="showPaging"
+							>
+								No result found
 							</div>
 						</div>
 					</as-split-area>

@@ -22,7 +22,7 @@ export class NavbarComponent implements OnInit {
 	isUserLoggedIn = false;
 	uiUtility = UiUtility;
 	projectRole = '';
-	refsetRole = '';
+	mapsetRole = '';
 	formatedRoles = '';
 	@Input() breadcrumbs: any;
 
@@ -52,9 +52,9 @@ export class NavbarComponent implements OnInit {
 		projectChannel.onmessage = (e) => {
 			this.projectRole = e.data;
 		};
-		const refsetDataChannel = new BroadcastChannel('refsetDataChannel');
-		refsetDataChannel.onmessage = (e) => {
-			this.refsetRole = e.data;
+		const mapsetDataChannel = new BroadcastChannel('refsetDataChannel');
+		mapsetDataChannel.onmessage = (e) => {
+			this.mapsetRole = e.data;
 		};
 	}
 
@@ -92,7 +92,7 @@ export class NavbarComponent implements OnInit {
 	}
 
 	showRefsetRole(): boolean {
-		return this.router.url.includes('details') && this.refsetRole.length > 0;
+		return this.router.url.includes('details') && this.mapsetRole.length > 0;
 	}
 
 	navigate(breadcrumbId: string) {

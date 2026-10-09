@@ -72,9 +72,42 @@
 		<div class="row d-flex dropdown-group" *ngIf="showConfigSection && loaded && !saving && !loadError">
 			<div class="col-md-auto mt2-directory-chooser-column m-l-20">
 				<mat-menu #settingsMenu="matMenu" class="menu">
-					<div class="heading">TABLE SETTINGS</div>
-					<div class="mat-mdc-menu-content">
-						FILTER BY
+					<div class="mat-mdc-menu-content menu m-t-10">
+						<div>SOURCE LANGUAGE</div>
+						<div class="d-flex mb-5 align-items-center">
+							<mat-form-field floatLabel="never" appearance="fill" class="filter-box">
+								<mat-select
+									[(value)]="selectedLanguage"
+									[title]="selectedLanguage"
+									[placeholder]="selectedLanguage"
+									(click)="$event.stopPropagation()"
+									(selectionChange)="changeLanguage()"
+									[disabled]="!showPaging"
+								>
+									<mat-option *ngFor="let option of languageOptions" [value]="option.value" class="no-checkbox">
+										{{ option.display }}
+									</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+						<div>TARGET LANGUAGE</div>
+						<div class="d-flex mb-5 align-items-center">
+							<mat-form-field floatLabel="never" appearance="fill" class="filter-box">
+								<mat-select
+									[(value)]="selectedToLanguage"
+									[title]="selectedToLanguage"
+									[placeholder]="selectedToLanguage"
+									(click)="$event.stopPropagation()"
+									(selectionChange)="changeLanguage()"
+									[disabled]="!showPaging"
+								>
+									<mat-option *ngFor="let option of languageOptions" [value]="option.value" class="no-checkbox">
+										{{ option.display }}
+									</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+						<div>FILTER BY</div>
 						<div class="d-flex mb-2 align-items-center">
 							<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
 								<mat-select
@@ -91,14 +124,15 @@
 									}}</mat-option>
 								</mat-select>
 							</mat-form-field>
-							<span
-								class="clear-search ml-20"
-								*ngIf="workflowFilter"
-								title="Clear Filter"
-								(click)="$event.stopPropagation(); workflowFilter = ''; filterSelection('workflow')"
-							>
-								&#10005;
-							</span>
+							<div class="clear-search ml-20">
+								<span
+									*ngIf="workflowFilter"
+									title="Clear Filter"
+									(click)="$event.stopPropagation(); workflowFilter = ''; filterSelection('workflow')"
+								>
+									&#10005;
+								</span>
+							</div>
 						</div>
 						<div class="d-flex mb-5 align-items-center">
 							<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
@@ -111,22 +145,20 @@
 									(click)="$event.stopPropagation()"
 									(selectionChange)="filterSelection('assigned')"
 								>
-									<mat-option
-										*ngFor="let assigned of assignedFilterOptions"
-										value="{{ assigned.value }}"
-										class="no-checkbox line-clamp-2"
-										title="{{ assigned.label }}"
-										>{{ assigned.label }}</mat-option
-									>
-								</mat-select> </mat-form-field
-							><span
-								class="clear-search ml-20"
-								*ngIf="assignedFilter"
-								title="Clear Filter"
-								(click)="$event.stopPropagation(); assignedFilter = ''; filterSelection('assigned')"
-							>
-								&#10005;
-							</span>
+									<mat-option *ngFor="let assigned of assignedFilterOptions" value="{{ assigned.value }}" class="no-checkbox">{{
+										assigned.label
+									}}</mat-option>
+								</mat-select>
+							</mat-form-field>
+							<div class="clear-search ml-20">
+								<span
+									*ngIf="assignedFilter"
+									title="Clear Filter"
+									(click)="$event.stopPropagation(); assignedFilter = ''; filterSelection('assigned')"
+								>
+									&#10005;
+								</span>
+							</div>
 						</div>
 					</div>
 					<app-column-chooser
@@ -135,6 +167,7 @@
 						[useDialog]="useDialog"
 						[columnStorage]="mapsetBatchColumnStorage"
 						[manualStateRefresh]="manualStateRefresh"
+						[disabled]="!showPaging"
 					>
 					</app-column-chooser
 				></mat-menu>
@@ -213,7 +246,7 @@
 					</button>
 				</div>
 			</div>
-			<div class="col-md-auto mt2-directory-chooser-column">
+			<div class="col-md-auto mt2-directory-chooser-column" *ngIf="showPaging">
 				<div class="menu-inline">
 					<button [matMenuTriggerFor]="actionMenu" aria-label="Actions" title="Actions" class="mapset-download-icon menu-button">
 						<mat-icon class="menu-icon">more_vert</mat-icon>
@@ -276,223 +309,232 @@
 			</div>
 		</div>
 		<div class="metadata-section-background" [hidden]="!showConfigSection">
-			<div id="directoryHeader" class="directory-header ag-theme-alpine" [hidden]="!showConfigSection || !loaded || saving || loadError"></div>
+			<div
+				id="directoryHeader"
+				class="directory-header ag-theme-alpine"
+				[hidden]="!showConfigSection || !loaded || saving || loadError || !showPaging"
+			></div>
 			<div id="config-background" [hidden]="!showConfigSection || !loaded || saving || loadError" class="section-background config-section">
-				<div class="grid-wrapper config-scrolling">
-					<ag-grid-angular
-						[columnDefs]="gridColumnDefs"
-						[rowData]="mapsetData"
-						(gridReady)="onGridReady($event)"
-						[gridOptions]="gridOptions"
-						class="ag-theme-alpine mt2-ag-grid mt2-ag-grid-no-filter"
-						[suppressScrollOnNewData]="true"
-						[rowClassRules]="rowClassRules"
-					>
-					</ag-grid-angular>
-
-					<!--Group Popover-->
-					<div
-						class="group-popover"
-						id="group-popover"
-						[ngStyle]="{ top: popoverLocationY + 'px', left: popoverLocationX + 'px' }"
-						[ngClass]="showGroupPopover ? 'show' : 'hide'"
-					>
-						<div class="popup-handle popup-handle-top"></div>
-						<img
-							src="assets/grey-close-icon.svg"
-							(click)="closeGroup()"
-							width="12px"
-							height="12px"
-							title="Close"
-							aria-label="Close"
-							class="grey-close-icon"
-							alt="Close"
-						/>
-						<div class="col mappings-section m-l-20">
-							<div class="m-t-20 m-b-10">
-								<div>
-									<label class="m-r-10">Group</label>
-									<mat-form-field floatLabel="never" id="groupInputField" title="Enter Group" class="adjust-mat-input-sm">
-										<input
-											type="number"
-											matInput
-											#groupInput
-											placeholder="Enter Group"
-											id="groupCodeInput"
-											(keydown)="numberOnly($event)"
-											[formControl]="groupFC"
-											class="target-input"
-										/>
-									</mat-form-field>
-									<span class="clear-search" title="Clear Group" (click)="clearGroupInput()">&#10005;</span>
-								</div>
-								<div>
-									<label class="m-r-10">Entry</label>
-									<mat-form-field floatLabel="never" id="entryInputField" title="Enter Entry" class="adjust-mat-input-sm">
-										<input
-											type="number"
-											matInput
-											#priorityInput
-											placeholder="Enter Entry"
-											id="entryCodeInput"
-											(keydown)="numberOnly($event)"
-											[formControl]="priorityFC"
-											class="target-input"
-										/>
-									</mat-form-field>
-									<span class="clear-search" title="Clear Entry" (click)="clearPriorityInput()">&#10005;</span>
-								</div>
-							</div>
-						</div>
-						<div class="modal-footer mt-10 mt2-lockable mt2-btn-group">
-							<button
-								type="button"
-								title="Save"
-								class="mt2-btn mt2-action-btn sm-inline-btn no-margin-top form-btn"
-								[disabled]="!groupFC.value || groupFC.value === '0' || !priorityFC.value || priorityFC.value === '0'"
-								(click)="setGroup()"
-							>
-								Save
-							</button>
-						</div>
-					</div>
-
-					<!--Target Popover-->
-					<div
-						class="target-popover"
-						id="target-popover"
-						[ngStyle]="{ top: popoverLocationY + 'px', left: popoverLocationX + 'px' }"
-						[ngClass]="showTargetPopover ? 'show' : 'hide'"
-					>
-						<div class="popup-handle popup-handle-top"></div>
-						<img
-							src="assets/grey-close-icon.svg"
-							(click)="closeTarget()"
-							width="12px"
-							height="12px"
-							title="Close"
-							aria-label="Close"
-							class="grey-close-icon"
-							alt="Close"
-						/>
-						<div class="col mappings-section m-l-20 m-r-20">
-							<div class="m-t-20 m-b-10">
-								<form (ngSubmit)="onKeyPress($event)" class="max-width m-t-5 type-ahead-form">
-									<span class="type-head-append">
-										<i class="fa-solid fa-magnifying-glass svg-inline"></i>
-										<input
-											#targetInput
-											id="typeahead-basic"
-											type="text"
-											class="form-control"
-											[(ngModel)]="query"
-											[formControl]="targetFC"
-											title="Search Target Code or Name (enter at least 2 characters, case sensitive)"
-											[placeholder]="'Search Target Code or Name'"
-											[ngbTypeahead]="searchAutoComplete"
-											[resultFormatter]="formatter"
-											[inputFormatter]="formatter"
-											[resultTemplate]="rt"
-											(selectItem)="selectItemFromMenu($event)"
-											[focusFirst]="false"
-										/>
-										<span class="clear-search" title="Clear Search" (click)="clearTargetInput()">&#10005;</span>
-									</span>
-								</form>
-							</div>
-							<span class="mappings-section m-b-10">{{ targetToName }}</span>
-						</div>
-
-						<div class="modal-footer mt-20 mb-10 mt2-lockable mt2-btn-group align-items-center">
-							<div class="mappings-section code-link no-wrap" title="Search Browser" (click)="searchBrowser()">
-								<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#2269e8">
-									<path
-										d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"
-									/>
-								</svg>
-								Search Browser
-							</div>
-							<button
-								type="button"
-								title="Set as Target"
-								class="mt2-btn mt2-action-btn sm-inline-btn no-margin-top form-btn"
-								(click)="setTarget(targetFC.value, targetToName)"
-								[disabled]="!foundConceptCode || !selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT'"
-								(ngClass)="({ disabled: !foundConceptCode || !selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT' })"
-							>
-								Set as Target
-							</button>
-							<button
-								type="button"
-								title="Set Empty Target"
-								class="mt2-btn mt2-action-btn sm-inline-btn no-margin-top form-btn"
-								[disabled]="!selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT'"
-								(ngClass)="({ disabled: !selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT' })"
-								(click)="setEmptyTarget()"
-							>
-								Set Empty Target
-							</button>
-						</div>
-					</div>
-
-					<!--Advice Popover-->
-					<div
-						class="advice-popover"
-						id="advice-popover"
-						[ngStyle]="{ top: popoverLocationY + 'px', left: popoverLocationX + 'px' }"
-						[ngClass]="showAdvicePopover ? 'show' : 'hide'"
-					>
-						<div class="popup-handle popup-handle-top"></div>
-						<img
-							src="assets/grey-close-icon.svg"
-							(click)="closePopover()"
-							width="12px"
-							height="12px"
-							title="Close"
-							aria-label="Close"
-							class="grey-close-icon"
-							alt="Close"
-						/>
-						<ul>
-							<li *ngFor="let advice of popover_updateAdviceList" class="advice-list-item" [hidden]="advice.indexOf('ALWAYS') > -1">
-								<span title="{{ advice }}" class="code-color">{{ advice }}</span
-								><span title="Remove advice" class="clear-search adjust-clear" (click)="removeAdviceFromList(advice)">&#10005;</span>
-							</li>
-						</ul>
-						<div class="target-selection advice-selection" [hidden]="popover_addAdviceList.length === 0">
-							<mat-form-field appearance="fill" floatLabel="never" class="advice-selection-box target-selection-box-advice">
-								<mat-select
-									#selectAdvice
-									title="Select advice to add"
-									placeholder="Select advice to add"
-									[(value)]="popover_adviceToAdd"
-									(selectionChange)="addAdviceToList(popover_uuid)"
-								>
-									<mat-option
-										*ngFor="let advice of popover_addAdviceList"
-										value="{{ advice }}"
-										title="{{ advice }}"
-										class="no-checkbox border-bottom"
-										><span class="advice-item">
-											<i class="fa-solid fa-star-of-life advice-icon-sm"></i>
-											<div class="line-clamp-2">{{ advice }}</div></span
-										></mat-option
-									>
-								</mat-select>
-							</mat-form-field>
-						</div>
-						<span class="mappings-section m-l-20" *ngIf="popover_addAdviceList.length === 0 && mapAdvices.length > 0"
-							>No advice to add.</span
+				<div [hidden]="!loaded" *ngIf="mapsetData.length === 0 || !showPaging" class="status-no-results">No result found</div>
+				<div class="content-wrapper" [hidden]="!loaded || !showPaging">
+					<div class="grid-wrapper config-scrolling">
+						<ag-grid-angular
+							[columnDefs]="gridColumnDefs"
+							[rowData]="mapsetData"
+							(gridReady)="onGridReady($event)"
+							[gridOptions]="gridOptions"
+							class="ag-theme-alpine mt2-ag-grid mt2-ag-grid-no-filter"
+							[suppressScrollOnNewData]="true"
+							[rowClassRules]="rowClassRules"
 						>
-						<div class="modal-footer mt-10 mt2-lockable mt2-btn-group">
-							<button
-								type="button"
-								title="Save"
-								class="mt2-btn mt2-action-btn sm-inline-btn no-margin-top form-btn"
-								(click)="setAdvice()"
+						</ag-grid-angular>
+
+						<!--Group Popover-->
+						<div
+							class="group-popover"
+							id="group-popover"
+							[ngStyle]="{ top: popoverLocationY + 'px', left: popoverLocationX + 'px' }"
+							[ngClass]="showGroupPopover ? 'show' : 'hide'"
+						>
+							<div class="popup-handle popup-handle-top"></div>
+							<img
+								src="assets/grey-close-icon.svg"
+								(click)="closeGroup()"
+								width="12px"
+								height="12px"
+								title="Close"
+								aria-label="Close"
+								class="grey-close-icon"
+								alt="Close"
+							/>
+							<div class="col mappings-section m-l-20">
+								<div class="m-t-20 m-b-10">
+									<div>
+										<label class="m-r-10">Group</label>
+										<mat-form-field floatLabel="never" id="groupInputField" title="Enter Group" class="adjust-mat-input-sm">
+											<input
+												type="number"
+												matInput
+												#groupInput
+												placeholder="Enter Group"
+												id="groupCodeInput"
+												(keydown)="numberOnly($event)"
+												[formControl]="groupFC"
+												class="target-input"
+											/>
+										</mat-form-field>
+										<span class="clear-search" title="Clear Group" (click)="clearGroupInput()">&#10005;</span>
+									</div>
+									<div>
+										<label class="m-r-10">Entry</label>
+										<mat-form-field floatLabel="never" id="entryInputField" title="Enter Entry" class="adjust-mat-input-sm">
+											<input
+												type="number"
+												matInput
+												#priorityInput
+												placeholder="Enter Entry"
+												id="entryCodeInput"
+												(keydown)="numberOnly($event)"
+												[formControl]="priorityFC"
+												class="target-input"
+											/>
+										</mat-form-field>
+										<span class="clear-search" title="Clear Entry" (click)="clearPriorityInput()">&#10005;</span>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer mt-10 mt2-lockable mt2-btn-group">
+								<button
+									type="button"
+									title="Save"
+									class="mt2-btn mt2-action-btn sm-inline-btn no-margin-top form-btn"
+									[disabled]="!groupFC.value || groupFC.value === '0' || !priorityFC.value || priorityFC.value === '0'"
+									(click)="setGroup()"
+								>
+									Save
+								</button>
+							</div>
+						</div>
+
+						<!--Target Popover-->
+						<div
+							class="target-popover"
+							id="target-popover"
+							[ngStyle]="{ top: popoverLocationY + 'px', left: popoverLocationX + 'px' }"
+							[ngClass]="showTargetPopover ? 'show' : 'hide'"
+						>
+							<div class="popup-handle popup-handle-top"></div>
+							<img
+								src="assets/grey-close-icon.svg"
+								(click)="closeTarget()"
+								width="12px"
+								height="12px"
+								title="Close"
+								aria-label="Close"
+								class="grey-close-icon"
+								alt="Close"
+							/>
+							<div class="col mappings-section m-l-20 m-r-20">
+								<div class="m-t-20 m-b-10">
+									<form (ngSubmit)="onKeyPress($event)" class="max-width m-t-5 type-ahead-form">
+										<span class="type-head-append">
+											<i class="fa-solid fa-magnifying-glass svg-inline"></i>
+											<input
+												#targetInput
+												id="typeahead-basic"
+												type="text"
+												class="form-control"
+												[(ngModel)]="query"
+												[formControl]="targetFC"
+												title="Search Target Code or Name (enter at least 2 characters, case sensitive)"
+												[placeholder]="'Search Target Code or Name'"
+												[ngbTypeahead]="searchAutoComplete"
+												[resultFormatter]="formatter"
+												[inputFormatter]="formatter"
+												[resultTemplate]="rt"
+												(selectItem)="selectItemFromMenu($event)"
+												[focusFirst]="false"
+											/>
+											<span class="clear-search" title="Clear Search" (click)="clearTargetInput()">&#10005;</span>
+										</span>
+									</form>
+								</div>
+								<span class="mappings-section m-b-10">{{ targetToName }}</span>
+							</div>
+
+							<div class="modal-footer mt-20 mb-10 mt2-lockable mt2-btn-group align-items-center">
+								<div class="mappings-section code-link no-wrap" title="Search Browser" (click)="searchBrowser()">
+									<svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#2269e8">
+										<path
+											d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"
+										/>
+									</svg>
+									Search Browser
+								</div>
+								<button
+									type="button"
+									title="Set as Target"
+									class="mt2-btn mt2-action-btn sm-inline-btn no-margin-top form-btn"
+									(click)="setTarget(targetFC.value, targetToName)"
+									[disabled]="!foundConceptCode || !selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+									(ngClass)="({ disabled: !foundConceptCode || !selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT' })"
+								>
+									Set as Target
+								</button>
+								<button
+									type="button"
+									title="Set Empty Target"
+									class="mt2-btn mt2-action-btn sm-inline-btn no-margin-top form-btn"
+									[disabled]="!selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT'"
+									(ngClass)="({ disabled: !selectedTarget || mapsetInfo.workflowStatus !== 'IN_EDIT' })"
+									(click)="setEmptyTarget()"
+								>
+									Set Empty Target
+								</button>
+							</div>
+						</div>
+
+						<!--Advice Popover-->
+						<div
+							class="advice-popover"
+							id="advice-popover"
+							[ngStyle]="{ top: popoverLocationY + 'px', left: popoverLocationX + 'px' }"
+							[ngClass]="showAdvicePopover ? 'show' : 'hide'"
+						>
+							<div class="popup-handle popup-handle-top"></div>
+							<img
+								src="assets/grey-close-icon.svg"
+								(click)="closePopover()"
+								width="12px"
+								height="12px"
+								title="Close"
+								aria-label="Close"
+								class="grey-close-icon"
+								alt="Close"
+							/>
+							<ul>
+								<li *ngFor="let advice of popover_updateAdviceList" class="advice-list-item" [hidden]="advice.indexOf('ALWAYS') > -1">
+									<span title="{{ advice }}" class="code-color">{{ advice }}</span
+									><span title="Remove advice" class="clear-search adjust-clear" (click)="removeAdviceFromList(advice)"
+										>&#10005;</span
+									>
+								</li>
+							</ul>
+							<div class="target-selection advice-selection" [hidden]="popover_addAdviceList.length === 0">
+								<mat-form-field appearance="fill" floatLabel="never" class="advice-selection-box target-selection-box-advice">
+									<mat-select
+										#selectAdvice
+										title="Select advice to add"
+										placeholder="Select advice to add"
+										[(value)]="popover_adviceToAdd"
+										(selectionChange)="addAdviceToList(popover_uuid)"
+									>
+										<mat-option
+											*ngFor="let advice of popover_addAdviceList"
+											value="{{ advice }}"
+											title="{{ advice }}"
+											class="no-checkbox border-bottom"
+											><span class="advice-item">
+												<i class="fa-solid fa-star-of-life advice-icon-sm"></i>
+												<div class="line-clamp-2">{{ advice }}</div></span
+											></mat-option
+										>
+									</mat-select>
+								</mat-form-field>
+							</div>
+							<span class="mappings-section m-l-20" *ngIf="popover_addAdviceList.length === 0 && mapAdvices.length > 0"
+								>No advice to add.</span
 							>
-								Save
-							</button>
+							<div class="modal-footer mt-10 mt2-lockable mt2-btn-group">
+								<button
+									type="button"
+									title="Save"
+									class="mt2-btn mt2-action-btn sm-inline-btn no-margin-top form-btn"
+									(click)="setAdvice()"
+								>
+									Save
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -524,14 +566,20 @@
 		</div>
 		<div class="row d-flex dropdown-group" *ngIf="showBrowserSection && !saving">
 			<div class="col-md-auto mt2-directory-chooser-column m-l-20">
-				<mat-menu #settingsMenu="matMenu" class="menu">
-					<div class="heading">TABLE SETTINGS</div>
-					<app-column-chooser *ngIf="showPaging" title="Select Columns to Display" [gridColumnApi]="browserApi" [useDialog]="false">
+				<mat-menu #settingsMenu="matMenu" class="menu"
+					>\
+					<app-column-chooser *ngIf="showBrowser" title="Select Columns to Display" [gridColumnApi]="browserApi" [useDialog]="false">
 					</app-column-chooser
 				></mat-menu>
 
 				<div class="menu-inline">
-					<button [matMenuTriggerFor]="settingsMenu" aria-label="Settings" title="Settings" class="mapset-download-icon menu-button">
+					<button
+						[matMenuTriggerFor]="settingsMenu"
+						aria-label="Settings"
+						title="Settings"
+						class="mapset-download-icon menu-button"
+						[disabled]="!showBrowser"
+					>
 						<mat-icon class="menu-icon">settings</mat-icon>
 						<span class="menu-label">Settings</span>
 					</button>
@@ -617,7 +665,7 @@
 
 						<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
 						<div class="mt2-pagination-container" [hidden]="!browserLoaded" *ngIf="showBrowserSection && !saving">
-							<div class="mt2-pagination-top-row" *ngIf="showPaging">
+							<div class="mt2-pagination-top-row" *ngIf="showBrowser">
 								<div *ngIf="paginationPages.totalPages > 1" class="mt2-pagination-buttons no-wrap">
 									<button
 										#paginationFirstPage
@@ -705,7 +753,7 @@
 									</button>
 								</div>
 
-								<div class="mt2-pagination-bottom-row" *ngIf="showPaging">
+								<div class="mt2-pagination-bottom-row" *ngIf="showBrowser">
 									<span *ngFor="let sizeOption of browserPaging.pageSizeOptions">
 										<button
 											mat-raised-button
@@ -720,7 +768,7 @@
 									</span>
 								</div>
 							</div>
-							<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
+							<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showBrowser">
 								Showing
 								<span class="fw-bold p-l-5 p-r-5">
 									{{ (getCurrentPage() + 1) * browserPaging.pageSize - browserPaging.pageSize + 1 }}
@@ -735,8 +783,11 @@
 								</span>
 								of <span class="fw-bold p-l-5"> {{ numOfMembers }} </span> results
 							</div>
-							<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine text-center" [hidden]="showPaging">
-								No results to show
+							<div
+								class="mt2-pagination-total-label directory-new-paging ag-theme-alpine text-center status-no-results"
+								[hidden]="showBrowser"
+							>
+								No result found
 							</div>
 						</div>
 					</as-split-area>
@@ -912,7 +963,7 @@
 					><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
 				</p>
 			</div>
-			<mapset-meta [refset]="data"></mapset-meta>
+			<mapset-meta [mapset]="data"></mapset-meta>
 		</div>
 	</ng-template>
 
@@ -929,7 +980,7 @@
 					><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
 				</p>
 			</div>
-			<mapset-meta [refset]="data"></mapset-meta>
+			<mapset-meta [mapset]="data"></mapset-meta>
 		</div>
 	</ng-template>
 	<!-- Workflow Status Templates -->
@@ -948,7 +999,7 @@
 	<!-- Name Templates -->
 	<ng-template #directoryNameSection let-params>
 		<span class="blue-link">{{ params?.value }}</span>
-		<span *ngIf="params?.data?.modFlag !== ''">
+		<span *ngIf="params?.data?.modFlag !== '' && params?.value">
 			<img
 				class="mapset-mod-icon"
 				*ngIf="params?.data?.moduleId !== internationalId"
@@ -972,13 +1023,13 @@
 			</div>
 
 			<div class="col">
-				<div class="library-app-refset-discussion-list p-r-20" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+				<div class="library-app-refset-discussion-list p-r-15" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
 					<img src="/assets/comment-dots-regular.svg" title="View Feedback" aria-label="View Feedback" class="discussion-icon" />
 				</div>
 			</div>
 
 			<div class="col">
-				<div class="library-app-refset-notes m-r-15 no-padding">
+				<div class="library-app-refset-notes no-padding">
 					<img
 						src="/assets/edit-icon.svg"
 						title="Map has unsaved changes"

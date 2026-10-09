@@ -130,6 +130,9 @@ export class ColumnChooserComponent {
 	}
 
 	selectColumns() {
+		if (this.disabled) {
+			return;
+		}
 		this.selectedColumns = this.columns.filter((menuitem) => menuitem.show).map((menuitem) => menuitem.colId);
 		const state: any = [];
 		for (const column of this.columns) {

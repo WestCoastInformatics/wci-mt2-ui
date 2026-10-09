@@ -368,7 +368,7 @@ export class RefsetService extends RestService {
 	}
 
 	getMappingsCurrentlyAssigned(): Observable<any> {
-		return this.get(this.contextPath + `mappings/workflow/assigned?limit=25&offset=0&sort=assignedAt&sortAscending=false`, '', false);
+		return this.get(this.contextPath + `mappings/workflow/assigned?limit=1000&offset=0&sort=assignedAt&sortAscending=false`, '', false);
 	}
 
 	getMapsetWorkflowStatus(mapsetId: string): Observable<any> {

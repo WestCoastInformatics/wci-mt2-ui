@@ -609,8 +609,7 @@
 }
 
 .status-no-results {
-	float: right;
-	margin-right: 145px;
+	text-align: center;
 	color: #7f7f7f;
 	font-size: 14px;
 }
@@ -1000,8 +999,4 @@
 .dialog-close-x-dark {
 	color: #666666 !important;
 	font-size: 20px;
-}
-
-.no-wrap {
-	text-wrap: nowrap;
 }

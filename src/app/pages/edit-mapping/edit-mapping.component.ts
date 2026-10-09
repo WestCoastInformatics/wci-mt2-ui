@@ -27,6 +27,7 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { Constants } from 'src/app/utilities/constants.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
@@ -63,23 +64,23 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 	];
 	selectedView = 'all';
 	selectedBrowser = '';
-	refsetGridApi: any;
+	gridApi: any;
 	columnDefs = [];
-	refsetGridColumns = [
+	gridColumns = [
 		{ name: 'information', show: true },
-		{ name: 'refsetId', show: true },
+		{ name: 'mapsetId', show: true },
 	];
 	rowSelection = 'multiple';
-	refsetGridOptions: any;
-	refsetGridPaging = {
+	gridOptions: any;
+	gridPaging = {
 		pageSize: 10,
 		pageSizeOptions: [10, 25, 50, 100],
 		totalKnown: false,
 		totalRows: null,
 		manualStateRefresh: Boolean(true),
 	};
-	refsetGridLastFilter = '';
-	refsetGridLastSort = '';
+	gridLastFilter = '';
+	gridLastSort = '';
 	showTable = false;
 	mapsetData = [];
 	dialog!: DialogService;
@@ -143,7 +144,6 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 	rowColors = [{ background: 'white' }, { background: '#f2f2f2' }];
 	currentRowColor = 0;
 	moduleMetadata: any;
-	refsetData: any;
 	loadedBrowser = false;
 	isNewPageSize = false;
 	paginationPages: any = {};
@@ -161,6 +161,13 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 	workFlowMapActions = [];
 	reviewMapWF: any;
 	editMappingsPage: any;
+	languageOptions: any[] = [];
+	selectedLanguage = 'default';
+	selectedToLanguage = 'default';
+	headerNameColumnName = '';
+	headerToNameColumnName = '';
+	mapsetLanguageStorage = 'mapsetLanguage';
+	mapsetToLanguageStorage = 'mapsetToLanguage';
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -322,6 +329,35 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 					this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
 					localStorage.setItem('projects_mapsetVersion', JSON.stringify(this.selectedVersion));
 				}
+				const languages = this.mapsetInfo?.mapProject.edition?.fullyQualifiedLanguageRefsets;
+				const languageRefsetOptions = [];
+				languageRefsetOptions.push({ value: 'default', display: '(PT)' });
+				const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
+				const languageToStorage = localStorage.getItem(this.mapsetToLanguageStorage);
+				if (languageStorage) {
+					this.selectedLanguage = languageStorage;
+				}
+				if (languageToStorage) {
+					this.selectedToLanguage = languageToStorage;
+				}
+				for (const language of languages) {
+					let type = 'PT';
+					if (language.qualifiedLanguageCode.indexOf('FSN') >= 0) {
+						type = 'FSN';
+					}
+					const languageValue = language.qualifiedLanguageRefset;
+					if (!this.selectedLanguage && !languageStorage) {
+						this.selectedLanguage = languageValue;
+					}
+					if (!this.selectedToLanguage && !languageToStorage) {
+						this.selectedToLanguage = languageValue;
+					}
+					languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageDialectCode + ' (' + type + ')' });
+				}
+				if (languageRefsetOptions.length > 0) {
+					this.languageOptions = languageRefsetOptions;
+				}
+				this.loadLanguageStorage();
 				this.getMapsetData();
 				this.getMapProject();
 			},
@@ -420,6 +456,151 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 			}
 		}
 		return '';
+	}
+
+	changeLanguage() {
+		const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
+		if (this.selectedLanguage !== languageStorage) {
+			localStorage.setItem(this.mapsetLanguageStorage, this.selectedLanguage);
+		}
+		const languageToStorage = localStorage.getItem(this.mapsetToLanguageStorage);
+		if (this.selectedToLanguage !== languageToStorage) {
+			localStorage.setItem(this.mapsetToLanguageStorage, this.selectedToLanguage);
+		}
+		this.getMapsetInfo();
+	}
+
+	getLanguageNameValue(mapset: any) {
+		if (!CodeUtility.hasValue(mapset)) {
+			return '';
+		}
+		let text = '';
+		let label = '';
+		const selectedLang = this.selectedLanguage;
+		let selectedLanguage = [];
+		for (const language of this.languageOptions) {
+			if (language.value === this.selectedLanguage) {
+				selectedLanguage.push(language);
+			}
+		}
+		if (selectedLanguage.length > 0) {
+			label = selectedLanguage[0].display;
+		}
+		if (mapset?.descriptions && selectedLanguage[0].value !== 'default') {
+			const choosenDescription = mapset.descriptions.filter((description: any) => {
+				return description.languageId === selectedLang;
+			})[0];
+			if (choosenDescription) {
+				text = choosenDescription.term;
+			}
+		} else {
+			text = mapset.name;
+		}
+		this.headerNameColumnName = 'Source ' + label;
+		return text;
+	}
+
+	getLanguageToNameValue(mapset: any) {
+		if (!CodeUtility.hasValue(mapset)) {
+			return '';
+		}
+		let text = '';
+		let label = '';
+		const selectedLang = this.selectedToLanguage;
+		let selectedToLanguage = [];
+		for (const language of this.languageOptions) {
+			if (language.value === this.selectedToLanguage) {
+				selectedToLanguage.push(language);
+			}
+		}
+		if (selectedToLanguage.length > 0) {
+			label = selectedToLanguage[0].display;
+		}
+		if (mapset?.toDescription && selectedToLanguage[0].value !== 'default') {
+			const choosenDescription = mapset.toDescription.filter((description: any) => {
+				return description.languageId === selectedLang;
+			})[0];
+			if (choosenDescription) {
+				text = choosenDescription.term;
+			}
+		} else {
+			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
+		}
+		this.headerToNameColumnName = 'Target ' + label;
+		return text;
+	}
+
+	languageNameValueGetter(params: any) {
+		if (!CodeUtility.hasValue(params.data)) {
+			return '';
+		}
+		const mapset = params.data;
+		let text = '';
+		let label = '';
+		const selectedLang = this.selectedLanguage;
+		let selectedLanguage = [];
+		for (const language of this.languageOptions) {
+			if (language.value === this.selectedLanguage) {
+				selectedLanguage.push(language);
+			}
+		}
+		if (selectedLanguage.length > 0) {
+			label = selectedLanguage[0].display;
+		}
+		if (mapset?.descriptions && selectedLanguage[0].value !== 'default') {
+			const choosenDescription = mapset.descriptions.filter((description: any) => {
+				return description.languageId === selectedLang;
+			})[0];
+			if (choosenDescription) {
+				text = choosenDescription.term;
+			}
+		} else {
+			text = mapset.name;
+		}
+		this.headerNameColumnName = 'Source ' + label;
+		return text;
+	}
+
+	languageToNameValueGetter(params: any) {
+		if (!CodeUtility.hasValue(params.data)) {
+			return '';
+		}
+		const mapset = params.data;
+		let text = '';
+		let label = '';
+		let selectedToLanguage = [];
+		for (const language of this.languageOptions) {
+			if (language.value === this.selectedToLanguage) {
+				selectedToLanguage.push(language);
+			}
+		}
+		if (selectedToLanguage.length > 0) {
+			label = selectedToLanguage[0].display;
+		}
+		const selectedLang = this.selectedToLanguage;
+		if (mapset?.toDescription && selectedToLanguage[0].value !== 'default') {
+			const choosenDescription = mapset.toDescription.filter((description: any) => {
+				return description.languageId === selectedLang;
+			})[0];
+			if (choosenDescription) {
+				text = choosenDescription.term;
+			}
+		} else {
+			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
+		}
+		this.headerToNameColumnName = 'Target ' + label;
+		return text;
+	}
+
+	loadLanguageStorage() {
+		const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
+		if (languageStorage) {
+			this.selectedLanguage = languageStorage;
+		}
+		const languageToStorage = localStorage.getItem(this.mapsetToLanguageStorage);
+		if (languageToStorage) {
+			this.selectedToLanguage = languageToStorage;
+		}
 	}
 
 	getModuleLanguageIcon(moduleId: string) {
@@ -637,6 +818,13 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 					mapAdvices = results.mapEntries[b].advices.filter(function (res: any) {
 						return res.indexOf('ALWAYS') === -1;
 					});
+					const toDescription = [];
+					for (let i = 0; i < results.mapEntries[b].descriptions?.length; i++) {
+						toDescription.push(results.mapEntries[b].descriptions[i]);
+					}
+					if (toDescription.length > 0) {
+						results.mapEntries[b].toDescription = toDescription;
+					}
 					results.mapEntries[b].mapAdvices = mapAdvices;
 					results.mapEntries[b].adviceAlways = adviceAlways;
 					results.mapEntries[b].modFlag = this.getModuleLanguageIcon(results.mapEntries[b].moduleId);
@@ -652,6 +840,7 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 							entries: results.mapEntries.length,
 							code: results.code,
 							name: results.name,
+							toDescription: toDescription,
 							toName:
 								results.mapEntries[b].toName.length > 0 && results.mapEntries[b].toName !== ' DOES NOT EXIST'
 									? results.mapEntries[b].toName
@@ -735,6 +924,9 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 	}
 
 	searchBrowser() {
+		if (this.showConfigSection) {
+			this.toggleSectionView('showConfigSection');
+		}
 		if (!this.showBrowserSection) {
 			this.toggleSectionView('showBrowserSection');
 			this.secondWindow.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -924,6 +1116,12 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 	}
 
 	setTarget(currentConcept: any) {
+		if (!this.showConfigSection) {
+			this.toggleSectionView('showConfigSection');
+		}
+		if (this.showBrowserSection) {
+			this.toggleSectionView('showBrowserSection');
+		}
 		this.targetCodeInput = currentConcept.code;
 		this.targetNameInput = currentConcept.name;
 		this.setTargetCode();
@@ -1231,7 +1429,7 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 				const startRow = rowParams.startRow;
 				const endRow = rowParams.endRow;
 				const sortModel = rowParams.sortModel;
-				this.browserApi.showLoadingOverlay();
+				this.browserApi.setGridOption('loading', true);
 
 				let query = this.searchBrowserInput;
 				if (this.searchBrowserInput === '') {
@@ -1282,7 +1480,7 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 
 								if (this.browserData?.length > 0) {
 									this.showPaging = true;
-									this.browserApi.hideOverlay();
+									this.browserApi.setGridOption('loading', false);
 									this.paginationPages = Math.ceil(this.numOfMembers / this.browserPaging.pageSize)
 										? this.pagerService.getPager(
 												Math.ceil(this.numOfMembers / this.browserPaging.pageSize),
@@ -1340,7 +1538,6 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 				cellClass: 'blue-link',
 				resizable: false,
 				sortable: false,
-				suppressSorting: true,
 			},
 			{
 				field: 'name',
@@ -1351,13 +1548,11 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 				minWidth: 165,
 				resizable: false,
 				sortable: false,
-				suppressSorting: true,
 			},
 		];
 		this.browserOptions = {
 			context: { componentParent: this },
 			pagination: true,
-			angularCompileHeaders: true,
 			suppressColumnVirtualisation: true,
 			suppressPaginationPanel: true,
 			rowModelType: 'infinite',
@@ -1381,7 +1576,7 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 			onCellClicked: this.onBrowserCellClick,
 			onPaginationChanged: (event: any) => this.onPaginationChanged(event),
 			domLayout: 'autoHeight',
-			frameworkComponents: {
+			components: {
 				templateRenderer: TemplateRendererComponent,
 			},
 			defaultColDef: {
@@ -1389,9 +1584,8 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 				filter: false,
 				sortingOrder: ['asc', 'desc'],
 				floatingFilter: false,
-				suppressMenu: true,
+				suppressHeaderMenuButton: true,
 				resizable: true,
-				suppressSorting: true,
 				suppressMovable: true,
 			},
 			enableBrowserTooltips: true,
@@ -1409,6 +1603,7 @@ export class EditMappingComponent implements OnInit, OnDestroy {
 
 	@Debounce()
 	onBrowserSearchChange() {
+		this.closeConceptDetails();
 		this.searchBrowserInput = this.searchBrowserInput.trim();
 
 		if (!CodeUtility.hasValue(this.searchBrowserInput) || (CodeUtility.hasValue(this.searchBrowserInput) && this.searchBrowserInput.length > 2)) {

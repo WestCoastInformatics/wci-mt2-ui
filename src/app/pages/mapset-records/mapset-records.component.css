@@ -446,6 +446,10 @@
 	width: 150px;
 }
 
+.heading-margin {
+	margin-left: 7px;
+}
+
 .checkbox-column {
 	margin-left: 18px;
 	width: 30px;
@@ -463,7 +467,7 @@
 }
 
 .action-column {
-	margin-top: 15px;
+	margin-top: 5px;
 	text-align: right;
 }
 
