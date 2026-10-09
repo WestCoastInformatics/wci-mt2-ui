@@ -432,6 +432,10 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + `concept/${terminology}/${version}/${code}`, '', false);
 	}
 
+	generateAutomaps(mapsetId: string, params: any): Observable<any> {
+		return this.post(this.contextPath + `mapset/${mapsetId}/generateAutomaps`, params);
+	}
+
 	searchConceptByQuery(terminology: string, version: string, query: string, limit: string): Observable<any> {
 		return this.get(this.contextPath + `concept/${terminology}/${version}?limit=${limit}&offset=0&query=${query}`, '', false);
 	}

@@ -145,7 +145,7 @@ const appRoutes: Routes = [
 		runGuardsAndResolvers: 'always',
 	},
 	{
-		path: 'projects/mapset/:code/mappings/:concepts/automap',
+		path: 'projects/mapset/:code/mappings/:concepts/type/:type/confidence/:confidence/automap',
 		component: AutoMappingComponent,
 		data: { breadcrumbLabel: 'Automap Mappings' },
 		canActivate: [AuthGuardGuard],

@@ -107,6 +107,8 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 	mapsetInfo: any = {};
 	selectedVersion: any;
 	conceptCodes: any[] = [];
+	entityType = 'condition';
+	minConfidence = '0.8';
 	mapping = '';
 	routeParamsSubscription$!: Subscription;
 	browserSubscription!: Subscription;
@@ -278,6 +280,8 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.conceptCodes = routeParams.concepts.split('_');
+			this.entityType = routeParams.type ? routeParams.type : this.entityType;
+			this.minConfidence = routeParams.confidence ? routeParams.confidence : this.minConfidence;
 			this.mapsetAutomapColumnStorage += routeParams.concepts;
 			this.automapSearchInput += routeParams.concepts;
 			this.mapsetAutomapWorkflowFilter += routeParams.concepts;
@@ -1437,7 +1441,12 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 	getMapsetData() {
 		if (this.mapsetInfo?.id !== undefined) {
 			//change this to automap API
-			this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCodes.join(',')).subscribe({
+			const params = {
+				conceptCodes: this.conceptCodes,
+				entityType: this.entityType,
+				minConfidence: Number(this.minConfidence),
+			};
+			this.refsetService.generateAutomaps(this.mapsetInfo.id, params).subscribe({
 				next: (response) => {
 					this.loaded = true;
 					const automap = [];
