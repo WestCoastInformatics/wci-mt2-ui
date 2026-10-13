@@ -13,7 +13,7 @@ import {
 	OnDestroy,
 } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { PaginationChangedEvent, RowClassParams } from 'ag-grid-community';
+import { PaginationChangedEvent, RowClassParams, ValueGetterParams } from 'ag-grid-community';
 import { Subscription, Observable, OperatorFunction, of, map } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
@@ -446,6 +446,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				},
 			},
 			{
+				colId: 'code',
 				field: 'code',
 				tooltipField: 'code',
 				headerName: 'Source',
@@ -629,6 +630,33 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				},
 			},
 		];
+
+		for (const options of this.languageOptions) {
+			if (options.value !== 'default') {
+				const nameOption = {
+					colId: `source_${options.value}`,
+					headerName: `Source ${options.display}`,
+					headerTooltip: `Source ${options.display}`,
+					flex: 2,
+					resizable: true,
+					minWidth: 165,
+					valueGetter: (params: ValueGetterParams) => this.languageNameAllValueGetter(params, options.value),
+					sortable: false,
+					unSortIcon: false,
+				};
+				const nameToOption = {
+					colId: `target_${options.value}`,
+					headerName: `Target ${options.display}`,
+					headerTooltip: `Target ${options.display}`,
+					resizable: true,
+					unSortIcon: false,
+					sortable: false,
+					valueGetter: (params: ValueGetterParams) => this.languageToNameAllValueGetter(params, options.value),
+				};
+				this.gridColumnDefs.push(nameOption);
+				this.gridColumnDefs.push(nameToOption);
+			}
+		}
 	}
 
 	onGridReady = (gridReadyParams: any) => {
@@ -669,12 +697,18 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				const state: any = [];
 				for (const column of columns) {
 					column.show = true;
-
 					if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
 						column.show = false;
+						this.manualStateRefresh = true;
+					}
+					for (const languages of this.languageOptions) {
+						const sourceId = `source_${languages.value}`;
+						if (column.colId === sourceId || column.colId === `target_${languages.value}`) {
+							column.show = false;
+							this.manualStateRefresh = true;
+						}
 					}
 					this.manualStateRefresh = true;
-
 					state.push({ colId: column.colId, hide: !column.show });
 				}
 				this.gridApi.applyColumnState({ state: state });
@@ -949,6 +983,66 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		return text;
 	}
 
+	languageNameAllValueGetter(params: any, language: string) {
+		if (!CodeUtility.hasValue(params.data)) {
+			return '';
+		}
+		const mapset = params.data;
+		let text = '';
+		let label = '';
+		const selectedLang = language;
+		let selectedLanguage = [];
+		for (const language of this.languageOptions) {
+			if (language.value === selectedLang) {
+				selectedLanguage.push(language);
+			}
+		}
+		if (selectedLanguage.length > 0) {
+			label = selectedLanguage[0].display;
+		}
+		if (mapset?.descriptions && selectedLanguage[0].value !== 'default') {
+			const choosenDescription = mapset.descriptions.filter((description: any) => {
+				return description.languageId === selectedLang;
+			})[0];
+			if (choosenDescription) {
+				text = choosenDescription.term;
+			}
+		} else {
+			text = mapset.name;
+		}
+		return text;
+	}
+
+	languageToNameAllValueGetter(params: any, language: string) {
+		if (!CodeUtility.hasValue(params.data)) {
+			return '';
+		}
+		const mapset = params.data;
+		let text = '';
+		let label = '';
+		const selectedLang = language;
+		let selectedLanguage = [];
+		for (const language of this.languageOptions) {
+			if (language.value === selectedLang) {
+				selectedLanguage.push(language);
+			}
+		}
+		if (selectedLanguage.length > 0) {
+			label = selectedLanguage[0].display;
+		}
+		if (mapset?.toDescription && selectedLanguage[0].value !== 'default') {
+			const choosenDescription = mapset.toDescription.filter((description: any) => {
+				return description.languageId === selectedLang;
+			})[0];
+			if (choosenDescription) {
+				text = choosenDescription.term;
+			}
+		} else {
+			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
+		}
+		return text;
+	}
+
 	languageNameValueGetter(params: any) {
 		if (!CodeUtility.hasValue(params.data)) {
 			return '';
@@ -1042,6 +1136,14 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				column.show = true;
 				if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
 					column.show = false;
+					this.manualStateRefresh = true;
+				}
+				for (const languages of this.languageOptions) {
+					const sourceId = `source_${languages.value}`;
+					if (column.colId === sourceId || column.colId === `target_${languages.value}`) {
+						column.show = false;
+						this.manualStateRefresh = true;
+					}
 				}
 				this.manualStateRefresh = true;
 				state.push({ colId: column.colId, hide: !column.show });

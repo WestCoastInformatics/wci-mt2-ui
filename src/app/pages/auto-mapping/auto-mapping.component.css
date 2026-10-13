@@ -488,6 +488,17 @@
 	display: inline-block;
 }
 
+.menu-title {
+	font-size: 14px;
+	color: #666666;
+}
+
+.dropdown-divider {
+	border-top: 1px solid #666 !important;
+	margin-bottom: 10px !important;
+	margin-top: 1px !important;
+}
+
 .mappings-section {
 	color: #666;
 	font-size: 12px;
@@ -736,7 +747,7 @@
 	cursor: pointer;
 	color: var(--mapset-blue);
 	font-size: 1.25em;
-    background-color: #fff;
+	background-color: #fff;
 }
 
 .mapset-notes-icon {

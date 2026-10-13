@@ -550,8 +550,6 @@ export class MapsetRecordsComponent implements OnInit {
 							resizable: true,
 							minWidth: 165,
 							valueGetter: (params: ValueGetterParams) => this.languageNameAllValueGetter(params, options.value),
-							cellRenderer: TemplateRendererComponent,
-							cellRendererParams: { template: this.nameSection },
 							sortable: false,
 							unSortIcon: false,
 						};
@@ -563,8 +561,6 @@ export class MapsetRecordsComponent implements OnInit {
 							unSortIcon: false,
 							sortable: false,
 							valueGetter: (params: ValueGetterParams) => this.languageToNameAllValueGetter(params, options.value),
-							cellRenderer: TemplateRendererComponent,
-							cellRendererParams: { template: this.toNameSection },
 						};
 						this.columnDefs.push(nameOption);
 						this.columnDefs.push(nameToOption);
@@ -952,8 +948,8 @@ export class MapsetRecordsComponent implements OnInit {
 		if (selectedLanguage.length > 0) {
 			label = selectedLanguage[0].display;
 		}
-		if (mapset?.descriptions && selectedLanguage[0].value !== 'default') {
-			const choosenDescription = mapset.descriptions.filter((description: any) => {
+		if (mapset?.toDescription && selectedLanguage[0].value !== 'default') {
+			const choosenDescription = mapset.toDescription.filter((description: any) => {
 				return description.languageId === selectedLang;
 			})[0];
 			if (choosenDescription) {
