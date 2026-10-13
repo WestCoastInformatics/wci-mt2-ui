@@ -17,6 +17,7 @@ export class ColumnChooserComponent {
 	@Input() gridColumnApi: any;
 	@Input() disabled = false;
 	@Input() useDialog = true;
+	@Input() showMenu = false;
 	@Input() manualStateRefresh = false;
 	@Input() columnStorage: any;
 	@ViewChild('columnChooserSection') columnChooserDialog!: TemplateRef<any>;
