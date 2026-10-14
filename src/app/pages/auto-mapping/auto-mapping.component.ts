@@ -641,7 +641,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 				const nameOption = {
 					colId: `source_${options.value}`,
 					headerName: `Source ${options.display}`,
-					headerTooltip: `Source ${options.display}`,
+					headerTooltip: `Source ${options.title}`,
 					flex: 2,
 					resizable: true,
 					minWidth: 165,
@@ -652,7 +652,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 				const nameToOption = {
 					colId: `target_${options.value}`,
 					headerName: `Target ${options.display}`,
-					headerTooltip: `Target ${options.display}`,
+					headerTooltip: `Target ${options.title}`,
 					resizable: true,
 					unSortIcon: false,
 					sortable: false,
@@ -887,7 +887,11 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 					if (!this.selectedToLanguage && !languageToStorage) {
 						this.selectedToLanguage = languageValue;
 					}
-					languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageDialectCode + ' (' + type + ')' });
+					languageRefsetOptions.push({
+						value: languageValue,
+						display: language.qualifiedLanguageDialectCode + ' (' + type + ')',
+						title: language.languageTermDescription,
+					});
 				}
 				if (languageRefsetOptions.length > 0) {
 					this.languageOptions = languageRefsetOptions;

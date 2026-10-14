@@ -547,7 +547,7 @@ export class MapsetRecordsComponent implements OnInit {
 						const nameOption = {
 							colId: `source_${options.value}`,
 							headerName: `Source ${options.display}`,
-							headerTooltip: `Source ${options.display}`,
+							headerTooltip: `Source ${options.title}`,
 							flex: 2,
 							resizable: true,
 							minWidth: 165,
@@ -558,7 +558,7 @@ export class MapsetRecordsComponent implements OnInit {
 						const nameToOption = {
 							colId: `target_${options.value}`,
 							headerName: `Target ${options.display}`,
-							headerTooltip: `Target ${options.display}`,
+							headerTooltip: `Target ${options.title}`,
 							resizable: true,
 							unSortIcon: false,
 							sortable: false,
@@ -710,7 +710,7 @@ export class MapsetRecordsComponent implements OnInit {
 
 		const languages = this.mapsetInfo?.mapProject.edition?.fullyQualifiedLanguageRefsets;
 		const languageRefsetOptions = [];
-		languageRefsetOptions.push({ value: 'default', display: '(PT)' });
+		languageRefsetOptions.push({ value: 'default', display: '(PT)', title: '(PT)' });
 		const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
 		const languageToStorage = localStorage.getItem(this.mapsetToLanguageStorage);
 		if (languageStorage) {
@@ -731,7 +731,11 @@ export class MapsetRecordsComponent implements OnInit {
 			if (!this.selectedToLanguage && !languageToStorage) {
 				this.selectedToLanguage = languageValue;
 			}
-			languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageDialectCode + ' (' + type + ')' });
+			languageRefsetOptions.push({
+				value: languageValue,
+				display: language.qualifiedLanguageDialectCode + ' (' + type + ')',
+				title: language.languageTermDescription,
+			});
 		}
 		if (languageRefsetOptions.length > 0) {
 			this.languageOptions = languageRefsetOptions;
@@ -1035,10 +1039,10 @@ export class MapsetRecordsComponent implements OnInit {
 	changeHeaderTitle() {
 		const updatedDefs = this.columnDefs.map((col: any) => {
 			if (col.colId === 'name' && col.headerName !== this.headerNameColumnName) {
-				return { ...col, headerName: this.headerNameColumnName };
+				return { ...col, headerName: this.headerNameColumnName, headerTooltip: 'changed' };
 			}
 			if (col.colId === 'toName' && col.headerName !== this.headerToNameColumnName) {
-				return { ...col, headerName: this.headerToNameColumnName };
+				return { ...col, headerName: this.headerToNameColumnName, headerTooltip: 'changed' };
 			}
 			return col;
 		});

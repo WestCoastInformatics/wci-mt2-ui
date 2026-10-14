@@ -57,7 +57,14 @@ export class ColumnChooserComponent {
 				} else {
 					if (CodeUtility.hasValue(column.headerTooltip)) {
 						columnData.name = column.headerTooltip;
+					} else {
+						columnData.name = column.field;
 					}
+				}
+				if (!CodeUtility.hasValue(column.headerTooltip)) {
+					columnData.headerTooltip = columnData.name;
+				} else {
+					columnData.headerTooltip = column.headerTooltip;
 				}
 
 				const previousColumn = previousColumns.find((element) => element.colId == columnData.colId);
