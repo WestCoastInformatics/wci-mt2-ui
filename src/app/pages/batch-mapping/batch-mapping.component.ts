@@ -304,42 +304,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		}
 
 		this.disableChannel.postMessage(false);
-
-		this.gridOptions = {
-			context: { componentParent: this },
-			pagination: false,
-			suppressColumnVirtualisation: true,
-			suppressPaginationPanel: true,
-			paginationPageSize: this.gridPaging.pageSize,
-			rowSelection: 'single',
-			animateRows: false,
-			enableCellTextSelection: true,
-			singleClickEdit: true,
-			onGridReady: this.onGridReady,
-			onCellDoubleClicked: this.onGridCellClick,
-			onCellValueChanged: this.onCellValueChanged,
-			components: {
-				templateRenderer: TemplateRendererComponent,
-				categoryFilterComponent: CategoryFilterComponent,
-				dateTextFilterComponent: DateTextFilterComponent,
-			},
-			defaultColDef: {
-				sortable: false,
-				filter: false,
-				sortingOrder: ['asc', 'desc'],
-				floatingFilter: false,
-				suppressHeaderMenuButton: true,
-				resizable: true,
-				suppressMovable: true,
-			},
-			enableBrowserTooltips: true,
-			rowClassRules: {
-				'updated-row': (params: RowClassParams) => {
-					return params.data?.updated === true;
-				},
-			},
-		};
-
 		this.changeDetectorRef.detectChanges();
 	}
 
@@ -407,7 +371,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			},
 			enableBrowserTooltips: true,
 		};
-		this.showTable = true;
+		this.showBrowser = true;
 	}
 
 	loadGridColumns(): void {
@@ -630,7 +594,8 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				},
 			},
 		];
-
+		const sourceColumns: any[] = [];
+		const targetColumns: any[] = [];
 		for (const options of this.languageOptions) {
 			if (options.value !== 'default') {
 				const nameOption = {
@@ -653,10 +618,54 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 					sortable: false,
 					valueGetter: (params: ValueGetterParams) => this.languageToNameAllValueGetter(params, options.value),
 				};
-				this.gridColumnDefs.push(nameOption);
-				this.gridColumnDefs.push(nameToOption);
+				sourceColumns.push(nameOption);
+				targetColumns.push(nameToOption);
 			}
 		}
+		this.gridColumnDefs = this.gridColumnDefs.flatMap((col: any) => {
+			if (col.colId === 'name') {
+				return [col, ...sourceColumns];
+			}
+			if (col.colId === 'toName') {
+				return [col, ...targetColumns];
+			}
+			return [col];
+		});
+
+		this.gridOptions = {
+			context: { componentParent: this },
+			pagination: false,
+			suppressColumnVirtualisation: true,
+			suppressPaginationPanel: true,
+			paginationPageSize: this.gridPaging.pageSize,
+			rowSelection: 'single',
+			animateRows: false,
+			enableCellTextSelection: true,
+			singleClickEdit: true,
+			onGridReady: this.onGridReady,
+			onCellDoubleClicked: this.onGridCellClick,
+			onCellValueChanged: this.onCellValueChanged,
+			components: {
+				templateRenderer: TemplateRendererComponent,
+				categoryFilterComponent: CategoryFilterComponent,
+				dateTextFilterComponent: DateTextFilterComponent,
+			},
+			defaultColDef: {
+				sortable: false,
+				filter: false,
+				sortingOrder: ['asc', 'desc'],
+				floatingFilter: false,
+				suppressHeaderMenuButton: true,
+				resizable: true,
+			},
+			enableBrowserTooltips: true,
+			rowClassRules: {
+				'updated-row': (params: RowClassParams) => {
+					return params.data?.updated === true;
+				},
+			},
+		};
+		this.showTable = true;
 	}
 
 	onGridReady = (gridReadyParams: any) => {
@@ -1115,10 +1124,10 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			} else {
 				columnData.colId = column.colId;
 			}
-			if (columnData.field === 'name' && columnData.headerName !== this.headerNameColumnName) {
+			if (columnData.colId === 'name' && columnData.headerName !== this.headerNameColumnName) {
 				columnData.headerName = this.headerNameColumnName;
 			}
-			if (columnData.field === 'toName' && columnData.headerName !== this.headerToNameColumnName) {
+			if (columnData.colId === 'toName' && columnData.headerName !== this.headerToNameColumnName) {
 				columnData.headerName = this.headerToNameColumnName;
 			}
 			if (columnData.colId !== 'action-btns' && columnData.colId !== 'checkbox') {
@@ -1289,10 +1298,9 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		this.closeConceptDetails();
 		this.searchBrowserInput = this.searchBrowserInput.trim();
 
-		if (!CodeUtility.hasValue(this.searchBrowserInput) || (CodeUtility.hasValue(this.searchBrowserInput) && this.searchBrowserInput.length > 2)) {
+		if (CodeUtility.hasValue(this.searchBrowserInput) && this.searchBrowserInput.length > 2) {
 			this.setPageSize(10);
 			this.goToPage(0);
-			this.browserLoaded = false;
 			this.browserApi.purgeInfiniteCache();
 		}
 	}
@@ -1415,12 +1423,10 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				const endRow = rowParams.endRow;
 				const sortModel = rowParams.sortModel;
 				this.browserApi.setGridOption('loading', true);
-
 				let query = this.searchBrowserInput;
 				if (this.searchBrowserInput === '') {
 					query = '';
 				}
-
 				const storedWorkflowFilter = localStorage.getItem(this.mapsetBatchWorkflowFilter);
 				if (storedWorkflowFilter) {
 					this.workflowFilter = JSON.parse(storedWorkflowFilter);
@@ -1477,10 +1483,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 								const childP = document.getElementsByClassName('ag-paging-panel')[lastIndexP];
 								document.getElementById('directoryPaging').appendChild(childP);
 
-								this.showBrowser = true;
-
 								if (this.browserData?.length > 0) {
-									this.showBrowser = true;
 									this.browserApi.setGridOption('loading', false);
 									this.paginationPages = Math.ceil(this.numOfMembers / this.browserPaging.pageSize)
 										? this.pagerService.getPager(
@@ -1496,7 +1499,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 									rowParams.successCallback(this.browserData, lastRow);
 								}
 								if (this.numOfMembers === 0) {
-									this.showBrowser = false;
 									this.browserApi.showNoRowsOverlay();
 									rowParams.successCallback([], 0);
 								}
@@ -1516,7 +1518,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 								this.browserSubscription.unsubscribe();
 							},
 							error: (error: any) => {
-								this.showBrowser = false;
 								this.browserApi.showNoRowsOverlay();
 								rowParams.successCallback([], 0);
 								//console.error(' Error: ', error);
@@ -1540,7 +1541,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		if (this.mapsetInfo?.id !== undefined) {
 			this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCodes.join(',')).subscribe({
 				next: (response) => {
-					this.loaded = true;
 					const batch = [];
 					const list = response.items;
 					this.mapsetResponse = list;
@@ -1627,6 +1627,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 
 					if (batch?.length > 0) {
 						this.showPaging = true;
+						this.loaded = true;
 					} else {
 						this.showPaging = false;
 					}

@@ -334,7 +334,6 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 				floatingFilter: false,
 				suppressHeaderMenuButton: true,
 				resizable: true,
-				suppressMovable: true,
 			},
 			enableBrowserTooltips: true,
 			rowClassRules: {
@@ -635,6 +634,8 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 			},
 		];
 
+		const sourceColumns: any[] = [];
+		const targetColumns: any[] = [];
 		for (const options of this.languageOptions) {
 			if (options.value !== 'default') {
 				const nameOption = {
@@ -657,10 +658,19 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 					sortable: false,
 					valueGetter: (params: ValueGetterParams) => this.languageToNameAllValueGetter(params, options.value),
 				};
-				this.gridColumnDefs.push(nameOption);
-				this.gridColumnDefs.push(nameToOption);
+				sourceColumns.push(nameOption);
+				targetColumns.push(nameToOption);
 			}
 		}
+		this.gridColumnDefs = this.gridColumnDefs.flatMap((col: any) => {
+			if (col.colId === 'name') {
+				return [col, ...sourceColumns];
+			}
+			if (col.colId === 'toName') {
+				return [col, ...targetColumns];
+			}
+			return [col];
+		});
 	}
 
 	onGridReady = (gridReadyParams: any) => {
@@ -1113,10 +1123,10 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 			} else {
 				columnData.colId = column.colId;
 			}
-			if (columnData.field === 'name' && columnData.headerName !== this.headerNameColumnName) {
+			if (columnData.colId === 'name' && columnData.headerName !== this.headerNameColumnName) {
 				columnData.headerName = this.headerNameColumnName;
 			}
-			if (columnData.field === 'toName' && columnData.headerName !== this.headerToNameColumnName) {
+			if (columnData.colId === 'toName' && columnData.headerName !== this.headerToNameColumnName) {
 				columnData.headerName = this.headerToNameColumnName;
 			}
 			if (columnData.colId !== 'action-btns' && columnData.colId !== 'checkbox') {

@@ -2354,6 +2354,10 @@ app-date-text-floating-filter {
 	overflow: hidden;
 }
 
+.max-menu {
+	max-height: 50vh;
+}
+
 .no-wrap {
 	text-wrap: nowrap;
 }

@@ -456,7 +456,6 @@ export class MapsetInactivesComponent implements OnInit {
 					floatingFilter: false,
 					suppressHeaderMenuButton: true,
 					resizable: true,
-					suppressMovable: true,
 				},
 				enableBrowserTooltips: true,
 				rowClassRules: {

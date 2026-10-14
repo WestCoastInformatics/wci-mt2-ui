@@ -540,6 +540,8 @@ export class MapsetRecordsComponent implements OnInit {
 					},
 				];
 
+				const sourceColumns: any[] = [];
+				const targetColumns: any[] = [];
 				for (const options of this.languageOptions) {
 					if (options.value !== 'default') {
 						const nameOption = {
@@ -562,11 +564,19 @@ export class MapsetRecordsComponent implements OnInit {
 							sortable: false,
 							valueGetter: (params: ValueGetterParams) => this.languageToNameAllValueGetter(params, options.value),
 						};
-						this.columnDefs.push(nameOption);
-						this.columnDefs.push(nameToOption);
+						sourceColumns.push(nameOption);
+						targetColumns.push(nameToOption);
 					}
 				}
-
+				this.columnDefs = this.columnDefs.flatMap((col: any) => {
+					if (col.colId === 'name') {
+						return [col, ...sourceColumns];
+					}
+					if (col.colId === 'toName') {
+						return [col, ...targetColumns];
+					}
+					return [col];
+				});
 				this.gridOptions = {
 					pagination: true,
 					rowModelType: 'infinite',
@@ -604,7 +614,6 @@ export class MapsetRecordsComponent implements OnInit {
 						floatingFilter: false,
 						suppressHeaderMenuButton: true,
 						resizable: true,
-						suppressMovable: true,
 					},
 					enableBrowserTooltips: true,
 					rowClassRules: {
@@ -1025,10 +1034,10 @@ export class MapsetRecordsComponent implements OnInit {
 
 	changeHeaderTitle() {
 		const updatedDefs = this.columnDefs.map((col: any) => {
-			if (col.field === 'name' && col.headerName !== this.headerNameColumnName) {
+			if (col.colId === 'name' && col.headerName !== this.headerNameColumnName) {
 				return { ...col, headerName: this.headerNameColumnName };
 			}
-			if (col.field === 'toName' && col.headerName !== this.headerToNameColumnName) {
+			if (col.colId === 'toName' && col.headerName !== this.headerToNameColumnName) {
 				return { ...col, headerName: this.headerToNameColumnName };
 			}
 			return col;
