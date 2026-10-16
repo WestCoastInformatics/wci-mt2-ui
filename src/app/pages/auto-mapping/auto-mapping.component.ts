@@ -308,41 +308,6 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 		}
 
 		this.disableChannel.postMessage(false);
-
-		this.gridOptions = {
-			context: { componentParent: this },
-			pagination: false,
-			suppressColumnVirtualisation: true,
-			suppressPaginationPanel: true,
-			paginationPageSize: this.gridPaging.pageSize,
-			rowSelection: 'single',
-			animateRows: false,
-			enableCellTextSelection: true,
-			singleClickEdit: true,
-			onGridReady: this.onGridReady,
-			onCellDoubleClicked: this.onGridCellClick,
-			onCellValueChanged: this.onCellValueChanged,
-			components: {
-				templateRenderer: TemplateRendererComponent,
-				categoryFilterComponent: CategoryFilterComponent,
-				dateTextFilterComponent: DateTextFilterComponent,
-			},
-			defaultColDef: {
-				sortable: false,
-				filter: false,
-				sortingOrder: ['asc', 'desc'],
-				floatingFilter: false,
-				suppressHeaderMenuButton: true,
-				resizable: true,
-			},
-			enableBrowserTooltips: true,
-			rowClassRules: {
-				'updated-row': (params: RowClassParams) => {
-					return params.data?.updated === true;
-				},
-			},
-		};
-
 		this.changeDetectorRef.detectChanges();
 	}
 
@@ -410,7 +375,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 			},
 			enableBrowserTooltips: true,
 		};
-		this.showTable = true;
+		this.showBrowser = true;
 	}
 
 	loadGridColumns(): void {
@@ -461,6 +426,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 				sortable: false,
 			},
 			{
+				colId: 'name',
 				field: 'name',
 				tooltipField: 'name',
 				headerValueGetter: (params: any) => `${this.headerNameColumnName}`,
@@ -475,6 +441,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 				unSortIcon: false,
 			},
 			{
+				colId: 'toCode',
 				field: 'toCode',
 				tooltipField: 'toCode',
 				headerName: 'Target',
@@ -490,6 +457,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 				sortable: false,
 			},
 			{
+				colId: 'toName',
 				field: 'toName',
 				tooltipField: 'toName',
 				headerValueGetter: (params: any) => `${this.headerToNameColumnName}`,
@@ -603,6 +571,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 				sortable: false,
 			},
 			{
+				colId: 'modified',
 				field: 'modified',
 				tooltipValueGetter: UiUtility.gridDateValueGetter,
 				headerName: 'Last Modified',
@@ -671,6 +640,41 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 			}
 			return [col];
 		});
+
+		this.gridOptions = {
+			context: { componentParent: this },
+			pagination: false,
+			suppressColumnVirtualisation: true,
+			suppressPaginationPanel: true,
+			paginationPageSize: this.gridPaging.pageSize,
+			rowSelection: 'single',
+			animateRows: false,
+			enableCellTextSelection: true,
+			singleClickEdit: true,
+			onGridReady: this.onGridReady,
+			onCellDoubleClicked: this.onGridCellClick,
+			onCellValueChanged: this.onCellValueChanged,
+			components: {
+				templateRenderer: TemplateRendererComponent,
+				categoryFilterComponent: CategoryFilterComponent,
+				dateTextFilterComponent: DateTextFilterComponent,
+			},
+			defaultColDef: {
+				sortable: false,
+				filter: false,
+				sortingOrder: ['asc', 'desc'],
+				floatingFilter: false,
+				suppressHeaderMenuButton: true,
+				resizable: true,
+			},
+			enableBrowserTooltips: true,
+			rowClassRules: {
+				'updated-row': (params: RowClassParams) => {
+					return params.data?.updated === true;
+				},
+			},
+		};
+		this.showTable = true;
 	}
 
 	onGridReady = (gridReadyParams: any) => {
@@ -711,12 +715,17 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 				const state: any = [];
 				for (const column of columns) {
 					column.show = true;
-
 					if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
 						column.show = false;
 					}
 					this.manualStateRefresh = true;
-
+					for (const languages of this.languageOptions) {
+						const sourceId = `source_${languages.value}`;
+						if (column.colId === sourceId || column.colId === `target_${languages.value}`) {
+							column.show = false;
+							this.manualStateRefresh = true;
+						}
+					}
 					state.push({ colId: column.colId, hide: !column.show });
 				}
 				this.gridApi.applyColumnState({ state: state });
@@ -726,7 +735,6 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 				this.manualStateRefresh = true;
 			}
 		}
-		this.changeHeaderTitle();
 	}
 
 	loadLanguageStorage() {
@@ -1118,54 +1126,67 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 	}
 
 	changeHeaderTitle() {
-		const columns: any = [];
-		const updatedDefs = this.gridApi.getColumnDefs?.();
-		for (let column of updatedDefs) {
-			const columnData: any = {};
-			if (!column.colId) {
-				columnData.colId = column.field;
-			} else {
-				columnData.colId = column.colId;
+		const updatedDefs = this.gridColumnDefs.map((col: any) => {
+			if (col.colId === 'name' && col.headerName !== this.headerNameColumnName) {
+				return { ...col, headerName: this.headerNameColumnName, headerTooltip: 'changed' };
 			}
-			if (columnData.colId === 'name' && columnData.headerName !== this.headerNameColumnName) {
-				columnData.headerName = this.headerNameColumnName;
+			if (col.colId === 'toName' && col.headerName !== this.headerToNameColumnName) {
+				return { ...col, headerName: this.headerToNameColumnName, headerTooltip: 'changed' };
 			}
-			if (columnData.colId === 'toName' && columnData.headerName !== this.headerToNameColumnName) {
-				columnData.headerName = this.headerToNameColumnName;
-			}
-			if (columnData.colId !== 'action-btns' && columnData.colId !== 'checkbox') {
-				columns.push(columnData);
-			}
-		}
+			return col;
+		});
 		this.gridApi.setGridOption('columnDefs', updatedDefs);
-		const state: any = [];
-		if (this.mapsetAutomapColumnStorage) {
-			if (localStorage.getItem(this.mapsetAutomapColumnStorage)) {
-				this.gridApi.applyColumnState({ state: JSON.parse(localStorage.getItem(this.mapsetAutomapColumnStorage)) });
-			}
-		} else {
-			for (const column of columns) {
-				column.show = true;
-				if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
-					column.show = false;
-					this.manualStateRefresh = true;
-				}
-				for (const languages of this.languageOptions) {
-					const sourceId = `source_${languages.value}`;
-					if (column.colId === sourceId || column.colId === `target_${languages.value}`) {
-						column.show = false;
-						this.manualStateRefresh = true;
-					}
-				}
-				this.manualStateRefresh = true;
-				state.push({ colId: column.colId, hide: !column.show });
-			}
-			this.gridApi.applyColumnState({ state: state });
-			if (this.mapsetAutomapColumnStorage) {
-				localStorage.setItem(this.mapsetAutomapColumnStorage, JSON.stringify(state));
-			}
-		}
 	}
+
+	// changeHeaderTitle() {
+	// 	const columns: any = [];
+	// 	const updatedDefs = this.gridApi.getColumnDefs?.();
+	// 	for (let column of updatedDefs) {
+	// 		const columnData: any = {};
+	// 		if (!column.colId) {
+	// 			columnData.colId = column.field;
+	// 		} else {
+	// 			columnData.colId = column.colId;
+	// 		}
+	// 		if (columnData.colId === 'name' && columnData.headerName !== this.headerNameColumnName) {
+	// 			columnData.headerName = this.headerNameColumnName;
+	// 		}
+	// 		if (columnData.colId === 'toName' && columnData.headerName !== this.headerToNameColumnName) {
+	// 			columnData.headerName = this.headerToNameColumnName;
+	// 		}
+	// 		if (columnData.colId !== 'action-btns' && columnData.colId !== 'checkbox') {
+	// 			columns.push(columnData);
+	// 		}
+	// 	}
+	// 	this.gridApi.setGridOption('columnDefs', updatedDefs);
+	// 	const state: any = [];
+	// 	if (this.mapsetAutomapColumnStorage) {
+	// 		if (localStorage.getItem(this.mapsetAutomapColumnStorage)) {
+	// 			this.gridApi.applyColumnState({ state: JSON.parse(localStorage.getItem(this.mapsetAutomapColumnStorage)) });
+	// 		}
+	// 	} else {
+	// 		for (const column of columns) {
+	// 			column.show = true;
+	// 			if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
+	// 				column.show = false;
+	// 				this.manualStateRefresh = true;
+	// 			}
+	// 			for (const languages of this.languageOptions) {
+	// 				const sourceId = `source_${languages.value}`;
+	// 				if (column.colId === sourceId || column.colId === `target_${languages.value}`) {
+	// 					column.show = false;
+	// 					this.manualStateRefresh = true;
+	// 				}
+	// 			}
+	// 			this.manualStateRefresh = true;
+	// 			state.push({ colId: column.colId, hide: !column.show });
+	// 		}
+	// 		this.gridApi.applyColumnState({ state: state });
+	// 		if (this.mapsetAutomapColumnStorage) {
+	// 			localStorage.setItem(this.mapsetAutomapColumnStorage, JSON.stringify(state));
+	// 		}
+	// 	}
+	// }
 
 	getModuleMetadata() {
 		if (this.mt2Service.moduleMetadata.value?.length === 0) {
@@ -1301,10 +1322,9 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 		this.closeConceptDetails();
 		this.searchBrowserInput = this.searchBrowserInput.trim();
 
-		if (!CodeUtility.hasValue(this.searchBrowserInput) || (CodeUtility.hasValue(this.searchBrowserInput) && this.searchBrowserInput.length > 2)) {
+		if (CodeUtility.hasValue(this.searchBrowserInput) && this.searchBrowserInput.length > 2) {
 			this.setPageSize(10);
 			this.goToPage(0);
-			this.browserLoaded = false;
 			this.browserApi.purgeInfiniteCache();
 		}
 	}
@@ -1489,10 +1509,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 								const childP = document.getElementsByClassName('ag-paging-panel')[lastIndexP];
 								document.getElementById('directoryPaging').appendChild(childP);
 
-								this.showBrowser = true;
-
 								if (this.browserData?.length > 0) {
-									this.showBrowser = true;
 									this.browserApi.setGridOption('loading', false);
 									this.paginationPages = Math.ceil(this.numOfMembers / this.browserPaging.pageSize)
 										? this.pagerService.getPager(
@@ -1508,7 +1525,6 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 									rowParams.successCallback(this.browserData, lastRow);
 								}
 								if (this.numOfMembers === 0) {
-									this.showBrowser = false;
 									this.browserApi.showNoRowsOverlay();
 									rowParams.successCallback([], 0);
 								}
@@ -1528,7 +1544,6 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 								this.browserSubscription.unsubscribe();
 							},
 							error: (error: any) => {
-								this.showBrowser = false;
 								this.browserApi.showNoRowsOverlay();
 								rowParams.successCallback([], 0);
 								//console.error(' Error: ', error);
@@ -1550,7 +1565,6 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 
 	getMapsetData() {
 		if (this.mapsetInfo?.id !== undefined) {
-			//change this to automap API
 			const params = {
 				conceptCodes: this.conceptCodes,
 				entityType: this.entityType,

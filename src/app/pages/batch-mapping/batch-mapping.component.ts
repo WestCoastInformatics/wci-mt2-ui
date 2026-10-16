@@ -422,6 +422,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				sortable: false,
 			},
 			{
+				colId: 'name',
 				field: 'name',
 				tooltipField: 'name',
 				headerValueGetter: (params: any) => `${this.headerNameColumnName}`,
@@ -436,6 +437,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				unSortIcon: false,
 			},
 			{
+				colId: 'toCode',
 				field: 'toCode',
 				tooltipField: 'toCode',
 				headerName: 'Target',
@@ -451,6 +453,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				sortable: false,
 			},
 			{
+				colId: 'toName',
 				field: 'toName',
 				tooltipField: 'toName',
 				headerValueGetter: (params: any) => `${this.headerToNameColumnName}`,
@@ -564,6 +567,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				sortable: false,
 			},
 			{
+				colId: 'modified',
 				field: 'modified',
 				tooltipValueGetter: UiUtility.gridDateValueGetter,
 				headerName: 'Last Modified',
@@ -708,8 +712,8 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 					column.show = true;
 					if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
 						column.show = false;
-						this.manualStateRefresh = true;
 					}
+					this.manualStateRefresh = true;
 					for (const languages of this.languageOptions) {
 						const sourceId = `source_${languages.value}`;
 						if (column.colId === sourceId || column.colId === `target_${languages.value}`) {
@@ -717,7 +721,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 							this.manualStateRefresh = true;
 						}
 					}
-					this.manualStateRefresh = true;
 					state.push({ colId: column.colId, hide: !column.show });
 				}
 				this.gridApi.applyColumnState({ state: state });
@@ -727,7 +730,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				this.manualStateRefresh = true;
 			}
 		}
-		this.changeHeaderTitle();
 	}
 
 	loadLanguageStorage() {
@@ -1119,54 +1121,66 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 	}
 
 	changeHeaderTitle() {
-		const columns: any = [];
-		const updatedDefs = this.gridApi.getColumnDefs?.();
-		for (let column of updatedDefs) {
-			const columnData: any = {};
-			if (!column.colId) {
-				columnData.colId = column.field;
-			} else {
-				columnData.colId = column.colId;
+		const updatedDefs = this.gridColumnDefs.map((col: any) => {
+			if (col.colId === 'name' && col.headerName !== this.headerNameColumnName) {
+				return { ...col, headerName: this.headerNameColumnName, headerTooltip: 'changed' };
 			}
-			if (columnData.colId === 'name' && columnData.headerName !== this.headerNameColumnName) {
-				columnData.headerName = this.headerNameColumnName;
+			if (col.colId === 'toName' && col.headerName !== this.headerToNameColumnName) {
+				return { ...col, headerName: this.headerToNameColumnName, headerTooltip: 'changed' };
 			}
-			if (columnData.colId === 'toName' && columnData.headerName !== this.headerToNameColumnName) {
-				columnData.headerName = this.headerToNameColumnName;
-			}
-			if (columnData.colId !== 'action-btns' && columnData.colId !== 'checkbox') {
-				columns.push(columnData);
-			}
-		}
+			return col;
+		});
 		this.gridApi.setGridOption('columnDefs', updatedDefs);
-		const state: any = [];
-		if (this.mapsetBatchColumnStorage) {
-			if (localStorage.getItem(this.mapsetBatchColumnStorage)) {
-				this.gridApi.applyColumnState({ state: JSON.parse(localStorage.getItem(this.mapsetBatchColumnStorage)) });
-			}
-		} else {
-			for (const column of columns) {
-				column.show = true;
-				if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
-					column.show = false;
-					this.manualStateRefresh = true;
-				}
-				for (const languages of this.languageOptions) {
-					const sourceId = `source_${languages.value}`;
-					if (column.colId === sourceId || column.colId === `target_${languages.value}`) {
-						column.show = false;
-						this.manualStateRefresh = true;
-					}
-				}
-				this.manualStateRefresh = true;
-				state.push({ colId: column.colId, hide: !column.show });
-			}
-			this.gridApi.applyColumnState({ state: state });
-			if (this.mapsetBatchColumnStorage) {
-				localStorage.setItem(this.mapsetBatchColumnStorage, JSON.stringify(state));
-			}
-		}
 	}
+	// changeHeaderTitle() {
+	// 	const columns: any = [];
+	// 	const updatedDefs = this.gridApi.getColumnDefs?.();
+	// 	for (let column of updatedDefs) {
+	// 		const columnData: any = {};
+	// 		if (!column.colId) {
+	// 			columnData.colId = column.field;
+	// 		} else {
+	// 			columnData.colId = column.colId;
+	// 		}
+	// 		if (columnData.colId === 'name' && columnData.headerName !== this.headerNameColumnName) {
+	// 			columnData.headerName = this.headerNameColumnName;
+	// 		}
+	// 		if (columnData.colId === 'toName' && columnData.headerName !== this.headerToNameColumnName) {
+	// 			columnData.headerName = this.headerToNameColumnName;
+	// 		}
+	// 		if (columnData.colId !== 'action-btns' && columnData.colId !== 'checkbox') {
+	// 			columns.push(columnData);
+	// 		}
+	// 	}
+	// 	this.gridApi.setGridOption('columnDefs', updatedDefs);
+	// 	const state: any = [];
+	// 	if (this.mapsetBatchColumnStorage) {
+	// 		if (localStorage.getItem(this.mapsetBatchColumnStorage)) {
+	// 			this.gridApi.applyColumnState({ state: JSON.parse(localStorage.getItem(this.mapsetBatchColumnStorage)) });
+	// 		}
+	// 	} else {
+	// 		for (const column of columns) {
+	// 			column.show = true;
+	// 			if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
+	// 				column.show = false;
+	// 				this.manualStateRefresh = true;
+	// 			}
+	// 			for (const languages of this.languageOptions) {
+	// 				const sourceId = `source_${languages.value}`;
+	// 				if (column.colId === sourceId || column.colId === `target_${languages.value}`) {
+	// 					column.show = false;
+	// 					this.manualStateRefresh = true;
+	// 				}
+	// 			}
+	// 			this.manualStateRefresh = true;
+	// 			state.push({ colId: column.colId, hide: !column.show });
+	// 		}
+	// 		this.gridApi.applyColumnState({ state: state });
+	// 		if (this.mapsetBatchColumnStorage) {
+	// 			localStorage.setItem(this.mapsetBatchColumnStorage, JSON.stringify(state));
+	// 		}
+	// 	}
+	// }
 
 	getModuleMetadata() {
 		if (this.mt2Service.moduleMetadata.value?.length === 0) {
@@ -1639,7 +1653,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 						const lastIndex = document.getElementsByClassName('ag-header').length - 1;
 						const child = document.getElementsByClassName('ag-header')[0]; //lastIndex];
 						document.getElementById('directoryHeader').appendChild(child);
-						this.checkColumnSettings();
 					}, 400);
 
 					this.breadcrumbService.setBreadcrumbs([
