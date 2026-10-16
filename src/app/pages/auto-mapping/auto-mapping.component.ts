@@ -866,7 +866,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 				}
 				const languages = this.mapsetInfo?.mapProject.edition?.fullyQualifiedLanguageRefsets;
 				const languageRefsetOptions = [];
-				languageRefsetOptions.push({ value: 'default', display: '(PT)' });
+				languageRefsetOptions.push({ value: 'default', display: '(PT)', title: '(PT)' });
 				const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
 				const languageToStorage = localStorage.getItem(this.mapsetToLanguageStorage);
 				if (languageStorage) {

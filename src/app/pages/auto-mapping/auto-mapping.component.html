@@ -89,13 +89,17 @@
 								<mat-form-field floatLabel="never" appearance="fill" class="filter-box">
 									<mat-select
 										[(value)]="selectedLanguage"
-										[title]="selectedLanguage"
 										[placeholder]="selectedLanguage"
 										(click)="$event.stopPropagation()"
 										(selectionChange)="changeLanguage()"
 										[disabled]="!showPaging"
 									>
-										<mat-option *ngFor="let option of languageOptions" [value]="option.value" class="no-checkbox">
+										<mat-option
+											*ngFor="let option of languageOptions"
+											[value]="option.value"
+											class="no-checkbox"
+											[title]="option.title"
+										>
 											{{ option.display }}
 										</mat-option>
 									</mat-select>
@@ -106,13 +110,17 @@
 								<mat-form-field floatLabel="never" appearance="fill" class="filter-box">
 									<mat-select
 										[(value)]="selectedToLanguage"
-										[title]="selectedToLanguage"
 										[placeholder]="selectedToLanguage"
 										(click)="$event.stopPropagation()"
 										(selectionChange)="changeLanguage()"
 										[disabled]="!showPaging"
 									>
-										<mat-option *ngFor="let option of languageOptions" [value]="option.value" class="no-checkbox">
+										<mat-option
+											*ngFor="let option of languageOptions"
+											[value]="option.value"
+											class="no-checkbox"
+											[title]="option.title"
+										>
 											{{ option.display }}
 										</mat-option>
 									</mat-select>
