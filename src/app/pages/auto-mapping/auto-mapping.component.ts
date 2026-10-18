@@ -937,10 +937,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 		if (this.selectedToLanguage !== languageToStorage) {
 			localStorage.setItem(this.mapsetToLanguageStorage, this.selectedToLanguage);
 		}
-		this.getMapsetInfo();
-		setTimeout(() => {
-			this.changeHeaderTitle();
-		}, 2500);
+		this.changeHeaderTitle();
 	}
 
 	getLanguageNameValue(mapset: any) {
@@ -1126,67 +1123,24 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 	}
 
 	changeHeaderTitle() {
-		const updatedDefs = this.gridColumnDefs.map((col: any) => {
+		const columnDefs = this.gridApi.getColumnDefs?.();
+		const updatedDefs = columnDefs.flatMap((col: any) => {
 			if (col.colId === 'name' && col.headerName !== this.headerNameColumnName) {
-				return { ...col, headerName: this.headerNameColumnName, headerTooltip: 'changed' };
+				col.headerName = this.headerNameColumnName;
+				col.headerTooltip = 'changed';
+				return [col];
 			}
 			if (col.colId === 'toName' && col.headerName !== this.headerToNameColumnName) {
-				return { ...col, headerName: this.headerToNameColumnName, headerTooltip: 'changed' };
+				col.headerName = this.headerToNameColumnName;
+				col.headerTooltip = 'changed';
+				return [col];
 			}
-			return col;
+			return [col];
 		});
+		this.manualStateRefresh = true;
 		this.gridApi.setGridOption('columnDefs', updatedDefs);
+		this.checkColumnSettings();
 	}
-
-	// changeHeaderTitle() {
-	// 	const columns: any = [];
-	// 	const updatedDefs = this.gridApi.getColumnDefs?.();
-	// 	for (let column of updatedDefs) {
-	// 		const columnData: any = {};
-	// 		if (!column.colId) {
-	// 			columnData.colId = column.field;
-	// 		} else {
-	// 			columnData.colId = column.colId;
-	// 		}
-	// 		if (columnData.colId === 'name' && columnData.headerName !== this.headerNameColumnName) {
-	// 			columnData.headerName = this.headerNameColumnName;
-	// 		}
-	// 		if (columnData.colId === 'toName' && columnData.headerName !== this.headerToNameColumnName) {
-	// 			columnData.headerName = this.headerToNameColumnName;
-	// 		}
-	// 		if (columnData.colId !== 'action-btns' && columnData.colId !== 'checkbox') {
-	// 			columns.push(columnData);
-	// 		}
-	// 	}
-	// 	this.gridApi.setGridOption('columnDefs', updatedDefs);
-	// 	const state: any = [];
-	// 	if (this.mapsetAutomapColumnStorage) {
-	// 		if (localStorage.getItem(this.mapsetAutomapColumnStorage)) {
-	// 			this.gridApi.applyColumnState({ state: JSON.parse(localStorage.getItem(this.mapsetAutomapColumnStorage)) });
-	// 		}
-	// 	} else {
-	// 		for (const column of columns) {
-	// 			column.show = true;
-	// 			if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
-	// 				column.show = false;
-	// 				this.manualStateRefresh = true;
-	// 			}
-	// 			for (const languages of this.languageOptions) {
-	// 				const sourceId = `source_${languages.value}`;
-	// 				if (column.colId === sourceId || column.colId === `target_${languages.value}`) {
-	// 					column.show = false;
-	// 					this.manualStateRefresh = true;
-	// 				}
-	// 			}
-	// 			this.manualStateRefresh = true;
-	// 			state.push({ colId: column.colId, hide: !column.show });
-	// 		}
-	// 		this.gridApi.applyColumnState({ state: state });
-	// 		if (this.mapsetAutomapColumnStorage) {
-	// 			localStorage.setItem(this.mapsetAutomapColumnStorage, JSON.stringify(state));
-	// 		}
-	// 	}
-	// }
 
 	getModuleMetadata() {
 		if (this.mt2Service.moduleMetadata.value?.length === 0) {
@@ -1667,7 +1621,6 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 						const child = document.getElementsByClassName('ag-header')[0]; //lastIndex];
 						document.getElementById('directoryHeader').appendChild(child);
 						this.changeHeaderTitle();
-						this.checkColumnSettings();
 					}, 400);
 
 					this.breadcrumbService.setBreadcrumbs([
