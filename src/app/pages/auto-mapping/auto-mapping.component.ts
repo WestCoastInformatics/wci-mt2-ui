@@ -206,7 +206,9 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 	selectedLanguage = 'default';
 	selectedToLanguage = 'default';
 	headerNameColumnName = '';
+	headerNameColumnTooltip = '';
 	headerToNameColumnName = '';
+	headerToNameColumnTooltip = '';
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
@@ -430,6 +432,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 				field: 'name',
 				tooltipField: 'name',
 				headerValueGetter: (params: any) => `${this.headerNameColumnName}`,
+				headerTooltipValueGetter: (params: any) => `${this.headerNameColumnTooltip}`,
 				headerTooltip: 'Source Name',
 				flex: 1,
 				resizable: true,
@@ -461,7 +464,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 				field: 'toName',
 				tooltipField: 'toName',
 				headerValueGetter: (params: any) => `${this.headerToNameColumnName}`,
-				headerTooltip: 'Target Name',
+				headerTooltipValueGetter: (params: any) => `${this.headerToNameColumnTooltip}`,
 				resizable: true,
 				unSortIcon: true,
 				sortable: false,
@@ -946,6 +949,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 		}
 		let text = '';
 		let label = '';
+		let title = '';
 		const selectedLang = this.selectedLanguage;
 		let selectedLanguage = [];
 		for (const language of this.languageOptions) {
@@ -955,6 +959,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 		}
 		if (selectedLanguage.length > 0) {
 			label = selectedLanguage[0].display;
+			title = selectedLanguage[0].title;
 		}
 		if (mapset?.descriptions && selectedLanguage[0].value !== 'default') {
 			const choosenDescription = mapset.descriptions.filter((description: any) => {
@@ -967,6 +972,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 			text = mapset.name;
 		}
 		this.headerNameColumnName = 'Source ' + label;
+		this.headerNameColumnTooltip = title === '' ? 'Source ' + label : title;
 		return text;
 	}
 
@@ -976,6 +982,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 		}
 		let text = '';
 		let label = '';
+		let title = '';
 		const selectedLang = this.selectedToLanguage;
 		let selectedToLanguage = [];
 		for (const language of this.languageOptions) {
@@ -985,6 +992,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 		}
 		if (selectedToLanguage.length > 0) {
 			label = selectedToLanguage[0].display;
+			title = selectedToLanguage[0].title;
 		}
 		if (mapset?.toDescription && selectedToLanguage[0].value !== 'default') {
 			const choosenDescription = mapset.toDescription.filter((description: any) => {
@@ -997,6 +1005,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
 		}
 		this.headerToNameColumnName = 'Target ' + label;
+		this.headerToNameColumnTooltip = title === '' ? 'Target ' + label : title;
 		return text;
 	}
 
@@ -1067,6 +1076,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 		const mapset = params.data;
 		let text = '';
 		let label = '';
+		let title = '';
 		const selectedLang = this.selectedLanguage;
 		let selectedLanguage = [];
 		for (const language of this.languageOptions) {
@@ -1076,6 +1086,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 		}
 		if (selectedLanguage.length > 0) {
 			label = selectedLanguage[0].display;
+			title = selectedLanguage[0].title;
 		}
 		if (mapset?.descriptions && selectedLanguage[0].value !== 'default') {
 			const choosenDescription = mapset.descriptions.filter((description: any) => {
@@ -1088,6 +1099,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 			text = mapset.name;
 		}
 		this.headerNameColumnName = 'Source ' + label;
+		this.headerNameColumnTooltip = title === '' ? 'Source ' + label : title;
 		return text;
 	}
 
@@ -1098,6 +1110,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 		const mapset = params.data;
 		let text = '';
 		let label = '';
+		let title = '';
 		let selectedToLanguage = [];
 		for (const language of this.languageOptions) {
 			if (language.value === this.selectedToLanguage) {
@@ -1106,6 +1119,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 		}
 		if (selectedToLanguage.length > 0) {
 			label = selectedToLanguage[0].display;
+			title = selectedToLanguage[0].title;
 		}
 		const selectedLang = this.selectedToLanguage;
 		if (mapset?.toDescription && selectedToLanguage[0].value !== 'default') {
@@ -1119,6 +1133,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
 		}
 		this.headerToNameColumnName = 'Target ' + label;
+		this.headerToNameColumnTooltip = title === '' ? 'Target ' + label : title;
 		return text;
 	}
 
@@ -1127,12 +1142,12 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 		const updatedDefs = columnDefs.flatMap((col: any) => {
 			if (col.colId === 'name' && col.headerName !== this.headerNameColumnName) {
 				col.headerName = this.headerNameColumnName;
-				col.headerTooltip = 'changed';
+				col.headerTooltip = this.headerNameColumnTooltip;
 				return [col];
 			}
 			if (col.colId === 'toName' && col.headerName !== this.headerToNameColumnName) {
 				col.headerName = this.headerToNameColumnName;
-				col.headerTooltip = 'changed';
+				col.headerTooltip = this.headerToNameColumnTooltip;
 				return [col];
 			}
 			return [col];

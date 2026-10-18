@@ -227,7 +227,9 @@ export class MapsetRecordsComponent implements OnInit {
 	selectedLanguage = 'default';
 	selectedToLanguage = 'default';
 	headerNameColumnName = '';
+	headerNameColumnTooltip = '';
 	headerToNameColumnName = '';
+	headerToNameColumnTooltip = '';
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
@@ -402,7 +404,7 @@ export class MapsetRecordsComponent implements OnInit {
 						field: 'name',
 						tooltipField: 'name',
 						headerValueGetter: (params: any) => `${this.headerNameColumnName}`,
-						headerTooltip: 'Source Name',
+						headerTooltipValueGetter: (params: any) => `${this.headerNameColumnTooltip}`,
 						flex: 2,
 						resizable: true,
 						minWidth: 165,
@@ -433,7 +435,7 @@ export class MapsetRecordsComponent implements OnInit {
 						field: 'toName',
 						tooltipField: 'toName',
 						headerValueGetter: (params: any) => `${this.headerToNameColumnName}`,
-						headerTooltip: 'Target Name',
+						headerTooltipValueGetter: (params: any) => `${this.headerToNameColumnTooltip}`,
 						resizable: true,
 						unSortIcon: false,
 						sortable: false,
@@ -860,6 +862,7 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 		let text = '';
 		let label = '';
+		let title = '';
 		const selectedLang = this.selectedLanguage;
 		let selectedLanguage = [];
 		for (const language of this.languageOptions) {
@@ -869,6 +872,7 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 		if (selectedLanguage.length > 0) {
 			label = selectedLanguage[0].display;
+			title = selectedLanguage[0].title;
 		}
 		if (mapset?.descriptions && selectedLanguage[0].value !== 'default') {
 			const choosenDescription = mapset.descriptions.filter((description: any) => {
@@ -881,6 +885,7 @@ export class MapsetRecordsComponent implements OnInit {
 			text = mapset.name;
 		}
 		this.headerNameColumnName = 'Source ' + label;
+		this.headerNameColumnTooltip = title === '' ? 'Source ' + label : title;
 		return text;
 	}
 
@@ -890,6 +895,7 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 		let text = '';
 		let label = '';
+		let title = '';
 		const selectedLang = this.selectedToLanguage;
 		let selectedToLanguage = [];
 		for (const language of this.languageOptions) {
@@ -899,6 +905,7 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 		if (selectedToLanguage.length > 0) {
 			label = selectedToLanguage[0].display;
+			title = selectedToLanguage[0].title;
 		}
 		if (mapset?.toDescription && selectedToLanguage[0].value !== 'default') {
 			const choosenDescription = mapset.toDescription.filter((description: any) => {
@@ -911,6 +918,7 @@ export class MapsetRecordsComponent implements OnInit {
 			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
 		}
 		this.headerToNameColumnName = 'Target ' + label;
+		this.headerToNameColumnTooltip = title === '' ? 'Target ' + label : title;
 		return text;
 	}
 
@@ -981,6 +989,7 @@ export class MapsetRecordsComponent implements OnInit {
 		const mapset = params.data;
 		let text = '';
 		let label = '';
+		let title = '';
 		const selectedLang = this.selectedLanguage;
 		let selectedLanguage = [];
 		for (const language of this.languageOptions) {
@@ -990,6 +999,7 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 		if (selectedLanguage.length > 0) {
 			label = selectedLanguage[0].display;
+			title = selectedLanguage[0].title;
 		}
 		if (mapset?.descriptions && selectedLanguage[0].value !== 'default') {
 			const choosenDescription = mapset.descriptions.filter((description: any) => {
@@ -1002,6 +1012,7 @@ export class MapsetRecordsComponent implements OnInit {
 			text = mapset.name;
 		}
 		this.headerNameColumnName = 'Source ' + label;
+		this.headerNameColumnTooltip = title === '' ? 'Source ' + label : title;
 		return text;
 	}
 
@@ -1012,6 +1023,7 @@ export class MapsetRecordsComponent implements OnInit {
 		const mapset = params.data;
 		let text = '';
 		let label = '';
+		let title = '';
 		let selectedToLanguage = [];
 		for (const language of this.languageOptions) {
 			if (language.value === this.selectedToLanguage) {
@@ -1020,6 +1032,7 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 		if (selectedToLanguage.length > 0) {
 			label = selectedToLanguage[0].display;
+			title = selectedToLanguage[0].title;
 		}
 		const selectedLang = this.selectedToLanguage;
 		if (mapset?.toDescription && selectedToLanguage[0].value !== 'default') {
@@ -1033,16 +1046,17 @@ export class MapsetRecordsComponent implements OnInit {
 			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
 		}
 		this.headerToNameColumnName = 'Target ' + label;
+		this.headerToNameColumnTooltip = title === '' ? 'Target ' + label : title;
 		return text;
 	}
 
 	changeHeaderTitle() {
 		const updatedDefs = this.columnDefs.map((col: any) => {
 			if (col.colId === 'name' && col.headerName !== this.headerNameColumnName) {
-				return { ...col, headerName: this.headerNameColumnName, headerTooltip: 'changed' };
+				return { ...col, headerName: this.headerNameColumnName, headerTooltip: this.headerNameColumnTooltip };
 			}
 			if (col.colId === 'toName' && col.headerName !== this.headerToNameColumnName) {
-				return { ...col, headerName: this.headerToNameColumnName, headerTooltip: 'changed' };
+				return { ...col, headerName: this.headerToNameColumnName, headerTooltip: this.headerToNameColumnTooltip };
 			}
 			return col;
 		});
