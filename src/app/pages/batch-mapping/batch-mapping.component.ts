@@ -13,7 +13,7 @@ import {
 	OnDestroy,
 } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { PaginationChangedEvent, RowClassParams } from 'ag-grid-community';
+import { PaginationChangedEvent, RowClassParams, ValueGetterParams } from 'ag-grid-community';
 import { Subscription, Observable, OperatorFunction, of, map } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
@@ -204,7 +204,9 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 	selectedLanguage = 'default';
 	selectedToLanguage = 'default';
 	headerNameColumnName = '';
+	headerNameColumnTooltip = '';
 	headerToNameColumnName = '';
+	headerToNameColumnTooltip = '';
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
@@ -304,42 +306,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		}
 
 		this.disableChannel.postMessage(false);
-
-		this.gridOptions = {
-			context: { componentParent: this },
-			pagination: false,
-			suppressColumnVirtualisation: true,
-			suppressPaginationPanel: true,
-			paginationPageSize: this.gridPaging.pageSize,
-			rowSelection: 'single',
-			animateRows: false,
-			enableCellTextSelection: true,
-			singleClickEdit: true,
-			onGridReady: this.onGridReady,
-			onCellDoubleClicked: this.onGridCellClick,
-			onCellValueChanged: this.onCellValueChanged,
-			components: {
-				templateRenderer: TemplateRendererComponent,
-				categoryFilterComponent: CategoryFilterComponent,
-				dateTextFilterComponent: DateTextFilterComponent,
-			},
-			defaultColDef: {
-				sortable: false,
-				filter: false,
-				sortingOrder: ['asc', 'desc'],
-				floatingFilter: false,
-				suppressHeaderMenuButton: true,
-				resizable: true,
-				suppressMovable: true,
-			},
-			enableBrowserTooltips: true,
-			rowClassRules: {
-				'updated-row': (params: RowClassParams) => {
-					return params.data?.updated === true;
-				},
-			},
-		};
-
 		this.changeDetectorRef.detectChanges();
 	}
 
@@ -407,7 +373,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			},
 			enableBrowserTooltips: true,
 		};
-		this.showTable = true;
+		this.showBrowser = true;
 	}
 
 	loadGridColumns(): void {
@@ -446,6 +412,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				},
 			},
 			{
+				colId: 'code',
 				field: 'code',
 				tooltipField: 'code',
 				headerName: 'Source',
@@ -457,9 +424,11 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				sortable: false,
 			},
 			{
+				colId: 'name',
 				field: 'name',
 				tooltipField: 'name',
 				headerValueGetter: (params: any) => `${this.headerNameColumnName}`,
+				headerTooltipValueGetter: (params: any) => `${this.headerNameColumnTooltip}`,
 				headerTooltip: 'Source Name',
 				flex: 1,
 				resizable: true,
@@ -471,6 +440,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				unSortIcon: false,
 			},
 			{
+				colId: 'toCode',
 				field: 'toCode',
 				tooltipField: 'toCode',
 				headerName: 'Target',
@@ -486,10 +456,11 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				sortable: false,
 			},
 			{
+				colId: 'toName',
 				field: 'toName',
 				tooltipField: 'toName',
 				headerValueGetter: (params: any) => `${this.headerToNameColumnName}`,
-				headerTooltip: 'Target Name',
+				headerTooltipValueGetter: (params: any) => `${this.headerToNameColumnTooltip}`,
 				resizable: true,
 				unSortIcon: true,
 				sortable: false,
@@ -599,6 +570,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				sortable: false,
 			},
 			{
+				colId: 'modified',
 				field: 'modified',
 				tooltipValueGetter: UiUtility.gridDateValueGetter,
 				headerName: 'Last Modified',
@@ -629,14 +601,86 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				},
 			},
 		];
+		const sourceColumns: any[] = [];
+		const targetColumns: any[] = [];
+		for (const options of this.languageOptions) {
+			if (options.value !== 'default') {
+				const nameOption = {
+					colId: `source_${options.value}`,
+					headerName: `Source ${options.display}`,
+					headerTooltip: `Source ${options.title}`,
+					flex: 2,
+					resizable: true,
+					minWidth: 165,
+					valueGetter: (params: ValueGetterParams) => this.languageNameAllValueGetter(params, options.value),
+					sortable: false,
+					unSortIcon: false,
+				};
+				const nameToOption = {
+					colId: `target_${options.value}`,
+					headerName: `Target ${options.display}`,
+					headerTooltip: `Target ${options.title}`,
+					resizable: true,
+					unSortIcon: false,
+					sortable: false,
+					valueGetter: (params: ValueGetterParams) => this.languageToNameAllValueGetter(params, options.value),
+				};
+				sourceColumns.push(nameOption);
+				targetColumns.push(nameToOption);
+			}
+		}
+		this.gridColumnDefs = this.gridColumnDefs.flatMap((col: any) => {
+			if (col.colId === 'name') {
+				return [col, ...sourceColumns];
+			}
+			if (col.colId === 'toName') {
+				return [col, ...targetColumns];
+			}
+			return [col];
+		});
+
+		this.loadLanguageStorage();
+
+		this.gridOptions = {
+			context: { componentParent: this },
+			pagination: false,
+			suppressColumnVirtualisation: true,
+			suppressPaginationPanel: true,
+			paginationPageSize: this.gridPaging.pageSize,
+			rowSelection: 'single',
+			animateRows: false,
+			enableCellTextSelection: true,
+			singleClickEdit: true,
+			onGridReady: this.onGridReady,
+			onCellDoubleClicked: this.onGridCellClick,
+			onCellValueChanged: this.onCellValueChanged,
+			components: {
+				templateRenderer: TemplateRendererComponent,
+				categoryFilterComponent: CategoryFilterComponent,
+				dateTextFilterComponent: DateTextFilterComponent,
+			},
+			defaultColDef: {
+				sortable: false,
+				filter: false,
+				sortingOrder: ['asc', 'desc'],
+				floatingFilter: false,
+				suppressHeaderMenuButton: true,
+				resizable: true,
+			},
+			enableBrowserTooltips: true,
+			rowClassRules: {
+				'updated-row': (params: RowClassParams) => {
+					return params.data?.updated === true;
+				},
+			},
+		};
+		this.showTable = true;
 	}
 
 	onGridReady = (gridReadyParams: any) => {
 		if (gridReadyParams?.api && gridReadyParams.type === 'gridReady') {
 			this.gridApi = gridReadyParams.api;
 			this.gridParams = gridReadyParams;
-			this.checkColumnSettings();
-			this.loadLanguageStorage();
 			setTimeout(() => {
 				this.checkSearchFilters();
 			}, 500);
@@ -669,12 +713,17 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				const state: any = [];
 				for (const column of columns) {
 					column.show = true;
-
 					if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
 						column.show = false;
 					}
 					this.manualStateRefresh = true;
-
+					for (const languages of this.languageOptions) {
+						const sourceId = `source_${languages.value}`;
+						if (column.colId === sourceId || column.colId === `target_${languages.value}`) {
+							column.show = false;
+							this.manualStateRefresh = true;
+						}
+					}
 					state.push({ colId: column.colId, hide: !column.show });
 				}
 				this.gridApi.applyColumnState({ state: state });
@@ -684,7 +733,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				this.manualStateRefresh = true;
 			}
 		}
-		this.changeHeaderTitle();
 	}
 
 	loadLanguageStorage() {
@@ -824,7 +872,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				}
 				const languages = this.mapsetInfo?.mapProject.edition?.fullyQualifiedLanguageRefsets;
 				const languageRefsetOptions = [];
-				languageRefsetOptions.push({ value: 'default', display: '(PT)' });
+				languageRefsetOptions.push({ value: 'default', display: '(PT)', title: '(PT)' });
 				const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
 				const languageToStorage = localStorage.getItem(this.mapsetToLanguageStorage);
 				if (languageStorage) {
@@ -845,7 +893,11 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 					if (!this.selectedToLanguage && !languageToStorage) {
 						this.selectedToLanguage = languageValue;
 					}
-					languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageDialectCode + ' (' + type + ')' });
+					languageRefsetOptions.push({
+						value: languageValue,
+						display: language.qualifiedLanguageDialectCode + ' (' + type + ')',
+						title: language.languageTermDescription,
+					});
 				}
 				if (languageRefsetOptions.length > 0) {
 					this.languageOptions = languageRefsetOptions;
@@ -883,10 +935,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		if (this.selectedToLanguage !== languageToStorage) {
 			localStorage.setItem(this.mapsetToLanguageStorage, this.selectedToLanguage);
 		}
-		this.getMapsetInfo();
-		setTimeout(() => {
-			this.changeHeaderTitle();
-		}, 2500);
+		this.changeHeaderTitle();
 	}
 
 	getLanguageNameValue(mapset: any) {
@@ -895,10 +944,77 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		}
 		let text = '';
 		let label = '';
+		let title = '';
 		const selectedLang = this.selectedLanguage;
 		let selectedLanguage = [];
 		for (const language of this.languageOptions) {
 			if (language.value === this.selectedLanguage) {
+				selectedLanguage.push(language);
+			}
+		}
+		if (selectedLanguage.length > 0) {
+			label = selectedLanguage[0].display;
+			title = selectedLanguage[0].title;
+		}
+		if (mapset?.descriptions && selectedLanguage[0].value !== 'default') {
+			const choosenDescription = mapset.descriptions.filter((description: any) => {
+				return description.languageId === selectedLang;
+			})[0];
+			if (choosenDescription) {
+				text = choosenDescription.term;
+			}
+		} else {
+			text = mapset.name;
+		}
+		this.headerNameColumnName = 'Source ' + label;
+		this.headerNameColumnTooltip = title === '' ? 'Source ' + label : title;
+		return text;
+	}
+
+	getLanguageToNameValue(mapset: any) {
+		if (!CodeUtility.hasValue(mapset)) {
+			return '';
+		}
+		let text = '';
+		let label = '';
+		let title = '';
+		const selectedLang = this.selectedToLanguage;
+		let selectedToLanguage = [];
+		for (const language of this.languageOptions) {
+			if (language.value === this.selectedToLanguage) {
+				selectedToLanguage.push(language);
+			}
+		}
+		if (selectedToLanguage.length > 0) {
+			label = selectedToLanguage[0].display;
+			title = selectedToLanguage[0].title;
+		}
+		if (mapset?.toDescription && selectedToLanguage[0].value !== 'default') {
+			const choosenDescription = mapset.toDescription.filter((description: any) => {
+				return description.languageId === selectedLang;
+			})[0];
+			if (choosenDescription) {
+				text = choosenDescription.term;
+			}
+		} else {
+			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
+		}
+		this.headerToNameColumnName = 'Target ' + label;
+		this.headerToNameColumnTooltip = title === '' ? 'Target ' + label : title;
+		return text;
+	}
+
+	languageNameAllValueGetter(params: any, language: string) {
+		if (!CodeUtility.hasValue(params.data)) {
+			return '';
+		}
+		const mapset = params.data;
+		let text = '';
+		let label = '';
+		const selectedLang = language;
+		let selectedLanguage = [];
+		for (const language of this.languageOptions) {
+			if (language.value === selectedLang) {
 				selectedLanguage.push(language);
 			}
 		}
@@ -915,27 +1031,27 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		} else {
 			text = mapset.name;
 		}
-		this.headerNameColumnName = 'Source ' + label;
 		return text;
 	}
 
-	getLanguageToNameValue(mapset: any) {
-		if (!CodeUtility.hasValue(mapset)) {
+	languageToNameAllValueGetter(params: any, language: string) {
+		if (!CodeUtility.hasValue(params.data)) {
 			return '';
 		}
+		const mapset = params.data;
 		let text = '';
 		let label = '';
-		const selectedLang = this.selectedToLanguage;
-		let selectedToLanguage = [];
+		const selectedLang = language;
+		let selectedLanguage = [];
 		for (const language of this.languageOptions) {
-			if (language.value === this.selectedToLanguage) {
-				selectedToLanguage.push(language);
+			if (language.value === selectedLang) {
+				selectedLanguage.push(language);
 			}
 		}
-		if (selectedToLanguage.length > 0) {
-			label = selectedToLanguage[0].display;
+		if (selectedLanguage.length > 0) {
+			label = selectedLanguage[0].display;
 		}
-		if (mapset?.toDescription && selectedToLanguage[0].value !== 'default') {
+		if (mapset?.toDescription && selectedLanguage[0].value !== 'default') {
 			const choosenDescription = mapset.toDescription.filter((description: any) => {
 				return description.languageId === selectedLang;
 			})[0];
@@ -945,7 +1061,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		} else {
 			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
 		}
-		this.headerToNameColumnName = 'Target ' + label;
 		return text;
 	}
 
@@ -956,6 +1071,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		const mapset = params.data;
 		let text = '';
 		let label = '';
+		let title = '';
 		const selectedLang = this.selectedLanguage;
 		let selectedLanguage = [];
 		for (const language of this.languageOptions) {
@@ -965,6 +1081,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		}
 		if (selectedLanguage.length > 0) {
 			label = selectedLanguage[0].display;
+			title = selectedLanguage[0].title;
 		}
 		if (mapset?.descriptions && selectedLanguage[0].value !== 'default') {
 			const choosenDescription = mapset.descriptions.filter((description: any) => {
@@ -977,6 +1094,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			text = mapset.name;
 		}
 		this.headerNameColumnName = 'Source ' + label;
+		this.headerNameColumnTooltip = title === '' ? 'Source ' + label : title;
 		return text;
 	}
 
@@ -987,6 +1105,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		const mapset = params.data;
 		let text = '';
 		let label = '';
+		let title = '';
 		let selectedToLanguage = [];
 		for (const language of this.languageOptions) {
 			if (language.value === this.selectedToLanguage) {
@@ -995,6 +1114,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		}
 		if (selectedToLanguage.length > 0) {
 			label = selectedToLanguage[0].display;
+			title = selectedToLanguage[0].title;
 		}
 		const selectedLang = this.selectedToLanguage;
 		if (mapset?.toDescription && selectedToLanguage[0].value !== 'default') {
@@ -1008,49 +1128,28 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
 		}
 		this.headerToNameColumnName = 'Target ' + label;
+		this.headerToNameColumnTooltip = title === '' ? 'Target ' + label : title;
 		return text;
 	}
 
 	changeHeaderTitle() {
-		const columns: any = [];
-		const updatedDefs = this.gridApi.getColumnDefs?.();
-		for (let column of updatedDefs) {
-			const columnData: any = {};
-			if (!column.colId) {
-				columnData.colId = column.field;
-			} else {
-				columnData.colId = column.colId;
+		const columnDefs = this.gridApi.getColumnDefs?.();
+		const updatedDefs = columnDefs.flatMap((col: any) => {
+			if (col.colId === 'name' && col.headerName !== this.headerNameColumnName) {
+				col.headerName = this.headerNameColumnName;
+				col.headerTooltip = this.headerNameColumnTooltip;
+				return [col];
 			}
-			if (columnData.field === 'name' && columnData.headerName !== this.headerNameColumnName) {
-				columnData.headerName = this.headerNameColumnName;
+			if (col.colId === 'toName' && col.headerName !== this.headerToNameColumnName) {
+				col.headerName = this.headerToNameColumnName;
+				col.headerTooltip = this.headerToNameColumnTooltip;
+				return [col];
 			}
-			if (columnData.field === 'toName' && columnData.headerName !== this.headerToNameColumnName) {
-				columnData.headerName = this.headerToNameColumnName;
-			}
-			if (columnData.colId !== 'action-btns' && columnData.colId !== 'checkbox') {
-				columns.push(columnData);
-			}
-		}
+			return [col];
+		});
+		this.manualStateRefresh = true;
 		this.gridApi.setGridOption('columnDefs', updatedDefs);
-		const state: any = [];
-		if (this.mapsetBatchColumnStorage) {
-			if (localStorage.getItem(this.mapsetBatchColumnStorage)) {
-				this.gridApi.applyColumnState({ state: JSON.parse(localStorage.getItem(this.mapsetBatchColumnStorage)) });
-			}
-		} else {
-			for (const column of columns) {
-				column.show = true;
-				if (column.colId === 'relation' || column.colId === 'rule' || column.colId === 'advices') {
-					column.show = false;
-				}
-				this.manualStateRefresh = true;
-				state.push({ colId: column.colId, hide: !column.show });
-			}
-			this.gridApi.applyColumnState({ state: state });
-			if (this.mapsetBatchColumnStorage) {
-				localStorage.setItem(this.mapsetBatchColumnStorage, JSON.stringify(state));
-			}
-		}
+		this.checkColumnSettings();
 	}
 
 	getModuleMetadata() {
@@ -1187,10 +1286,9 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		this.closeConceptDetails();
 		this.searchBrowserInput = this.searchBrowserInput.trim();
 
-		if (!CodeUtility.hasValue(this.searchBrowserInput) || (CodeUtility.hasValue(this.searchBrowserInput) && this.searchBrowserInput.length > 2)) {
+		if (CodeUtility.hasValue(this.searchBrowserInput) && this.searchBrowserInput.length > 2) {
 			this.setPageSize(10);
 			this.goToPage(0);
-			this.browserLoaded = false;
 			this.browserApi.purgeInfiniteCache();
 		}
 	}
@@ -1313,12 +1411,10 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 				const endRow = rowParams.endRow;
 				const sortModel = rowParams.sortModel;
 				this.browserApi.setGridOption('loading', true);
-
 				let query = this.searchBrowserInput;
 				if (this.searchBrowserInput === '') {
 					query = '';
 				}
-
 				const storedWorkflowFilter = localStorage.getItem(this.mapsetBatchWorkflowFilter);
 				if (storedWorkflowFilter) {
 					this.workflowFilter = JSON.parse(storedWorkflowFilter);
@@ -1375,10 +1471,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 								const childP = document.getElementsByClassName('ag-paging-panel')[lastIndexP];
 								document.getElementById('directoryPaging').appendChild(childP);
 
-								this.showBrowser = true;
-
 								if (this.browserData?.length > 0) {
-									this.showBrowser = true;
 									this.browserApi.setGridOption('loading', false);
 									this.paginationPages = Math.ceil(this.numOfMembers / this.browserPaging.pageSize)
 										? this.pagerService.getPager(
@@ -1394,7 +1487,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 									rowParams.successCallback(this.browserData, lastRow);
 								}
 								if (this.numOfMembers === 0) {
-									this.showBrowser = false;
 									this.browserApi.showNoRowsOverlay();
 									rowParams.successCallback([], 0);
 								}
@@ -1414,7 +1506,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 								this.browserSubscription.unsubscribe();
 							},
 							error: (error: any) => {
-								this.showBrowser = false;
 								this.browserApi.showNoRowsOverlay();
 								rowParams.successCallback([], 0);
 								//console.error(' Error: ', error);
@@ -1438,7 +1529,6 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		if (this.mapsetInfo?.id !== undefined) {
 			this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCodes.join(',')).subscribe({
 				next: (response) => {
-					this.loaded = true;
 					const batch = [];
 					const list = response.items;
 					this.mapsetResponse = list;
@@ -1525,6 +1615,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 
 					if (batch?.length > 0) {
 						this.showPaging = true;
+						this.loaded = true;
 					} else {
 						this.showPaging = false;
 					}
@@ -1532,7 +1623,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 						const lastIndex = document.getElementsByClassName('ag-header').length - 1;
 						const child = document.getElementsByClassName('ag-header')[0]; //lastIndex];
 						document.getElementById('directoryHeader').appendChild(child);
-						this.checkColumnSettings();
+						this.changeHeaderTitle();
 					}, 400);
 
 					this.breadcrumbService.setBreadcrumbs([

@@ -357,7 +357,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					}
 				}
 				this.mapsetData = mappings;
-				this.numOfMembers = results.limit;
+				this.numOfMembers = results.total < 10 ? results.total : results.limit;
 				this.numOfResults = results.limit;
 				results.items = this.mapsetData;
 				const lastIndex = document.getElementsByClassName('ag-header').length - 1;

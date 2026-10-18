@@ -625,6 +625,11 @@
 	display: inline-block;
 }
 
+.menu-title {
+	font-size: 14px;
+	color: #666666;
+}
+
 .dropdown-divider {
 	border-top: 1px solid #666 !important;
 	margin-bottom: 10px !important;

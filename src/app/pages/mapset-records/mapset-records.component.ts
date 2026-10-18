@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { PaginationChangedEvent, RowClassParams } from 'ag-grid-community';
+import { PaginationChangedEvent, RowClassParams, ValueGetterParams } from 'ag-grid-community';
 import { MatSelect } from '@angular/material/select';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
@@ -227,7 +227,9 @@ export class MapsetRecordsComponent implements OnInit {
 	selectedLanguage = 'default';
 	selectedToLanguage = 'default';
 	headerNameColumnName = '';
+	headerNameColumnTooltip = '';
 	headerToNameColumnName = '';
+	headerToNameColumnTooltip = '';
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
@@ -386,6 +388,7 @@ export class MapsetRecordsComponent implements OnInit {
 						},
 					},
 					{
+						colId: 'code',
 						field: 'code',
 						tooltipField: 'code',
 						headerName: 'Source',
@@ -397,10 +400,11 @@ export class MapsetRecordsComponent implements OnInit {
 						sortable: false,
 					},
 					{
+						colId: 'name',
 						field: 'name',
 						tooltipField: 'name',
 						headerValueGetter: (params: any) => `${this.headerNameColumnName}`,
-						headerTooltip: 'Source Name',
+						headerTooltipValueGetter: (params: any) => `${this.headerNameColumnTooltip}`,
 						flex: 2,
 						resizable: true,
 						minWidth: 165,
@@ -411,6 +415,7 @@ export class MapsetRecordsComponent implements OnInit {
 						unSortIcon: false,
 					},
 					{
+						colId: 'toCode',
 						field: 'toCode',
 						tooltipField: 'toCode',
 						headerName: 'Target',
@@ -426,10 +431,11 @@ export class MapsetRecordsComponent implements OnInit {
 						sortable: false,
 					},
 					{
+						colId: 'toName',
 						field: 'toName',
 						tooltipField: 'toName',
 						headerValueGetter: (params: any) => `${this.headerToNameColumnName}`,
-						headerTooltip: 'Target Name',
+						headerTooltipValueGetter: (params: any) => `${this.headerToNameColumnTooltip}`,
 						resizable: true,
 						unSortIcon: false,
 						sortable: false,
@@ -504,6 +510,7 @@ export class MapsetRecordsComponent implements OnInit {
 						sortable: false,
 					},
 					{
+						colId: 'modified',
 						field: 'modified',
 						tooltipValueGetter: UiUtility.gridDateValueGetter,
 						headerName: 'Last Modified',
@@ -535,6 +542,43 @@ export class MapsetRecordsComponent implements OnInit {
 					},
 				];
 
+				const sourceColumns: any[] = [];
+				const targetColumns: any[] = [];
+				for (const options of this.languageOptions) {
+					if (options.value !== 'default') {
+						const nameOption = {
+							colId: `source_${options.value}`,
+							headerName: `Source ${options.display}`,
+							headerTooltip: `Source ${options.title}`,
+							flex: 2,
+							resizable: true,
+							minWidth: 165,
+							valueGetter: (params: ValueGetterParams) => this.languageNameAllValueGetter(params, options.value),
+							sortable: false,
+							unSortIcon: false,
+						};
+						const nameToOption = {
+							colId: `target_${options.value}`,
+							headerName: `Target ${options.display}`,
+							headerTooltip: `Target ${options.title}`,
+							resizable: true,
+							unSortIcon: false,
+							sortable: false,
+							valueGetter: (params: ValueGetterParams) => this.languageToNameAllValueGetter(params, options.value),
+						};
+						sourceColumns.push(nameOption);
+						targetColumns.push(nameToOption);
+					}
+				}
+				this.columnDefs = this.columnDefs.flatMap((col: any) => {
+					if (col.colId === 'name') {
+						return [col, ...sourceColumns];
+					}
+					if (col.colId === 'toName') {
+						return [col, ...targetColumns];
+					}
+					return [col];
+				});
 				this.gridOptions = {
 					pagination: true,
 					rowModelType: 'infinite',
@@ -572,7 +616,6 @@ export class MapsetRecordsComponent implements OnInit {
 						floatingFilter: false,
 						suppressHeaderMenuButton: true,
 						resizable: true,
-						suppressMovable: true,
 					},
 					enableBrowserTooltips: true,
 					rowClassRules: {
@@ -669,7 +712,7 @@ export class MapsetRecordsComponent implements OnInit {
 
 		const languages = this.mapsetInfo?.mapProject.edition?.fullyQualifiedLanguageRefsets;
 		const languageRefsetOptions = [];
-		languageRefsetOptions.push({ value: 'default', display: '(PT)' });
+		languageRefsetOptions.push({ value: 'default', display: '(PT)', title: '(PT)' });
 		const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
 		const languageToStorage = localStorage.getItem(this.mapsetToLanguageStorage);
 		if (languageStorage) {
@@ -690,7 +733,11 @@ export class MapsetRecordsComponent implements OnInit {
 			if (!this.selectedToLanguage && !languageToStorage) {
 				this.selectedToLanguage = languageValue;
 			}
-			languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageDialectCode + ' (' + type + ')' });
+			languageRefsetOptions.push({
+				value: languageValue,
+				display: language.qualifiedLanguageDialectCode + ' (' + type + ')',
+				title: language.languageTermDescription,
+			});
 		}
 		if (languageRefsetOptions.length > 0) {
 			this.languageOptions = languageRefsetOptions;
@@ -815,10 +862,77 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 		let text = '';
 		let label = '';
+		let title = '';
 		const selectedLang = this.selectedLanguage;
 		let selectedLanguage = [];
 		for (const language of this.languageOptions) {
 			if (language.value === this.selectedLanguage) {
+				selectedLanguage.push(language);
+			}
+		}
+		if (selectedLanguage.length > 0) {
+			label = selectedLanguage[0].display;
+			title = selectedLanguage[0].title;
+		}
+		if (mapset?.descriptions && selectedLanguage[0].value !== 'default') {
+			const choosenDescription = mapset.descriptions.filter((description: any) => {
+				return description.languageId === selectedLang;
+			})[0];
+			if (choosenDescription) {
+				text = choosenDescription.term;
+			}
+		} else {
+			text = mapset.name;
+		}
+		this.headerNameColumnName = 'Source ' + label;
+		this.headerNameColumnTooltip = title === '' ? 'Source ' + label : title;
+		return text;
+	}
+
+	getLanguageToNameValue(mapset: any) {
+		if (!CodeUtility.hasValue(mapset)) {
+			return '';
+		}
+		let text = '';
+		let label = '';
+		let title = '';
+		const selectedLang = this.selectedToLanguage;
+		let selectedToLanguage = [];
+		for (const language of this.languageOptions) {
+			if (language.value === this.selectedToLanguage) {
+				selectedToLanguage.push(language);
+			}
+		}
+		if (selectedToLanguage.length > 0) {
+			label = selectedToLanguage[0].display;
+			title = selectedToLanguage[0].title;
+		}
+		if (mapset?.toDescription && selectedToLanguage[0].value !== 'default') {
+			const choosenDescription = mapset.toDescription.filter((description: any) => {
+				return description.languageId === selectedLang;
+			})[0];
+			if (choosenDescription) {
+				text = choosenDescription.term;
+			}
+		} else {
+			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
+		}
+		this.headerToNameColumnName = 'Target ' + label;
+		this.headerToNameColumnTooltip = title === '' ? 'Target ' + label : title;
+		return text;
+	}
+
+	languageNameAllValueGetter(params: any, language: string) {
+		if (!CodeUtility.hasValue(params.data)) {
+			return '';
+		}
+		const mapset = params.data;
+		let text = '';
+		let label = '';
+		const selectedLang = language;
+		let selectedLanguage = [];
+		for (const language of this.languageOptions) {
+			if (language.value === selectedLang) {
 				selectedLanguage.push(language);
 			}
 		}
@@ -835,27 +949,27 @@ export class MapsetRecordsComponent implements OnInit {
 		} else {
 			text = mapset.name;
 		}
-		this.headerNameColumnName = 'Source ' + label;
 		return text;
 	}
 
-	getLanguageToNameValue(mapset: any) {
-		if (!CodeUtility.hasValue(mapset)) {
+	languageToNameAllValueGetter(params: any, language: string) {
+		if (!CodeUtility.hasValue(params.data)) {
 			return '';
 		}
+		const mapset = params.data;
 		let text = '';
 		let label = '';
-		const selectedLang = this.selectedToLanguage;
-		let selectedToLanguage = [];
+		const selectedLang = language;
+		let selectedLanguage = [];
 		for (const language of this.languageOptions) {
-			if (language.value === this.selectedToLanguage) {
-				selectedToLanguage.push(language);
+			if (language.value === selectedLang) {
+				selectedLanguage.push(language);
 			}
 		}
-		if (selectedToLanguage.length > 0) {
-			label = selectedToLanguage[0].display;
+		if (selectedLanguage.length > 0) {
+			label = selectedLanguage[0].display;
 		}
-		if (mapset?.toDescription && selectedToLanguage[0].value !== 'default') {
+		if (mapset?.toDescription && selectedLanguage[0].value !== 'default') {
 			const choosenDescription = mapset.toDescription.filter((description: any) => {
 				return description.languageId === selectedLang;
 			})[0];
@@ -865,7 +979,6 @@ export class MapsetRecordsComponent implements OnInit {
 		} else {
 			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
 		}
-		this.headerToNameColumnName = 'Target ' + label;
 		return text;
 	}
 
@@ -876,6 +989,7 @@ export class MapsetRecordsComponent implements OnInit {
 		const mapset = params.data;
 		let text = '';
 		let label = '';
+		let title = '';
 		const selectedLang = this.selectedLanguage;
 		let selectedLanguage = [];
 		for (const language of this.languageOptions) {
@@ -885,6 +999,7 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 		if (selectedLanguage.length > 0) {
 			label = selectedLanguage[0].display;
+			title = selectedLanguage[0].title;
 		}
 		if (mapset?.descriptions && selectedLanguage[0].value !== 'default') {
 			const choosenDescription = mapset.descriptions.filter((description: any) => {
@@ -897,6 +1012,7 @@ export class MapsetRecordsComponent implements OnInit {
 			text = mapset.name;
 		}
 		this.headerNameColumnName = 'Source ' + label;
+		this.headerNameColumnTooltip = title === '' ? 'Source ' + label : title;
 		return text;
 	}
 
@@ -907,6 +1023,7 @@ export class MapsetRecordsComponent implements OnInit {
 		const mapset = params.data;
 		let text = '';
 		let label = '';
+		let title = '';
 		let selectedToLanguage = [];
 		for (const language of this.languageOptions) {
 			if (language.value === this.selectedToLanguage) {
@@ -915,6 +1032,7 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 		if (selectedToLanguage.length > 0) {
 			label = selectedToLanguage[0].display;
+			title = selectedToLanguage[0].title;
 		}
 		const selectedLang = this.selectedToLanguage;
 		if (mapset?.toDescription && selectedToLanguage[0].value !== 'default') {
@@ -928,16 +1046,17 @@ export class MapsetRecordsComponent implements OnInit {
 			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
 		}
 		this.headerToNameColumnName = 'Target ' + label;
+		this.headerToNameColumnTooltip = title === '' ? 'Target ' + label : title;
 		return text;
 	}
 
 	changeHeaderTitle() {
 		const updatedDefs = this.columnDefs.map((col: any) => {
-			if (col.field === 'name' && col.headerName !== this.headerNameColumnName) {
-				return { ...col, headerName: this.headerNameColumnName };
+			if (col.colId === 'name' && col.headerName !== this.headerNameColumnName) {
+				return { ...col, headerName: this.headerNameColumnName, headerTooltip: this.headerNameColumnTooltip };
 			}
-			if (col.field === 'toName' && col.headerName !== this.headerToNameColumnName) {
-				return { ...col, headerName: this.headerToNameColumnName };
+			if (col.colId === 'toName' && col.headerName !== this.headerToNameColumnName) {
+				return { ...col, headerName: this.headerToNameColumnName, headerTooltip: this.headerToNameColumnTooltip };
 			}
 			return col;
 		});
@@ -1143,6 +1262,13 @@ export class MapsetRecordsComponent implements OnInit {
 							column.show = false;
 						}
 						this.manualStateRefresh = true;
+					}
+					for (const languages of this.languageOptions) {
+						const sourceId = `source_${languages.value}`;
+						if (column.colId === sourceId || column.colId === `target_${languages.value}`) {
+							column.show = false;
+							this.manualStateRefresh = true;
+						}
 					}
 					state.push({ colId: column.colId, hide: !column.show });
 				}
