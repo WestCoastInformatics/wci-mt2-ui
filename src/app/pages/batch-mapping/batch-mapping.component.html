@@ -634,7 +634,7 @@
 						aria-label="Settings"
 						title="Settings"
 						class="mapset-download-icon menu-button"
-						[disabled]="!showBrowser"
+						[disabled]="!showBrowser || numOfMembers === 0"
 					>
 						<mat-icon class="menu-icon">settings</mat-icon>
 						<span class="menu-label">Settings</span>
@@ -707,7 +707,7 @@
 			<div id="config-background" [hidden]="!showBrowserSection || !browserLoaded || saving" class="section-background config-section">
 				<as-split direction="horizontal" gutterSize="4" class="browser-split">
 					<as-split-area [lockSize]="true" [size]="conceptDetail ? 50 : 100">
-						<div #browserWrapper class="grid-wrapper browser-scrolling">
+						<div #browserWrapper class="grid-wrapper browser-scrolling" [hidden]="searchBrowserInput === '' || numOfMembers === 0">
 							<ag-grid-angular
 								*ngIf="showBrowser"
 								[columnDefs]="browserColumnDefs"
@@ -720,7 +720,11 @@
 						</div>
 
 						<div id="directoryPaging" class="directory-paging ag-theme-alpine" [hidden]="true"></div>
-						<div class="mt2-pagination-container" [hidden]="!browserLoaded" *ngIf="showBrowserSection && !saving">
+						<div
+							class="mt2-pagination-container"
+							[hidden]="!browserLoaded"
+							*ngIf="showBrowserSection && !saving && searchBrowserInput !== ''"
+						>
 							<div class="mt2-pagination-top-row" *ngIf="showBrowser">
 								<div *ngIf="paginationPages.totalPages > 1" class="mt2-pagination-buttons no-wrap">
 									<button
@@ -824,7 +828,10 @@
 									</span>
 								</div>
 							</div>
-							<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showBrowser">
+							<div
+								class="mt2-pagination-total-label directory-new-paging ag-theme-alpine"
+								[hidden]="!showBrowser || numOfMembers === 0"
+							>
 								Showing
 								<span class="fw-bold p-l-5 p-r-5">
 									{{ (getCurrentPage() + 1) * browserPaging.pageSize - browserPaging.pageSize + 1 }}
@@ -841,7 +848,7 @@
 							</div>
 							<div
 								class="mt2-pagination-total-label directory-new-paging ag-theme-alpine text-center status-no-results"
-								[hidden]="showBrowser"
+								[hidden]="showBrowser && numOfMembers > 0"
 							>
 								No result found
 							</div>

@@ -641,6 +641,8 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 			return [col];
 		});
 
+		this.loadLanguageStorage();
+
 		this.gridOptions = {
 			context: { componentParent: this },
 			pagination: false,
@@ -681,8 +683,6 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 		if (gridReadyParams?.api && gridReadyParams.type === 'gridReady') {
 			this.gridApi = gridReadyParams.api;
 			this.gridParams = gridReadyParams;
-			this.checkColumnSettings();
-			this.loadLanguageStorage();
 			setTimeout(() => {
 				this.checkSearchFilters();
 			}, 500);
@@ -1666,6 +1666,7 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 						const lastIndex = document.getElementsByClassName('ag-header').length - 1;
 						const child = document.getElementsByClassName('ag-header')[0]; //lastIndex];
 						document.getElementById('directoryHeader').appendChild(child);
+						this.changeHeaderTitle();
 						this.checkColumnSettings();
 					}, 400);
 
