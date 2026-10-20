@@ -42,7 +42,7 @@ export class AuthenticationService {
 	 *  a local UI (e.g. localhost:4200) to work against a remote API.
 	 */
 	login(): void {
-		const returnUrl = encodeURIComponent(window.location.origin);
+		const returnUrl = encodeURIComponent(window.location.origin + '/dashboard');
 		window.location.href = this.authenticateBaseUrl() + 'login?returnUrl=' + returnUrl;
 	}
 

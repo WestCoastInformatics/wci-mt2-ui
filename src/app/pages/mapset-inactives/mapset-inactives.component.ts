@@ -39,15 +39,15 @@ export class MapsetInactivesComponent implements OnInit {
 		{ value: 'private', display: 'Private' },
 	];
 	selectedVersion: any;
-	refsetGridApi: any;
+	gridApi: any;
 	columnDefs: any;
-	refsetGridColumns = [
+	gridColumns = [
 		{ name: 'information', show: true },
 		{ name: 'refsetId', show: true },
 	];
 	rowSelection = 'multiple';
-	refsetGridOptions: any;
-	refsetGridPaging = {
+	gridOptions: any;
+	gridPaging = {
 		pageSize: 10,
 		pageSizeOptions: [10, 25, 50, 100],
 		totalKnown: false,
@@ -55,8 +55,8 @@ export class MapsetInactivesComponent implements OnInit {
 		manualStateRefresh: Boolean(true),
 	};
 	paginationPages: any = {};
-	refsetGridLastFilter = '';
-	refsetGridLastSort = '';
+	gridLastFilter = '';
+	gridLastSort = '';
 	showTable = false;
 	mapsetData: any;
 	dialog!: DialogService;
@@ -158,6 +158,7 @@ export class MapsetInactivesComponent implements OnInit {
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
 		this.titleService.setTitle('Mapping Tool - Manage Inactives');
+		localStorage.setItem('unsavedChanges', 'false');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.getMapsetInfo();
@@ -247,7 +248,6 @@ export class MapsetInactivesComponent implements OnInit {
 					filter: false,
 					resizable: false,
 					sortable: false,
-					suppressSorting: true,
 					getQuickFilterText: (params: any) => {
 						return '';
 					},
@@ -268,7 +268,6 @@ export class MapsetInactivesComponent implements OnInit {
 					filter: false,
 					resizable: false,
 					sortable: false,
-					suppressSorting: true,
 					getQuickFilterText: (params: any) => {
 						return '';
 					},
@@ -287,7 +286,6 @@ export class MapsetInactivesComponent implements OnInit {
 					resizable: true,
 					unSortIcon: false,
 					sortable: false,
-					suppressSorting: true,
 				},
 				{
 					field: 'name',
@@ -301,7 +299,6 @@ export class MapsetInactivesComponent implements OnInit {
 					cellRendererParams: { template: this.nameSection },
 					sortable: false,
 					unSortIcon: false,
-					suppressSorting: true,
 				},
 				{
 					field: 'toCode',
@@ -316,7 +313,6 @@ export class MapsetInactivesComponent implements OnInit {
 					resizable: true,
 					unSortIcon: false,
 					sortable: false,
-					suppressSorting: true,
 				},
 				{
 					field: 'toName',
@@ -326,7 +322,6 @@ export class MapsetInactivesComponent implements OnInit {
 					resizable: true,
 					unSortIcon: true,
 					sortable: false,
-					suppressSorting: true,
 					cellRenderer: TemplateRendererComponent,
 					cellRendererParams: { template: this.toNameSection },
 				},
@@ -340,7 +335,6 @@ export class MapsetInactivesComponent implements OnInit {
 					resizable: true,
 					unSortIcon: true,
 					sortable: false,
-					suppressSorting: true,
 					flex: 1,
 					minWidth: 100,
 				},
@@ -355,7 +349,6 @@ export class MapsetInactivesComponent implements OnInit {
 					resizable: true,
 					unSortIcon: true,
 					sortable: false,
-					suppressSorting: true,
 				},
 				{
 					field: 'advices',
@@ -369,7 +362,6 @@ export class MapsetInactivesComponent implements OnInit {
 					cellRendererParams: { template: this.adviceSection },
 					unSortIcon: true,
 					sortable: false,
-					suppressSorting: true,
 				},
 				{
 					field: 'rule',
@@ -382,7 +374,6 @@ export class MapsetInactivesComponent implements OnInit {
 					resizable: true,
 					unSortIcon: true,
 					sortable: false,
-					suppressSorting: true,
 				},
 				{
 					field: 'rule',
@@ -395,7 +386,6 @@ export class MapsetInactivesComponent implements OnInit {
 					resizable: true,
 					unSortIcon: true,
 					sortable: false,
-					suppressSorting: true,
 				},
 				{
 					field: 'modified',
@@ -411,7 +401,6 @@ export class MapsetInactivesComponent implements OnInit {
 					floatingFilterComponentParams: { suppressFilterButton: true },
 					unSortIcon: true,
 					sortable: false,
-					suppressSorting: true,
 				},
 				{
 					field: 'downloadable',
@@ -424,14 +413,13 @@ export class MapsetInactivesComponent implements OnInit {
 					sortable: false,
 					filter: false,
 					resizable: false,
-					suppressSorting: true,
 					getQuickFilterText: (params: any) => {
 						return '';
 					},
 				},
 			];
 
-			this.refsetGridOptions = {
+			this.gridOptions = {
 				pagination: true,
 				rowModelType: 'infinite',
 				suppressScrollOnNewData: true,
@@ -439,25 +427,24 @@ export class MapsetInactivesComponent implements OnInit {
 				suppressDragLeaveHidesColumns: true,
 				debounceVerticalScrollbar: true,
 				animateRows: false,
-				cacheBlockSize: this.refsetGridPaging.pageSize,
+				cacheBlockSize: this.gridPaging.pageSize,
 				debug: false,
 				cacheOverflowSize: 2,
 				maxBlocksInCache: 2,
 				maxConcurrentDatasourceRequests: 2,
-				paginationPageSize: this.refsetGridPaging.pageSize,
+				paginationPageSize: this.gridPaging.pageSize,
 				serverSideEnableClientSideSort: true,
-				paginationPageSizeSelector: this.refsetGridPaging.pageSizeOptions,
+				paginationPageSizeSelector: this.gridPaging.pageSizeOptions,
 				datasource: this.createDataSource(),
 				onPaginationChanged: (event: any) => this.onPaginationChanged(event),
 				context: { componentParent: this },
-				angularCompileHeaders: true,
 				suppressColumnVirtualisation: true,
 				suppressPaginationPanel: true,
 				enableCellTextSelection: true,
 				domLayout: 'autoHeight',
 				onCellDoubleClicked: this.onGridCellClick,
 				onGridReady: this.onGridReady,
-				frameworkComponents: {
+				components: {
 					templateRenderer: TemplateRendererComponent,
 					categoryFilterComponent: CategoryFilterComponent,
 					dateTextFilterComponent: DateTextFilterComponent,
@@ -467,10 +454,8 @@ export class MapsetInactivesComponent implements OnInit {
 					filter: false,
 					sortingOrder: ['asc', 'desc'],
 					floatingFilter: false,
-					suppressMenu: true,
+					suppressHeaderMenuButton: true,
 					resizable: true,
-					suppressSorting: true,
-					suppressMovable: true,
 				},
 				enableBrowserTooltips: true,
 				rowClassRules: {
@@ -552,15 +537,15 @@ export class MapsetInactivesComponent implements OnInit {
 			set.checked = this.gridSelectAll;
 			return set;
 		});
-		this.refsetGridApi.redrawRows();
+		this.gridApi.redrawRows();
 		this.checkedNum = this.gridSelectAll ? this.mapsetData.length : 0;
 	}
 
 	onGridReady = (gridReadyParams: any) => {
 		if (gridReadyParams?.api && gridReadyParams.type === 'gridReady') {
-			this.refsetGridApi = gridReadyParams.api;
+			this.gridApi = gridReadyParams.api;
 		}
-		// this.refsetGridApi.setColumnDefs(this.columnDefs);
+		// this.gridApi.setColumnDefs(this.columnDefs);
 
 		const _window = window;
 		_window['checkboxHandleClick'] = () => {
@@ -579,7 +564,7 @@ export class MapsetInactivesComponent implements OnInit {
 				const startRow = rowParams.startRow;
 				const endRow = rowParams.endRow;
 				const sortModel = rowParams.sortModel;
-				this.refsetGridApi.showLoadingOverlay();
+				this.gridApi.setGridOption('loading', true);
 
 				let query = '';
 
@@ -598,12 +583,12 @@ export class MapsetInactivesComponent implements OnInit {
 							limit = this.numOfMembers - startRow;
 						}
 					}
-					if (this.refsetGridPaging.pageSize === undefined) {
-						this.refsetGridPaging.pageSize = 10;
+					if (this.gridPaging.pageSize === undefined) {
+						this.gridPaging.pageSize = 10;
 					}
 					const restParams: any = {
 						offset: startRow,
-						limit: this.refsetGridPaging.pageSize,
+						limit: this.gridPaging.pageSize,
 					};
 
 					if (CodeUtility.hasValue(query)) {
@@ -690,11 +675,11 @@ export class MapsetInactivesComponent implements OnInit {
 
 							if (data?.length > 0) {
 								this.showPaging = true;
-								this.refsetGridApi.hideOverlay();
-								this.paginationPages = Math.ceil(this.numOfMembers / this.refsetGridPaging.pageSize)
+								this.gridApi.setGridOption('loading', false);
+								this.paginationPages = Math.ceil(this.numOfMembers / this.gridPaging.pageSize)
 									? this.pagerService.getPager(
-											Math.ceil(this.numOfMembers / this.refsetGridPaging.pageSize),
-											this.refsetGridApi.paginationGetCurrentPage(),
+											Math.ceil(this.numOfMembers / this.gridPaging.pageSize),
+											this.gridApi.paginationGetCurrentPage(),
 											true,
 										)
 									: {};
@@ -706,11 +691,11 @@ export class MapsetInactivesComponent implements OnInit {
 								rowParams.successCallback(data, lastRow);
 							} else {
 								this.showPaging = false;
-								this.refsetGridApi.showNoRowsOverlay();
+								this.gridApi.showNoRowsOverlay();
 								rowParams.successCallback([], 0);
 							}
 
-							this.refsetGridPaging.manualStateRefresh = Boolean(true);
+							this.gridPaging.manualStateRefresh = Boolean(true);
 							// set placeholders on the grid floating filter fields
 							Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
 								if (obj.attributes['disabled']) {
@@ -725,7 +710,7 @@ export class MapsetInactivesComponent implements OnInit {
 							this.mapSetSubscription.unsubscribe();
 						},
 						error: (error) => {
-							this.refsetGridApi.showNoRowsOverlay();
+							this.gridApi.showNoRowsOverlay();
 							rowParams.successCallback([], 0);
 						},
 					});
@@ -760,7 +745,7 @@ export class MapsetInactivesComponent implements OnInit {
 		for (let d = 0; d < this.mapsetData.length; d++) {
 			if (this.mapsetData[d].index === index) {
 				this.mapsetData[d].active = status;
-				this.refsetGridApi.redrawRows();
+				this.gridApi.redrawRows();
 			}
 		}
 	}
@@ -806,7 +791,7 @@ export class MapsetInactivesComponent implements OnInit {
 	}
 
 	openPopover(params: any) {
-		this.refsetGridApi.forEachNode((node) => {
+		this.gridApi.forEachNode((node) => {
 			if (node.data.advices_open) {
 				node.data.advices_open = false;
 			}
@@ -823,8 +808,8 @@ export class MapsetInactivesComponent implements OnInit {
 				offsetRows = 3;
 			}
 			const currentPageIndex =
-				this.paginationComponent.getCurrentPage() * this.refsetGridApi.paginationGetPageSize() - this.refsetGridApi.paginationGetPageSize();
-			if (params.node.rowIndex > 0 && params.node.rowIndex - currentPageIndex + offsetRows >= this.refsetGridApi.paginationGetPageSize()) {
+				this.paginationComponent.getCurrentPage() * this.gridApi.paginationGetPageSize() - this.gridApi.paginationGetPageSize();
+			if (params.node.rowIndex > 0 && params.node.rowIndex - currentPageIndex + offsetRows >= this.gridApi.paginationGetPageSize()) {
 				params.data.advice_bottom = true;
 				params.data.advice_top = false;
 				this.advicePopoverLocation = Number(-popHeight + 5) + 'px';
@@ -851,7 +836,7 @@ export class MapsetInactivesComponent implements OnInit {
 			return;
 		}
 		if (event.column.colId !== 'advices') {
-			this.refsetGridApi.forEachNode((node) => {
+			this.gridApi.forEachNode((node) => {
 				if (node.data.advices_open) {
 					node.data.advices_open = false;
 				}
@@ -860,7 +845,7 @@ export class MapsetInactivesComponent implements OnInit {
 	};
 
 	gridEvent(action: any): void {
-		const selectedRows = this.refsetGridApi.getSelectedRows();
+		const selectedRows = this.gridApi.getSelectedRows();
 		this.openToBeDevelopedModal(this.tbdModal);
 	}
 
@@ -879,8 +864,8 @@ export class MapsetInactivesComponent implements OnInit {
 					for (let c = 0; c < this.mapsetData.length; c++) {
 						if (this.mapsetData[c].checked === true) {
 							this.mapsetData[c].processed = true;
-							this.refsetGridApi.setGridOption('rowData', this.mapsetData);
-							this.refsetGridApi.redrawRows();
+							this.gridApi.setGridOption('rowData', this.mapsetData);
+							this.gridApi.redrawRows();
 						}
 					}
 				}
@@ -925,7 +910,7 @@ export class MapsetInactivesComponent implements OnInit {
 			}
 		});
 		this.checkedNum = 0;
-		this.refsetGridApi.redrawRows();
+		this.gridApi.redrawRows();
 	}
 
 	downloadReports() {
@@ -977,8 +962,6 @@ export class MapsetInactivesComponent implements OnInit {
 	saveNotes() {
 		this.notesError = '';
 		if (this.notesEditor !== '' && this.notesEditor !== null) {
-			console.log('notes entry ', this.notesEditor);
-
 			this.closeNotesModal();
 			this.openToBeDevelopedModal(this.tbdModal);
 		} else {
@@ -997,9 +980,9 @@ export class MapsetInactivesComponent implements OnInit {
 	saveFeedback() {
 		this.feedbackError = '';
 		if (this.feedbackEditor !== '' && this.feedbackEditor !== null && this.feedbackSubject !== '' && this.feedbackSubject !== null) {
-			console.log('feedback entry ', this.feedbackEditor);
-			console.log('feedback subject ', this.feedbackSubject);
-			console.log('feedback selectFeedbackPrivate ', this.selectFeedbackPrivate);
+			// console.log('feedback entry ', this.feedbackEditor);
+			// console.log('feedback subject ', this.feedbackSubject);
+			// console.log('feedback selectFeedbackPrivate ', this.selectFeedbackPrivate);
 			this.closeFeedbackModal();
 			this.openToBeDevelopedModal(this.tbdModal);
 		} else {
@@ -1023,7 +1006,7 @@ export class MapsetInactivesComponent implements OnInit {
 	@Debounce()
 	changedViewFilter() {
 		//this.loaded = false;
-		//this.refsetGridApi.purgeInfiniteCache();
+		//this.gridApi.purgeInfiniteCache();
 	}
 
 	@Debounce(600)
@@ -1033,14 +1016,14 @@ export class MapsetInactivesComponent implements OnInit {
 			this.setPageSize(10);
 			this.goToPage(0);
 			this.loaded = false;
-			this.refsetGridApi.purgeInfiniteCache();
+			this.gridApi.purgeInfiniteCache();
 		}
 	}
 
 	/*Pagination functions */
 	onPaginationChanged(event: PaginationChangedEvent) {
-		if (this.refsetGridApi) {
-			this.isNewPageSize = this.refsetGridPaging.pageSize !== this.refsetGridApi.paginationGetPageSize();
+		if (this.gridApi) {
+			this.isNewPageSize = this.gridPaging.pageSize !== this.gridApi.paginationGetPageSize();
 			if (this.isNewPageSize) {
 				this.loaded = false;
 			}
@@ -1048,21 +1031,21 @@ export class MapsetInactivesComponent implements OnInit {
 			if (this.gridSelectAll) {
 				window['checkbox-table-all'].click();
 			}
-			this.refsetGridPaging.pageSize = this.refsetGridApi.paginationGetPageSize();
-			this.refsetGridApi.updateGridOptions({
-				paginationPageSize: this.refsetGridPaging.pageSize,
-				cacheBlockSize: this.refsetGridPaging.pageSize,
+			this.gridPaging.pageSize = this.gridApi.paginationGetPageSize();
+			this.gridApi.updateGridOptions({
+				paginationPageSize: this.gridPaging.pageSize,
+				cacheBlockSize: this.gridPaging.pageSize,
 			});
 		}
 	}
 
 	setPageSize(size: number) {
-		this.refsetGridApi.paginationGoToFirstPage();
-		this.refsetGridApi.setGridOption('paginationPageSize', size);
+		this.gridApi.paginationGoToFirstPage();
+		this.gridApi.setGridOption('paginationPageSize', size);
 	}
 
 	goToPage(number: number) {
-		this.refsetGridApi.paginationGoToPage(number);
+		this.gridApi.paginationGoToPage(number);
 	}
 
 	//***** General Functions *****/
@@ -1142,8 +1125,8 @@ export class MapsetInactivesComponent implements OnInit {
 
 	getCurrentPage() {
 		let current = 1;
-		if (this.refsetGridApi) {
-			current = this.refsetGridApi.paginationGetCurrentPage();
+		if (this.gridApi) {
+			current = this.gridApi.paginationGetCurrentPage();
 		}
 		return current;
 	}

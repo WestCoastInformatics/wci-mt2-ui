@@ -10,20 +10,20 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 	styleUrls: ['mapset-meta-table.component.css'],
 })
 export class MapsetMetaTableComponent implements OnInit {
-	@Input() refset: any;
+	@Input() mapset: any;
 	loggedIn = false;
 
 	constructor(private authenticationService: AuthenticationService) {}
 
 	get directUrl(): string {
-		return this.refset?.refsetId
+		return this.mapset?.refsetId
 			? window.location.protocol +
 					'//' +
 					window.location.host +
 					'/details/' +
-					this.refset.refsetId +
+					this.mapset.refsetId +
 					'/' +
-					RefsetUtility.getVersionDateForRefsetApiCall(this.refset)
+					RefsetUtility.getVersionDateForRefsetApiCall(this.mapset)
 			: '';
 	}
 
@@ -32,15 +32,15 @@ export class MapsetMetaTableComponent implements OnInit {
 	}
 
 	getEditionUrl() {
-		return `${window.location.origin}/organizations/${this.refset?.edition.organizationId}/edition/${this.refset?.editionId}/projects`;
+		return `${window.location.origin}/organizations/${this.mapset?.edition.organizationId}/edition/${this.mapset?.editionId}/projects`;
 	}
 
 	getProjectUrl() {
-		return `${window.location.origin}/organization/${this.refset?.edition.organizationId}/edition/${this.refset?.editionId}/projects/${this.refset?.projectId}/refsets`;
+		return `${window.location.origin}/organization/${this.mapset?.edition.organizationId}/edition/${this.mapset?.editionId}/projects/${this.mapset?.projectId}/refsets`;
 	}
 
-	setDescriptions(refsetData: any): Array<string> {
-		return refsetData?.descriptions;
+	setDescriptions(mapsetData: any): Array<string> {
+		return mapsetData?.descriptions;
 	}
 
 	showFlagIcon(event: Event) {
@@ -62,7 +62,7 @@ export class MapsetMetaTableComponent implements OnInit {
 	}
 
 	latestDate(versionList: any[]): string {
-		if (this.refset?.versionStatus === Constants.IN_DEVELOPMENT) {
+		if (this.mapset?.versionStatus === Constants.IN_DEVELOPMENT) {
 			return 'Latest';
 		}
 		return versionList && versionList[0] ? `${versionList[0].date}` : '';

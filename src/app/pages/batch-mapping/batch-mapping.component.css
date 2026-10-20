@@ -488,6 +488,17 @@
 	display: inline-block;
 }
 
+.menu-title {
+	font-size: 14px;
+	color: #666666;
+}
+
+.dropdown-divider {
+	border-top: 1px solid #666 !important;
+	margin-bottom: 10px !important;
+	margin-top: 1px !important;
+}
+
 .mappings-section {
 	color: #666;
 	font-size: 12px;
@@ -609,8 +620,7 @@
 }
 
 .status-no-results {
-	float: right;
-	margin-right: 145px;
+	text-align: center;
 	color: #7f7f7f;
 	font-size: 14px;
 }
@@ -737,14 +747,21 @@
 	cursor: pointer;
 	color: var(--mapset-blue);
 	font-size: 1.25em;
+	background-color: #fff;
 }
 
 .mapset-notes-icon {
 	cursor: pointer;
 	width: 24px;
 	height: 24px;
-
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
+}
+
+.mapset-edit-icon {
+	margin-top: -0.2em;
+	width: 24px;
+	height: 24px;
+	filter: invert(60%) sepia(75%) saturate(2420%) hue-rotate(209deg) brightness(90%) contrast(100%);
 }
 
 .mapset-name {
@@ -770,7 +787,6 @@
 	margin-top: -0.2em;
 	width: 24px;
 	height: 24px;
-
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 
@@ -874,7 +890,7 @@
 .config-scrolling {
 	min-height: 40vh;
 	height: 100vh;
-	max-height: 55vh;
+	max-height: 70vh;
 }
 
 .mt2-pagination-container {
@@ -994,8 +1010,4 @@
 .dialog-close-x-dark {
 	color: #666666 !important;
 	font-size: 20px;
-}
-
-.no-wrap {
-	text-wrap: nowrap;
 }

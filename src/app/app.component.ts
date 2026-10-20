@@ -79,15 +79,11 @@ export class AppComponent implements OnInit {
 			}
 		});
 
-		router.events
-			.pipe(
-				filter((event) => {
-					return event instanceof NavigationStart && event.navigationTrigger === 'popstate';
-				}),
-			)
-			.subscribe((event: NavigationStart) => {
+		router.events.pipe(filter((event) => event instanceof NavigationStart && event.navigationTrigger === 'popstate')).subscribe(() => {
+			if (localStorage.getItem('unsavedChanges') !== 'true') {
 				location.reload();
-			});
+			}
+		});
 
 		router.events
 			.pipe(filter((event) => event instanceof NavigationError))
@@ -128,6 +124,10 @@ export class AppComponent implements OnInit {
 
 	@HostListener('window:popstate')
 	onPopState() {
+		if (localStorage.getItem('unsavedChanges') === 'true') {
+			return;
+		}
+
 		if (localStorage.getItem('navigationHistory')) {
 			this.history = JSON.parse(localStorage.getItem('navigationHistory'));
 		}

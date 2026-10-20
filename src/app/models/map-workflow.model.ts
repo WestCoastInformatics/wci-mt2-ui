@@ -3,7 +3,7 @@ export class MapWorkflow {
 	static getWorkFlowForMap(): any {
 		return [
 			{
-				label: 'Assign',
+				label: 'Assign Published',
 				value: 'ASSIGN',
 				status: 'PUBLISHED',
 				roles: ['SPECIALIST'],
@@ -15,7 +15,7 @@ export class MapWorkflow {
 				edit: false,
 			},
 			{
-				label: 'Assign',
+				label: 'Assign New',
 				value: 'ASSIGN',
 				status: 'NEW',
 				roles: ['SPECIALIST'],
@@ -27,7 +27,7 @@ export class MapWorkflow {
 				edit: false,
 			},
 			{
-				label: 'Assign',
+				label: 'Assign Ready For Publication',
 				value: 'ASSIGN',
 				status: 'READY_FOR_PUBLICATION',
 				roles: ['SPECIALIST'],
@@ -39,7 +39,7 @@ export class MapWorkflow {
 				edit: false,
 			},
 			{
-				label: 'Unassign',
+				label: 'Unassign In Edit',
 				value: 'RELEASE',
 				status: 'EDITING_IN_PROGRESS',
 				roles: ['SPECIALIST'],
@@ -63,7 +63,7 @@ export class MapWorkflow {
 				edit: true,
 			},
 			{
-				label: 'Unassign',
+				label: 'Unassign In Edit',
 				value: 'FORCE_RELEASE',
 				status: 'EDITING_IN_PROGRESS',
 				roles: ['ADMIN'],
@@ -75,7 +75,7 @@ export class MapWorkflow {
 				edit: true,
 			},
 			{
-				label: 'Reassign',
+				label: 'Reassign In Edit',
 				value: 'REASSIGN',
 				status: 'EDITING_IN_PROGRESS',
 				roles: ['ADMIN', 'LEAD'],
@@ -123,7 +123,7 @@ export class MapWorkflow {
 				edit: false,
 			},
 			{
-				label: 'Unassign',
+				label: 'Unassign In Review',
 				value: 'RELEASE',
 				status: 'REVIEW_IN_PROGRESS',
 				roles: ['LEAD'],
@@ -135,7 +135,7 @@ export class MapWorkflow {
 				edit: true,
 			},
 			{
-				label: 'Reassign',
+				label: 'Reassign In Review',
 				value: 'REASSIGN',
 				status: 'REVIEW_IN_PROGRESS',
 				roles: ['ADMIN', 'LEAD'],
@@ -147,7 +147,7 @@ export class MapWorkflow {
 				edit: false,
 			},
 			{
-				label: 'Unassign',
+				label: 'Unassign In Review',
 				value: 'FORCE_RELEASE',
 				status: 'REVIEW_IN_PROGRESS',
 				roles: ['ADMIN'],

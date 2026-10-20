@@ -44,8 +44,8 @@
 	--mat-sys-corner-full: 15px;
 	--mat-checkbox-disabled-label-color: rgb(102, 102, 102);
 	--mat-checkbox-label-text-color: rgb(102, 102, 102);
-	--mat-checkbox-disabled-selected-icon-color: #000003;
-	--mat-checkbox-unselected-focus-icon-color: #000003;
+	--mat-checkbox-disabled-selected-icon-color: #999;
+	--mat-checkbox-unselected-focus-icon-color: #999;
 	--mat-checkbox-unselected-hover-icon-color: rgb(102, 102, 102);
 	--mat-form-field-filled-disabled-container-color: #666;
 	--mat-select-disabled-trigger-text-color: #999;

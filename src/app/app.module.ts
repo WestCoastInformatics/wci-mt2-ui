@@ -61,6 +61,7 @@ import { MapsetLibraryComponent } from './pages/mapset-library/mapset-library.co
 import { MapsetProjectsComponent } from './pages/mapset-projects/mapset-projects.component';
 import { MapsetMappingComponent } from './pages/mapset-mapping/mapset-mapping.component';
 import { EditMappingComponent } from './pages/edit-mapping/edit-mapping.component';
+import { AutoMappingComponent } from './pages/auto-mapping/auto-mapping.component';
 import { BatchMappingComponent } from './pages/batch-mapping/batch-mapping.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { InboxComponent } from './pages/inbox/inbox.component';
@@ -140,12 +141,24 @@ const appRoutes: Routes = [
 		component: BatchMappingComponent,
 		data: { breadcrumbLabel: 'Batch Edit Mappings' },
 		canActivate: [AuthGuardGuard],
+		canDeactivate: [AuthGuardGuard],
+		runGuardsAndResolvers: 'always',
+	},
+	{
+		path: 'projects/mapset/:code/mappings/:concepts/type/:type/confidence/:confidence/automap',
+		component: AutoMappingComponent,
+		data: { breadcrumbLabel: 'Automap Mappings' },
+		canActivate: [AuthGuardGuard],
+		canDeactivate: [AuthGuardGuard],
+		runGuardsAndResolvers: 'always',
 	},
 	{
 		path: 'projects/mapset/:code/mapping/:concept/edit',
 		component: EditMappingComponent,
 		data: { breadcrumbLabel: 'Edit Map' },
 		canActivate: [AuthGuardGuard],
+		canDeactivate: [AuthGuardGuard],
+		runGuardsAndResolvers: 'always',
 	},
 	{ path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
 	{ path: 'inbox', component: InboxComponent, data: { breadcrumbLabel: 'Inbox' }, canActivate: [AuthGuardGuard] },
@@ -179,6 +192,7 @@ const appRoutes: Routes = [
 		MapsetInactivesComponent,
 		MapsetMappingComponent,
 		EditMappingComponent,
+		AutoMappingComponent,
 		BatchMappingComponent,
 		PageContainerComponent,
 		WorkflowStatusBadgeComponent,
@@ -193,7 +207,6 @@ const appRoutes: Routes = [
 		RouterModule.forRoot(
 			appRoutes,
 			{
-				onSameUrlNavigation: 'reload',
 				scrollPositionRestoration: 'top',
 				canceledNavigationResolution: 'computed',
 			},

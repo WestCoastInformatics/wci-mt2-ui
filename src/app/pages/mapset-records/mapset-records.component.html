@@ -146,7 +146,7 @@
 		</span>
 	</div>
 </div>
-<div class="mt2-container" (window:resize)="onResize($event)" [ngClass]="{ 'm-t-20': libraryOnly }">
+<div class="mt2-container" (window:resize)="onResize($event)" [ngClass]="{ 'm-t-20': libraryOnly, 'mt2-project': !libraryOnly }">
 	<div class="metadata-collapsible-container">
 		<div class="switch-view" *ngIf="showMappingsSection && loaded" [hidden]="numOfMembers === 0">
 			<mat-label class="switch-label">view by</mat-label>
@@ -186,69 +186,154 @@
 			/>
 		</div>
 		<div class="d-flex dropdown-group" *ngIf="showMappingsSection">
-			<div class="col-md-auto mt2-directory-chooser-column" *ngIf="showTable && showMapTable === 'table'">
-				<mat-menu #settingsMenu="matMenu" class="menu">
-					<div class="heading">TABLE SETTINGS</div>
-					<div class="mat-mdc-menu-content">
-						FILTER BY
-						<div class="d-flex mb-2 align-items-center">
-							<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
-								<mat-select
-									#filterWorkflowStatus
-									title="Filter by Workflow Status"
-									placeholder="Workflow Status"
-									[(value)]="workflowFilter"
-									(click)="$event.stopPropagation()"
-									(selectionChange)="filterSelection('workflow')"
-								>
-									<mat-option *ngFor="let workflow of workflowFilterOptions" value="{{ workflow.value }}" class="no-checkbox">{{
-										workflow.label
-									}}</mat-option>
-								</mat-select>
-							</mat-form-field>
-							<span
-								class="clear-search ml-20"
-								*ngIf="workflowFilter"
-								title="Clear Filter"
-								(click)="$event.stopPropagation(); workflowFilter = ''; filterSelection('workflow')"
-							>
-								&#10005;
-							</span>
-						</div>
-						<div class="d-flex mb-5 align-items-center">
-							<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
-								<mat-select
-									#filterAssignedUser
-									title="Filter by Assigned To"
-									placeholder="Assigned To"
-									[(value)]="assignedFilter"
-									(click)="$event.stopPropagation()"
-									(selectionChange)="filterSelection('assigned')"
-								>
-									<mat-option *ngFor="let assigned of assignedFilterOptions" value="{{ assigned.value }}" class="no-checkbox">{{
-										assigned.label
-									}}</mat-option>
-								</mat-select> </mat-form-field
-							><span
-								class="clear-search ml-20"
-								*ngIf="assignedFilter"
-								title="Clear Filter"
-								(click)="$event.stopPropagation(); assignedFilter = ''; filterSelection('assigned')"
-							>
-								&#10005;
-							</span>
-						</div>
+			<div class="col-md-auto mt2-directory-chooser-column">
+				<mat-menu #settingsMenu="matMenu">
+					<div class="mat-mdc-menu-content m-t-10">
+						<button
+							mat-menu-item
+							[matMenuTriggerFor]="languageMenu"
+							class="menu-title"
+							(click)="$event.stopPropagation()"
+							aria-label="Select Language"
+							title="Select Language"
+						>
+							<span>SELECT LANGUAGE</span>
+						</button>
+						<mat-menu #languageMenu="matMenu" class="menu">
+							<div>SOURCE LANGUAGE</div>
+							<div class="d-flex mb-5 align-items-center">
+								<mat-form-field floatLabel="never" appearance="fill" class="filter-box">
+									<mat-select
+										[(value)]="selectedLanguage"
+										[placeholder]="selectedLanguage"
+										(click)="$event.stopPropagation()"
+										(selectionChange)="changeLanguage()"
+										[disabled]="!showPaging"
+									>
+										<mat-option
+											*ngFor="let option of languageOptions"
+											[value]="option.value"
+											class="no-checkbox"
+											aria-label="Search"
+											[title]="option.title"
+										>
+											{{ option.display }}
+										</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</div>
+							<div>TARGET LANGUAGE</div>
+							<div class="d-flex mb-5 align-items-center">
+								<mat-form-field floatLabel="never" appearance="fill" class="filter-box">
+									<mat-select
+										[(value)]="selectedToLanguage"
+										[placeholder]="selectedToLanguage"
+										(click)="$event.stopPropagation()"
+										(selectionChange)="changeLanguage()"
+										[disabled]="!showPaging"
+									>
+										<mat-option
+											*ngFor="let option of languageOptions"
+											[value]="option.value"
+											class="no-checkbox"
+											[title]="option.title"
+										>
+											{{ option.display }}
+										</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</div></mat-menu
+						>
+						<div class="dropdown-divider"></div>
+						<button
+							mat-menu-item
+							[matMenuTriggerFor]="filterMenu"
+							class="menu-title"
+							(click)="$event.stopPropagation()"
+							aria-label="Filter By"
+							title="Filter By"
+						>
+							<span>FILTER BY</span>
+						</button>
+						<mat-menu #filterMenu="matMenu" class="menu">
+							<div class="d-flex mb-5 align-items-center">
+								<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
+									<mat-select
+										#filterWorkflowStatus
+										[panelClass]="workflowFilter ? '' : 'filter-empty-panel'"
+										title="Filter by Workflow Status"
+										placeholder="WORKFLOW STATUS"
+										[(value)]="workflowFilter"
+										(click)="$event.stopPropagation()"
+										(selectionChange)="filterSelection('workflow')"
+									>
+										<mat-option *ngFor="let workflow of workflowFilterOptions" value="{{ workflow.value }}" class="no-checkbox">{{
+											workflow.label
+										}}</mat-option>
+									</mat-select>
+								</mat-form-field>
+								<div class="clear-search ml-20 clear-dd-search">
+									<span
+										*ngIf="workflowFilter"
+										title="Clear Filter"
+										(click)="$event.stopPropagation(); workflowFilter = ''; filterSelection('workflow')"
+									>
+										&#10005;
+									</span>
+								</div>
+							</div>
+							<div class="d-flex mb-5 align-items-center">
+								<mat-form-field appearance="fill" floatLabel="never" class="filter-box">
+									<mat-select
+										#filterAssignedUser
+										[panelClass]="assignedFilter ? '' : 'filter-empty-panel'"
+										title="Filter by Assigned To"
+										placeholder="ASSIGNED TO"
+										[(value)]="assignedFilter"
+										(click)="$event.stopPropagation()"
+										(selectionChange)="filterSelection('assigned')"
+									>
+										<mat-option *ngFor="let assigned of assignedFilterOptions" value="{{ assigned.value }}" class="no-checkbox">{{
+											assigned.label
+										}}</mat-option>
+									</mat-select>
+								</mat-form-field>
+								<div class="clear-search ml-20 clear-dd-search">
+									<span
+										*ngIf="assignedFilter"
+										title="Clear Filter"
+										(click)="$event.stopPropagation(); assignedFilter = ''; filterSelection('assigned')"
+									>
+										&#10005;
+									</span>
+								</div>
+							</div>
+						</mat-menu>
 					</div>
-					<app-column-chooser
-						*ngIf="showPaging"
+					<div class="dropdown-divider"></div>
+					<button
+						mat-menu-item
+						[matMenuTriggerFor]="columnsMenu"
+						class="menu-title"
+						(click)="$event.stopPropagation()"
+						aria-label="Select Columns to Display"
 						title="Select Columns to Display"
-						[gridColumnApi]="refsetGridApi"
-						[useDialog]="useDialog"
-						[columnStorage]="mapsetRecordsColumnStorage"
-						[manualStateRefresh]="manualStateRefresh"
 					>
-					</app-column-chooser
-				></mat-menu>
+						<span>COLUMNS (Show/Hide)</span>
+					</button>
+					<mat-menu #columnsMenu="matMenu" class="menu max-menu">
+						<app-column-chooser
+							*ngIf="showTable && showMapTable === 'table'"
+							[gridColumnApi]="gridApi"
+							[useDialog]="useDialog"
+							[showMenu]="true"
+							[columnStorage]="mapsetRecordsColumnStorage"
+							[manualStateRefresh]="manualStateRefresh"
+							[disabled]="!showPaging"
+						>
+						</app-column-chooser>
+					</mat-menu>
+				</mat-menu>
 
 				<div class="menu-inline">
 					<button
@@ -347,6 +432,29 @@
 						<span>Edit Selected Mapping</span>
 					</button>
 					<button
+						*ngIf="
+							!libraryOnly &&
+							checkedNum > 0 &&
+							mapsetInfo.workflowStatus === 'IN_EDIT' &&
+							mapsetInfo.refSetName.includes('Automap Demo Conditions to SNOMED CT')
+						"
+						mat-menu-item
+						(click)="selectAction('automap')"
+					>
+						<span>Automap Selected Mappings</span>
+					</button>
+					<button
+						*ngIf="
+							!libraryOnly &&
+							mapsetInfo.workflowStatus === 'IN_EDIT' &&
+							mapsetInfo.refSetName.includes('Automap Demo Conditions to SNOMED CT')
+						"
+						mat-menu-item
+						(click)="selectAction('automap-list')"
+					>
+						<span>Automap Maps By List</span>
+					</button>
+					<button
 						*ngIf="!libraryOnly && checkedNum > 1 && mapsetInfo.workflowStatus === 'IN_EDIT' && batchEditEnabled"
 						mat-menu-item
 						(click)="selectAction('batch')"
@@ -364,13 +472,23 @@
 						>
 					</ng-container>
 					<div class="dropdown-divider"></div>
+					<button mat-menu-item class="menu-title" [matMenuTriggerFor]="downloadMenu" aria-label="Download" title="Download">
+						<span>DOWNLOAD</span>
+					</button>
+					<div class="dropdown-divider"></div>
+					<button mat-menu-item class="menu-title" [matMenuTriggerFor]="reportMenu" aria-label="Reports" title="Reports">
+						<span>REPORTS</span>
+					</button>
+				</mat-menu>
+				<mat-menu #downloadMenu="matMenu">
 					<button mat-menu-item (click)="selectAction('selected')" [disabled]="checkedNum < 1">
 						<span>Download Selected Mappings</span>
 					</button>
 					<button mat-menu-item (click)="selectAction('all')">
 						<span>Download Entire Map Set</span>
 					</button>
-					<div class="dropdown-divider"></div>
+				</mat-menu>
+				<mat-menu #reportMenu="matMenu">
 					<button mat-menu-item (click)="selectAction('report_nrmr')">
 						<span>Norway Replacement Map Report</span>
 					</button>
@@ -402,7 +520,7 @@
 							style="width: 100%; height: 100%"
 							[columnDefs]="columnDefs"
 							[suppressRowTransform]="true"
-							[gridOptions]="refsetGridOptions"
+							[gridOptions]="gridOptions"
 							[rowSelection]="rowSelection"
 							(firstDataRendered)="onResize(500)"
 						>
@@ -410,7 +528,7 @@
 					</div>
 				</div>
 
-				<div [hidden]="!loaded" *ngIf="showMapTable !== 'table'" class="content-wrapper">
+				<div [hidden]="!loaded" *ngIf="showMapTable === 'record' && showPaging" class="content-wrapper">
 					<div *ngFor="let record of mapsetData; index as i">
 						<div class="record-row" [ngClass]="{ 'odd-row': 0 === i % 2 }" *ngIf="!record.spanned">
 							<div class="col-12 row">
@@ -424,15 +542,31 @@
 										></label>
 									</div>
 									<div class="col-11 code-name">
-										{{ record.name }}, <span class="code-link" (click)="goToMappingPage(record.code)">{{ record.code }}</span>
+										{{ getLanguageNameValue(record) ? getLanguageNameValue(record) : record.name }},
+										<span class="code-link" (click)="goToMappingPage(record.code)">{{ record.code }}</span>
 									</div>
 
 									<div *ngFor="let entry of record.mapEntries; index as x" class="row col-12 second-row">
-										<div class="col-4 row mb-3">
+										<div class="col-5 row mb-3">
 											<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
-											<div class="record-code col-2">{{ entry.toCode }}</div>
-											<div class="record-name col-8">
-												{{ entry.toName }}
+											<div class="record-code col-2 ellipsis-text" [title]="entry.toCode">{{ entry.toCode }}</div>
+											<div
+												class="record-name col-8 no-wrap"
+												title="{{
+													getLanguageToNameValue(entry)
+														? `${getLanguageToNameValue(entry)} ${headerToNameColumnName.split('Target ')[1]}`
+														: entry.toName === ''
+															? '[NO TARGET]'
+															: entry.toName
+												}}"
+											>
+												{{
+													getLanguageToNameValue(entry)
+														? `${getLanguageToNameValue(entry)} ${headerToNameColumnName.split('Target ')[1]}`
+														: entry.toName === ''
+															? '[NO TARGET]'
+															: entry.toName
+												}}
 												<span *ngIf="getModuleLanguageIcon(entry.moduleId) !== ''">
 													<img
 														class="mapset-mod-icon"
@@ -443,8 +577,8 @@
 												/></span>
 											</div>
 										</div>
-										<div class="col-8 row mb-3">
-											<div class="info-box">
+										<div class="col-7 row mb-3">
+											<div class="info-box" *ngIf="entry.relation">
 												<i class="fa-regular fa-handshake relation-icon"></i
 												><span class="info-message">{{ entry.relation }}</span>
 											</div>
@@ -572,10 +706,10 @@
 				</div>
 
 				<div class="mt2-pagination-bottom-row" *ngIf="showPaging">
-					<span *ngFor="let sizeOption of refsetGridPaging.pageSizeOptions">
+					<span *ngFor="let sizeOption of gridPaging.pageSizeOptions">
 						<button
 							mat-raised-button
-							[color]="refsetGridPaging.pageSize === sizeOption ? 'secondary' : ''"
+							[color]="gridPaging.pageSize === sizeOption ? 'secondary' : ''"
 							class="pagination-page-buttons unthemed"
 							(click)="setPageSize(sizeOption)"
 							[hidden]="sizeOption > numOfMembers"
@@ -588,18 +722,14 @@
 			</div>
 			<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
 				Showing
-				<span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * refsetGridPaging.pageSize - refsetGridPaging.pageSize + 1 }} </span> to
+				<span class="fw-bold p-l-5 p-r-5"> {{ (getCurrentPage() + 1) * gridPaging.pageSize - gridPaging.pageSize + 1 }} </span> to
 				<span class="fw-bold p-l-5 p-r-5">
-					{{
-						numOfMembers < (getCurrentPage() + 1) * refsetGridPaging.pageSize
-							? numOfMembers
-							: (getCurrentPage() + 1) * refsetGridPaging.pageSize
-					}}
+					{{ numOfMembers < (getCurrentPage() + 1) * gridPaging.pageSize ? numOfMembers : (getCurrentPage() + 1) * gridPaging.pageSize }}
 				</span>
 				of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span
 				><span class="p-r-5" *ngIf="numOfMembers === 10000">maximum </span> results
 			</div>
-			<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No results to show</div>
+			<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No result found</div>
 		</div>
 	</div>
 	<div class="metadata-collapsible-container">
@@ -715,7 +845,7 @@
 		</div>
 
 		<div [hidden]="!showHistorySection" class="history-section">
-			<div [hidden]="!historyLoaded" *ngIf="numOfRecords === 0" class="status-no-results">No Results to Show</div>
+			<div [hidden]="!historyLoaded" *ngIf="numOfRecords === 0" class="status-no-results">No result found</div>
 			<div class="content-wrapper" [hidden]="!showHistoryTable">
 				<div #gridWrapperHistory class="grid-wrapper-history">
 					<ag-grid-angular
@@ -747,7 +877,7 @@
 					><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
 				</p>
 			</div>
-			<mapset-meta [refset]="data"></mapset-meta>
+			<mapset-meta [mapset]="data"></mapset-meta>
 		</div>
 	</ng-template>
 
@@ -768,7 +898,7 @@
 	<!-- Name Templates -->
 	<ng-template #directoryNameSection let-params>
 		<span class="blue-link">{{ params?.value }}</span>
-		<span *ngIf="params?.data?.modFlag !== ''">
+		<span *ngIf="params?.data?.modFlag !== '' && params?.value">
 			<img
 				class="mapset-mod-icon"
 				*ngIf="params?.data?.moduleId !== internationalId"
@@ -906,8 +1036,62 @@
 		</div>
 	</ng-template>
 
+	<ng-template #automapListModal let-modal>
+		<div class="modal-header mt2-modal-header">
+			<div class="modal-title">Automap Maps By List</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeAutomapListModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body m-t-10">
+			<textarea
+				#automapModalList
+				class="form-field-value notes-text"
+				type="text"
+				name="idList"
+				placeholder="Enter a list of IDs. Use a comma, whitespace, or newline delimited Mapping Ids."
+				[formControl]="automapListFC"
+			></textarea>
+			<div class="modal-select">
+				<label class="modal-label">Entity Type:</label>
+				<input matInput type="text" [formControl]="automapListTypeFC" placeholder="Entity Type" />
+			</div>
+			<div class="modal-select">
+				<label class="modal-label">Min Confidence:</label>
+				<input matInput type="text" [formControl]="automapListConfidenceFC" placeholder="Min Confidence" />
+			</div>
+		</div>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeAutomapListModal()">Cancel</button>
+			<button type="button" title="Edit" class="mt2-btn mt2-action-btn" (click)="submitAutomapList()">Submit</button>
+		</div>
+	</ng-template>
+
+	<ng-template #automapModal let-modal>
+		<div class="modal-header mt2-modal-header">
+			<div class="modal-title">Automap Maps Config</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeAutomapModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body m-t-10">
+			<div class="modal-select">
+				<label class="modal-label">Entity Type:</label>
+				<input matInput type="text" [formControl]="automapTypeFC" placeholder="Entity Type" />
+			</div>
+			<div class="modal-select">
+				<label class="modal-label">Min Confidence:</label>
+				<input matInput type="text" [formControl]="automapConfidenceFC" placeholder="Min Confidence" />
+			</div>
+		</div>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeAutomapModal()">Cancel</button>
+			<button type="button" title="Edit" class="mt2-btn mt2-action-btn" (click)="submitAutomap()">Submit</button>
+		</div>
+	</ng-template>
+
 	<ng-template #reportModal let-modal>
-		<div class="modal-header rt2-modal-header">
+		<div class="modal-header mt2-modal-header">
 			<div class="modal-title">{{ report?.title }}</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeReportModal()">
 				<span aria-hidden="true">&times;</span>
@@ -916,9 +1100,9 @@
 		<div class="modal-body m-t-10">
 			<p class="p-l-30 p-t-10 p-b-0">Are you sure you want to request this report?</p>
 		</div>
-		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeReportModal()">Cancel</button>
-			<button type="button" title="Edit" class="rt2-btn rt2-action-btn" (click)="requestReport()">Submit</button>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeReportModal()">Cancel</button>
+			<button type="button" title="Edit" class="mt2-btn mt2-action-btn" (click)="requestReport()">Submit</button>
 		</div>
 	</ng-template>
 

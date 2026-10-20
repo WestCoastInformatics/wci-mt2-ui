@@ -1,4 +1,4 @@
-<div class="heading-margin">COLUMNS (Show/Hide)</div>
+<div *ngIf="!showMenu" class="heading-margin">COLUMNS (Show/Hide)</div>
 <mat-checkbox
 	class="menu-checkbox"
 	*ngFor="let column of columns; let i = index"
@@ -6,6 +6,8 @@
 	(click)="$event.stopPropagation()"
 	(change)="selectColumns()"
 	[disabled]="selectedColumns.length === 1 && column.show"
+	[ngClass]="{ disabled: disabled }"
+	[title]="column.headerTooltip"
 >
 	{{ column.name }}
 </mat-checkbox>

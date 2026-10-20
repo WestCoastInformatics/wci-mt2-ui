@@ -368,7 +368,7 @@ export class RefsetService extends RestService {
 	}
 
 	getMappingsCurrentlyAssigned(): Observable<any> {
-		return this.get(this.contextPath + `mappings/workflow/assigned?limit=25&offset=0&sort=assignedAt&sortAscending=false`, '', false);
+		return this.get(this.contextPath + `mappings/workflow/assigned?limit=1000&offset=0&sort=assignedAt&sortAscending=false`, '', false);
 	}
 
 	getMapsetWorkflowStatus(mapsetId: string): Observable<any> {
@@ -430,6 +430,10 @@ export class RefsetService extends RestService {
 
 	getConceptByCode(terminology: string, version: string, code: string): Observable<any> {
 		return this.get(this.contextPath + `concept/${terminology}/${version}/${code}`, '', false);
+	}
+
+	generateAutomaps(mapsetId: string, params: any): Observable<any> {
+		return this.post(this.contextPath + `mapset/${mapsetId}/generateAutomaps`, params);
 	}
 
 	searchConceptByQuery(terminology: string, version: string, query: string, limit: string): Observable<any> {

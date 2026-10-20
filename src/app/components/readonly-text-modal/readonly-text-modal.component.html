@@ -1,5 +1,5 @@
 <div class="limit-text-container">
-	<span *ngIf="shortText" class="limit-text-30" [innerHTML]="shortText" (click)="openCreateRefsetModal(refsetVersionNotes)"> </span>
+	<span *ngIf="shortText" class="limit-text-30" [innerHTML]="shortText" (click)="openCreateRefsetModal(mapsetVersionNotes)"> </span>
 </div>
 
 <ng-template #refsetVersionNotes let-modal>
@@ -15,7 +15,14 @@
 		<div class="row text-break" [innerHTML]="longText"></div>
 	</div>
 	<div class="modal-footer rt2-modal-footer">
-		<button type="button" (click)="modal.close('Read Only Text Modal')" aria-hidden="false" class="rt2-btn rt2-close-btn" aria-label="Read Only Text Modal" title="Read Only Text Modal">
+		<button
+			type="button"
+			(click)="modal.close('Read Only Text Modal')"
+			aria-hidden="false"
+			class="rt2-btn rt2-close-btn"
+			aria-label="Read Only Text Modal"
+			title="Read Only Text Modal"
+		>
 			Close
 		</button>
 	</div>

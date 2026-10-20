@@ -17,6 +17,7 @@ export class ColumnChooserComponent {
 	@Input() gridColumnApi: any;
 	@Input() disabled = false;
 	@Input() useDialog = true;
+	@Input() showMenu = false;
 	@Input() manualStateRefresh = false;
 	@Input() columnStorage: any;
 	@ViewChild('columnChooserSection') columnChooserDialog!: TemplateRef<any>;
@@ -39,24 +40,31 @@ export class ColumnChooserComponent {
 			if (!columnDefs) {
 				return;
 			}
-
 			for (const column of columnDefs) {
 				// Avoid these coluns (they are icon columns without titles)
-				if (column.headerName == '' || !column.headerName) {
+				if ((column.headerName == '' || !column.headerName) && column.colId !== 'name' && column.colId !== 'toName') {
 					continue;
 				}
-				const columnData: any = {};
-
+				let columnData: any = {};
 				if (!column.colId) {
 					columnData.colId = column.field;
 				} else {
 					columnData.colId = column.colId;
 				}
-
+				columnData.name = columnData.colId;
 				if (CodeUtility.hasValue(column.headerName)) {
 					columnData.name = column.headerName;
 				} else {
-					columnData.name = columnData.colId;
+					if (CodeUtility.hasValue(column.headerTooltip)) {
+						columnData.name = column.headerTooltip;
+					} else {
+						columnData.name = column.field;
+					}
+				}
+				if (!CodeUtility.hasValue(column.headerTooltip)) {
+					columnData.headerTooltip = columnData.name;
+				} else {
+					columnData.headerTooltip = column.headerTooltip;
 				}
 
 				const previousColumn = previousColumns.find((element) => element.colId == columnData.colId);
@@ -130,6 +138,9 @@ export class ColumnChooserComponent {
 	}
 
 	selectColumns() {
+		if (this.disabled) {
+			return;
+		}
 		this.selectedColumns = this.columns.filter((menuitem) => menuitem.show).map((menuitem) => menuitem.colId);
 		const state: any = [];
 		for (const column of this.columns) {

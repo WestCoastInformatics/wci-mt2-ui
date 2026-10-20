@@ -324,6 +324,11 @@
 	padding-top: 0 !important;
 }
 
+.mt2-project {
+	min-height: calc(100vh - 244px);
+	max-height: calc(100vh - 244px);
+}
+
 .mt2-btn:hover {
 	background-color: var(--mapset-blue) !important;
 	color: #ffffff !important;
@@ -441,6 +446,10 @@
 	width: 150px;
 }
 
+.heading-margin {
+	margin-left: 7px;
+}
+
 .checkbox-column {
 	margin-left: 18px;
 	width: 30px;
@@ -458,7 +467,7 @@
 }
 
 .action-column {
-	margin-top: 15px;
+	margin-top: 5px;
 	text-align: right;
 }
 
@@ -614,6 +623,11 @@
 
 .menu-inline {
 	display: inline-block;
+}
+
+.menu-title {
+	font-size: 14px;
+	color: #666666;
 }
 
 .dropdown-divider {

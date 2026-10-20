@@ -10,6 +10,7 @@ import {
 	ViewChild,
 	HostListener,
 	Renderer2,
+	OnDestroy,
 } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { PaginationChangedEvent } from 'ag-grid-community';
@@ -26,6 +27,7 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { MT2Service } from 'src/app/services/mt2.service';
 import { Title } from '@angular/platform-browser';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { Constants } from 'src/app/utilities/constants.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
@@ -40,7 +42,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 	templateUrl: './edit-mapping.component.html',
 	styleUrls: ['./edit-mapping.component.css'],
 })
-export class EditMappingComponent implements OnInit {
+export class EditMappingComponent implements OnInit, OnDestroy {
 	user!: User;
 	userRoles: any[] = [];
 	targetCodeInput = '';
@@ -62,23 +64,23 @@ export class EditMappingComponent implements OnInit {
 	];
 	selectedView = 'all';
 	selectedBrowser = '';
-	refsetGridApi: any;
+	gridApi: any;
 	columnDefs = [];
-	refsetGridColumns = [
+	gridColumns = [
 		{ name: 'information', show: true },
-		{ name: 'refsetId', show: true },
+		{ name: 'mapsetId', show: true },
 	];
 	rowSelection = 'multiple';
-	refsetGridOptions: any;
-	refsetGridPaging = {
+	gridOptions: any;
+	gridPaging = {
 		pageSize: 10,
 		pageSizeOptions: [10, 25, 50, 100],
 		totalKnown: false,
 		totalRows: null,
 		manualStateRefresh: Boolean(true),
 	};
-	refsetGridLastFilter = '';
-	refsetGridLastSort = '';
+	gridLastFilter = '';
+	gridLastSort = '';
 	showTable = false;
 	mapsetData = [];
 	dialog!: DialogService;
@@ -142,7 +144,6 @@ export class EditMappingComponent implements OnInit {
 	rowColors = [{ background: 'white' }, { background: '#f2f2f2' }];
 	currentRowColor = 0;
 	moduleMetadata: any;
-	refsetData: any;
 	loadedBrowser = false;
 	isNewPageSize = false;
 	paginationPages: any = {};
@@ -157,9 +158,16 @@ export class EditMappingComponent implements OnInit {
 	currentStatus = '';
 	assignedUser = '';
 	workFlowMapStatus = { label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false };
-	workFlowMapActions = [{ label: '', value: '', status: '', roles: [''], message: '', notes: '', assign: false, edit: false }];
+	workFlowMapActions = [];
 	reviewMapWF: any;
 	editMappingsPage: any;
+	languageOptions: any[] = [];
+	selectedLanguage = 'default';
+	selectedToLanguage = 'default';
+	headerNameColumnName = '';
+	headerToNameColumnName = '';
+	mapsetLanguageStorage = 'mapsetLanguage';
+	mapsetToLanguageStorage = 'mapsetToLanguage';
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -213,6 +221,7 @@ export class EditMappingComponent implements OnInit {
 		this.user = this.authenticationService.getUser();
 		this.userRoles = this.authenticationService.getUserPrimaryRoles();
 		this.titleService.setTitle('Mapping Tool - Edit Map');
+		localStorage.setItem('unsavedChanges', 'false');
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.conceptCode = routeParams.concept;
@@ -320,6 +329,35 @@ export class EditMappingComponent implements OnInit {
 					this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
 					localStorage.setItem('projects_mapsetVersion', JSON.stringify(this.selectedVersion));
 				}
+				const languages = this.mapsetInfo?.mapProject.edition?.fullyQualifiedLanguageRefsets;
+				const languageRefsetOptions = [];
+				languageRefsetOptions.push({ value: 'default', display: '(PT)' });
+				const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
+				const languageToStorage = localStorage.getItem(this.mapsetToLanguageStorage);
+				if (languageStorage) {
+					this.selectedLanguage = languageStorage;
+				}
+				if (languageToStorage) {
+					this.selectedToLanguage = languageToStorage;
+				}
+				for (const language of languages) {
+					let type = 'PT';
+					if (language.qualifiedLanguageCode.indexOf('FSN') >= 0) {
+						type = 'FSN';
+					}
+					const languageValue = language.qualifiedLanguageRefset;
+					if (!this.selectedLanguage && !languageStorage) {
+						this.selectedLanguage = languageValue;
+					}
+					if (!this.selectedToLanguage && !languageToStorage) {
+						this.selectedToLanguage = languageValue;
+					}
+					languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageDialectCode + ' (' + type + ')' });
+				}
+				if (languageRefsetOptions.length > 0) {
+					this.languageOptions = languageRefsetOptions;
+				}
+				this.loadLanguageStorage();
 				this.getMapsetData();
 				this.getMapProject();
 			},
@@ -420,6 +458,151 @@ export class EditMappingComponent implements OnInit {
 		return '';
 	}
 
+	changeLanguage() {
+		const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
+		if (this.selectedLanguage !== languageStorage) {
+			localStorage.setItem(this.mapsetLanguageStorage, this.selectedLanguage);
+		}
+		const languageToStorage = localStorage.getItem(this.mapsetToLanguageStorage);
+		if (this.selectedToLanguage !== languageToStorage) {
+			localStorage.setItem(this.mapsetToLanguageStorage, this.selectedToLanguage);
+		}
+		this.getMapsetInfo();
+	}
+
+	getLanguageNameValue(mapset: any) {
+		if (!CodeUtility.hasValue(mapset)) {
+			return '';
+		}
+		let text = '';
+		let label = '';
+		const selectedLang = this.selectedLanguage;
+		let selectedLanguage = [];
+		for (const language of this.languageOptions) {
+			if (language.value === this.selectedLanguage) {
+				selectedLanguage.push(language);
+			}
+		}
+		if (selectedLanguage.length > 0) {
+			label = selectedLanguage[0].display;
+		}
+		if (mapset?.descriptions && selectedLanguage[0].value !== 'default') {
+			const choosenDescription = mapset.descriptions.filter((description: any) => {
+				return description.languageId === selectedLang;
+			})[0];
+			if (choosenDescription) {
+				text = choosenDescription.term;
+			}
+		} else {
+			text = mapset.name;
+		}
+		this.headerNameColumnName = 'Source ' + label;
+		return text;
+	}
+
+	getLanguageToNameValue(mapset: any) {
+		if (!CodeUtility.hasValue(mapset)) {
+			return '';
+		}
+		let text = '';
+		let label = '';
+		const selectedLang = this.selectedToLanguage;
+		let selectedToLanguage = [];
+		for (const language of this.languageOptions) {
+			if (language.value === this.selectedToLanguage) {
+				selectedToLanguage.push(language);
+			}
+		}
+		if (selectedToLanguage.length > 0) {
+			label = selectedToLanguage[0].display;
+		}
+		if (mapset?.toDescription && selectedToLanguage[0].value !== 'default') {
+			const choosenDescription = mapset.toDescription.filter((description: any) => {
+				return description.languageId === selectedLang;
+			})[0];
+			if (choosenDescription) {
+				text = choosenDescription.term;
+			}
+		} else {
+			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
+		}
+		this.headerToNameColumnName = 'Target ' + label;
+		return text;
+	}
+
+	languageNameValueGetter(params: any) {
+		if (!CodeUtility.hasValue(params.data)) {
+			return '';
+		}
+		const mapset = params.data;
+		let text = '';
+		let label = '';
+		const selectedLang = this.selectedLanguage;
+		let selectedLanguage = [];
+		for (const language of this.languageOptions) {
+			if (language.value === this.selectedLanguage) {
+				selectedLanguage.push(language);
+			}
+		}
+		if (selectedLanguage.length > 0) {
+			label = selectedLanguage[0].display;
+		}
+		if (mapset?.descriptions && selectedLanguage[0].value !== 'default') {
+			const choosenDescription = mapset.descriptions.filter((description: any) => {
+				return description.languageId === selectedLang;
+			})[0];
+			if (choosenDescription) {
+				text = choosenDescription.term;
+			}
+		} else {
+			text = mapset.name;
+		}
+		this.headerNameColumnName = 'Source ' + label;
+		return text;
+	}
+
+	languageToNameValueGetter(params: any) {
+		if (!CodeUtility.hasValue(params.data)) {
+			return '';
+		}
+		const mapset = params.data;
+		let text = '';
+		let label = '';
+		let selectedToLanguage = [];
+		for (const language of this.languageOptions) {
+			if (language.value === this.selectedToLanguage) {
+				selectedToLanguage.push(language);
+			}
+		}
+		if (selectedToLanguage.length > 0) {
+			label = selectedToLanguage[0].display;
+		}
+		const selectedLang = this.selectedToLanguage;
+		if (mapset?.toDescription && selectedToLanguage[0].value !== 'default') {
+			const choosenDescription = mapset.toDescription.filter((description: any) => {
+				return description.languageId === selectedLang;
+			})[0];
+			if (choosenDescription) {
+				text = choosenDescription.term;
+			}
+		} else {
+			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
+		}
+		this.headerToNameColumnName = 'Target ' + label;
+		return text;
+	}
+
+	loadLanguageStorage() {
+		const languageStorage = localStorage.getItem(this.mapsetLanguageStorage);
+		if (languageStorage) {
+			this.selectedLanguage = languageStorage;
+		}
+		const languageToStorage = localStorage.getItem(this.mapsetToLanguageStorage);
+		if (languageToStorage) {
+			this.selectedToLanguage = languageToStorage;
+		}
+	}
+
 	getModuleLanguageIcon(moduleId: string) {
 		let flag = '';
 		this.moduleMetadata.module.forEach((data: any) => {
@@ -471,6 +654,7 @@ export class EditMappingComponent implements OnInit {
 
 	drop(event: CdkDragDrop<string[]>) {
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
 			if (this.mapsetData[0].mapEntries[p].group - 1 === event.previousIndex) {
 				this.mapsetData[0].mapEntries[p].group = 'next';
@@ -492,6 +676,7 @@ export class EditMappingComponent implements OnInit {
 
 	dropT(event: CdkDragDrop<string[]>) {
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		const newGroup = [];
 		for (let p = 0; p < this.mapsetData[0].mapEntries.length; p++) {
 			if (this.mapsetData[0].mapEntries[p].group === event.item.data.group) {
@@ -519,6 +704,7 @@ export class EditMappingComponent implements OnInit {
 	reloadMapping() {
 		this.loaded = false;
 		this.userChanged = false;
+		localStorage.setItem('unsavedChanges', 'false');
 		this.targetFC.disable();
 		this.selectedTarget.id = '';
 		this.clearTargetInput();
@@ -632,6 +818,13 @@ export class EditMappingComponent implements OnInit {
 					mapAdvices = results.mapEntries[b].advices.filter(function (res: any) {
 						return res.indexOf('ALWAYS') === -1;
 					});
+					const toDescription = [];
+					for (let i = 0; i < results.mapEntries[b].descriptions?.length; i++) {
+						toDescription.push(results.mapEntries[b].descriptions[i]);
+					}
+					if (toDescription.length > 0) {
+						results.mapEntries[b].toDescription = toDescription;
+					}
 					results.mapEntries[b].mapAdvices = mapAdvices;
 					results.mapEntries[b].adviceAlways = adviceAlways;
 					results.mapEntries[b].modFlag = this.getModuleLanguageIcon(results.mapEntries[b].moduleId);
@@ -647,6 +840,7 @@ export class EditMappingComponent implements OnInit {
 							entries: results.mapEntries.length,
 							code: results.code,
 							name: results.name,
+							toDescription: toDescription,
 							toName:
 								results.mapEntries[b].toName.length > 0 && results.mapEntries[b].toName !== ' DOES NOT EXIST'
 									? results.mapEntries[b].toName
@@ -726,9 +920,13 @@ export class EditMappingComponent implements OnInit {
 		this.numOfGroups--;
 		this.groupList.pop();
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 	}
 
 	searchBrowser() {
+		if (this.showConfigSection) {
+			this.toggleSectionView('showConfigSection');
+		}
 		if (!this.showBrowserSection) {
 			this.toggleSectionView('showBrowserSection');
 			this.secondWindow.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -744,6 +942,7 @@ export class EditMappingComponent implements OnInit {
 	setEmptyTarget() {
 		this.clearTargetInput();
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		let defaultRule = '';
 		if (!this.ruleBased) {
 			defaultRule = 'TRUE';
@@ -810,6 +1009,7 @@ export class EditMappingComponent implements OnInit {
 		this.mapsetData[0].mapEntries.push(newMapEntry);
 		this.setSelectedTarget(newMapEntry.uuid, newMapEntry.toCode, newMapEntry.toName, newMapEntry.group, newMapEntry.priority);
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 	}
 
 	removeTarget() {
@@ -831,6 +1031,7 @@ export class EditMappingComponent implements OnInit {
 			}
 		}
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 	}
 
 	setSelectedTarget(uuid: string, code: string, name: string, group: number, priority: number) {
@@ -911,9 +1112,16 @@ export class EditMappingComponent implements OnInit {
 		this.foundConceptCode = false;
 		this.clearTargetInput();
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 	}
 
 	setTarget(currentConcept: any) {
+		if (!this.showConfigSection) {
+			this.toggleSectionView('showConfigSection');
+		}
+		if (this.showBrowserSection) {
+			this.toggleSectionView('showBrowserSection');
+		}
 		this.targetCodeInput = currentConcept.code;
 		this.targetNameInput = currentConcept.name;
 		this.setTargetCode();
@@ -932,6 +1140,7 @@ export class EditMappingComponent implements OnInit {
 				break;
 		}
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 	}
 
 	saveMapping() {
@@ -972,12 +1181,16 @@ export class EditMappingComponent implements OnInit {
 		};
 
 		this.userChanged = false;
+		localStorage.setItem('unsavedChanges', 'false');
 		this.refsetService.getMapsetWorkflowStatus(this.mapsetInfo.id).subscribe(
 			(status) => {
 				if (status.workflowStatus === 'IN_EDIT') {
 					this.refsetService.updateMapsetMapping(this.mapsetInfo.id, saveMapset).subscribe(
 						(status: any) => {
 							this.notificationService.show('The mapping has been saved.', 'Saved', 'success', { timeOut: 0, extendedTimeOut: 0 });
+							setTimeout(() => {
+								this.getMapsetData();
+							}, 50);
 						},
 						(err) => {
 							console.error(' Error: ', err);
@@ -1053,6 +1266,7 @@ export class EditMappingComponent implements OnInit {
 				this.addMapGroup();
 			} else {
 				this.userChanged = true;
+				localStorage.setItem('unsavedChanges', 'true');
 				this.mapsetData.forEach((data) => {
 					data.mapEntries.forEach((entry: any) => {
 						if (entry.uuid === uuid) {
@@ -1120,6 +1334,7 @@ export class EditMappingComponent implements OnInit {
 
 	addAdviceToList(uuid: string) {
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		this.mapsetData.forEach((data) => {
 			data.mapEntries.forEach((entry: any) => {
 				if (entry.uuid === uuid) {
@@ -1139,6 +1354,7 @@ export class EditMappingComponent implements OnInit {
 
 	removeAdviceFromList(uuid: string, advice: string) {
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		this.mapsetData.forEach((data) => {
 			data.mapEntries.forEach((entry: any) => {
 				if (entry.uuid === uuid) {
@@ -1155,6 +1371,7 @@ export class EditMappingComponent implements OnInit {
 
 	setAdvice(uuid: string) {
 		this.userChanged = true;
+		localStorage.setItem('unsavedChanges', 'true');
 		this.mapsetData.forEach((data) => {
 			data.mapEntries.forEach((entry: any) => {
 				if (entry.uuid === uuid) {
@@ -1212,7 +1429,7 @@ export class EditMappingComponent implements OnInit {
 				const startRow = rowParams.startRow;
 				const endRow = rowParams.endRow;
 				const sortModel = rowParams.sortModel;
-				this.browserApi.showLoadingOverlay();
+				this.browserApi.setGridOption('loading', true);
 
 				let query = this.searchBrowserInput;
 				if (this.searchBrowserInput === '') {
@@ -1263,7 +1480,7 @@ export class EditMappingComponent implements OnInit {
 
 								if (this.browserData?.length > 0) {
 									this.showPaging = true;
-									this.browserApi.hideOverlay();
+									this.browserApi.setGridOption('loading', false);
 									this.paginationPages = Math.ceil(this.numOfMembers / this.browserPaging.pageSize)
 										? this.pagerService.getPager(
 												Math.ceil(this.numOfMembers / this.browserPaging.pageSize),
@@ -1321,7 +1538,6 @@ export class EditMappingComponent implements OnInit {
 				cellClass: 'blue-link',
 				resizable: false,
 				sortable: false,
-				suppressSorting: true,
 			},
 			{
 				field: 'name',
@@ -1332,13 +1548,11 @@ export class EditMappingComponent implements OnInit {
 				minWidth: 165,
 				resizable: false,
 				sortable: false,
-				suppressSorting: true,
 			},
 		];
 		this.browserOptions = {
 			context: { componentParent: this },
 			pagination: true,
-			angularCompileHeaders: true,
 			suppressColumnVirtualisation: true,
 			suppressPaginationPanel: true,
 			rowModelType: 'infinite',
@@ -1362,7 +1576,7 @@ export class EditMappingComponent implements OnInit {
 			onCellClicked: this.onBrowserCellClick,
 			onPaginationChanged: (event: any) => this.onPaginationChanged(event),
 			domLayout: 'autoHeight',
-			frameworkComponents: {
+			components: {
 				templateRenderer: TemplateRendererComponent,
 			},
 			defaultColDef: {
@@ -1370,9 +1584,8 @@ export class EditMappingComponent implements OnInit {
 				filter: false,
 				sortingOrder: ['asc', 'desc'],
 				floatingFilter: false,
-				suppressMenu: true,
+				suppressHeaderMenuButton: true,
 				resizable: true,
-				suppressSorting: true,
 				suppressMovable: true,
 			},
 			enableBrowserTooltips: true,
@@ -1390,6 +1603,7 @@ export class EditMappingComponent implements OnInit {
 
 	@Debounce()
 	onBrowserSearchChange() {
+		this.closeConceptDetails();
 		this.searchBrowserInput = this.searchBrowserInput.trim();
 
 		if (!CodeUtility.hasValue(this.searchBrowserInput) || (CodeUtility.hasValue(this.searchBrowserInput) && this.searchBrowserInput.length > 2)) {
@@ -1548,7 +1762,6 @@ export class EditMappingComponent implements OnInit {
 	}
 
 	updateNotesStatus(event: any) {
-		console.log('updateNotesStatus', event);
 		for (let c = 0; c < this.mapsetData.length; c++) {
 			if (this.mapsetData[c].code === event.conceptCode) {
 				this.mapsetData[c].hasNotes = event.hasNotes;
@@ -1559,5 +1772,18 @@ export class EditMappingComponent implements OnInit {
 	@HostListener('window:scroll', ['$event'])
 	onScroll(event: any) {
 		//this.closePopover();
+	}
+
+	@HostListener('window:beforeunload', ['$event'])
+	onBeforeUnload($event: BeforeUnloadEvent) {
+		if (localStorage.getItem('unsavedChanges') === 'true') {
+			$event.preventDefault(); // Required for modern browsers
+			$event.returnValue = ''; // Triggers the native prompt
+		}
+	}
+
+	ngOnDestroy() {
+		this.userChanged = false;
+		localStorage.setItem('unsavedChanges', 'false');
 	}
 }
