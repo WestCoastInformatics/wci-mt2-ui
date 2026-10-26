@@ -1533,6 +1533,9 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 					const list = response.items;
 					this.mapsetResponse = list;
 					this.assignedFilterOptions = [];
+					let source = '';
+					let odd = true;
+					let even = false;
 					for (let i = 0; i < list.length; i++) {
 						const results = list[i];
 						let data = {};
@@ -1561,6 +1564,19 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 							if (toDescription.length > 0) {
 								results.mapEntries[b].toDescription = toDescription;
 							}
+							if (source === '') {
+								source = results.code;
+							}
+							if (source !== results.code) {
+								source = results.code;
+								if (!even) {
+									even = true;
+									odd = false;
+								} else {
+									even = false;
+									odd = true;
+								}
+							}
 							data = {
 								uuid: results.code + results.mapEntries[b].modified + b,
 								index: results.code + count,
@@ -1581,6 +1597,8 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 										? results.mapEntries[b].group + '/' + results.mapEntries[b].priority + '#' + results.mapEntries[b].toCode
 										: results.mapEntries[b].group + '/' + results.mapEntries[b].priority + '#[Empty Target]',
 								rule: results.mapEntries[b].rule.length > 0 ? results.mapEntries[b].rule : '---',
+								odd: odd,
+								even: even,
 								relation: results.mapEntries[b].relation.length > 0 ? this.titleCaseWord(results.mapEntries[b].relation) : '---',
 								modified: results.mapEntries[b].modified,
 								modifiedBy: results.mapEntries[b].modifiedBy,
@@ -1682,10 +1700,16 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 	addEmptyTargetToGroup(code: string, groupNum: number) {
 		let nextPriorityNum = 1;
 		let selectEntryIndex = 0;
-		let orginalFrom = { code: '', name: '', status: '' };
+		let orginalFrom = { code: '', name: '', status: '', odd: '', even: '' };
 		for (let p = 0; p < this.mapsetData.length; p++) {
 			if (this.mapsetData[p].code == code) {
-				orginalFrom = { code: this.mapsetData[p].code, name: this.mapsetData[p].name, status: this.mapsetData[p].workflowStatus };
+				orginalFrom = {
+					code: this.mapsetData[p].code,
+					name: this.mapsetData[p].name,
+					status: this.mapsetData[p].workflowStatus,
+					odd: this.mapsetData[p].odd,
+					even: this.mapsetData[p].even,
+				};
 				if (this.mapsetData[p].group === groupNum) {
 					if (this.mapsetData[p].priority >= nextPriorityNum) {
 						selectEntryIndex = p;
@@ -1705,6 +1729,8 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			index: orginalFrom.code + this.mapsetData.length,
 			name: orginalFrom.name,
 			code: orginalFrom.code,
+			odd: orginalFrom.odd,
+			even: orginalFrom.even,
 			workflowStatus: orginalFrom.status,
 			assignedUser: this.user?.userName,
 			group: groupNum,

@@ -373,6 +373,11 @@
 	margin-right: 5px;
 }
 
+.even-chip {
+	background-color: white !important;
+	border: 1px solid var(--standard_primary_button_color) !important;
+}
+
 .section-background {
 	padding: 0 0 10px 10px;
 	margin-right: 8px;
