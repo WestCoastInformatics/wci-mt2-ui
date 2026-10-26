@@ -9,10 +9,11 @@
 		"lint": "ng lint",
 		"test": "jest",
 		"e2e": "ng e2e",
+		"dev": "ng serve --port 4200 --host 0.0.0.0",
 		"cypress:open": "cypress open",
 		"cypress:run": "cypress run",
 		"audit-scan": "npm audit --audit-level=high",
-		"run-audit": "npm run audit-scan && npm start"
+		"run-audit": "npm run audit-scan && npm start && npm dev"
 	},
 	"private": true,
 	"dependencies": {
