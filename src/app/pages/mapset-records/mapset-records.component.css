@@ -163,6 +163,11 @@
 	margin-right: 5px;
 }
 
+.even-chip {
+	background-color: white !important;
+	border: 1px solid var(--standard_primary_button_color) !important;
+}
+
 .overflow {
 	overflow: auto;
 }

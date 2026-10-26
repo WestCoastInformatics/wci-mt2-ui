@@ -967,6 +967,7 @@
 			<mat-chip-list *ngIf="params?.value.split('#')[0] !== '1/1&1'">
 				<mat-chip
 					class="mapset-chip"
+					[ngClass]="{ 'even-chip': params.data?.even }"
 					title="{{
 						'Group ' +
 							params?.value.split('#')[0].split('&')[0].split('/')[0] +
