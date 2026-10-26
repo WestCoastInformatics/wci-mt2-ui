@@ -24,20 +24,38 @@ jobs:
             - name: Run Jest Tests
               run: npm run test
     cypress-run:
-        needs: run-jest-tests
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v5
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: '20'
-                  cache: 'npm'
-            - name: Run E2E tests
-              uses: cypress-io/github-action@v6
-              with:
-                  browser: chrome
-                  build: npm run build
-                  start: npm run start
-                  wait-on: 'http://localhost:4200'
+    needs: run-unit-tests
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout Code
+          uses: actions/checkout@v5
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+              node-version: '20' #set the project Angular version
+              cache: 'npm'
+        - name: Install Dependencies
+          run: npm ci
+        - name: Start Angular server
+          run: |
+              npm run dev > "$RUNNER_TEMP/angular-server.log" 2>&1 &
+              echo "$!" > "$RUNNER_TEMP/angular-server.pid"
+        - name: Wait for Angular server
+          run: |
+              for attempt in {1..60}; do
+                if curl --fail --silent --max-time 2 http://127.0.0.1:4200/ > /dev/null; then
+                  exit 0
+                fi
+                if ! kill -0 "$(cat "$RUNNER_TEMP/angular-server.pid")" 2>/dev/null; then
+                  cat "$RUNNER_TEMP/angular-server.log"
+                  exit 1
+                fi
+                sleep 2
+              done
+              cat "$RUNNER_TEMP/angular-server.log"
+              exit 1
+        - name: Run E2E tests
+          uses: cypress-io/github-action@v6
+          with:
+              install: false
+              command: npm run cypress:run
