@@ -6,6 +6,7 @@ import { EMPTY } from 'rxjs';
 import { RestService } from './rest.service';
 import { NotificationService } from '../notification.service';
 import { environment } from 'src/environments/environment';
+import { vi } from 'vitest';
 
 describe('RestService', () => {
 	let service: RestService;
@@ -85,8 +86,8 @@ describe('RestService', () => {
 
 	describe('giveErrorNotification', () => {
 		it('should call notificationService.show when ignoreErrors is false', () => {
-			const showSpy = jest.spyOn(notificationService, 'show').mockReturnValue({} as any);
-			const handleDupsSpy = jest.spyOn(notificationService, 'handleDuplicates').mockReturnValue({} as any);
+			const showSpy = vi.spyOn(notificationService, 'show').mockReturnValue({} as any);
+			const handleDupsSpy = vi.spyOn(notificationService, 'handleDuplicates').mockReturnValue({} as any);
 
 			service.giveErrorNotification({ status: 500, error: 'Server Error' }, false);
 
@@ -108,8 +109,8 @@ describe('RestService', () => {
 
 	describe('giveWarningNotification', () => {
 		it('should call notificationService.show when ignoreErrors is false', () => {
-			const showSpy = jest.spyOn(notificationService, 'show').mockReturnValue({} as any);
-			const handleDupsSpy = jest.spyOn(notificationService, 'handleDuplicates').mockReturnValue({} as any);
+			const showSpy = vi.spyOn(notificationService, 'show').mockReturnValue({} as any);
+			const handleDupsSpy = vi.spyOn(notificationService, 'handleDuplicates').mockReturnValue({} as any);
 
 			service.giveWarningNotification({ status: 400, error: 'Bad Request' }, false);
 

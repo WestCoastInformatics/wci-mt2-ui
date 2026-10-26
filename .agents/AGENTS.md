@@ -74,8 +74,8 @@ Notes for agents:
 
 ## Testing
 
-- This project uses **Jest** with `jest-preset-angular`. Do not use Vitest.
-- Test configuration: `jest.config.js` and `setup-jest.ts` at the project root.
+- This project uses **Vitest 4** with `@analogjs/vitest-angular`.
+- Test configuration: `vitest.config.ts` and `src/setup-vitest.ts`.
 - E2E tests use **Cypress** (`cypress.config.ts`).
 - Run `ng build` after generating component/service code to verify no compilation errors.
 

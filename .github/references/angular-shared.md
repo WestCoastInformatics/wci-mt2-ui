@@ -99,4 +99,4 @@ For task-specific Angular guidance, consult the `angular-developer` skill refere
 - Forms: `references/reactive-forms.md` (preferred for this project)
 - Routing: `references/define-routes.md`, `references/route-guards.md`
 - DI: `references/di-fundamentals.md`, `references/creating-services.md`
-- Testing: `references/testing-fundamentals.md` (uses Jest + jest-preset-angular)
+- Testing: `references/testing-fundamentals.md` (uses Vitest 4 + `@analogjs/vitest-angular`)

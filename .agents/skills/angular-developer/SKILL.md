@@ -131,7 +131,7 @@ When implementing styling and animations in Angular, consult the following refer
 
 When writing or updating tests, consult the following references based on the task:
 
-- **Fundamentals**: Best practices for unit testing (Jest + jest-preset-angular), async patterns, and `TestBed`. Read [testing-fundamentals.md](references/testing-fundamentals.md)
+- **Fundamentals**: Best practices for unit testing (Vitest 4 + `@analogjs/vitest-angular`), async patterns, and `TestBed`. Read [testing-fundamentals.md](references/testing-fundamentals.md)
 - **Component Harnesses**: Standard patterns for robust component interaction. Read [component-harnesses.md](references/component-harnesses.md)
 - **Router Testing**: Using `RouterTestingHarness` for reliable navigation tests. Read [router-testing.md](references/router-testing.md)
 - **End-to-End (E2E) Testing**: Best practices for E2E tests with Cypress. Read [e2e-testing.md](references/e2e-testing.md)
