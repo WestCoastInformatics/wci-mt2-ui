@@ -24,7 +24,6 @@ jobs:
             - name: Run Jest Tests
               run: npm run test
     cypress-run:
-        needs: run-jest-tests
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Code
