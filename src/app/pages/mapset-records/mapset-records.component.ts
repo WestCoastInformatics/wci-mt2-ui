@@ -1391,7 +1391,9 @@ export class MapsetRecordsComponent implements OnInit {
 
 							const data = [];
 							let count = 0;
-
+							let source = '';
+							let odd = true;
+							let even = false;
 							for (let a = 0; a < results.length; a++) {
 								for (let b = 0; b < results[a].mapEntries.length; b++) {
 									let spanned = false;
@@ -1413,7 +1415,16 @@ export class MapsetRecordsComponent implements OnInit {
 									if (toDescription.length > 0) {
 										results[a].mapEntries[b].toDescription = toDescription;
 									}
-
+									if (source !== results[a].code) {
+										source = results[a].code;
+										if (!even) {
+											even = true;
+											odd = false;
+										} else {
+											even = false;
+											odd = true;
+										}
+									}
 									data.push({
 										index: results[a].code !== '' ? a + results[a].code + count : count,
 										spanned: spanned,
@@ -1438,6 +1449,8 @@ export class MapsetRecordsComponent implements OnInit {
 													'#' +
 													results[a].mapEntries[b].toCode
 												: 'No map entries available.',
+										odd: odd,
+										even: even,
 										rule: results[a].mapEntries[b].rule.length > 0 ? results[a].mapEntries[b].rule : '---',
 										relation: results[a].mapEntries[b].relation.length > 0 ? results[a].mapEntries[b].relation : '---',
 										modified: results[a].mappingWorkflow?.modified,
