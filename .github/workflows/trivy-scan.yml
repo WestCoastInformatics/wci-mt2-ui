@@ -33,19 +33,19 @@ jobs:
                   TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
                   TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
 
-            # Check for CRITICAL vulnerabilities in the frontend scan (removed HIGH temporarily)
+            # Check for CRITICAL vulnerabilities in the frontend scan
             - name: Check vulnerabilities in frontend
               id: check-vulns-frontend
               run: |
-                  # Get the count of  CRITICAL vulnerabilities
-                  vuln_count=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL" )] | length' reportFrontend.json)
-                  echo "Frontend  CRITICAL vulnerability count: $vuln_count"
+                  # Get the count of HIGH and CRITICAL vulnerabilities
+                  vuln_count=$(jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL" or .Severity == "HIGH")] | length' reportFrontend.json)
+                  echo "Frontend HIGH and CRITICAL vulnerability count: $vuln_count"
 
-                  # List the  CRITICAL vulnerabilities, if any
+                  # List the HIGH and CRITICAL vulnerabilities, if any
                   if [ "$vuln_count" -gt 0 ]; then
-                    echo "Listing CRITICAL vulnerabilities found in package-lock.json:"
-                    jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL" )] | .[] | {ID, Severity, Description, PackageName, InstalledVersion, FixedVersion}' reportFrontend.json
+                    echo "Listing HIGH and CRITICAL vulnerabilities found in package-lock.json:"
+                    jq '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL" or .Severity == "HIGH")] | .[] | {ID, Severity, Description, PackageName, InstalledVersion, FixedVersion}' reportFrontend.json
                     exit 1
                   else
-                    echo "No  CRITICAL vulnerabilities found in package-lock.json."
+                    echo "No HIGH or CRITICAL vulnerabilities found in package-lock.json."
                   fi
