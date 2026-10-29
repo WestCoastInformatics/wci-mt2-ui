@@ -6,6 +6,7 @@ import { Title } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { EnvService } from './services/environment/env.service';
 import { AuthenticationService } from './services/authentication/authentication.service';
+import { vi } from 'vitest';
 
 describe('AppComponent', () => {
 	let component: AppComponent;
@@ -18,7 +19,7 @@ describe('AppComponent', () => {
 			providers: [
 				{
 					provide: AuthenticationService,
-					useValue: { prepareUserSession: jest.fn() }
+					useValue: { prepareUserSession: vi.fn() }
 				},
 				{
 					provide: EnvService,

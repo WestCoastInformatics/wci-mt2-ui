@@ -1,6 +1,6 @@
 # Testing Fundamentals
 
-This guide covers the fundamental principles and practices for writing unit tests in this repository, which uses **Jest** (via `jest-preset-angular`) as the test runner. Configuration is in `jest.config.js` and `setup-jest.ts` at the project root.
+This guide covers the fundamental principles and practices for writing unit tests in this repository, which uses **Vitest 4** with `@analogjs/vitest-angular`. Configuration is in `vitest.config.ts` and `src/setup-vitest.ts`.
 
 ## Core Philosophy: Async-First
 

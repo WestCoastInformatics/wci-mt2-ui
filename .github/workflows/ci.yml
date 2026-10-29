@@ -7,7 +7,7 @@ on:
         branches:
             - develop # the primary branch
 jobs:
-    run-jest-tests:
+    run-vitest-tests:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Code
@@ -21,9 +21,10 @@ jobs:
               run: npm ci
             - name: Build Application
               run: npm run build
-            - name: Run Jest Tests
+            - name: Run Vitest Tests
               run: npm run test
     cypress-run:
+        needs: run-vitest-tests
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Code
