@@ -89,9 +89,9 @@
 	"overrides": {
 		"qs": "^6.16.0",
 		"picomatch": "^4.0.4",
-		"minimatch": "^10.2.4",
+		"minimatch": "^11.0.1",
 		"jsdom": "^26.0.0",
-		"glob": "^13.0.6",
+		"glob": "^14.0.2",
 		"rimraf": "^5.0.10",
 		"uuid": "^14.0.0",
 		"webpack-dev-server": "^5.2.6",
