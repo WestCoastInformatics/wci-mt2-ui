@@ -206,11 +206,14 @@
 					</button>
 					<mat-menu #columnsMenu="matMenu" class="menu max-menu">
 						<app-column-chooser
-							title="Select Columns to Display"
+							*ngIf="showTable"
 							[gridColumnApi]="gridApi"
 							[useDialog]="useDialog"
 							[showMenu]="true"
 							[columnStorage]="mapsetAutomapColumnStorage"
+							[languageStorage]="mapsetLanguageStorage"
+							[toLanguageStorage]="mapsetToLanguageStorage"
+							[languages]="languageOptions"
 							[manualStateRefresh]="manualStateRefresh"
 							[disabled]="!showPaging"
 						>

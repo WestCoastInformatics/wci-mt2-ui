@@ -426,14 +426,13 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			{
 				colId: 'name',
 				field: 'name',
-				tooltipField: 'name',
 				headerValueGetter: (params: any) => `${this.headerNameColumnName}`,
 				headerTooltipValueGetter: (params: any) => `${this.headerNameColumnTooltip}`,
-				headerTooltip: 'Source Name',
 				flex: 1,
 				resizable: true,
 				minWidth: 155,
 				valueGetter: this.languageNameValueGetter.bind(this),
+				tooltipValueGetter: this.languageNameValueGetter.bind(this),
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.nameSection },
 				sortable: false,
@@ -458,13 +457,13 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			{
 				colId: 'toName',
 				field: 'toName',
-				tooltipField: 'toName',
 				headerValueGetter: (params: any) => `${this.headerToNameColumnName}`,
 				headerTooltipValueGetter: (params: any) => `${this.headerToNameColumnTooltip}`,
 				resizable: true,
 				unSortIcon: true,
 				sortable: false,
 				valueGetter: this.languageToNameValueGetter.bind(this),
+				tooltipValueGetter: this.languageToNameValueGetter.bind(this),
 				cellRenderer: TemplateRendererComponent,
 				cellRendererParams: { template: this.toNameSection },
 			},
@@ -609,6 +608,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 					colId: `source_${options.value}`,
 					headerName: `Source ${options.display}`,
 					headerTooltip: `Source ${options.title}`,
+					tooltipValueGetter: (params: ValueGetterParams) => this.languageNameAllValueGetter(params, options.value),
 					flex: 2,
 					resizable: true,
 					minWidth: 165,
@@ -620,6 +620,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 					colId: `target_${options.value}`,
 					headerName: `Target ${options.display}`,
 					headerTooltip: `Target ${options.title}`,
+					tooltipValueGetter: (params: ValueGetterParams) => this.languageToNameAllValueGetter(params, options.value),
 					resizable: true,
 					unSortIcon: false,
 					sortable: false,
@@ -935,7 +936,10 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		if (this.selectedToLanguage !== languageToStorage) {
 			localStorage.setItem(this.mapsetToLanguageStorage, this.selectedToLanguage);
 		}
-		this.changeHeaderTitle();
+		this.getMapsetInfo();
+		setTimeout(() => {
+			this.changeHeaderTitle();
+		}, 2500);
 	}
 
 	getLanguageNameValue(mapset: any) {
@@ -967,7 +971,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			text = mapset.name;
 		}
 		this.headerNameColumnName = 'Source ' + label;
-		this.headerNameColumnTooltip = title === '' ? 'Source ' + label : title;
+		this.headerNameColumnTooltip = title === '' ? 'Source ' + label : 'Source ' + title;
 		return text;
 	}
 
@@ -1000,7 +1004,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
 		}
 		this.headerToNameColumnName = 'Target ' + label;
-		this.headerToNameColumnTooltip = title === '' ? 'Target ' + label : title;
+		this.headerToNameColumnTooltip = title === '' ? 'Target ' + label : 'Target ' + title;
 		return text;
 	}
 
@@ -1094,7 +1098,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			text = mapset.name;
 		}
 		this.headerNameColumnName = 'Source ' + label;
-		this.headerNameColumnTooltip = title === '' ? 'Source ' + label : title;
+		this.headerNameColumnTooltip = title === '' ? 'Source ' + label : 'Source ' + title;
 		return text;
 	}
 
@@ -1128,7 +1132,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
 		}
 		this.headerToNameColumnName = 'Target ' + label;
-		this.headerToNameColumnTooltip = title === '' ? 'Target ' + label : title;
+		this.headerToNameColumnTooltip = title === '' ? 'Target ' + label : 'Target ' + title;
 		return text;
 	}
 

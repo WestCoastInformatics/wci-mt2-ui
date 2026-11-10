@@ -19,7 +19,11 @@ export class ColumnChooserComponent {
 	@Input() useDialog = true;
 	@Input() showMenu = false;
 	@Input() manualStateRefresh = false;
-	@Input() columnStorage: any;
+	@Input() columnStorage = '';
+	@Input() languageStorage = '';
+	@Input() toLanguageStorage = '';
+	@Input() languages: any;
+
 	@ViewChild('columnChooserSection') columnChooserDialog!: TemplateRef<any>;
 
 	constructor() {}
@@ -41,7 +45,28 @@ export class ColumnChooserComponent {
 				return;
 			}
 			for (const column of columnDefs) {
-				// Avoid these coluns (they are icon columns without titles)
+				let nameCol = 'Source (PT)';
+				let nameTooltip = 'Source (PT)';
+				let toNameCol = 'Target (PT)';
+				let toNameTooltip = 'Target (PT)';
+				if (localStorage.getItem(this.languageStorage)) {
+					const languageStorage = localStorage.getItem(this.languageStorage);
+					for (const language of this.languages) {
+						if (languageStorage === language.value && language.value !== 'default') {
+							nameCol = `Source ${language.display}`;
+							nameTooltip = language.title;
+						}
+					}
+				}
+				if (localStorage.getItem(this.toLanguageStorage)) {
+					const languageToStorage = localStorage.getItem(this.toLanguageStorage);
+					for (const language of this.languages) {
+						if (languageToStorage === language.value && language.value !== 'default') {
+							toNameCol = `Target ${language.display}`;
+							toNameTooltip = language.title;
+						}
+					}
+				}
 				if ((column.headerName == '' || !column.headerName) && column.colId !== 'name' && column.colId !== 'toName') {
 					continue;
 				}
@@ -66,9 +91,15 @@ export class ColumnChooserComponent {
 				} else {
 					columnData.headerTooltip = column.headerTooltip;
 				}
-
+				if (column.colId === 'name') {
+					columnData.name = nameCol;
+					columnData.headerTooltip = nameTooltip;
+				}
+				if (column.colId === 'toName') {
+					columnData.name = toNameCol;
+					columnData.headerTooltip = toNameTooltip;
+				}
 				const previousColumn = previousColumns.find((element) => element.colId == columnData.colId);
-
 				// apply previous column selections if there were any
 				if (previousColumn) {
 					columnData.show = previousColumn.show;
@@ -81,10 +112,8 @@ export class ColumnChooserComponent {
 				} else {
 					columnData.show = false;
 				}
-
 				this.columns.push(columnData);
 			}
-
 			if (this.columnStorage) {
 				const columnSelection = localStorage.getItem(this.columnStorage);
 
@@ -112,6 +141,7 @@ export class ColumnChooserComponent {
 				this.selectedColumns = JSON.parse(JSON.stringify(this.columns));
 			}
 		}
+
 		if (this.manualStateRefresh) {
 			if (this.columnStorage) {
 				const columnSelection = localStorage.getItem(this.columnStorage);
