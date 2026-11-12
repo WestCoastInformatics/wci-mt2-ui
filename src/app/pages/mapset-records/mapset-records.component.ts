@@ -402,13 +402,13 @@ export class MapsetRecordsComponent implements OnInit {
 					{
 						colId: 'name',
 						field: 'name',
-						tooltipField: 'name',
 						headerValueGetter: (params: any) => `${this.headerNameColumnName}`,
 						headerTooltipValueGetter: (params: any) => `${this.headerNameColumnTooltip}`,
 						flex: 2,
 						resizable: true,
 						minWidth: 165,
 						valueGetter: this.languageNameValueGetter.bind(this),
+						tooltipValueGetter: this.languageNameValueGetter.bind(this),
 						cellRenderer: TemplateRendererComponent,
 						cellRendererParams: { template: this.nameSection },
 						sortable: false,
@@ -433,13 +433,13 @@ export class MapsetRecordsComponent implements OnInit {
 					{
 						colId: 'toName',
 						field: 'toName',
-						tooltipField: 'toName',
 						headerValueGetter: (params: any) => `${this.headerToNameColumnName}`,
 						headerTooltipValueGetter: (params: any) => `${this.headerToNameColumnTooltip}`,
 						resizable: true,
 						unSortIcon: false,
 						sortable: false,
 						valueGetter: this.languageToNameValueGetter.bind(this),
+						tooltipValueGetter: this.languageToNameValueGetter.bind(this),
 						cellRenderer: TemplateRendererComponent,
 						cellRendererParams: { template: this.toNameSection },
 					},
@@ -550,6 +550,7 @@ export class MapsetRecordsComponent implements OnInit {
 							colId: `source_${options.value}`,
 							headerName: `Source ${options.display}`,
 							headerTooltip: `Source ${options.title}`,
+							tooltipValueGetter: (params: ValueGetterParams) => this.languageNameAllValueGetter(params, options.value),
 							flex: 2,
 							resizable: true,
 							minWidth: 165,
@@ -561,6 +562,7 @@ export class MapsetRecordsComponent implements OnInit {
 							colId: `target_${options.value}`,
 							headerName: `Target ${options.display}`,
 							headerTooltip: `Target ${options.title}`,
+							tooltipValueGetter: (params: ValueGetterParams) => this.languageToNameAllValueGetter(params, options.value),
 							resizable: true,
 							unSortIcon: false,
 							sortable: false,
@@ -885,7 +887,7 @@ export class MapsetRecordsComponent implements OnInit {
 			text = mapset.name;
 		}
 		this.headerNameColumnName = 'Source ' + label;
-		this.headerNameColumnTooltip = title === '' ? 'Source ' + label : title;
+		this.headerNameColumnTooltip = title === '' ? 'Source ' + label : 'Source ' + title;
 		return text;
 	}
 
@@ -918,7 +920,7 @@ export class MapsetRecordsComponent implements OnInit {
 			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
 		}
 		this.headerToNameColumnName = 'Target ' + label;
-		this.headerToNameColumnTooltip = title === '' ? 'Target ' + label : title;
+		this.headerToNameColumnTooltip = title === '' ? 'Target ' + label : 'Target ' + title;
 		return text;
 	}
 
@@ -1012,7 +1014,7 @@ export class MapsetRecordsComponent implements OnInit {
 			text = mapset.name;
 		}
 		this.headerNameColumnName = 'Source ' + label;
-		this.headerNameColumnTooltip = title === '' ? 'Source ' + label : title;
+		this.headerNameColumnTooltip = title === '' ? 'Source ' + label : 'Source ' + title;
 		return text;
 	}
 
@@ -1046,7 +1048,7 @@ export class MapsetRecordsComponent implements OnInit {
 			text = mapset.toName === 'DOES NOT EXIST' || mapset.toName === null ? '---' : mapset.toName;
 		}
 		this.headerToNameColumnName = 'Target ' + label;
-		this.headerToNameColumnTooltip = title === '' ? 'Target ' + label : title;
+		this.headerToNameColumnTooltip = title === '' ? 'Target ' + label : 'Target ' + title;
 		return text;
 	}
 
@@ -1060,6 +1062,7 @@ export class MapsetRecordsComponent implements OnInit {
 			}
 			return col;
 		});
+		this.manualStateRefresh = true;
 		this.gridApi.setGridOption('columnDefs', updatedDefs);
 	}
 
@@ -1710,18 +1713,6 @@ export class MapsetRecordsComponent implements OnInit {
 		if (event.column.colId !== 'checkbox' && event.column.colId !== 'action-btns') {
 			this.goToMappingPage(event.data.code);
 		}
-		/*
-		if (event.column.colId === 'code') {
-			this.goToMappingPage(event.data.code);
-			return;
-		}
-		if (event.column.colId !== 'advices') {
-			this.gridApi.forEachNode((node) => {
-				if (node.data.advices_open) {
-					node.data.advices_open = false;
-				}
-			});
-		}*/
 	};
 
 	gridEvent(action: any): void {
