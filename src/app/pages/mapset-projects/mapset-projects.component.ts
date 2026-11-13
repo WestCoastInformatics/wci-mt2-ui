@@ -135,35 +135,23 @@ export class MapsetProjectsComponent implements OnInit {
 
 	private clearSavedSelections(): void {
 		const keysToRemove: string[] = [];
-
 		for (let i = 0; i < localStorage.length; i++) {
 			const key = localStorage.key(i);
-
 			if (
-				key?.startsWith('projects_mapsetSearchInput') ||
-				key?.startsWith('projects_showMapTable') ||
+				key?.startsWith('library_mapsetVersion') ||
 				key?.startsWith('projects_mapsetVersion') ||
+				key?.startsWith('library_mapsetSearchInput') ||
+				key?.startsWith('projects_mapsetSearchInput') ||
+				key?.startsWith('batchSearchInput') ||
+				key?.startsWith('automapSearchInput') ||
+				key?.startsWith('library_mapsetGridCurrentPageSize') ||
+				key?.startsWith('library_mapsetGridCurrentPageNum') ||
 				key?.startsWith('projects_mapsetGridCurrentPageSize') ||
-				key?.startsWith('projects_mapsetGridCurrentPageNum') ||
-				key?.startsWith('projects_mapsetRecordsColumns') ||
-				key?.startsWith('projects_mapsetRecordsLanguage') ||
-				key?.startsWith('projects_mapsetRecordsWorkflowFilter') ||
-				key?.startsWith('projects_mapsetRecordsAssignedFilter') ||
-				key?.startsWith('projects_batchSearchInput') ||
-				key?.startsWith('mapsetBatchWorkflowFilter') ||
-				key?.startsWith('mapsetBatchAssignedFilter') ||
-				key?.startsWith('mapsetBatchColumnStorage') ||
-				key?.startsWith('projects_automapSearchInput') ||
-				key?.startsWith('mapsetAutomapWorkflowFilter') ||
-				key?.startsWith('mapsetAutomapAssignedFilter') ||
-				key?.startsWith('mapsetAutomapColumnStorage') ||
-				key?.startsWith('mapsetLanguage') ||
-				key?.startsWith('mapsetToLanguage')
+				key?.startsWith('projects_mapsetGridCurrentPageNum')
 			) {
 				keysToRemove.push(key);
 			}
 		}
-
 		keysToRemove.forEach((key) => localStorage.removeItem(key));
 	}
 
