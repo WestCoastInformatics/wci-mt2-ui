@@ -106,6 +106,35 @@ export class NavbarComponent implements OnInit {
 		this.authenticationService.logoutUser();
 	}
 
+	resetFilters() {
+		const keysToRemove: string[] = [];
+
+		for (let i = 0; i < localStorage.length; i++) {
+			const key = localStorage.key(i);
+			if (
+				key?.startsWith('mapsetLanguage') ||
+				key?.startsWith('mapsetToLanguage') ||
+				key?.startsWith('library_showMapTable') ||
+				key?.startsWith('library_mapsetRecordsColumns') ||
+				key?.startsWith('projects_showMapTable') ||
+				key?.startsWith('projects_mapsetRecordsColumns') ||
+				key?.startsWith('projects_mapsetRecordsWorkflowFilter') ||
+				key?.startsWith('projects_mapsetRecordsAssignedFilter') ||
+				key?.startsWith('batchColumnStorage') ||
+				key?.startsWith('batchWorkflowFilter') ||
+				key?.startsWith('batchAssignedFilter') ||
+				key?.startsWith('automapColumnStorage') ||
+				key?.startsWith('automapWorkflowFilter') ||
+				key?.startsWith('automapAssignedFilter')
+			) {
+				keysToRemove.push(key);
+			}
+		}
+
+		keysToRemove.forEach((key) => localStorage.removeItem(key));
+		window.location.reload();
+	}
+
 	landing() {
 		const breadcrumbs: never[] = [];
 		this.breadcrumbService.setBreadcrumbs(breadcrumbs);

@@ -114,6 +114,31 @@
 					<div class="dropdown-divider hide"></div>
 					<a class="dropdown-item text-center pointer hide" (click)="resources()">Resources</a>
 					<div class="dropdown-divider"></div>
+
+					<div
+						[matMenuTriggerFor]="settingsMenu"
+						class="dropdown-item text-center default-font default-pointer"
+						(click)="$event.stopPropagation()"
+						aria-label="User Settings"
+						title="User Settings"
+					>
+						<strong>User Settings</strong>
+					</div>
+
+					<mat-menu #settingsMenu="matMenu" class="menu settings-menu">
+						<div class="d-flex mb-5 align-items-center">
+							<button
+								mat-menu-item
+								class="menu-title"
+								(click)="resetFilters()"
+								aria-label="Settings"
+								title="Reset Saved Filter Selections"
+							>
+								<strong>Reset Saved Filters</strong>
+							</button>
+						</div>
+					</mat-menu>
+					<div class="dropdown-divider"></div>
 					<a class="dropdown-item text-center" href="#" (click)="logoutUser(); $event.preventDefault()">Log Out</a>
 				</div>
 			</div>

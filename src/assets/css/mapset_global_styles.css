@@ -1538,6 +1538,20 @@ mt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 	cursor: not-allowed !important;
 }
 
+.settings-menu {
+	background-color: var(--mapset-hover) !important;
+	div {
+		button {
+			span {
+				color: white;
+			}
+		}
+		button:hover {
+			background-color: var(--standard_link_color) !important;
+		}
+	}
+}
+
 .create-new-refset-row {
 	align-items: baseline;
 	display: flex;
@@ -2289,6 +2303,10 @@ img.mt2-edition-flag {
 .subtract-symbol-icon,
 .grey-add-symbol-icon,
 .grey-trash-bin-icon {
+	cursor: pointer;
+}
+
+.default-pointer {
 	cursor: pointer;
 }
 
