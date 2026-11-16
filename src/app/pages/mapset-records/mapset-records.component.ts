@@ -331,7 +331,7 @@ export class MapsetRecordsComponent implements OnInit {
 		for (let i = 0; i < localStorage.length; i++) {
 			const key = localStorage.key(i);
 
-			if (key?.startsWith('batchSearchInput')) {
+			if (key?.startsWith('batchSearchInput') || key?.startsWith('automapSearchInput')) {
 				keysToRemove.push(key);
 			}
 		}

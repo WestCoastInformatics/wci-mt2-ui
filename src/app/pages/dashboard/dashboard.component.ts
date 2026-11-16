@@ -133,34 +133,23 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 	private clearSavedSelections(): void {
 		const keysToRemove: string[] = [];
-
 		for (let i = 0; i < localStorage.length; i++) {
 			const key = localStorage.key(i);
-
 			if (
-				key?.startsWith('library_mapsetSearchInput') ||
-				key?.startsWith('library_showMapTable') ||
 				key?.startsWith('library_mapsetVersion') ||
+				key?.startsWith('projects_mapsetVersion') ||
+				key?.startsWith('library_mapsetSearchInput') ||
+				key?.startsWith('projects_mapsetSearchInput') ||
+				key?.startsWith('batchSearchInput') ||
+				key?.startsWith('automapSearchInput') ||
 				key?.startsWith('library_mapsetGridCurrentPageSize') ||
 				key?.startsWith('library_mapsetGridCurrentPageNum') ||
-				key?.startsWith('library_mapsetRecordsColumns') ||
-				key?.startsWith('library_mapsetRecordsLanguage') ||
-				key?.startsWith('library_batchSearchInput') ||
-				key?.startsWith('projects_mapsetSearchInput') ||
-				key?.startsWith('projects_showMapTable') ||
-				key?.startsWith('projects_mapsetVersion') ||
 				key?.startsWith('projects_mapsetGridCurrentPageSize') ||
-				key?.startsWith('projects_mapsetGridCurrentPageNum') ||
-				key?.startsWith('projects_mapsetRecordsColumns') ||
-				key?.startsWith('projects_mapsetRecordsLanguage') ||
-				key?.startsWith('projects_batchSearchInput') ||
-				key?.startsWith('mapsetLanguage') ||
-				key?.startsWith('mapsetToLanguage')
+				key?.startsWith('projects_mapsetGridCurrentPageNum')
 			) {
 				keysToRemove.push(key);
 			}
 		}
-
 		keysToRemove.forEach((key) => localStorage.removeItem(key));
 	}
 

@@ -136,12 +136,12 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 	showGroupPopover = false;
 	showTargetPopover = false;
 	tempModuleIdChangeBeforeRelease = '449080006';
-	mapsetAutomapColumnStorage = 'mapsetAutomapColumnStorage';
+	mapsetAutomapColumnStorage = 'automapColumnStorage';
 	mapsetLanguageStorage = 'mapsetLanguage';
 	mapsetToLanguageStorage = 'mapsetToLanguage';
 	automapSearchInput = 'automapSearchInput';
-	mapsetAutomapWorkflowFilter = 'mapsetAutomapWorkflowFilter';
-	mapsetAutomapAssignedFilter = 'mapsetAutomapAssignedFilter';
+	mapsetAutomapWorkflowFilter = 'automapWorkflowFilter';
+	mapsetAutomapAssignedFilter = 'automapAssignedFilter';
 	targetFC = new FormControl('a');
 	public query: any;
 	//formatter = (result: any) => result || this.query;
