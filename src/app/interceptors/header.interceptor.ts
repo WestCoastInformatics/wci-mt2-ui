@@ -15,24 +15,22 @@ export class HeaderInterceptor implements HttpInterceptor {
 
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		const user = this.authService.getUser();
+		// Prefer user.authToken; fall back to sessionStorage so hybrid login
+		// (#auth_token handoff) attaches Bearer before mapset_user is written.
+		const authToken = user?.authToken || sessionStorage.getItem('auth_token');
 
-		if (!request.headers.has('Content-Type') && !request.headers.has('enctype')) {
-			const authToken = user?.authToken;
-			let headers = request.headers.set('Content-Type', 'application/json');
-			if (authToken) {
-				headers = headers.set('Authorization', 'Bearer ' + authToken);
-			}
-			request = request.clone({
-				headers,
-				withCredentials: true,
-			});
-		} else {
-			request = request.clone({
-				withCredentials: true,
-			});
+		let headers = request.headers;
+		if (!headers.has('Content-Type') && !headers.has('enctype')) {
+			headers = headers.set('Content-Type', 'application/json');
+		}
+		if (authToken && !headers.has('Authorization')) {
+			headers = headers.set('Authorization', 'Bearer ' + authToken);
 		}
 
-		const allCookies = document.cookie;
+		request = request.clone({
+			headers,
+			withCredentials: true,
+		});
 
 		if (!this.authService.isAuthenticated()) {
 			this.authService.notAuthenticated();
