@@ -28,7 +28,7 @@ export class UiUtility {
 	 */
 	static gridDateValueGetter(params) {
 		if (params?.data && CodeUtility.hasValue(params.data[params.colDef.field])) {
-			let format = CodeUtility.DATE_FORMAT_REVERSE;
+			let format = CodeUtility.DATE_FORMAT_REVERSE_WITH_24_HOUR_TIME;
 
 			if (params.colDef.valueFormat) {
 				format = params.colDef.valueFormat;

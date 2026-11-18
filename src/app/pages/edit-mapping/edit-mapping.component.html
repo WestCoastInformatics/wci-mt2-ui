@@ -395,8 +395,7 @@
 											'unlink-icon': mapsetInfo.workflowStatus !== 'IN_EDIT',
 										}"
 										(click)="setSelectedTarget(entry.uuid, entry.toCode, entry.toName, entry.group, entry.priority)"
-										>{{ entry.toCode }}</span
-									><span
+										>{{ entry.toCode }}</span><span
 										title="{{
 											getLanguageToNameValue(entry)
 												? `${getLanguageToNameValue(entry)} ${headerToNameColumnName}`
@@ -776,7 +775,7 @@
 								of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
 							</div>
 							<div
-								class="mt2-pagination-total-label directory-new-paging ag-theme-alpine text-center status-no-results"
+								class="mt2-pagination-total-label directory-no-paging ag-theme-alpine text-center status-no-results"
 								[hidden]="showPaging"
 							>
 								No result found
@@ -1038,8 +1037,12 @@
 		/>
 		<ul>
 			<li *ngFor="let advice of entry.updateAdviceList" class="advice-list-item" [hidden]="advice.indexOf('ALWAYS') > -1">
-				<span title="{{ advice }}" class="code-color">{{ advice }}</span
-				><span title="Remove Advice" class="clear-search adjust-clear" (click)="removeAdviceFromList(entry.uuid, advice)">&#10005;</span>
+				<span title="{{ advice }}" class="code-color">{{ advice }}</span><span
+					title="Remove Advice"
+					class="clear-search adjust-clear"
+					(click)="removeAdviceFromList(entry.uuid, advice)"
+					>&#10005;</span
+				>
 			</li>
 		</ul>
 		<div class="target-selection advice-selection" [hidden]="entry.addAdviceList?.length === 0">

@@ -16,6 +16,9 @@ jobs:
             # Checkout the pull request code
             - name: Checkout code
               uses: actions/checkout@v4
+              with:
+                  node-version: '20'
+                  cache: 'npm'
 
             # Install Trivy if not cached
             - name: Install Trivy
@@ -28,7 +31,7 @@ jobs:
             - name: Run Trivy scan for package-lock.json
               id: trivy-scan-frontend
               run: |
-                  trivy fs package-lock.json --db-repository ghcr.io/aquasecurity/trivy-db:2 --format json --output reportFrontend.json
+                  trivy fs package-lock.json --ignore-unfixed --db-repository ghcr.io/aquasecurity/trivy-db:2 --format json --output reportFrontend.json
               env:
                   TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
                   TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db

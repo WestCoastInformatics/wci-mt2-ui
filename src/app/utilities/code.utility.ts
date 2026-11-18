@@ -204,7 +204,10 @@ export class CodeUtility {
 
 	static parseJsonDate(jsonDate) {
 		if (this.hasValue(jsonDate)) {
-			const date = moment.unix(jsonDate / 1000);
+			const date =
+				typeof jsonDate === 'number' || /^\d+$/.test(jsonDate)
+					? moment.unix(jsonDate / 1000)
+					: moment.utc(jsonDate, moment.ISO_8601);
 
 			if (date.isValid()) {
 				return date.utc();

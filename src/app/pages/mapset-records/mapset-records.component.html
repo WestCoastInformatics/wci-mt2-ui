@@ -729,10 +729,10 @@
 				<span class="fw-bold p-l-5 p-r-5">
 					{{ numOfMembers < (getCurrentPage() + 1) * gridPaging.pageSize ? numOfMembers : (getCurrentPage() + 1) * gridPaging.pageSize }}
 				</span>
-				of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span
-				><span class="p-r-5" *ngIf="numOfMembers === 10000">maximum </span> results
+				of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span><span class="p-r-5" *ngIf="numOfMembers === 10000">maximum </span>
+				results
 			</div>
-			<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging">No result found</div>
+			<div class="mt2-pagination-total-label directory-no-paging ag-theme-alpine" [hidden]="showPaging">No result found</div>
 		</div>
 	</div>
 	<div class="metadata-collapsible-container">
@@ -876,8 +876,10 @@
 			<div class="row mt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
 				<p class="fs-18 mb-0 ml-10">{{ data.name }}</p>
 				<p class="fs-16 ml-10">
-					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span
-					><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
+					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span><span
+						*ngIf="data?.versionDate"
+						>{{ ', ' + data?.versionDate }}</span
+					>
 				</p>
 			</div>
 			<mapset-meta [mapset]="data"></mapset-meta>

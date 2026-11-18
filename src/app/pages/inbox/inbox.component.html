@@ -133,16 +133,21 @@
 					</div>
 					<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="!showPaging">
 						<div *ngIf="searchInput === ''">
-							Showing
-							<span class="fw-bold p-l-5 p-r-5">
+							<span *ngIf="numOfMembers > gridPaging.pageSize">Showing</span>
+							<span class="fw-bold p-l-5 p-r-5" *ngIf="numOfMembers > gridPaging.pageSize">
 								{{ (getCurrentPage() + 1) * gridPaging.pageSize - gridPaging.pageSize + 1 }}
 							</span>
-							of <span class="fw-bold p-l-5 p-r-5"> {{ numOfMembers }} </span> results
+							<span *ngIf="numOfMembers > gridPaging.pageSize"> of </span>
+							<span class="fw-bold p-l-5 p-r-5">
+								{{ numOfMembers }}
+							</span>
+							results
+							<span *ngIf="numOfMembers <= gridPaging.pageSize"> found </span>
 						</div>
 						<div *ngIf="searchInput !== ''">Showing {{ gridApi.getDisplayedRowCount() }} search results</div>
 					</div>
 				</div>
-				<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging || !showTable">No result found</div>
+				<div class="mt2-pagination-total-label directory-no-paging ag-theme-alpine" [hidden]="showPaging || !showTable">No result found</div>
 			</div>
 		</div>
 	</div>
@@ -180,8 +185,10 @@
 			<div class="row mt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
 				<p class="fs-18 mb-0 ml-10">{{ data.name }}</p>
 				<p class="fs-16 ml-10">
-					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span
-					><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
+					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span><span
+						*ngIf="data?.versionDate"
+						>{{ ', ' + data?.versionDate }}</span
+					>
 				</p>
 			</div>
 			<mapset-meta [mapset]="data"></mapset-meta>
