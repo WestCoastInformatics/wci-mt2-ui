@@ -2116,6 +2116,9 @@ export class MapsetRecordsComponent implements OnInit {
 			},
 			(err) => {
 				console.error(' Error: ', err);
+				if (this.workFlowStatus.value=="FINISH_EDIT" && this.mapsetData.some((mapset:any) => mapset.workflowStatus === "EDITING_IN_PROGRESS")) {
+					err.message = "One or more mappings are still in edit. Please finish all edits and try again.";
+				}
 				this.authenticationService.checkError(err);
 			},
 		);
