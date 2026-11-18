@@ -2168,24 +2168,26 @@ export class MapsetRecordsComponent implements OnInit {
 		if (this.workFlowNotesFC.dirty) {
 			this.workFlowStatus.notes = this.workFlowNotesFC.value;
 		}
-		if (this.workFlowStatus.value == 'FINISH_EDIT' && this.mapsetData.some((mapset: any) => mapset.workflowStatus === 'EDITING_IN_PROGRESS')) {
-			this.notificationService.show('One or more mappings are still in edit. Please finish all edits and try again.', 'Error', 'error');
-		} else {
-			this.waitingForResponse = true;
-			this.refsetService.setMapsetWorkflowStatus(this.mapsetInfo.id, this.workFlowStatus.value, this.workFlowStatus.notes).subscribe(
-				(response) => {
-					if (response) {
-						this.mapsetInfo = response;
-						this.setWorkflowStatus();
-						this.getMapsetInfo();
-					}
-				},
-				(err) => {
-					console.error(' Error: ', err);
-					this.authenticationService.checkError(err);
-				},
-			);
-		}
+		this.waitingForResponse = true;
+		this.refsetService.setMapsetWorkflowStatus(this.mapsetInfo.id, this.workFlowStatus.value, this.workFlowStatus.notes).subscribe(
+			(response) => {
+				if (response) {
+					this.mapsetInfo = response;
+					this.setWorkflowStatus();
+					this.getMapsetInfo();
+				}
+			},
+			(err) => {
+				console.error(' Error: ', err);
+				if (
+					this.workFlowStatus.value == 'FINISH_EDIT' &&
+					this.mapsetData.some((mapset: any) => mapset.workflowStatus === 'EDITING_IN_PROGRESS')
+				) {
+					err.message = 'One or more mappings are still in edit. Please finish all edits and try again.';
+				}
+				this.authenticationService.checkError(err);
+			},
+		);
 	}
 
 	setWorkflowStatus() {
