@@ -224,6 +224,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				valueGetter: UiUtility.gridDateValueGetter,
 				floatingFilterComponent: DateTextFilterComponent,
 				floatingFilterComponentParams: { suppressFilterButton: true },
+				sort: 'desc',
+				sortIndex: 0,
 				sortable: false,
 				unSortIcon: false,
 			},
@@ -260,6 +262,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		this.showTable = true;
 		this.changeDetectorRef.detectChanges();
 	}
+
+	// dateComparator(date1: string, date2: string) {
+	// 	if(date1 == null && date2 == null) return 0;
+	// 	if(date1 == null) return -1;
+	// 	if(date2 == null) return 1;
+
+	// 	return -1;
+	// }
 
 	showDropdown(): void {
 		this.toggleDropdown = !this.toggleDropdown;
