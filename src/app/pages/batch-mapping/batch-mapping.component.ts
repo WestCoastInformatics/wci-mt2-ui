@@ -133,7 +133,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 	showGroupPopover = false;
 	showTargetPopover = false;
 	tempModuleIdChangeBeforeRelease = '449080006';
-	mapsetBatchColumnStorage = 'batchColumnStorage';
+	mapsetBatchColumnStorage = 'mapsetRecordsColumns';
 	mapsetLanguageStorage = 'mapsetLanguage';
 	mapsetToLanguageStorage = 'mapsetToLanguage';
 	batchSearchInput = 'batchSearchInput';
@@ -279,7 +279,8 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
 			this.conceptCodes = routeParams.concepts.split('_');
-			this.mapsetBatchColumnStorage += routeParams.concepts;
+			this.mapsetBatchColumnStorage = `projects_${this.mapsetBatchColumnStorage}`;
+			this.mapsetBatchColumnStorage += this.mapsetCode;
 			this.batchSearchInput += routeParams.concepts;
 			this.mapsetBatchWorkflowFilter += routeParams.concepts;
 			this.mapsetBatchAssignedFilter += routeParams.concepts;
