@@ -237,7 +237,17 @@
 	display: flex;
 	margin-top: 7px;
 	flex: 1;
-	justify-content: center;
+	justify-content: right !important;
+	color: #7f7f7f;
+	font-size: 1.4rem !important;
+	font-weight: 400 !important;
+}
+
+.directory-no-paging {
+	display: flex;
+	margin-top: 7px;
+	flex: 1;
+	justify-content: center !important;
 	color: #7f7f7f;
 	font-size: 1.4rem !important;
 	font-weight: 400 !important;

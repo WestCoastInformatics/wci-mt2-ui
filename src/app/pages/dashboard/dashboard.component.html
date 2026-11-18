@@ -137,21 +137,17 @@
 							<span class="fw-bold p-l-5 p-r-5" *ngIf="numOfMembers > gridPaging.pageSize">
 								{{ (getCurrentPage() + 1) * gridPaging.pageSize - gridPaging.pageSize + 1 }}
 							</span>
-							<span *ngIf="numOfMembers > gridPaging.pageSize">
-								of
-							</span> 
+							<span *ngIf="numOfMembers > gridPaging.pageSize"> of </span>
 							<span class="fw-bold p-l-5 p-r-5">
-								 {{ numOfMembers }} 
-							</span> 
-							results
-							<span *ngIf="numOfMembers <= gridPaging.pageSize">
-								found
+								{{ numOfMembers }}
 							</span>
+							results
+							<span *ngIf="numOfMembers <= gridPaging.pageSize"> found </span>
 						</div>
 						<div *ngIf="searchInput !== ''">Showing {{ gridApi.getDisplayedRowCount() }} search results</div>
 					</div>
 				</div>
-				<div class="mt2-pagination-total-label directory-new-paging ag-theme-alpine" [hidden]="showPaging || !showTable">No result found</div>
+				<div class="mt2-pagination-total-label directory-no-paging ag-theme-alpine" [hidden]="showPaging || !showTable">No result found</div>
 			</div>
 		</div>
 		<!-- Workflow Status Templates -->

@@ -543,8 +543,10 @@
 							/>
 							<ul>
 								<li *ngFor="let advice of popover_updateAdviceList" class="advice-list-item" [hidden]="advice.indexOf('ALWAYS') > -1">
-									<span title="{{ advice }}" class="code-color">{{ advice }}</span
-									><span title="Remove advice" class="clear-search adjust-clear" (click)="removeAdviceFromList(advice)"
+									<span title="{{ advice }}" class="code-color">{{ advice }}</span><span
+										title="Remove advice"
+										class="clear-search adjust-clear"
+										(click)="removeAdviceFromList(advice)"
 										>&#10005;</span
 									>
 								</li>
@@ -840,7 +842,7 @@
 								of <span class="fw-bold p-l-5"> {{ numOfMembers }} </span> results
 							</div>
 							<div
-								class="mt2-pagination-total-label directory-new-paging ag-theme-alpine text-center status-no-results"
+								class="mt2-pagination-total-label directory-no-paging ag-theme-alpine text-center status-no-results"
 								[hidden]="showBrowser && numOfMembers > 0"
 							>
 								No result found
@@ -1015,8 +1017,10 @@
 			<div class="row mt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
 				<p class="fs-18 mb-0 ml-10">{{ data.name }}</p>
 				<p class="fs-16 ml-10">
-					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span
-					><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
+					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span><span
+						*ngIf="data?.versionDate"
+						>{{ ', ' + data?.versionDate }}</span
+					>
 				</p>
 			</div>
 			<mapset-meta [mapset]="data"></mapset-meta>
@@ -1032,8 +1036,10 @@
 			<div class="row mt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
 				<p class="fs-18 mb-0 ml-10">{{ data.name }}</p>
 				<p class="fs-16 ml-10">
-					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span
-					><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
+					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span><span
+						*ngIf="data?.versionDate"
+						>{{ ', ' + data?.versionDate }}</span
+					>
 				</p>
 			</div>
 			<mapset-meta [mapset]="data"></mapset-meta>
