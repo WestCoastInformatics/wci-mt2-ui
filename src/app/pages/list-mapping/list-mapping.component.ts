@@ -1779,15 +1779,16 @@ export class ListMappingComponent implements OnInit, OnDestroy {
 				break;
 			case 'batch':
 				if (this.checkedNum > 1) {
-					const codes = [];
+					const codes: string[] = [];
 					for (let c = 0; c < this.mapsetData.length; c++) {
 						if (this.mapsetData[c].checked === true) {
 							codes.push(this.mapsetData[c].code);
 						}
 					}
-					if (codes.length > 0) {
+					const uniqueCodes = [...new Set(codes)];
+					if (uniqueCodes.length > 0) {
 						setTimeout(() => {
-							this.goToBatchMappingsPage(codes);
+							this.goToBatchMappingsPage(uniqueCodes);
 						}, 2);
 					}
 				}

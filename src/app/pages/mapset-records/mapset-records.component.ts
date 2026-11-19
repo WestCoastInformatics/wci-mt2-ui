@@ -1749,15 +1749,16 @@ export class MapsetRecordsComponent implements OnInit {
 				break;
 			case 'list-view':
 				if (this.checkedNum > 1) {
-					const codes = [];
+					const codes: string[] = [];
 					for (let c = 0; c < this.mapsetData.length; c++) {
 						if (this.mapsetData[c].checked === true) {
 							codes.push(this.mapsetData[c].code);
 						}
 					}
-					if (codes.length > 0) {
+					const uniqueCodes = [...new Set(codes)];
+					if (uniqueCodes.length > 0) {
 						setTimeout(() => {
-							this.goToListMappingsPage(codes);
+							this.goToListMappingsPage(uniqueCodes);
 						}, 2);
 					}
 				}
@@ -1767,15 +1768,16 @@ export class MapsetRecordsComponent implements OnInit {
 				break;
 			case 'batch':
 				if (this.checkedNum > 1) {
-					const codes = [];
+					const codes: string[] = [];
 					for (let c = 0; c < this.mapsetData.length; c++) {
 						if (this.mapsetData[c].checked === true) {
 							codes.push(this.mapsetData[c].code);
 						}
 					}
-					if (codes.length > 0) {
+					const uniqueCodes = [...new Set(codes)];
+					if (uniqueCodes.length > 0) {
 						setTimeout(() => {
-							this.goToBatchMappingsPage(codes);
+							this.goToBatchMappingsPage(uniqueCodes);
 						}, 2);
 					}
 				}
@@ -1844,15 +1846,16 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 
 		if (this.checkedNum > 0) {
-			const codes = [];
+			const codes: string[] = [];
 			for (let c = 0; c < this.mapsetData.length; c++) {
 				if (this.mapsetData[c].checked === true) {
 					codes.push(this.mapsetData[c].code);
 				}
 			}
-			if (codes.length > 0) {
+			const uniqueCodes = [...new Set(codes)];
+			if (uniqueCodes.length > 0) {
 				setTimeout(() => {
-					this.goToAutomapMappingsPage(codes);
+					this.goToAutomapMappingsPage(uniqueCodes);
 				}, 2);
 			}
 		}
