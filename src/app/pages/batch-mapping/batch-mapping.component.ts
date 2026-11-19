@@ -206,6 +206,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 	headerNameColumnTooltip = '';
 	headerToNameColumnName = '';
 	headerToNameColumnTooltip = '';
+	showInactive = false;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
@@ -672,6 +673,13 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			rowClassRules: {
 				'updated-row': (params: RowClassParams) => {
 					return params.data?.updated === true;
+				},
+				refset_tool_grid_inactive_row: function (params: any) {
+					let inactivatedRow = false;
+					if (params.data) {
+						inactivatedRow = params.data.active === false;
+					}
+					return inactivatedRow;
 				},
 			},
 		};
@@ -1529,9 +1537,22 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		return current;
 	}
 
+	toggleInactive(value: any) {
+		//show warning for loosing any unsaved changes
+		const result = value === 'active' ? false : true;
+		if (result !== this.showInactive) {
+			this.showInactive = result;
+			this.getMapsetData();
+		}
+	}
+
 	getMapsetData() {
+		let inactive = '';
+		if (this.showInactive) {
+			inactive = '&includeInactive=true';
+		}
 		if (this.mapsetInfo?.id !== undefined) {
-			this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCodes.join(',')).subscribe({
+			this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCodes.join(','), inactive).subscribe({
 				next: (response) => {
 					const batch = [];
 					const list = response.items;
@@ -1584,7 +1605,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 							data = {
 								uuid: results.code + results.mapEntries[b].modified + b,
 								index: results.code + count,
-								active: results.active,
+								active: results.mapEntries[b].active,
 								feedback: true,
 								mapEntries: results.mapEntries[b],
 								descriptions: results?.descriptions,
