@@ -420,9 +420,10 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + `mapset/${mapset}/mappings/${concept}`, '', false);
 	}
 
-	getMappingByMapsetConceptList(mapsetId: string, concepts: string): Observable<any> {
+	getMappingByMapsetConceptList(mapsetId: string, concepts: string, inactive: string = ''): Observable<any> {
 		return this.get(
-			this.contextPath + `mapset/${mapsetId}/mappings?conceptCodes=${concepts}&showOverriddenEntries=false&includeWorkflowStatus=true`,
+			this.contextPath +
+				`mapset/${mapsetId}/mappings?conceptCodes=${concepts}&showOverriddenEntries=false&includeWorkflowStatus=true${inactive}`,
 			'',
 			false,
 		);
@@ -444,11 +445,11 @@ export class RefsetService extends RestService {
 		return this.get(this.contextPath + `concept/${terminology}/${version}?limit=${limit}&offset=${offset}&query=${query}`, '', false);
 	}
 
-	updateMapsetMapping(mapsetId: string, params): Observable<any> {
+	updateMapsetMapping(mapsetId: string, params: any): Observable<any> {
 		return this.put(this.contextPath + `mapset/${mapsetId}`, params);
 	}
 
-	updateMapsetMappingBulk(mapsetId: string, params): Observable<any> {
+	updateMapsetMappingBulk(mapsetId: string, params: any): Observable<any> {
 		return this.put(this.contextPath + `mapset/${mapsetId}/bulk`, params);
 	}
 

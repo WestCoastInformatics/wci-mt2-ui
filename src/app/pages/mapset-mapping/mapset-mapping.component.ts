@@ -88,6 +88,7 @@ export class MapsetMappingComponent implements OnInit {
 	headerToNameColumnName = '';
 	mapsetLanguageStorage = 'mapsetLanguage';
 	mapsetToLanguageStorage = 'mapsetToLanguage';
+	showInactive = false;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -278,8 +279,20 @@ export class MapsetMappingComponent implements OnInit {
 		}
 	}
 
+	toggleInactive(value: any) {
+		const result = value === 'active' ? false : true;
+		if (result !== this.showInactive) {
+			this.showInactive = result;
+			this.getMapsetData();
+		}
+	}
+
 	getMapsetData() {
-		this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCode || '').subscribe({
+		let inactive = '';
+		if (this.showInactive) {
+			inactive = '&includeInactive=true';
+		}
+		this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCode || '', inactive).subscribe({
 			next: (response) => {
 				this.loaded = true;
 				const data = [];
@@ -315,6 +328,7 @@ export class MapsetMappingComponent implements OnInit {
 						mapEntries: results.mapEntries,
 						descriptions: results.descriptions,
 						entries: results.mapEntries.length,
+
 						code: results.code,
 						name: results.name,
 						toDescription: toDescription,
@@ -331,6 +345,7 @@ export class MapsetMappingComponent implements OnInit {
 						modified: results.mapEntries[b].modified,
 						advices: { number: adviceArray.length, list: adviceArray },
 						group: results.mapEntries[b].group,
+						active: results.mapEntries[b].active,
 						priority: results.mapEntries[b].priority,
 						moduleId: results.mapEntries[b].moduleId,
 						hasNotes: results.mapNotes?.length > 0 ? true : false,
