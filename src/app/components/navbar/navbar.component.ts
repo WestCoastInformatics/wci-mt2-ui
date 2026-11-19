@@ -123,6 +123,9 @@ export class NavbarComponent implements OnInit {
 				key?.startsWith('batchColumnStorage') ||
 				key?.startsWith('batchWorkflowFilter') ||
 				key?.startsWith('batchAssignedFilter') ||
+				key?.startsWith('listColumnStorage') ||
+				key?.startsWith('listWorkflowFilter') ||
+				key?.startsWith('listAssignedFilter') ||
 				key?.startsWith('automapColumnStorage') ||
 				key?.startsWith('automapWorkflowFilter') ||
 				key?.startsWith('automapAssignedFilter')

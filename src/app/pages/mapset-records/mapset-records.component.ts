@@ -86,6 +86,7 @@ export class MapsetRecordsComponent implements OnInit {
 	workFlowModalRef!: NgbModalRef;
 	downloadModalRef!: NgbModalRef;
 	batchListModalRef!: NgbModalRef;
+	viewListModalRef!: NgbModalRef;
 	automapModalRef!: NgbModalRef;
 	automapListModalRef!: NgbModalRef;
 	reportModalRef!: NgbModalRef;
@@ -157,6 +158,7 @@ export class MapsetRecordsComponent implements OnInit {
 	workFlowStatus = { label: '', value: '', message: '', notes: '' };
 	workFlowNotesFC = new FormControl('');
 	batchListFC = new FormControl('');
+	viewListFC = new FormControl('');
 	automapListFC = new FormControl('');
 	automapListTypeFC = new FormControl('');
 	automapListConfidenceFC = new FormControl('');
@@ -240,11 +242,13 @@ export class MapsetRecordsComponent implements OnInit {
 	@ViewChild('workFlowMapModal') workflowMapModal!: TemplateRef<any>;
 	@ViewChild('workFlowMapModalNotes') private workflowMapModalNotes!: ElementRef;
 	@ViewChild('batchListModal') batchListModal!: TemplateRef<any>;
+	@ViewChild('viewListModal') viewListModal!: TemplateRef<any>;
 	@ViewChild('automapListModal') automapListModal!: TemplateRef<any>;
 	@ViewChild('automapModal') automapModal!: TemplateRef<any>;
 	@ViewChild('reportModal') reportModal!: TemplateRef<any>;
 	@ViewChild('workFlowModalNotes') private workflowModalNotes!: ElementRef;
 	@ViewChild('batchModalList') private batchModalList!: ElementRef;
+	@ViewChild('viewModalList') private viewModalList!: ElementRef;
 	@ViewChild('automapModalList') private automapModalList!: ElementRef;
 	@ViewChild('directoryCheckSection') checkSection!: TemplateRef<any>;
 	@ViewChild('directoryCodeSection') codeSection!: TemplateRef<any>;
@@ -331,7 +335,7 @@ export class MapsetRecordsComponent implements OnInit {
 		for (let i = 0; i < localStorage.length; i++) {
 			const key = localStorage.key(i);
 
-			if (key?.startsWith('batchSearchInput') || key?.startsWith('automapSearchInput')) {
+			if (key?.startsWith('batchSearchInput') || key?.startsWith('automapSearchInput') || key?.startsWith('listSearchInput')) {
 				keysToRemove.push(key);
 			}
 		}
@@ -1743,6 +1747,24 @@ export class MapsetRecordsComponent implements OnInit {
 			case 'automap-list':
 				this.openAutomapListModal(this.automapListModal);
 				break;
+			case 'list-view':
+				if (this.checkedNum > 1) {
+					const codes = [];
+					for (let c = 0; c < this.mapsetData.length; c++) {
+						if (this.mapsetData[c].checked === true) {
+							codes.push(this.mapsetData[c].code);
+						}
+					}
+					if (codes.length > 0) {
+						setTimeout(() => {
+							this.goToListMappingsPage(codes);
+						}, 2);
+					}
+				}
+				break;
+			case 'view-list':
+				this.openViewListModal(this.viewListModal);
+				break;
 			case 'batch':
 				if (this.checkedNum > 1) {
 					const codes = [];
@@ -1920,6 +1942,42 @@ export class MapsetRecordsComponent implements OnInit {
 
 	closeBatchListModal() {
 		this.batchListModalRef.close();
+		this.isModalOpen = false;
+	}
+
+	openViewListModal(content: any) {
+		this.viewListFC.setValue('');
+		this.viewListFC.reset();
+		this.viewListModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+		setTimeout(() => {
+			this.viewModalList.nativeElement.focus();
+		}, 50);
+	}
+
+	submitViewList() {
+		let listOfIds = undefined;
+		if (this.viewListFC.dirty) {
+			listOfIds = this.viewListFC.value;
+		}
+		if (!listOfIds?.length) {
+			return;
+		}
+		const commaRegex = /,+/gi;
+		/* eslint-disable no-useless-escape */
+		const allIdsString = listOfIds
+			?.replaceAll(' ', ',')
+			.replaceAll('\n', ',')
+			.replaceAll(commaRegex, ',')
+			.replaceAll(/[^,\-\._a-zA-Z0-9]/g, '')
+			.trim();
+
+		this.goToListMappingsPage(allIdsString.split(','));
+		this.closeViewListModal();
+	}
+
+	closeViewListModal() {
+		this.viewListModalRef.close();
 		this.isModalOpen = false;
 	}
 
@@ -2637,6 +2695,20 @@ export class MapsetRecordsComponent implements OnInit {
 			replaceUrl: false,
 			skipLocationChange: false,
 		});
+	}
+
+	goToListMappingsPage(codes: any) {
+		this.router.navigate(
+			[
+				this.libraryOnly
+					? '/library' + '/mapset/' + this.mapsetCode + '/mappings/' + codes.join('_') + '/list'
+					: '/projects' + '/mapset/' + this.mapsetCode + '/mappings/' + codes.join('_') + '/list',
+			],
+			{
+				replaceUrl: false,
+				skipLocationChange: false,
+			},
+		);
 	}
 
 	getCurrentPage() {

@@ -161,6 +161,7 @@ export class InboxComponent implements OnInit, AfterViewInit {
 				key?.startsWith('library_mapsetSearchInput') ||
 				key?.startsWith('projects_mapsetSearchInput') ||
 				key?.startsWith('batchSearchInput') ||
+				key?.startsWith('listSearchInput') ||
 				key?.startsWith('automapSearchInput') ||
 				key?.startsWith('library_mapsetGridCurrentPageSize') ||
 				key?.startsWith('library_mapsetGridCurrentPageNum') ||
