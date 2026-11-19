@@ -133,6 +133,7 @@ export class ListMappingComponent implements OnInit, OnDestroy {
 	showGroupPopover = false;
 	showTargetPopover = false;
 	tempModuleIdChangeBeforeRelease = '449080006';
+	mapsetVersionStorage = 'mapsetVersion';
 	mapsetListColumnStorage = 'listColumnStorage';
 	mapsetLanguageStorage = 'mapsetLanguage';
 	mapsetToLanguageStorage = 'mapsetToLanguage';
@@ -275,8 +276,10 @@ export class ListMappingComponent implements OnInit, OnDestroy {
 					}
 				});
 			});
+			const prefix = this.libraryOnly ? 'library_' : 'projects_';
 			this.mapsetCode = routeParams.code;
 			this.conceptCodes = routeParams.concepts.split('_');
+			this.mapsetVersionStorage = prefix + this.mapsetVersionStorage;
 			this.mapsetListColumnStorage += routeParams.concepts;
 			this.listSearchInput += routeParams.concepts;
 			this.mapsetListWorkflowFilter += routeParams.concepts;
@@ -818,43 +821,61 @@ export class ListMappingComponent implements OnInit, OnDestroy {
 	getMapsetInfo() {
 		this.refsetService.getMapsetsByCode(this.mapsetCode).subscribe(
 			(results) => {
-				const mapsetVersions = Array.isArray(results) ? results : [results];
+				let mapsetVersions = Array.isArray(results) ? results : [results];
+				if (this.libraryOnly) {
+					mapsetVersions = mapsetVersions.filter((mapset) => mapset.versionStatus === 'PUBLISHED');
+				} else {
+					mapsetVersions = mapsetVersions.filter((mapset) => mapset.versionStatus === 'IN DEVELOPMENT');
+				}
 
-				const getIsInDevelopment = (status: string): boolean => {
-					return status === 'IN_DEVELOPMENT' || status === 'IN DEVELOPMENT';
-				};
+				if (!mapsetVersions || mapsetVersions.length === 0) {
+					this.mapsetInfo = {};
+					this.versionStatuses = [];
+					this.selectedVersion = undefined;
+					return;
+				}
+				if (!this.libraryOnly) {
+					const getIsInDevelopment = (status: string): boolean => {
+						return status === 'IN_DEVELOPMENT' || status === 'IN DEVELOPMENT';
+					};
 
-				mapsetVersions.sort((a, b) => {
-					const aInDev = getIsInDevelopment(a.versionStatus);
-					const bInDev = getIsInDevelopment(b.versionStatus);
+					mapsetVersions.sort((a, b) => {
+						const aInDev = getIsInDevelopment(a.versionStatus);
+						const bInDev = getIsInDevelopment(b.versionStatus);
 
-					if (aInDev && !bInDev) {
-						return -1;
-					}
-					if (bInDev && !aInDev) {
-						return 1;
-					}
+						if (aInDev && !bInDev) {
+							return -1;
+						}
+						if (bInDev && !aInDev) {
+							return 1;
+						}
 
-					const ad = a.versionDate || 0;
-					const bd = b.versionDate || 0;
-					return bd - ad;
-				});
-
+						const ad = a.versionDate || 0;
+						const bd = b.versionDate || 0;
+						return bd - ad;
+					});
+				}
 				this.mapsetInfo = mapsetVersions[0];
-				if (localStorage.getItem('projects_mapsetVersion')) {
-					this.selectedVersion = JSON.parse(localStorage.getItem('projects_mapsetVersion')).trim();
-					const mapsetFound = mapsetVersions.filter((v) => {
+				this.versionStatuses = mapsetVersions.map((v) => {
+					const versionDate = v.versionDate || new Date();
+					return formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
+				});
+				const storedMapsetVersion = localStorage.getItem(this.mapsetVersionStorage);
+				if (storedMapsetVersion) {
+					this.selectedVersion = JSON.parse(storedMapsetVersion);
+					const foundVersion = mapsetVersions.filter((v) => {
 						const versionDate = v.versionDate || new Date();
 						const mapsetVersionStatus = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + v.versionStatus + ') ';
 						return mapsetVersionStatus === this.selectedVersion;
 					});
-					if (mapsetFound.length > 0) {
-						this.mapsetInfo = mapsetFound[0];
+					if (foundVersion.length > 0) {
+						this.mapsetInfo = foundVersion[0];
 					}
 				} else {
-					const versionDate = this.mapsetInfo.versionDate || new Date();
-					this.selectedVersion = formatDate(versionDate, 'MM-dd-yyyy', 'en-US', 'UTC') + ' (' + this.mapsetInfo.versionStatus + ') ';
-					localStorage.setItem('projects_mapsetVersion', JSON.stringify(this.selectedVersion));
+					if (this.versionStatuses.length > 0) {
+						this.selectedVersion = this.versionStatuses[0];
+						localStorage.setItem(this.mapsetVersionStorage, JSON.stringify(this.selectedVersion));
+					}
 				}
 				const languages = this.mapsetInfo?.mapProject.edition?.fullyQualifiedLanguageRefsets;
 				const languageRefsetOptions = [];
