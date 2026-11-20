@@ -28,6 +28,8 @@ export class ErrorHandlingService {
 			this.authenticationService.logoutUser();
 		} else if (error.status === 403) {
 			this.notificationService.show('The user is not allowed to perform this action.', null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+		} else if (this.isBulkSaveConflict(error)) {
+			// Bulk save already running for this map set: the calling component shows its own message.
 		} else if (error.status >= 400 && error.status < 500) {
 			if (!error.url.includes('refsetservice/concept/')) {
 				const errorMessage = error.error || `Error ${error.status}`;
@@ -37,5 +39,9 @@ export class ErrorHandlingService {
 			this.authenticationService.checkError(error);
 		}
 		return throwError(() => error);
+	}
+
+	private isBulkSaveConflict(error: HttpErrorResponse): boolean {
+		return error.status === 409 && /\/mapset\/[^/]+\/bulk(\?|$)/.test(error.url ?? '');
 	}
 }

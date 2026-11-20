@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { RestService } from './rest.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { environment } from 'src/environments/environment';
@@ -449,8 +449,9 @@ export class RefsetService extends RestService {
 		return this.put(this.contextPath + `mapset/${mapsetId}`, params);
 	}
 
-	updateMapsetMappingBulk(mapsetId: string, params: any): Observable<any> {
-		return this.put(this.contextPath + `mapset/${mapsetId}/bulk`, params);
+	updateMapsetMappingBulk(mapsetId: string, params): Observable<any> {
+		// Rethrow the raw HttpErrorResponse so callers can read error.status (e.g. 409).
+		return this.put(this.contextPath + `mapset/${mapsetId}/bulk`, params, false, (err: any) => throwError(() => err));
 	}
 
 	requestReport_NRMR() {

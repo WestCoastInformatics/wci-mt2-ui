@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
-import { EMPTY } from 'rxjs';
+import { EMPTY, throwError } from 'rxjs';
 
 import { RestService } from './rest.service';
 import { NotificationService } from '../notification.service';
@@ -72,6 +72,18 @@ describe('RestService', () => {
 			expect(req.request.method).toBe('PUT');
 			expect(req.request.body).toEqual(body);
 			req.flush({});
+		});
+
+		it('should pass the raw error to errorHandler and skip the generic notification', () => {
+			const showSpy = vi.spyOn(notificationService, 'show').mockReturnValue({} as any);
+			const handler = vi.fn((err: any) => throwError(() => err));
+			let received: any;
+			service.put('/test', {}, false, handler).subscribe({ error: (e) => (received = e) });
+			const req = httpMock.expectOne((r) => r.url.includes('/test'));
+			req.flush('conflict', { status: 409, statusText: 'Conflict' });
+			expect(handler).toHaveBeenCalled();
+			expect(received.status).toBe(409);
+			expect(showSpy).not.toHaveBeenCalled();
 		});
 	});
 
