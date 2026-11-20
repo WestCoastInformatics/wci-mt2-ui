@@ -63,6 +63,7 @@ import { MapsetMappingComponent } from './pages/mapset-mapping/mapset-mapping.co
 import { EditMappingComponent } from './pages/edit-mapping/edit-mapping.component';
 import { AutoMappingComponent } from './pages/auto-mapping/auto-mapping.component';
 import { BatchMappingComponent } from './pages/batch-mapping/batch-mapping.component';
+import { ListMappingComponent } from './pages/list-mapping/list-mapping.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { InboxComponent } from './pages/inbox/inbox.component';
 
@@ -131,6 +132,14 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuardGuard],
 	},
 	{
+		path: 'library/mapset/:code/mappings/:concepts/list',
+		component: ListMappingComponent,
+		data: { breadcrumbLabel: 'List View Mappings' },
+		canActivate: [AuthGuardGuard],
+		canDeactivate: [AuthGuardGuard],
+		runGuardsAndResolvers: 'always',
+	},
+	{
 		path: 'projects/mapset/:code/mapping/:concept',
 		component: MapsetMappingComponent,
 		data: { breadcrumbLabel: 'Mapping' },
@@ -140,6 +149,14 @@ const appRoutes: Routes = [
 		path: 'projects/mapset/:code/mappings/:concepts/batch',
 		component: BatchMappingComponent,
 		data: { breadcrumbLabel: 'Batch Edit Mappings' },
+		canActivate: [AuthGuardGuard],
+		canDeactivate: [AuthGuardGuard],
+		runGuardsAndResolvers: 'always',
+	},
+	{
+		path: 'projects/mapset/:code/mappings/:concepts/list',
+		component: ListMappingComponent,
+		data: { breadcrumbLabel: 'List View Mappings' },
 		canActivate: [AuthGuardGuard],
 		canDeactivate: [AuthGuardGuard],
 		runGuardsAndResolvers: 'always',
@@ -194,6 +211,7 @@ const appRoutes: Routes = [
 		EditMappingComponent,
 		AutoMappingComponent,
 		BatchMappingComponent,
+		ListMappingComponent,
 		PageContainerComponent,
 		WorkflowStatusBadgeComponent,
 		NotesModalComponent,

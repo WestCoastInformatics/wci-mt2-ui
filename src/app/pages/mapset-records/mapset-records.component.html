@@ -6,7 +6,7 @@
 <div class="top-search-bar content-header">
 	<div class="d-flex">
 		<div class="row">
-			<div class="col-md-9 page-title" title="{{ mapsetInfo.refSetName }}">
+			<div class="col-md-9 page-title p-l-10" title="{{ mapsetInfo.refSetName }}">
 				<div class="mt2-wrap">{{ mapsetInfo.refSetName }}</div>
 			</div>
 			<div class="col-md-3 d-flex header-menu">
@@ -426,6 +426,12 @@
 					</button>
 					<button mat-menu-item (click)="selectAction('view')" [disabled]="checkedNum !== 1">
 						<span>View Selected Mapping</span>
+					</button>
+					<button *ngIf="checkedNum > 1" mat-menu-item (click)="selectAction('list-view')">
+						<span>View Selected Mappings</span>
+					</button>
+					<button mat-menu-item (click)="selectAction('view-list')">
+						<span>View Maps By List</span>
 					</button>
 					<button
 						*ngIf="!libraryOnly && mapsetInfo.workflowStatus === 'IN_EDIT' && singleEditEnabled && checkedNum === 1"
@@ -1016,6 +1022,29 @@
 		</div>
 		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
 			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		</div>
+	</ng-template>
+
+	<ng-template #viewListModal let-modal>
+		<div class="modal-header mt2-modal-header">
+			<div class="modal-title">View Maps By List</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeViewListModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body m-t-10">
+			<textarea
+				#viewModalList
+				class="form-field-value notes-text"
+				type="text"
+				name="notes"
+				placeholder="Enter a list of IDs. Use a comma, whitespace, or newline delimited Mapping Ids."
+				[formControl]="viewListFC"
+			></textarea>
+		</div>
+		<div class="modal-footer mt2-modal-footer mt2-lockable mt2-btn-group">
+			<button type="button" class="mt2-btn mt2-action-btn" (click)="closeViewListModal()">Cancel</button>
+			<button type="button" title="Edit" class="mt2-btn mt2-action-btn" (click)="submitViewList()">View</button>
 		</div>
 	</ng-template>
 
