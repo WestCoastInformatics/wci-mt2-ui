@@ -37,6 +37,7 @@ import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { PaginationService } from 'src/app/services/pagination.service';
 import { MapWorkflow } from 'src/app/models/map-workflow.model';
+import { UnsavedModalComponent } from 'src/app/components/unsaved-modal/unsaved-modal.component';
 
 @Component({
 	standalone: false,
@@ -1538,13 +1539,38 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 	}
 
 	toggleInactive(value: any) {
-		//show warning for loosing any unsaved changes
 		const result = value === 'active' ? false : true;
-		if (result !== this.showInactive) {
+		if (result === this.showInactive) {
+			return;
+		}
+		if (localStorage.getItem('unsavedChanges') !== 'true') {
 			this.showInactive = result;
 			this.getMapsetData();
+			return;
 		}
+		const modalRef = this.modalService.open(UnsavedModalComponent, { backdrop: 'static', keyboard: false });
+		modalRef.componentInstance.action = 'change view';
+		modalRef.componentInstance.confirmLabel = 'View';
+		modalRef.result
+			.then((proceed: boolean) => {
+				if (proceed) {
+					setTimeout(() => {
+						this.showInactive = result;
+						this.userChanged = false;
+						localStorage.setItem('unsavedChanges', 'false');
+						this.mapsetData.forEach((map: any) => {
+							map.updated = false;
+							map.showChanged = false;
+						});
+						this.gridApi?.redrawRows();
+						this.getMapsetData();
+					}, 50);
+				}
+			})
+			.catch(() => {});
 	}
+
+	resetUpdated() {}
 
 	getMapsetData() {
 		let inactive = '';
