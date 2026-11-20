@@ -134,7 +134,7 @@ export class ListMappingComponent implements OnInit, OnDestroy {
 	showTargetPopover = false;
 	tempModuleIdChangeBeforeRelease = '449080006';
 	mapsetVersionStorage = 'mapsetVersion';
-	mapsetListColumnStorage = 'listColumnStorage';
+	mapsetListColumnStorage = 'mapsetRecordsColumns';
 	mapsetLanguageStorage = 'mapsetLanguage';
 	mapsetToLanguageStorage = 'mapsetToLanguage';
 	listSearchInput = 'listSearchInput';
@@ -281,7 +281,8 @@ export class ListMappingComponent implements OnInit, OnDestroy {
 			this.mapsetCode = routeParams.code;
 			this.conceptCodes = routeParams.concepts.split('_');
 			this.mapsetVersionStorage = prefix + this.mapsetVersionStorage;
-			this.mapsetListColumnStorage += routeParams.concepts;
+			this.mapsetListColumnStorage = prefix + this.mapsetListColumnStorage;
+			this.mapsetListColumnStorage += this.mapsetCode;
 			this.listSearchInput += routeParams.concepts;
 			this.mapsetListWorkflowFilter += routeParams.concepts;
 			this.mapsetListAssignedFilter += routeParams.concepts;
