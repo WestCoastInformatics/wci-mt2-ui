@@ -1933,24 +1933,28 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 				return map;
 			}
 		});
-		this.userChanged = false;
-		localStorage.setItem('unsavedChanges', 'false');
 		this.refsetService.getMapsetWorkflowStatus(this.mapsetInfo.id).subscribe(
 			(status) => {
 				if (status.workflowStatus === 'IN_EDIT') {
 					this.refsetService.updateMapsetMappingBulk(this.mapsetInfo.id, this.mapsetResponse).subscribe(
-						(status) => {
-							this.saving = false;
-							this.notificationService.show('The mappings have been saved.', 'Success', 'success', { timeOut: 0, extendedTimeOut: 0 });
-							setTimeout(() => {
-								this.mapsetData.forEach((map: any) => {
-									map.updated = false;
-								});
-								this.getMapsetData();
-							}, 50);
+						(response) => {
+							if (response?.url) {
+								// Long-running save: backend returned a job url, poll until it finishes.
+								this.pollBulkSaveStatus(response.url);
+							} else {
+								this.onBulkSaveCompleted();
+							}
 						},
 						(error: any) => {
-							this.notificationService.show('Error saving, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+							if (error?.status === 409) {
+								this.saving = false;
+								this.notificationService.show('A save is already running for this map set. Please wait for it to finish.', 'Warning', 'warning', {
+									timeOut: 0,
+									extendedTimeOut: 0,
+								});
+							} else {
+								this.notificationService.show('Error saving, please try again.', 'Error', 'error', { timeOut: 2500, extendedTimeOut: 0 });
+							}
 							console.log(' Error: ', error);
 						},
 					);
@@ -1962,6 +1966,47 @@ export class AutoMappingComponent implements OnInit, OnDestroy {
 				}
 			},
 			(err) => {
+				console.error(' Error: ', err);
+				this.authenticationService.checkError(err);
+			},
+		);
+	}
+
+	onBulkSaveCompleted() {
+		this.saving = false;
+		this.userChanged = false;
+		localStorage.setItem('unsavedChanges', 'false');
+		this.notificationService.show('The mappings have been saved.', 'Success', 'success', { timeOut: 0, extendedTimeOut: 0 });
+		setTimeout(() => {
+			this.mapsetData.forEach((map: any) => {
+				map.updated = false;
+			});
+			this.getMapsetData();
+		}, 50);
+	}
+
+	pollBulkSaveStatus(url: string) {
+		this.refsetService.getDownloadMapsetStatus(url).subscribe(
+			(job) => {
+				switch (job?.status) {
+					case 'COMPLETED':
+						this.onBulkSaveCompleted();
+						break;
+					case 'FAILED':
+						this.saving = false;
+						this.userChanged = true;
+						localStorage.setItem('unsavedChanges', 'true');
+						this.notificationService.show(job.errorMessage || 'Error saving, please try again.', 'Error', 'error', { timeOut: 0, extendedTimeOut: 0 });
+						break;
+					default:
+						// PENDING / PROCESSING
+						setTimeout(() => {
+							this.pollBulkSaveStatus(url);
+						}, 1000);
+				}
+			},
+			(err) => {
+				this.saving = false;
 				console.error(' Error: ', err);
 				this.authenticationService.checkError(err);
 			},

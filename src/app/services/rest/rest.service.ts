@@ -88,9 +88,12 @@ export class RestService {
 		);
 	}
 
-	put(url: string, params: any, ignoreErrors = false): Observable<any> {
+	put(url: string, params: any, ignoreErrors = false, errorHandler: Function = null): Observable<any> {
 		return this.http.put<any>(this.restUrl + url, params).pipe(
 			catchError((err) => {
+				if (errorHandler) {
+					return errorHandler(err);
+				}
 				return this.giveErrorNotification(err, ignoreErrors);
 			}),
 		);
