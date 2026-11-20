@@ -209,6 +209,11 @@ tr.refset_tool_inactive_row {
 	text-decoration: line-through;
 }
 
+.inactive-background {
+	background-color: var(--inactive_row_color);
+	border: 1px solid #aaaaaa !important;
+}
+
 .only-label .mat-button-toggle-button .mat-button-toggle-label-content {
 	line-height: 12px !important;
 	text-wrap: auto;

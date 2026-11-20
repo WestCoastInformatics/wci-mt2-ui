@@ -17,6 +17,18 @@
 <div [hidden]="!loadError || !loaded" class="section-loading m-b-20">Error loading, please contact support.</div>
 <div class="mt2-container">
 	<div class="metadata-collapsible-container col-md-12 config-scrolling-section m-t-40" *ngIf="loaded && !loadError">
+		<div class="switch-view" *ngIf="loaded">
+			<mat-label class="switch-label">view by</mat-label>
+			<mat-button-toggle-group
+				#group="matButtonToggleGroup"
+				[value]="showInactive ? 'all' : 'active'"
+				(change)="toggleInactive(group.value)"
+				[hideSingleSelectionIndicator]="true"
+			>
+				<mat-button-toggle value="active" title="View by active"> active </mat-button-toggle>
+				<mat-button-toggle value="all" title="View by all"> all </mat-button-toggle>
+			</mat-button-toggle-group>
+		</div>
 		<div class="metadata-collapsible-container-group-header header-adjust pointer" (click)="toggleSectionView('showConfigSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
 				<span>Target Configuration</span>

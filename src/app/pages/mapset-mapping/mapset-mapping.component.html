@@ -71,6 +71,18 @@
 		</div>
 	</div>
 	<div class="metadata-collapsible-container" [ngClass]="{ 'm-t-20': loaded }">
+		<div class="switch-view" *ngIf="loaded">
+			<mat-label class="switch-label">view by</mat-label>
+			<mat-button-toggle-group
+				#group="matButtonToggleGroup"
+				[value]="showInactive ? 'all' : 'active'"
+				(change)="toggleInactive(group.value)"
+				[hideSingleSelectionIndicator]="true"
+			>
+				<mat-button-toggle value="active" title="View by active"> active </mat-button-toggle>
+				<mat-button-toggle value="all" title="View by all"> all </mat-button-toggle>
+			</mat-button-toggle-group>
+		</div>
 		<div class="metadata-collapsible-container-group-header row">
 			<div class="metadata-collapsible-container-title page-header-font" *ngIf="mapsetData.length > 0">
 				<span>Maps&nbsp; </span><span>{{ '(' + mapsetData[0].mapEntries.length + ')' }}</span>
@@ -167,66 +179,67 @@
 				<div class="col-12">
 					<div *ngFor="let record of mapsetData; index as i">
 						<div *ngIf="!record.spanned">
-							<div class="col-12 row">
-								<div class="d-flex col-10 row">
-									<div class="col-11 code-name hide">
-										{{ record.name }}, <span class="code-link">{{ record.code }}</span>
-									</div>
-
-									<div *ngFor="let entry of record.mapEntries; index as x" class="row col-12 second-row">
-										<div class="col-4 row mb-3">
-											<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
-											<div class="record-code col-2 ellipsis-text" [title]="entry.toCode">{{ entry.toCode }}</div>
-											<div
-												class="record-name col-8 d-flex no-wrap"
-												title="{{
-													getLanguageToNameValue(entry)
-														? `${getLanguageToNameValue(entry)} ${headerToNameColumnName}`
-														: entry.toName === ''
-															? '[NO TARGET]'
-															: entry.toName
-												}}"
-											>
-												{{
-													getLanguageToNameValue(entry)
-														? `${getLanguageToNameValue(entry)} ${headerToNameColumnName}`
-														: entry.toName === ''
-															? '[NO TARGET]'
-															: entry.toName
-												}}
-												<span *ngIf="record.modFlag !== ''">
-													<img
-														class="mapset-mod-icon"
-														*ngIf="record.moduleId !== internationalId"
-														src="{{ 'assets/flags/' + record.modFlag + '.png' }}"
-														title="{{ record.modLang }}"
-														aria-label="{{ record.modLang }}"
-												/></span>
-											</div>
-										</div>
-										<div class="col-8 row mb-3">
-											<div class="info-box" *ngIf="entry.relation">
-												<i class="fa-regular fa-handshake relation-icon"></i
-												><span class="info-message">{{ entry.relation }}</span>
-											</div>
-											<div
-												*ngFor="let advice of entry.advices; index as i"
-												class="info-box"
-												[hidden]="advice.indexOf('ALWAYS') > -1"
-											>
-												<span *ngIf="advice.length > 0"
-													><i class="fa-solid fa-star-of-life advice-icon"></i
-													><span class="info-message">{{ advice }}</span></span
-												>
-											</div>
-										</div>
-									</div>
+							<div class="col-12 row no-padding no-margin">
+								<div class="col-11 code-name hide">
+									{{ record.name }}, <span class="code-link">{{ record.code }}</span>
 								</div>
-								<div class="date-column col-1">
-									<div class="action-column" [hidden]="!mapsetData[0].modified">
-										Last Modified: {{ dateFormatter(mapsetData[0].modified) }}
+
+								<div
+									*ngFor="let entry of record.mapEntries; index as x"
+									class="row col-12 second-row"
+									[ngClass]="{ 'inactive-background': !entry.active }"
+								>
+									<div class="col row mb-3">
+										<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
+										<div class="record-code col-2 ellipsis-text" [title]="entry.toCode">{{ entry.toCode }}</div>
+										<div
+											class="record-name col-8 d-flex"
+											title="{{
+												getLanguageToNameValue(entry)
+													? `${getLanguageToNameValue(entry)} ${headerToNameColumnName}`
+													: entry.toName === ''
+														? '[NO TARGET]'
+														: entry.toName
+											}}"
+										>
+											{{
+												getLanguageToNameValue(entry)
+													? `${getLanguageToNameValue(entry)} ${headerToNameColumnName}`
+													: entry.toName === ''
+														? '[NO TARGET]'
+														: entry.toName
+											}}
+											<span *ngIf="record.modFlag !== ''">
+												<img
+													class="mapset-mod-icon"
+													*ngIf="record.moduleId !== internationalId"
+													src="{{ 'assets/flags/' + record.modFlag + '.png' }}"
+													title="{{ record.modLang }}"
+													aria-label="{{ record.modLang }}"
+											/></span>
+										</div>
 									</div>
-									<div [hidden]="!mapsetData[0].modifiedBy" class="date-column">Modified By: {{ mapsetData[0].modifiedBy }}</div>
+									<div class="col row mb-3">
+										<div class="info-box" *ngIf="entry.relation">
+											<i class="fa-regular fa-handshake relation-icon"></i
+											><span class="info-message">{{ entry.relation }}</span>
+										</div>
+										<div
+											*ngFor="let advice of entry.advices; index as i"
+											class="info-box"
+											[hidden]="advice.indexOf('ALWAYS') > -1"
+										>
+											<span *ngIf="advice.length > 0"
+												><i class="fa-solid fa-star-of-life advice-icon"></i
+												><span class="info-message">{{ advice }}</span></span
+											>
+										</div>
+									</div>
+									<div class="col row md-3">
+										<div class="action-column" [hidden]="!entry.modified">Last Modified: {{ dateFormatter(entry.modified) }}</div>
+										<div [hidden]="!entry.modifiedBy" class="action-column">Modified By: {{ entry.modifiedBy }}</div>
+										<div [hidden]="entry.active" class="action-column">Active: {{ entry.active }}</div>
+									</div>
 								</div>
 							</div>
 						</div>

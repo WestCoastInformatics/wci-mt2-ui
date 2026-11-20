@@ -11,4 +11,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 export class UnsavedModalComponent {
 	// Inject the active modal reference
 	activeModal = inject(NgbActiveModal);
+
+	// Overridable text; defaults match the navigation-guard wording
+	action = 'leave';
+	confirmLabel = 'Leave';
 }

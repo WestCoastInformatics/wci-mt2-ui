@@ -37,6 +37,7 @@ import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { PaginationService } from 'src/app/services/pagination.service';
 import { MapWorkflow } from 'src/app/models/map-workflow.model';
+import { UnsavedModalComponent } from 'src/app/components/unsaved-modal/unsaved-modal.component';
 
 @Component({
 	standalone: false,
@@ -206,6 +207,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 	headerNameColumnTooltip = '';
 	headerToNameColumnName = '';
 	headerToNameColumnTooltip = '';
+	showInactive = false;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 	@ViewChild('workflowStatusSection') workflowStatus!: TemplateRef<any>;
@@ -672,6 +674,13 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 			rowClassRules: {
 				'updated-row': (params: RowClassParams) => {
 					return params.data?.updated === true;
+				},
+				refset_tool_grid_inactive_row: function (params: any) {
+					let inactivatedRow = false;
+					if (params.data) {
+						inactivatedRow = params.data.active === false;
+					}
+					return inactivatedRow;
 				},
 			},
 		};
@@ -1529,9 +1538,47 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 		return current;
 	}
 
+	toggleInactive(value: any) {
+		const result = value === 'active' ? false : true;
+		if (result === this.showInactive) {
+			return;
+		}
+		if (localStorage.getItem('unsavedChanges') !== 'true') {
+			this.showInactive = result;
+			this.getMapsetData();
+			return;
+		}
+		const modalRef = this.modalService.open(UnsavedModalComponent, { backdrop: 'static', keyboard: false });
+		modalRef.componentInstance.action = 'change view';
+		modalRef.componentInstance.confirmLabel = 'View';
+		modalRef.result
+			.then((proceed: boolean) => {
+				if (proceed) {
+					setTimeout(() => {
+						this.showInactive = result;
+						this.userChanged = false;
+						localStorage.setItem('unsavedChanges', 'false');
+						this.mapsetData.forEach((map: any) => {
+							map.updated = false;
+							map.showChanged = false;
+						});
+						this.gridApi?.redrawRows();
+						this.getMapsetData();
+					}, 50);
+				}
+			})
+			.catch(() => {});
+	}
+
+	resetUpdated() {}
+
 	getMapsetData() {
+		let inactive = '';
+		if (this.showInactive) {
+			inactive = '&includeInactive=true';
+		}
 		if (this.mapsetInfo?.id !== undefined) {
-			this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCodes.join(',')).subscribe({
+			this.refsetService.getMappingByMapsetConceptList(this.mapsetInfo.id, this.conceptCodes.join(','), inactive).subscribe({
 				next: (response) => {
 					const batch = [];
 					const list = response.items;
@@ -1584,7 +1631,7 @@ export class BatchMappingComponent implements OnInit, OnDestroy {
 							data = {
 								uuid: results.code + results.mapEntries[b].modified + b,
 								index: results.code + count,
-								active: results.active,
+								active: results.mapEntries[b].active,
 								feedback: true,
 								mapEntries: results.mapEntries[b],
 								descriptions: results?.descriptions,
