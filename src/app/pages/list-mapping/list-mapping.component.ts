@@ -603,6 +603,8 @@ export class ListMappingComponent implements OnInit, OnDestroy {
 					resizable: true,
 					minWidth: 165,
 					valueGetter: (params: ValueGetterParams) => this.languageNameAllValueGetter(params, options.value),
+					cellRenderer: TemplateRendererComponent,
+					cellRendererParams: { template: this.nameSection },
 					sortable: false,
 					unSortIcon: false,
 				};
