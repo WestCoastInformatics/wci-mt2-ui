@@ -471,7 +471,7 @@ export class RefsetService extends RestService {
 	}
 
 	getDownloadMapsetStatus(job: string): Observable<any> {
-		return this.get(this.contextPath + '/' + job);
+		return this.get(this.contextPath + job);
 	}
 
 	getDownloadMapsetFile(url: string): Observable<any> {
