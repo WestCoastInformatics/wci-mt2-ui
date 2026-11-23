@@ -145,7 +145,10 @@ export class RestService {
 				definedError = ' ' + error.error;
 			}
 
-			const message = 'There was a problem with the request, please try again!' + definedError;
+			let message = 'There was a problem with the request, please try again!' + definedError;
+			if (error?.error?.message) {
+				message = error.error.message;
+			}
 			this.notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
 			this.notificationService.handleDuplicates('error', message);
 
