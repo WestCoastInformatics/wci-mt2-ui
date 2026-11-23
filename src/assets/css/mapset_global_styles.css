@@ -2382,6 +2382,11 @@ app-date-text-floating-filter {
 	overflow: hidden;
 }
 
+.name-wrap {
+	max-width: 70% !important;
+	display: inline-block;
+}
+
 .max-menu {
 	max-height: 50vh;
 }
