@@ -561,6 +561,12 @@
 .mapset-mod-icon {
 	margin-left: 10px;
 	height: 13px;
+	vertical-align: top !important;
+	margin-top: 3px;
+}
+
+.flag-icon-margin {
+	margin-top: 12px;
 }
 
 .mapset-notes-icon {

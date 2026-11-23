@@ -556,7 +556,7 @@
 									</div>
 
 									<div *ngFor="let entry of record.mapEntries; index as x" class="row col-12 second-row">
-										<div class="col-5 row mb-3">
+										<div class="col row mb-3">
 											<div class="record-num col-1">{{ entry.group || '1' }}/{{ entry.priority }}</div>
 											<div class="record-code col-2 ellipsis-text" [title]="entry.toCode">{{ entry.toCode }}</div>
 											<div
@@ -586,7 +586,7 @@
 												/></span>
 											</div>
 										</div>
-										<div class="col-7 row mb-3">
+										<div class="col row mb-3">
 											<div class="info-box" *ngIf="entry.relation">
 												<i class="fa-regular fa-handshake relation-icon"></i
 												><span class="info-message">{{ entry.relation }}</span>
@@ -908,10 +908,10 @@
 
 	<!-- Name Templates -->
 	<ng-template #directoryNameSection let-params>
-		<span class="blue-link">{{ params?.value }}</span>
+		<span class="blue-link ellipsis-text name-wrap">{{ params?.value }}</span>
 		<span *ngIf="params?.data?.modFlag !== '' && params?.value">
 			<img
-				class="mapset-mod-icon"
+				class="mapset-mod-icon flag-icon-margin"
 				*ngIf="params?.data?.moduleId !== internationalId"
 				src="{{ 'assets/flags/' + params?.data?.modFlag + '.png' }}"
 				title="{{ params?.data?.modLang }}"

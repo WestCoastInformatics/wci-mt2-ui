@@ -1060,10 +1060,10 @@
 
 	<!-- Name Templates -->
 	<ng-template #directoryNameSection let-params>
-		<span class="blue-link">{{ params?.value }}</span>
+		<span class="blue-link ellipsis-text name-wrap">{{ params?.value }}</span>
 		<span *ngIf="params?.data?.modFlag !== '' && params?.value">
 			<img
-				class="mapset-mod-icon"
+				class="mapset-mod-icon flag-icon-margin"
 				*ngIf="params?.data?.moduleId !== internationalId"
 				src="{{ 'assets/flags/' + params?.data?.modFlag + '.png' }}"
 				title="{{ params?.data?.modLang }}"
