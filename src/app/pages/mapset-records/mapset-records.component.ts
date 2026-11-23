@@ -25,6 +25,7 @@ import { formatDate } from '@angular/common';
 import { PaginationService } from 'src/app/services/pagination.service';
 import { MapWorkflow } from 'src/app/models/map-workflow.model';
 import { FormControl } from '@angular/forms';
+import { ErrorModalComponent } from 'src/app/components/error-modal/error-modal.component';
 
 @Component({
 	standalone: false,
@@ -2167,33 +2168,36 @@ export class MapsetRecordsComponent implements OnInit {
 	changeWorkFlowStatus() {
 		if (this.workFlowNotesFC.dirty) {
 			this.workFlowStatus.notes = this.workFlowNotesFC.value;
-		} else {
-			this.waitingForResponse = true;
-			this.refsetService.setMapsetWorkflowStatus(this.mapsetInfo.id, this.workFlowStatus.value, this.workFlowStatus.notes).subscribe(
-				(response) => {
-					if (response) {
-						this.mapsetInfo = response;
-						this.setWorkflowStatus();
-						this.getMapsetInfo();
-					}
-				},
-				(err) => {
-					console.error(' Error: ', err);
-					if (
-						this.workFlowStatus.value == 'FINISH_EDIT' &&
-						this.mapsetData.some((mapset: any) => mapset.workflowStatus === 'EDITING_IN_PROGRESS')
-					) {
-						this.notificationService.show(
-							'One or more mappings are still in edit. Please finish all edits and try again.',
-							'Error',
-							'error',
-						);
-					} else {
-						this.authenticationService.checkError(err);
-					}
-				},
-			);
 		}
+		this.waitingForResponse = true;
+		this.refsetService.setMapsetWorkflowStatus(this.mapsetInfo.id, this.workFlowStatus.value, this.workFlowStatus.notes).subscribe(
+			(response) => {
+				if (response) {
+					this.mapsetInfo = response;
+					this.setWorkflowStatus();
+					this.getMapsetInfo();
+				}
+			},
+			(err) => {
+				console.error(' Error: ', err);
+				const stillInEdit =
+					this.workFlowStatus.value == 'FINISH_EDIT' &&
+					this.mapsetData.some((mapset: any) => mapset.workflowStatus === 'EDITING_IN_PROGRESS');
+				if (stillInEdit) {
+					this.notificationService.show('One or more mappings are still in edit. Please finish all edits and try again.', 'Error', 'error');
+				}
+				const serverMessage: string = err?.error?.message || '';
+				const isConflict = err?.status === 409 || serverMessage.startsWith('409 CONFLICT');
+				if (isConflict) {
+					this.closeWorkFlowModal();
+					const modalRef = this.modalService.open(ErrorModalComponent, { centered: true, scrollable: true });
+					modalRef.componentInstance.errorMessage =
+						serverMessage.replace(/^409 CONFLICT\s*"?/, '').replace(/"\s*$/, '') || 'The workflow status change was blocked.';
+				} else if (!stillInEdit) {
+					this.authenticationService.checkError(err);
+				}
+			},
+		);
 	}
 
 	setWorkflowStatus() {

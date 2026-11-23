@@ -36,7 +36,11 @@ export class ErrorHandlingService {
 				this.notificationService.show(errorMessage, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
 			}
 		} else if (error.status >= 500 && error.status < 600) {
-			this.authenticationService.checkError(error);
+			const isMapsetWorkflowConflict =
+				error.url?.includes('/workflowStatus') && typeof error.error?.message === 'string' && error.error.message.startsWith('409 CONFLICT');
+			if (!isMapsetWorkflowConflict) {
+				this.authenticationService.checkError(error);
+			}
 		}
 		return throwError(() => error);
 	}
